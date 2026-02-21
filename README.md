@@ -15,14 +15,14 @@ Each domain has 14 rules evaluated by automated checkers. The dependent variable
 
 ## Domains
 
-| Domain | Output Format | Auto-Scorable Rules | Description |
-|--------|--------------|--------------------:|-------------|
+| Domain | Output Format | Scored Rules | Description |
+|--------|--------------|-------------:|-------------|
 | Chart (Vega-Lite) | JSON | 15/15 | Data visualization specifications |
-| Commit Message | Plain text | 13/14 | Conventional Commits format |
-| OpenAPI Spec | JSON/YAML | 13/14 | REST API specifications |
-| Dockerfile | Dockerfile | 10/14 | Container build instructions |
-| SQL Query | SQL | 8/14 | Analytical query style |
-| Terraform | HCL | 8/14 | Infrastructure as Code |
+| Commit Message | Plain text | 14/14 | Conventional Commits format |
+| OpenAPI Spec | JSON/YAML | 14/14 | REST API specifications |
+| Dockerfile | Dockerfile | 13/14 | Container build instructions (1 manual) |
+| SQL Query | SQL | 12/12 | Analytical query style |
+| Terraform | HCL | 13/14 | Infrastructure as Code (1 manual) |
 
 ## Repository Structure
 
