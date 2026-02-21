@@ -85,6 +85,7 @@ python scripts/analyze_all.py
 |-------|-----|----------|
 | Claude Haiku 4.5 | claude | Anthropic |
 | Claude Opus 4 | claude | Anthropic |
+| GLM-4.7 | opencode | ZhipuAI |
 | GLM-4.7 Flash | opencode | ZhipuAI |
 | GLM-5 | opencode | ZhipuAI |
 
