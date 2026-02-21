@@ -1,0 +1,13 @@
+{
+  "run_id": "zai-coding-plan-glm-4.7_none_task2_rep4",
+  "model": "zai-coding-plan/glm-4.7",
+  "condition": "none",
+  "task": "2",
+  "task_complexity": "medium",
+  "domain": "dockerfile",
+  "rep": 4,
+  "timestamp": "2026-02-21T06:41:11+00:00",
+  "duration_ms": 46678,
+  "cli_tool": "opencode",
+  "raw_output": "{\"type\":\"step_start\",\"timestamp\":1771656048650,\"sessionID\":\"ses_381126918ffehjCOODC0XkJmCi\",\"part\":{\"id\":\"prt_c7eedf008001teRcAjC0lUMEBY\",\"sessionID\":\"ses_381126918ffehjCOODC0XkJmCi\",\"messageID\":\"msg_c7eed9731001ORvlNJOESoi2xm\",\"type\":\"step-start\",\"snapshot\":\"98c626f5a273d2157918a4a9c9670bb8ff7c6544\"}}\n{\"type\":\"text\",\"timestamp\":1771656071834,\"sessionID\":\"ses_381126918ffehjCOODC0XkJmCi\",\"part\":{\"id\":\"prt_c7eee07c6001ea24f0wE45UqY9\",\"sessionID\":\"ses_381126918ffehjCOODC0XkJmCi\",\"messageID\":\"msg_c7eed9731001ORvlNJOESoi2xm\",\"type\":\"text\",\"text\":\"```dockerfile\\nFROM python:3.11-slim\\n\\nWORKDIR /app\\n\\nRUN apt-get update && apt-get install -y --no-install-recommends \\\\\\n    libgl1 \\\\\\n    libglib2.0-0 \\\\\\n    && rm -rf /var/lib/apt/lists/*\\n\\nCOPY requirements.txt .\\nRUN pip install --no-cache-dir \\\\\\n    torch==2.1.0+cpu -f https://download.pytorch.org/whl/torch \\\\\\n    -r requirements.txt\\n\\nCOPY download_model.py .\\nRUN python download_model.py\\n\\nCOPY . .\\n\\nEXPOSE 8000\\n\\nENV PYTHONUNBUFFERED=1\\n\\nHEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\\\\\n    CMD curl -f http://localhost:8000/health || exit 1\\n\\nCMD [\\\"uvicorn\\\", \\\"main:app\\\", \\\"--host\\\", \\\"0.0.0.0\\\", \\\"--port\\\", \\\"8000\\\"]\\n```\",\"time\":{\"start\":1771656071834,\"end\":1771656071834}}}\n{\"type\":\"step_finish\",\"timestamp\":1771656071844,\"sessionID\":\"ses_381126918ffehjCOODC0XkJmCi\",\"part\":{\"id\":\"prt_c7eee4a9b001A3MGf5ZIBjyMX4\",\"sessionID\":\"ses_381126918ffehjCOODC0XkJmCi\",\"messageID\":\"msg_c7eed9731001ORvlNJOESoi2xm\",\"type\":\"step-finish\",\"reason\":\"stop\",\"snapshot\":\"7f793588e08e567f5e1c74747d788e356cea079c\",\"cost\":0,\"tokens\":{\"total\":17307,\"input\":7919,\"output\":972,\"reasoning\":766,\"cache\":{\"read\":8416,\"write\":0}}}}"
+}

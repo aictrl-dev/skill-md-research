@@ -1,0 +1,13 @@
+{
+  "run_id": "zai-coding-plan-glm-4.7-flash_markdown_task3_rep3",
+  "model": "zai-coding-plan/glm-4.7-flash",
+  "condition": "markdown",
+  "task": "3",
+  "task_complexity": "complex",
+  "domain": "terraform",
+  "rep": 3,
+  "timestamp": "2026-02-21T08:38:09+00:00",
+  "duration_ms": 783,
+  "cli_tool": "opencode",
+  "raw_output": "ERROR 2026-02-21T08:38:09 +119ms service=models.dev error=Unable to connect. Is the computer able to access the url? Failed to fetch models.dev\n{\"type\":\"error\",\"timestamp\":1771663089920,\"sessionID\":\"ses_380a69f61ffe8YB7c2qqdGbiis\",\"error\":{\"name\":\"UnknownError\",\"data\":{\"message\":\"Error: Unable to connect. Is the computer able to access the url?\"}}}"
+}

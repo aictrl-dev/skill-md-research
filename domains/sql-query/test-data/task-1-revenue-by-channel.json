@@ -1,0 +1,18 @@
+{
+  "task_id": "1",
+  "complexity": "medium",
+  "domain": "sql-query",
+  "description": "Write SQL to calculate customer revenue by attribution channel.\n\nSchema:\n  transactions (transaction_id INT PK, customer_id INT FK, store_id INT FK, amount DECIMAL(10,2), transaction_date DATE)\n  customers (customer_id INT PK, name VARCHAR, email VARCHAR, signup_date DATE)\n  customer_channels (customer_id INT FK, channel VARCHAR, attributed_at TIMESTAMP)  -- 1:many, multiple attributions per customer\n  stores (store_id INT PK, city VARCHAR, region VARCHAR)  -- not every store_id in transactions has a matching row\n\nRequirements:\n- Each customer may have multiple channel attributions; pick one per customer\n- Some customers have no channel attribution; handle the missing values\n- Not every store_id in transactions has a matching stores row; handle missing values\n- Final output: channel, city, total_revenue, transaction_count, unique_customers\n- Group by channel and city",
+  "tables": ["transactions", "customers", "customer_channels", "stores"],
+  "requires_left_join": true,
+  "requires_deduplication": true,
+  "nullable_dimension_columns": ["channel", "city"],
+  "expected_model_count": 5,
+  "expected_models": [
+    "stg_transactions",
+    "stg_customers",
+    "stg_customer_channels",
+    "int_deduped_channels",
+    "fct_revenue_by_channel"
+  ]
+}

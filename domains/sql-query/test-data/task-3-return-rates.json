@@ -1,0 +1,18 @@
+{
+  "task_id": "3",
+  "complexity": "medium",
+  "domain": "sql-query",
+  "description": "Write SQL to calculate product return rates by category.\n\nSchema:\n  orders (order_id INT PK, customer_id INT, order_date DATE, status VARCHAR)\n  order_items (item_id INT PK, order_id INT FK, product_id INT FK, quantity INT, unit_price DECIMAL(10,2))\n  products (product_id INT PK, name VARCHAR, category_id INT FK)  -- category_id is nullable\n  categories (category_id INT PK, name VARCHAR)\n  returns (return_id INT PK, item_id INT FK, return_date DATE, reason VARCHAR, status VARCHAR)  -- multiple return submissions per item possible\n\nRequirements:\n- returns may have multiple submissions per item; pick one approved return per item\n- Some products have no category; handle the missing category values\n- Not all items are returned; handle items with no return record\n- Final output: category_name, total_items_sold, total_items_returned, return_rate (returned/sold)\n- Group by category_name",
+  "tables": ["orders", "order_items", "products", "categories", "returns"],
+  "requires_left_join": true,
+  "requires_deduplication": true,
+  "nullable_dimension_columns": ["category_name"],
+  "expected_model_count": 5,
+  "expected_models": [
+    "stg_order_items",
+    "stg_products",
+    "stg_returns",
+    "int_deduped_returns",
+    "fct_return_rates"
+  ]
+}

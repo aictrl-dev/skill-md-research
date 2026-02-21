@@ -1,0 +1,13 @@
+{
+  "run_id": "haiku_none_task3_rep2",
+  "model": "haiku",
+  "condition": "none",
+  "task": "3",
+  "task_complexity": "medium",
+  "domain": "sql-query",
+  "rep": 2,
+  "timestamp": "2026-02-20T22:08:08+00:00",
+  "duration_ms": 4127,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":2816,\"duration_api_ms\":2779,\"num_turns\":1,\"result\":\"```sql\\n-- return_rate_by_category.sql\\nSELECT \\n    COALESCE(c.name, 'Uncategorized') AS category_name,\\n    COUNT(oi.item_id) AS total_items_sold,\\n    COUNT(DISTINCT CASE WHEN r.return_id IS NOT NULL THEN oi.item_id END) AS total_items_returned,\\n    ROUND(\\n        COUNT(DISTINCT CASE WHEN r.return_id IS NOT NULL THEN oi.item_id END)::NUMERIC / \\n        COUNT(oi.item_id),\\n        4\\n    ) AS return_rate\\nFROM order_items oi\\nJOIN orders o ON oi.order_id = o.order_id\\nLEFT JOIN products p ON oi.product_id = p.product_id\\nLEFT JOIN categories c ON p.category_id = c.category_id\\nLEFT JOIN returns r ON oi.item_id = r.item_id AND r.status = 'approved'\\nWHERE o.status IN ('completed', 'shipped', 'delivered')\\nGROUP BY COALESCE(c.name, 'Uncategorized')\\nORDER BY return_rate DESC;\\n```\",\"stop_reason\":null,\"session_id\":\"b1e88ca1-d1ad-4271-a62d-5440d58da1ee\",\"total_cost_usd\":0.0041964,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":27634,\"output_tokens\":286,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-haiku-4-5-20251001\":{\"inputTokens\":3,\"outputTokens\":286,\"cacheReadInputTokens\":27634,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.0041964,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"6f378995-143d-468f-b16f-112b235193cc\"}"
+}

@@ -1,0 +1,13 @@
+{
+  "run_id": "zai-coding-plan-glm-4.7_none_task1_rep3",
+  "model": "zai-coding-plan/glm-4.7",
+  "condition": "none",
+  "task": "1",
+  "task_complexity": "medium",
+  "domain": "sql-query",
+  "rep": 3,
+  "timestamp": "2026-02-20T22:08:10+00:00",
+  "duration_ms": 44680,
+  "cli_tool": "opencode",
+  "raw_output": "{\"type\":\"step_start\",\"timestamp\":1771625249977,\"sessionID\":\"ses_382e80f17ffe1UHxtKDToNEVP5\",\"part\":{\"id\":\"prt_c7d17fcb7001Ih1s8jYq2cgMoA\",\"sessionID\":\"ses_382e80f17ffe1UHxtKDToNEVP5\",\"messageID\":\"msg_c7d17f132001IFcgWkzlhMPa1C\",\"type\":\"step-start\",\"snapshot\":\"827fca24930e52f0c836b58d2fda9fecd11897b6\"}}\n{\"type\":\"text\",\"timestamp\":1771625290910,\"sessionID\":\"ses_382e80f17ffe1UHxtKDToNEVP5\",\"part\":{\"id\":\"prt_c7d187d11001QxvusG9rvgTt7S\",\"sessionID\":\"ses_382e80f17ffe1UHxtKDToNEVP5\",\"messageID\":\"msg_c7d17f132001IFcgWkzlhMPa1C\",\"type\":\"text\",\"text\":\"-- 01_customer_channels.sql\\n```sql\\nWITH customer_primary_channel AS (\\n    SELECT \\n        customer_id,\\n        channel,\\n        ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY attributed_at ASC) as rn\\n    FROM customer_channels\\n)\\nSELECT \\n    customer_id,\\n    channel\\nFROM customer_primary_channel\\nWHERE rn = 1;\\n```\\n\\n-- 02_revenue_by_channel_city.sql\\n```sql\\nWITH customer_primary_channel AS (\\n    SELECT \\n        customer_id,\\n        channel,\\n        ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY attributed_at ASC) as rn\\n    FROM customer_channels\\n),\\nchannels AS (\\n    SELECT \\n        customer_id,\\n        channel\\n    FROM customer_primary_channel\\n    WHERE rn = 1\\n)\\nSELECT \\n    COALESCE(c.channel, 'Unattributed') AS channel,\\n    COALESCE(s.city, 'Unknown') AS city,\\n    SUM(t.amount) AS total_revenue,\\n    COUNT(t.transaction_id) AS transaction_count,\\n    COUNT(DISTINCT t.customer_id) AS unique_customers\\nFROM transactions t\\nJOIN customers cu ON t.customer_id = cu.customer_id\\nLEFT JOIN channels c ON t.customer_id = c.customer_id\\nLEFT JOIN stores s ON t.store_id = s.store_id\\nGROUP BY c.channel, s.city\\nORDER BY total_revenue DESC;\\n```\",\"time\":{\"start\":1771625290909,\"end\":1771625290909}}}\n{\"type\":\"step_finish\",\"timestamp\":1771625290922,\"sessionID\":\"ses_382e80f17ffe1UHxtKDToNEVP5\",\"part\":{\"id\":\"prt_c7d189ca0001ZjKEj3GB5mjESo\",\"sessionID\":\"ses_382e80f17ffe1UHxtKDToNEVP5\",\"messageID\":\"msg_c7d17f132001IFcgWkzlhMPa1C\",\"type\":\"step-finish\",\"reason\":\"stop\",\"snapshot\":\"2d846a3fb660e7ba8d701a6671bb1545899e6eea\",\"cost\":0,\"tokens\":{\"total\":17438,\"input\":7945,\"output\":941,\"reasoning\":661,\"cache\":{\"read\":8552,\"write\":0}}}}"
+}

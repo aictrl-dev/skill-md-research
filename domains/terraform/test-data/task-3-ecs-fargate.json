@@ -1,0 +1,21 @@
+{
+  "task_id": "3",
+  "complexity": "complex",
+  "domain": "terraform",
+  "description": "Write Terraform configuration for a production ECS Fargate service on AWS:\n\n- ECS Cluster with Fargate capacity provider\n- ECS Task Definition: 256 CPU, 512 memory, single container from ECR image (passed as variable)\n- ECS Service: desired count 2, deployment circuit breaker enabled\n- Application Load Balancer with HTTPS listener (certificate ARN as variable)\n- Target Group with health check on /health\n- RDS PostgreSQL 15 instance (db.t3.micro) in private subnets\n- Database credentials stored in AWS Secrets Manager\n- IAM: Task execution role (pull ECR, read secrets), Task role (CloudWatch logs)\n- Security groups: ALB allows 443 inbound, ECS allows ALB only, RDS allows ECS only\n- CloudWatch log group for container logs\n\nAssume VPC, subnets, and base networking already exist (pass as variables). Mark the database password as sensitive. Output the ALB DNS name and ECS service name.",
+  "provider": "aws",
+  "resources": ["aws_ecs_cluster", "aws_ecs_task_definition", "aws_ecs_service", "aws_lb", "aws_lb_target_group", "aws_lb_listener", "aws_db_instance", "aws_secretsmanager_secret", "aws_iam_role", "aws_security_group", "aws_cloudwatch_log_group"],
+  "has_stateful_resources": true,
+  "requires_data_sources": true,
+  "requirements": {
+    "provider_pinned": true,
+    "variables_with_description": true,
+    "variables_with_type": true,
+    "outputs": true,
+    "tags": true,
+    "sensitive_values": true,
+    "data_sources": true,
+    "locals": true,
+    "no_hardcoded_ids": true
+  }
+}

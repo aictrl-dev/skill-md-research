@@ -1,0 +1,13 @@
+{
+  "run_id": "zai-coding-plan-glm-5_markdown_task1_rep5",
+  "model": "zai-coding-plan/glm-5",
+  "condition": "markdown",
+  "task": "1",
+  "task_complexity": "medium",
+  "domain": "sql-query",
+  "rep": 5,
+  "timestamp": "2026-02-20T23:22:17+00:00",
+  "duration_ms": 3771196,
+  "cli_tool": "opencode",
+  "raw_output": "{\"error\": \"empty output\"}"
+}

@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structured Agent Instructions Improve Output Compliance: Experiment Results</title>
+    <meta name="description" content="108 runs across 4 models and 3 instruction conditions show pseudocode skills significantly outperform both baseline and markdown on a 15-rule style compliance evaluation.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --surface2: #f5f5f5;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-muted: #475569;
+            --text-light: #94a3b8;
+
+            --color-none: #94a3b8;
+            --color-markdown: #3b82f6;
+            --color-pseudocode: #22c55e;
+            --color-pass: #22c55e;
+            --color-fail: #ef4444;
+            --color-absent: #d1d5db;
+
+            --color-none-bg: rgba(148, 163, 184, 0.1);
+            --color-markdown-bg: rgba(59, 130, 246, 0.1);
+            --color-pseudocode-bg: rgba(34, 197, 94, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 17px;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+        .wide-container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        section { padding: 3rem 0; }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            line-height: 1.25;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--text);
+        }
+
+        p { margin-bottom: 1.25rem; color: var(--text-muted); }
+        p strong { color: var(--text); }
+
+        a { color: #2563eb; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        ul, ol { color: var(--text-muted); margin-bottom: 1.25rem; padding-left: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        li strong { color: var(--text); }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            background: var(--surface2);
+            padding: 0.15em 0.4em;
+            border-radius: 4px;
+        }
+
+        /* Header */
+        .page-header {
+            padding: 4rem 0 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-draft {
+            background: rgba(245, 158, 11, 0.15);
+            color: #d97706;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-v2 {
+            background: rgba(34, 197, 94, 0.15);
+            color: #16a34a;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        /* Metric cards */
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .metric-sublabel {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        /* Section labels */
+        .section-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            display: block;
+            color: var(--text-light);
+        }
+
+        /* Chart blocks */
+        .chart-block {
+            margin: 2rem 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        .chart-inner {
+            padding: 2rem;
+        }
+
+        .chart-caption {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .chart-caption strong { color: var(--text); }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .data-table th {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .data-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-muted);
+            vertical-align: top;
+        }
+
+        .data-table td strong { color: var(--text); }
+
+        .data-table tr:last-child td { border-bottom: none; }
+
+        .verdict-confirmed { color: #16a34a; font-weight: 600; }
+        .verdict-partial { color: #d97706; font-weight: 600; }
+        .verdict-mixed { color: #dc2626; font-weight: 600; }
+        .verdict-na { color: var(--text-light); font-weight: 600; }
+
+        /* Callout */
+        .callout {
+            padding: 1.5rem 2rem;
+            border-radius: 0.5rem;
+            margin: 2rem 0;
+            border-left: 4px solid;
+        }
+
+        .callout-green {
+            background: rgba(34, 197, 94, 0.06);
+            border-color: #22c55e;
+        }
+
+        .callout-orange {
+            background: rgba(245, 158, 11, 0.06);
+            border-color: #f59e0b;
+        }
+
+        .callout p:last-child { margin-bottom: 0; }
+        .callout-title { font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+
+        /* Divider */
+        .divider { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+
+        /* Condition pills */
+        .pill {
+            display: inline-block;
+            padding: 0.15em 0.5em;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .pill-none { background: var(--color-none-bg); color: #64748b; }
+        .pill-markdown { background: var(--color-markdown-bg); color: #2563eb; }
+        .pill-pseudocode { background: var(--color-pseudocode-bg); color: #16a34a; }
+
+        /* SVG chart styles */
+        .heatmap-cell { rx: 4; ry: 4; }
+        .chart-text { font-family: 'Inter', sans-serif; }
+        .chart-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Footer */
+        .page-footer {
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .page-footer a { color: #2563eb; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.75rem; }
+            .metric-grid { grid-template-columns: 1fr 1fr; }
+            .chart-inner { padding: 1rem; }
+            .chart-inner svg { max-width: 100%; height: auto; }
+        }
+
+        @media (max-width: 480px) {
+            .metric-grid { grid-template-columns: 1fr; }
+            .header-meta { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header class="page-header">
+    <div class="container">
+        <div class="header-meta">
+            <span>2026-02-20</span>
+            <span>v2.0</span>
+            <span class="badge badge-v2">v2 &mdash; Fixed skill</span>
+            <span class="badge badge-draft">Pre-print</span>
+        </div>
+        <h1>Structured Agent Instructions Improve Output Compliance: Experiment Results</h1>
+        <p class="hero-subtitle">108 runs &middot; 4 models &middot; 3 instruction conditions &middot; 15-rule automated evaluation. Pseudocode skills score 13.6/15 on style compliance, a +6.2 point improvement over the no-skill baseline. Pseudocode beats markdown on all 4 models.</p>
+    </div>
+</header>
+
+<!-- ===== Key Metrics ===== -->
+<section style="padding-top: 2rem; padding-bottom: 1rem;">
+    <div class="container">
+        <div class="metric-grid">
+            <div class="metric-card">
+                <div class="metric-value" style="color: var(--color-pseudocode);">13.6<span style="font-size: 0.5em; color: var(--text-light);">/15</span></div>
+                <div class="metric-label">Pseudocode mean deep score</div>
+                <div class="metric-sublabel">Across Haiku, Opus, GLM-5</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" style="color: var(--color-pseudocode);">+6.2</div>
+                <div class="metric-label">Improvement over no-skill baseline</div>
+                <div class="metric-sublabel">13.6 vs 7.4 mean score</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" style="color: var(--color-markdown);">94%</div>
+                <div class="metric-label">Specification coverage</div>
+                <div class="metric-sublabel">Pseudocode condition</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" style="color: var(--text);">108</div>
+                <div class="metric-label">Total experiment runs</div>
+                <div class="metric-sublabel">4 models &times; 3 conditions &times; 3 tasks &times; 3 reps</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== v2 Callout ===== -->
+<section style="padding-top: 0; padding-bottom: 1rem;">
+    <div class="container">
+        <div class="callout callout-green">
+            <p class="callout-title">v2 update: typed fields fix the GLM-5 anomaly</p>
+            <p>v1 of the pseudocode skill encoded 6 of 15 rules as <code># comment</code> annotations rather than typed dataclass fields. GLM-5 ignored these comments, producing incomplete output (markdown 12.3 vs pseudocode 10.6). In v2, all 15 rules are expressed as mandatory typed fields (<code>Typography</code>, <code>GridConfig</code>, <code>Annotations</code> dataclasses). GLM-5 now scores 13.6 with pseudocode, beating markdown on all models.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Experimental Setup ===== -->
+<section>
+    <div class="container">
+        <span class="section-label">Section 1</span>
+        <h2>Experimental Setup</h2>
+
+        <p>We tested whether the format of agent instructions affects output compliance on a chart style specification task. Three conditions were compared:</p>
+
+        <ul>
+            <li><span class="pill pill-none">none</span> &mdash; bare task prompt with no style guidance</li>
+            <li><span class="pill pill-markdown">markdown</span> &mdash; 15 style rules in structured Markdown (headings, tables, examples)</li>
+            <li><span class="pill pill-pseudocode">pseudocode</span> &mdash; same 15 rules as typed Python dataclasses, Enums, and <code>validate()</code> methods</li>
+        </ul>
+
+        <p>Each condition was tested across <strong>4 models</strong>: Haiku 4.5, Opus 4.6 (Claude family via <code>claude</code> CLI), GLM-5, and GLM-4.7-Flash (Zhipu AI via <code>opencode</code> CLI). Three chart tasks of increasing complexity (GDP bar chart, AI model growth, cloud revenue multi-series) were each repeated 3 times per cell.</p>
+
+        <h3>Evaluation: Deep Scoring</h3>
+
+        <p>The deep evaluator (<code>evaluate_deep.py</code>) uses structure-agnostic recursive DFS to search JSON output for evidence of each rule, regardless of schema variation. Each rule receives a three-valued verdict:</p>
+
+        <ul>
+            <li><strong>Pass</strong> &mdash; rule satisfied with evidence</li>
+            <li><strong>Fail</strong> &mdash; rule violated with evidence</li>
+            <li><strong>Absent</strong> &mdash; relevant fields not found in output (treated as 0 for scoring)</li>
+        </ul>
+
+        <p>The <strong>deep score</strong> is the count of passes (0&ndash;15). <strong>Coverage</strong> is the fraction of rules that received a pass or fail verdict (i.e., were addressable in the output).</p>
+    </div>
+</section>
+
+<!-- ===== Figure 1: Heatmap ===== -->
+<section style="padding-top: 0;">
+    <div class="wide-container">
+        <div class="chart-block">
+            <div class="chart-inner">
+                <svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Title -->
+                    <text x="350" y="24" text-anchor="middle" class="chart-text" font-size="15" font-weight="700" fill="#0f172a">Mean Deep Score by Model and Condition</text>
+                    <text x="350" y="42" text-anchor="middle" class="chart-text" font-size="11" fill="#94a3b8">Score out of 15. Higher is better. v2 pseudocode skill with all typed fields.</text>
+
+                    <!-- Column headers -->
+                    <text x="305" y="72" text-anchor="middle" class="chart-mono" font-size="11" font-weight="600" fill="#64748b">none</text>
+                    <text x="445" y="72" text-anchor="middle" class="chart-mono" font-size="11" font-weight="600" fill="#2563eb">markdown</text>
+                    <text x="585" y="72" text-anchor="middle" class="chart-mono" font-size="11" font-weight="600" fill="#16a34a">pseudocode</text>
+
+                    <!-- Row: Haiku  none=7.1, md=11.3, pc=12.9 -->
+                    <text x="160" y="110" text-anchor="end" class="chart-text" font-size="13" font-weight="500" fill="#0f172a">Haiku 4.5</text>
+                    <rect x="235" y="88" width="140" height="32" class="heatmap-cell" fill="#fde68a"/>
+                    <text x="305" y="109" text-anchor="middle" class="chart-mono" font-size="14" font-weight="700" fill="#713f12">7.1</text>
+                    <rect x="375" y="88" width="140" height="32" class="heatmap-cell" fill="#86efac"/>
+                    <text x="445" y="109" text-anchor="middle" class="chart-mono" font-size="14" font-weight="700" fill="#14532d">11.3</text>
+                    <rect x="515" y="88" width="140" height="32" class="heatmap-cell" fill="#4ade80"/>
+                    <text x="585" y="109" text-anchor="middle" class="chart-mono" font-size="14" font-weight="700" fill="#14532d">12.9</text>
+
+                    <!-- Row: Opus  none=8.1, md=11.4, pc=14.4 -->
+                    <text x="160" y="158" text-anchor="end" class="chart-text" font-size="13" font-weight="500" fill="#0f172a">Opus 4.6</text>
+                    <rect x="235" y="136" width="140" height="32" class="heatmap-cell" fill="#fde68a"/>
+                    <text x="305" y="157" text-anchor="middle" class="chart-mono" font-size="14" font-weight="700" fill="#713f12">8.1</text>
+                    <rect x="375" y="136" width="140" height="32" class="heatmap-cell" fill="#86efac"/>
+                    <text x="445" y="157" text-anchor="middle" class="chart-mono" font-size="14" font-weight="700" fill="#14532d">11.4</text>
+                    <rect x="515" y="136" width="140" height="32" class="heatmap-cell" fill="#16a34a"/>
+                    <text x="585" y="157" text-anchor="middle" class="chart-mono" font-size="14" font-weight="700" fill="#ffffff">14.4</text>
+
+                    <!-- Row: GLM-5  none=7.0, md=12.3, pc=13.6 -->
+                    <text x="160" y="206" text-anchor="end" class="chart-text" font-size="13" font-weight="500" fill="#0f172a">GLM-5</text>
+                    <rect x="235" y="184" width="140" height="32" class="heatmap-cell" fill="#fde68a"/>
+                    <text x="305" y="205" text-anchor="middle" class="chart-mono" font-size="14" font-weight="700" fill="#713f12">7.0</text>
+                    <rect x="375" y="184" width="140" height="32" class="heatmap-cell" fill="#4ade80"/>
+                    <text x="445" y="205" text-anchor="middle" class="chart-mono" font-size="14" font-weight="700" fill="#14532d">12.3</text>
+                    <rect x="515" y="184" width="140" height="32" class="heatmap-cell" fill="#22c55e"/>
+                    <text x="585" y="205" text-anchor="middle" class="chart-mono" font-size="14" font-weight="700" fill="#052e16">13.6</text>
+
+                    <!-- Row: GLM-4.7-Flash  none=0.2, md=0.2, pc=5.1 -->
+                    <text x="160" y="254" text-anchor="end" class="chart-text" font-size="13" font-weight="500" fill="#94a3b8">GLM-4.7-Flash</text>
+                    <rect x="235" y="232" width="140" height="32" class="heatmap-cell" fill="#fecaca"/>
+                    <text x="305" y="253" text-anchor="middle" class="chart-mono" font-size="14" font-weight="700" fill="#991b1b">0.2</text>
+                    <rect x="375" y="232" width="140" height="32" class="heatmap-cell" fill="#fecaca"/>
+                    <text x="445" y="253" text-anchor="middle" class="chart-mono" font-size="14" font-weight="700" fill="#991b1b">0.2</text>
+                    <rect x="515" y="232" width="140" height="32" class="heatmap-cell" fill="#fca5a5"/>
+                    <text x="585" y="253" text-anchor="middle" class="chart-mono" font-size="14" font-weight="700" fill="#7f1d1d">5.1</text>
+
+                    <!-- Legend -->
+                    <defs>
+                        <linearGradient id="heatGrad" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stop-color="#fecaca"/>
+                            <stop offset="35%" stop-color="#fde68a"/>
+                            <stop offset="65%" stop-color="#86efac"/>
+                            <stop offset="100%" stop-color="#16a34a"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="235" y="290" width="420" height="10" rx="5" fill="url(#heatGrad)"/>
+                    <text x="235" y="316" class="chart-mono" font-size="10" fill="#94a3b8">0</text>
+                    <text x="445" y="316" text-anchor="middle" class="chart-mono" font-size="10" fill="#94a3b8">7.5</text>
+                    <text x="655" y="316" text-anchor="end" class="chart-mono" font-size="10" fill="#94a3b8">15</text>
+                </svg>
+            </div>
+            <div class="chart-caption">
+                <strong>Figure 1: Deep score heatmap.</strong> Mean of 9 runs per cell (3 tasks &times; 3 reps). Pseudocode leads on all 4 models. Opus 4.6 achieves near-perfect 14.4/15 with pseudocode (96% compliance). GLM-4.7-Flash improved from 0.2 to 5.1 with pseudocode but still fails to produce valid JSON in most baseline/markdown runs.
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Figure 2: Coverage ===== -->
+<section style="padding-top: 0;">
+    <div class="wide-container">
+        <div class="chart-block">
+            <div class="chart-inner">
+                <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Title -->
+                    <text x="350" y="24" text-anchor="middle" class="chart-text" font-size="15" font-weight="700" fill="#0f172a">Specification Coverage by Condition</text>
+                    <text x="350" y="42" text-anchor="middle" class="chart-text" font-size="11" fill="#94a3b8">Fraction of 15 rules that received a pass or fail verdict, per model</text>
+
+                    <!-- Chart area: x 110..600, y 65..255. Height=190px for 0-100% -->
+                    <!-- Y = 255 - (pct * 1.9) -->
+
+                    <!-- Y-axis labels & gridlines -->
+                    <text x="100" y="69" text-anchor="end" class="chart-mono" font-size="10" fill="#94a3b8">100%</text>
+                    <line x1="110" y1="65" x2="600" y2="65" stroke="#e2e8f0" stroke-width="1"/>
+
+                    <text x="100" y="117" text-anchor="end" class="chart-mono" font-size="10" fill="#94a3b8">80%</text>
+                    <line x1="110" y1="113" x2="600" y2="113" stroke="#e2e8f0" stroke-width="1"/>
+
+                    <text x="100" y="164" text-anchor="end" class="chart-mono" font-size="10" fill="#94a3b8">60%</text>
+                    <line x1="110" y1="160" x2="600" y2="160" stroke="#e2e8f0" stroke-width="1"/>
+
+                    <text x="100" y="212" text-anchor="end" class="chart-mono" font-size="10" fill="#94a3b8">40%</text>
+                    <line x1="110" y1="208" x2="600" y2="208" stroke="#e2e8f0" stroke-width="1"/>
+
+                    <text x="100" y="259" text-anchor="end" class="chart-mono" font-size="10" fill="#94a3b8">20%</text>
+                    <line x1="110" y1="255" x2="600" y2="255" stroke="#e2e8f0" stroke-width="1"/>
+
+                    <!-- Baseline -->
+                    <line x1="110" y1="255" x2="600" y2="255" stroke="#cbd5e1" stroke-width="1.5"/>
+
+                    <!-- X-axis: 3 conditions at x=190, x=355, x=520 -->
+                    <text x="190" y="275" text-anchor="middle" class="chart-mono" font-size="11" font-weight="600" fill="#64748b">none</text>
+                    <text x="355" y="275" text-anchor="middle" class="chart-mono" font-size="11" font-weight="600" fill="#64748b">markdown</text>
+                    <text x="520" y="275" text-anchor="middle" class="chart-mono" font-size="11" font-weight="600" fill="#64748b">pseudocode</text>
+
+                    <!-- Vertical tick lines -->
+                    <line x1="190" y1="255" x2="190" y2="260" stroke="#94a3b8" stroke-width="1"/>
+                    <line x1="355" y1="255" x2="355" y2="260" stroke="#94a3b8" stroke-width="1"/>
+                    <line x1="520" y1="255" x2="520" y2="260" stroke="#94a3b8" stroke-width="1"/>
+
+                    <!-- ── Haiku: 65% → 82% → 87%  Color: #f59e0b (amber) ── -->
+                    <!-- Y: 65%=131.5  82%=99.2  87%=89.7 -->
+                    <polyline points="190,131.5 355,99.2 520,89.7" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="190" cy="131.5" r="4" fill="#f59e0b"/>
+                    <circle cx="355" cy="99.2" r="4" fill="#f59e0b"/>
+                    <circle cx="520" cy="89.7" r="4" fill="#f59e0b"/>
+                    <text x="195" y="125" class="chart-mono" font-size="9" fill="#d97706">65%</text>
+                    <text x="360" y="93" class="chart-mono" font-size="9" fill="#d97706">82%</text>
+                    <text x="525" y="84" class="chart-mono" font-size="9" fill="#d97706">87%</text>
+
+                    <!-- ── Opus: 64% → 80% → 97%  Color: #8b5cf6 (violet) ── -->
+                    <!-- Y: 64%=133.4  80%=103  97%=70.7 -->
+                    <polyline points="190,133.4 355,103 520,70.7" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="190" cy="133.4" r="4" fill="#8b5cf6"/>
+                    <circle cx="355" cy="103" r="4" fill="#8b5cf6"/>
+                    <circle cx="520" cy="70.7" r="4" fill="#8b5cf6"/>
+                    <text x="175" y="142" text-anchor="end" class="chart-mono" font-size="9" fill="#7c3aed">64%</text>
+                    <text x="340" y="112" text-anchor="end" class="chart-mono" font-size="9" fill="#7c3aed">80%</text>
+                    <text x="525" y="67" class="chart-mono" font-size="9" fill="#7c3aed">97%</text>
+
+                    <!-- ── GLM-5: 58% → 87% → 96%  Color: #06b6d4 (cyan) ── -->
+                    <!-- Y: 58%=144.8  87%=89.7  96%=72.6 -->
+                    <polyline points="190,144.8 355,89.7 520,72.6" fill="none" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="190" cy="144.8" r="4" fill="#06b6d4"/>
+                    <circle cx="355" cy="89.7" r="4" fill="#06b6d4"/>
+                    <circle cx="520" cy="72.6" r="4" fill="#06b6d4"/>
+                    <text x="175" y="152" text-anchor="end" class="chart-mono" font-size="9" fill="#0891b2">58%</text>
+                    <text x="340" y="84" text-anchor="end" class="chart-mono" font-size="9" fill="#0891b2">87%</text>
+                    <text x="510" y="80" text-anchor="end" class="chart-mono" font-size="9" fill="#0891b2">96%</text>
+
+                    <!-- ── GLM-4.7-Flash: 2% → 2% → 35%  Color: #ef4444 (red) ── -->
+                    <!-- Y: 2%=251.2  2%=251.2  35%=188.5 -->
+                    <polyline points="190,251.2 355,251.2 520,188.5" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6,3"/>
+                    <circle cx="190" cy="251.2" r="4" fill="#ef4444"/>
+                    <circle cx="355" cy="251.2" r="4" fill="#ef4444"/>
+                    <circle cx="520" cy="188.5" r="4" fill="#ef4444"/>
+                    <text x="195" y="246" class="chart-mono" font-size="9" fill="#dc2626">2%</text>
+                    <text x="360" y="246" class="chart-mono" font-size="9" fill="#dc2626">2%</text>
+                    <text x="525" y="184" class="chart-mono" font-size="9" fill="#dc2626">35%</text>
+
+                    <!-- Legend -->
+                    <line x1="135" y1="296" x2="155" y2="296" stroke="#f59e0b" stroke-width="2.5"/>
+                    <circle cx="145" cy="296" r="3" fill="#f59e0b"/>
+                    <text x="160" y="300" class="chart-mono" font-size="10" fill="#64748b">Haiku 4.5</text>
+
+                    <line x1="260" y1="296" x2="280" y2="296" stroke="#8b5cf6" stroke-width="2.5"/>
+                    <circle cx="270" cy="296" r="3" fill="#8b5cf6"/>
+                    <text x="285" y="300" class="chart-mono" font-size="10" fill="#64748b">Opus 4.6</text>
+
+                    <line x1="375" y1="296" x2="395" y2="296" stroke="#06b6d4" stroke-width="2.5"/>
+                    <circle cx="385" cy="296" r="3" fill="#06b6d4"/>
+                    <text x="400" y="300" class="chart-mono" font-size="10" fill="#64748b">GLM-5</text>
+
+                    <line x1="475" y1="296" x2="495" y2="296" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="6,3"/>
+                    <circle cx="485" cy="296" r="3" fill="#ef4444"/>
+                    <text x="500" y="300" class="chart-mono" font-size="10" fill="#64748b">GLM-4.7-Flash</text>
+                </svg>
+            </div>
+            <div class="chart-caption">
+                <strong>Figure 2: Coverage analysis.</strong> Coverage measures how much of the 15-rule spec the model addresses (pass or fail, not absent). All three capable models converge toward 87&ndash;97% coverage with pseudocode, up from 58&ndash;65% at baseline. GLM-4.7-Flash (dashed) jumps from 2% to 35% &mdash; still low but a dramatic relative improvement. The steepest lift is from none&rarr;markdown; pseudocode then pushes coverage further, especially for Opus (64%&rarr;97%).
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Figure 3: Per-Rule Stacked Bars ===== -->
+<section style="padding-top: 0;">
+    <div class="wide-container">
+        <div class="chart-block">
+            <div class="chart-inner">
+                <svg viewBox="0 0 700 620" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Title -->
+                    <text x="350" y="24" text-anchor="middle" class="chart-text" font-size="15" font-weight="700" fill="#0f172a">Per-Rule Verdict Breakdown: Pseudocode Condition</text>
+                    <text x="350" y="42" text-anchor="middle" class="chart-text" font-size="11" fill="#94a3b8">27 runs (Haiku + Opus + GLM-5). Green = pass, Red = fail, Gray = absent.</text>
+
+                    <!-- Legend -->
+                    <rect x="200" y="56" width="12" height="12" rx="2" fill="#22c55e"/>
+                    <text x="218" y="66" class="chart-text" font-size="10" fill="#475569">Pass</text>
+                    <rect x="270" y="56" width="12" height="12" rx="2" fill="#ef4444"/>
+                    <text x="288" y="66" class="chart-text" font-size="10" fill="#475569">Fail</text>
+                    <rect x="330" y="56" width="12" height="12" rx="2" fill="#d1d5db"/>
+                    <text x="348" y="66" class="chart-text" font-size="10" fill="#475569">Absent</text>
+
+                    <!-- Each rule: y starts at 85, 35px per row. Bar width: 350px max at x=280 -->
+                    <!-- 27 runs total. Bar: pass_frac * 350, fail_frac * 350, absent_frac * 350 -->
+
+                    <!-- Rule 1: Muted palette  pass=22 fail=4 absent=1 => 81%/15%/4% -->
+                    <text x="270" y="100" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">1. Muted palette</text>
+                    <rect x="280" y="88" width="285" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="565" y="88" width="52" height="18" fill="#ef4444"/>
+                    <rect x="617" y="88" width="13" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="101" class="chart-mono" font-size="9" fill="#94a3b8">96%</text>
+
+                    <!-- Rule 2: One highlight  pass=15 fail=11 absent=1 => 56%/41%/4% -->
+                    <text x="270" y="135" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">2. One highlight</text>
+                    <rect x="280" y="123" width="194" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="474" y="123" width="143" height="18" fill="#ef4444"/>
+                    <rect x="617" y="123" width="13" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="136" class="chart-mono" font-size="9" fill="#94a3b8">96%</text>
+
+                    <!-- Rule 3: No red+green  pass=22 fail=0 absent=5 => 81%/0%/19% -->
+                    <text x="270" y="170" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">3. No red+green</text>
+                    <rect x="280" y="158" width="285" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="565" y="158" width="65" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="171" class="chart-mono" font-size="9" fill="#94a3b8">81%</text>
+
+                    <!-- Rule 4: Consistent colors  pass=23 fail=0 absent=4 => 85%/0%/15% -->
+                    <text x="270" y="205" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">4. Consistent colors</text>
+                    <rect x="280" y="193" width="298" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="578" y="193" width="52" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="206" class="chart-mono" font-size="9" fill="#94a3b8">85%</text>
+
+                    <!-- Rule 5: Title = sentence  pass=22 fail=1 absent=4 => 81%/4%/15% -->
+                    <text x="270" y="240" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">5. Title = sentence</text>
+                    <rect x="280" y="228" width="285" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="565" y="228" width="13" height="18" fill="#ef4444"/>
+                    <rect x="578" y="228" width="52" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="241" class="chart-mono" font-size="9" fill="#94a3b8">85%</text>
+
+                    <!-- Rule 6: Source attribution  pass=22 fail=0 absent=5 => 81%/0%/19% -->
+                    <text x="270" y="275" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">6. Source attribution</text>
+                    <rect x="280" y="263" width="285" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="565" y="263" width="65" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="276" class="chart-mono" font-size="9" fill="#94a3b8">81%</text>
+
+                    <!-- Rule 7: Sans-serif  pass=22 fail=0 absent=5 => 81%/0%/19% -->
+                    <text x="270" y="310" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">7. Sans-serif font</text>
+                    <rect x="280" y="298" width="285" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="565" y="298" width="65" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="311" class="chart-mono" font-size="9" fill="#94a3b8">81%</text>
+
+                    <!-- Rule 8: Data labels  pass=22 fail=4 absent=1 => 81%/15%/4% -->
+                    <text x="270" y="345" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">8. Data labels (&le;8)</text>
+                    <rect x="280" y="333" width="285" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="565" y="333" width="52" height="18" fill="#ef4444"/>
+                    <rect x="617" y="333" width="13" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="346" class="chart-mono" font-size="9" fill="#94a3b8">96%</text>
+
+                    <!-- Rule 9: Y=0 bars  pass=23 fail=0 absent=4 => 85%/0%/15% -->
+                    <text x="270" y="380" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">9. Y=0 for bars</text>
+                    <rect x="280" y="368" width="298" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="578" y="368" width="52" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="381" class="chart-mono" font-size="9" fill="#94a3b8">85%</text>
+
+                    <!-- Rule 10: No top/right spine  pass=22 fail=0 absent=5 => 81%/0%/19% -->
+                    <text x="270" y="415" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">10. No top/right spine</text>
+                    <rect x="280" y="403" width="285" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="565" y="403" width="65" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="416" class="chart-mono" font-size="9" fill="#94a3b8">81%</text>
+
+                    <!-- Rule 11: Subtle gridlines  pass=22 fail=0 absent=5 => 81%/0%/19% -->
+                    <text x="270" y="450" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">11. Subtle gridlines</text>
+                    <rect x="280" y="438" width="285" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="565" y="438" width="65" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="451" class="chart-mono" font-size="9" fill="#94a3b8">81%</text>
+
+                    <!-- Rule 12: No redundancy  pass=15 fail=0 absent=12 => 56%/0%/44% -->
+                    <text x="270" y="485" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">12. No redundancy</text>
+                    <rect x="280" y="473" width="194" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="474" y="473" width="156" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="486" class="chart-mono" font-size="9" fill="#94a3b8">56%</text>
+
+                    <!-- Rule 13: Key insight  pass=22 fail=1 absent=4 => 81%/4%/15% -->
+                    <text x="270" y="520" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">13. Key insight called out</text>
+                    <rect x="280" y="508" width="285" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="565" y="508" width="13" height="18" fill="#ef4444"/>
+                    <rect x="578" y="508" width="52" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="521" class="chart-mono" font-size="9" fill="#94a3b8">85%</text>
+
+                    <!-- Rule 14: Legend rule  pass=22 fail=1 absent=4 => 81%/4%/15% -->
+                    <text x="270" y="555" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">14. Legend if &gt;3 cats</text>
+                    <rect x="280" y="543" width="285" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="565" y="543" width="13" height="18" fill="#ef4444"/>
+                    <rect x="578" y="543" width="52" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="556" class="chart-mono" font-size="9" fill="#94a3b8">85%</text>
+
+                    <!-- Rule 15: Aspect ratio  pass=22 fail=0 absent=5 => 81%/0%/19% -->
+                    <text x="270" y="590" text-anchor="end" class="chart-text" font-size="11" fill="#0f172a">15. Aspect ratio</text>
+                    <rect x="280" y="578" width="285" height="18" rx="3" fill="#22c55e"/>
+                    <rect x="565" y="578" width="65" height="18" rx="3" fill="#d1d5db"/>
+                    <text x="658" y="591" class="chart-mono" font-size="9" fill="#94a3b8">81%</text>
+                </svg>
+            </div>
+            <div class="chart-caption">
+                <strong>Figure 3: Per-rule verdict breakdown for pseudocode condition.</strong> The right-side percentage shows coverage (pass + fail as % of total). 13 of 15 rules achieve 81%+ pass rate. Rule 2 (one highlight) is the weakest at 56% due to over-coloring, and Rule 12 (no redundancy) has low coverage (56%) because most outputs don't produce enough redundant labels to trigger the check.
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Figure 4: Per-Rule Pass Rate Dot Plot ===== -->
+<section style="padding-top: 0;">
+    <div class="wide-container">
+        <div class="chart-block">
+            <div class="chart-inner">
+                <svg viewBox="0 0 700 620" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Title -->
+                    <text x="350" y="24" text-anchor="middle" class="chart-text" font-size="15" font-weight="700" fill="#0f172a">Per-Rule Pass Rate by Condition</text>
+                    <text x="350" y="42" text-anchor="middle" class="chart-text" font-size="11" fill="#94a3b8">Percentage of all runs that pass each rule. Excluding GLM-4.7-Flash.</text>
+
+                    <!-- Legend -->
+                    <circle cx="220" cy="62" r="5" fill="#94a3b8"/>
+                    <text x="232" y="66" class="chart-text" font-size="10" fill="#475569">none</text>
+                    <circle cx="290" cy="62" r="5" fill="#3b82f6"/>
+                    <text x="302" y="66" class="chart-text" font-size="10" fill="#475569">markdown</text>
+                    <circle cx="380" cy="62" r="5" fill="#22c55e"/>
+                    <text x="392" y="66" class="chart-text" font-size="10" fill="#475569">pseudocode</text>
+
+                    <!-- Axis: 0% at x=280, 100% at x=630. Scale: 350px per 100% -->
+                    <line x1="280" y1="80" x2="280" y2="600" stroke="#e2e8f0" stroke-width="1"/>
+                    <line x1="367.5" y1="80" x2="367.5" y2="600" stroke="#f1f5f9" stroke-width="1"/>
+                    <line x1="455" y1="80" x2="455" y2="600" stroke="#e2e8f0" stroke-width="1"/>
+                    <line x1="542.5" y1="80" x2="542.5" y2="600" stroke="#f1f5f9" stroke-width="1"/>
+                    <line x1="630" y1="80" x2="630" y2="600" stroke="#e2e8f0" stroke-width="1"/>
+                    <text x="280" y="612" text-anchor="middle" class="chart-mono" font-size="9" fill="#94a3b8">0%</text>
+                    <text x="455" y="612" text-anchor="middle" class="chart-mono" font-size="9" fill="#94a3b8">50%</text>
+                    <text x="630" y="612" text-anchor="middle" class="chart-mono" font-size="9" fill="#94a3b8">100%</text>
+
+                    <!-- Row height: 35px. y starts at 95 -->
+                    <!-- Rule 1: none=3%, md=72%, pc=81% -->
+                    <text x="270" y="98" text-anchor="end" class="chart-text" font-size="10" fill="#0f172a">1. Muted palette</text>
+                    <line x1="291" y1="95" x2="564" y2="95" stroke="#e2e8f0" stroke-dasharray="2,2" stroke-width="1"/>
+                    <circle cx="291" cy="95" r="5" fill="#94a3b8"/>
+                    <circle cx="532" cy="95" r="5" fill="#3b82f6"/>
+                    <circle cx="564" cy="95" r="5" fill="#22c55e"/>
+                    <rect x="640" y="88" width="55" height="14" rx="3" fill="rgba(34,197,94,0.1)"/>
+                    <text x="667" y="98" text-anchor="middle" class="chart-mono" font-size="8" font-weight="600" fill="#16a34a">+78pp</text>
+
+                    <!-- Rule 2: none=75%, md=61%, pc=56% -->
+                    <text x="270" y="133" text-anchor="end" class="chart-text" font-size="10" fill="#0f172a">2. One highlight</text>
+                    <circle cx="543" cy="130" r="5" fill="#94a3b8"/>
+                    <circle cx="494" cy="130" r="5" fill="#3b82f6"/>
+                    <circle cx="476" cy="130" r="5" fill="#22c55e"/>
+
+                    <!-- Rule 3: none=44%, md=72%, pc=81% -->
+                    <text x="270" y="168" text-anchor="end" class="chart-text" font-size="10" fill="#0f172a">3. No red+green</text>
+                    <circle cx="434" cy="165" r="5" fill="#94a3b8"/>
+                    <circle cx="532" cy="165" r="5" fill="#3b82f6"/>
+                    <circle cx="564" cy="165" r="5" fill="#22c55e"/>
+
+                    <!-- Rule 4: none=78%, md=75%, pc=85% -->
+                    <text x="270" y="203" text-anchor="end" class="chart-text" font-size="10" fill="#94a3b8">4. Consistent colors</text>
+                    <circle cx="553" cy="200" r="5" fill="#94a3b8"/>
+                    <circle cx="543" cy="200" r="5" fill="#3b82f6"/>
+                    <circle cx="578" cy="200" r="5" fill="#22c55e"/>
+
+                    <!-- Rule 5: none=58%, md=72%, pc=81% -->
+                    <text x="270" y="238" text-anchor="end" class="chart-text" font-size="10" fill="#0f172a">5. Title = sentence</text>
+                    <circle cx="483" cy="235" r="5" fill="#94a3b8"/>
+                    <circle cx="532" cy="235" r="5" fill="#3b82f6"/>
+                    <circle cx="564" cy="235" r="5" fill="#22c55e"/>
+
+                    <!-- Rule 6: none=58%, md=56%, pc=81% -->
+                    <text x="270" y="273" text-anchor="end" class="chart-text" font-size="10" fill="#0f172a">6. Source attribution</text>
+                    <circle cx="483" cy="270" r="5" fill="#94a3b8"/>
+                    <circle cx="476" cy="270" r="5" fill="#3b82f6"/>
+                    <circle cx="564" cy="270" r="5" fill="#22c55e"/>
+
+                    <!-- Rule 7: none=3%, md=61%, pc=81% -->
+                    <text x="270" y="308" text-anchor="end" class="chart-text" font-size="10" fill="#0f172a">7. Sans-serif font</text>
+                    <line x1="291" y1="305" x2="564" y2="305" stroke="#e2e8f0" stroke-dasharray="2,2" stroke-width="1"/>
+                    <circle cx="291" cy="305" r="5" fill="#94a3b8"/>
+                    <circle cx="494" cy="305" r="5" fill="#3b82f6"/>
+                    <circle cx="564" cy="305" r="5" fill="#22c55e"/>
+                    <rect x="640" y="298" width="55" height="14" rx="3" fill="rgba(34,197,94,0.1)"/>
+                    <text x="667" y="308" text-anchor="middle" class="chart-mono" font-size="8" font-weight="600" fill="#16a34a">+78pp</text>
+
+                    <!-- Rule 8: none=3%, md=39%, pc=81% -->
+                    <text x="270" y="343" text-anchor="end" class="chart-text" font-size="10" fill="#0f172a">8. Data labels</text>
+                    <line x1="291" y1="340" x2="564" y2="340" stroke="#e2e8f0" stroke-dasharray="2,2" stroke-width="1"/>
+                    <circle cx="291" cy="340" r="5" fill="#94a3b8"/>
+                    <circle cx="416" cy="340" r="5" fill="#3b82f6"/>
+                    <circle cx="564" cy="340" r="5" fill="#22c55e"/>
+                    <rect x="640" y="333" width="55" height="14" rx="3" fill="rgba(34,197,94,0.1)"/>
+                    <text x="667" y="343" text-anchor="middle" class="chart-mono" font-size="8" font-weight="600" fill="#16a34a">+78pp</text>
+
+                    <!-- Rule 9: none=69%, md=58%, pc=85% -->
+                    <text x="270" y="378" text-anchor="end" class="chart-text" font-size="10" fill="#0f172a">9. Y=0 for bars</text>
+                    <circle cx="522" cy="375" r="5" fill="#94a3b8"/>
+                    <circle cx="483" cy="375" r="5" fill="#3b82f6"/>
+                    <circle cx="578" cy="375" r="5" fill="#22c55e"/>
+
+                    <!-- Rule 10: none=0%, md=42%, pc=81% -->
+                    <text x="270" y="413" text-anchor="end" class="chart-text" font-size="10" fill="#0f172a">10. Spine removal</text>
+                    <line x1="280" y1="410" x2="564" y2="410" stroke="#e2e8f0" stroke-dasharray="2,2" stroke-width="1"/>
+                    <circle cx="280" cy="410" r="5" fill="#94a3b8"/>
+                    <circle cx="427" cy="410" r="5" fill="#3b82f6"/>
+                    <circle cx="564" cy="410" r="5" fill="#22c55e"/>
+                    <rect x="640" y="403" width="55" height="14" rx="3" fill="rgba(34,197,94,0.1)"/>
+                    <text x="667" y="413" text-anchor="middle" class="chart-mono" font-size="8" font-weight="600" fill="#16a34a">+81pp</text>
+
+                    <!-- Rule 11: none=0%, md=56%, pc=81% -->
+                    <text x="270" y="448" text-anchor="end" class="chart-text" font-size="10" fill="#0f172a">11. Subtle gridlines</text>
+                    <line x1="280" y1="445" x2="564" y2="445" stroke="#e2e8f0" stroke-dasharray="2,2" stroke-width="1"/>
+                    <circle cx="280" cy="445" r="5" fill="#94a3b8"/>
+                    <circle cx="476" cy="445" r="5" fill="#3b82f6"/>
+                    <circle cx="564" cy="445" r="5" fill="#22c55e"/>
+                    <rect x="640" y="438" width="55" height="14" rx="3" fill="rgba(34,197,94,0.1)"/>
+                    <text x="667" y="448" text-anchor="middle" class="chart-mono" font-size="8" font-weight="600" fill="#16a34a">+81pp</text>
+
+                    <!-- Rule 12: none=31%, md=25%, pc=56% -->
+                    <text x="270" y="483" text-anchor="end" class="chart-text" font-size="10" fill="#0f172a">12. No redundancy</text>
+                    <circle cx="389" cy="480" r="5" fill="#94a3b8"/>
+                    <circle cx="368" cy="480" r="5" fill="#3b82f6"/>
+                    <circle cx="476" cy="480" r="5" fill="#22c55e"/>
+
+                    <!-- Rule 13: none=75%, md=64%, pc=81% -->
+                    <text x="270" y="518" text-anchor="end" class="chart-text" font-size="10" fill="#0f172a">13. Key insight</text>
+                    <circle cx="543" cy="515" r="5" fill="#94a3b8"/>
+                    <circle cx="504" cy="515" r="5" fill="#3b82f6"/>
+                    <circle cx="564" cy="515" r="5" fill="#22c55e"/>
+
+                    <!-- Rule 14: none=64%, md=58%, pc=81% -->
+                    <text x="270" y="553" text-anchor="end" class="chart-text" font-size="10" fill="#0f172a">14. Legend rule</text>
+                    <circle cx="504" cy="550" r="5" fill="#94a3b8"/>
+                    <circle cx="483" cy="550" r="5" fill="#3b82f6"/>
+                    <circle cx="564" cy="550" r="5" fill="#22c55e"/>
+
+                    <!-- Rule 15: none=0%, md=72%, pc=81% -->
+                    <text x="270" y="588" text-anchor="end" class="chart-text" font-size="10" fill="#0f172a">15. Aspect ratio</text>
+                    <line x1="280" y1="585" x2="564" y2="585" stroke="#e2e8f0" stroke-dasharray="2,2" stroke-width="1"/>
+                    <circle cx="280" cy="585" r="5" fill="#94a3b8"/>
+                    <circle cx="532" cy="585" r="5" fill="#3b82f6"/>
+                    <circle cx="564" cy="585" r="5" fill="#22c55e"/>
+                    <rect x="640" y="578" width="55" height="14" rx="3" fill="rgba(34,197,94,0.1)"/>
+                    <text x="667" y="588" text-anchor="middle" class="chart-mono" font-size="8" font-weight="600" fill="#16a34a">+81pp</text>
+                </svg>
+            </div>
+            <div class="chart-caption">
+                <strong>Figure 4: Per-rule pass rate by condition.</strong> Pseudocode leads or ties on 14 of 15 rules. Six rules show massive 78&ndash;81 percentage-point jumps from baseline (Rules 1, 7, 8, 10, 11, 15). These are style properties models never produce without explicit instructions. Rule 2 (one highlight) is the only rule where pseudocode trails the baseline &mdash; typed fields encourage models to produce more color information, which triggers more highlight violations.
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Hypothesis Verdicts ===== -->
+<section>
+    <div class="container">
+        <span class="section-label">Section 5</span>
+        <h2>Hypothesis Verdicts</h2>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Hypothesis</th>
+                    <th>Verdict</th>
+                    <th>Evidence</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>H1: Skills help</strong><br>Skill conditions score higher than no-skill baseline</td>
+                    <td class="verdict-confirmed">Confirmed</td>
+                    <td>Markdown: +4.3/15 over baseline. Pseudocode: +6.2/15 over baseline. Mean baseline 7.4, markdown 11.7, pseudocode 13.6 (excluding GLM-4.7-Flash).</td>
+                </tr>
+                <tr>
+                    <td><strong>H2: Pseudo &ge; Markdown</strong><br>Pseudocode scores at least as high as markdown</td>
+                    <td class="verdict-confirmed">Confirmed</td>
+                    <td>Pseudocode wins on all 4 models: Haiku +1.6, Opus +3.0, GLM-5 +1.3, GLM-4.7-Flash +4.9. The v1 anomaly (GLM-5 preferring markdown) was caused by comment-only rules being ignored; v2 typed fields resolved this.</td>
+                </tr>
+                <tr>
+                    <td><strong>H3: Fewer tokens</strong><br>Pseudocode uses fewer output tokens</td>
+                    <td class="verdict-na">Not evaluated</td>
+                    <td>Token consumption data was not collected in this experiment design. The runner script used CLI tools that do not expose per-run token counts.</td>
+                </tr>
+                <tr>
+                    <td><strong>H4: Cross-model</strong><br>Format effect holds across model families</td>
+                    <td class="verdict-confirmed">Confirmed</td>
+                    <td>Pseudocode beats markdown on both Claude family (Haiku, Opus) and Zhipu family (GLM-5, GLM-4.7-Flash). The typed field approach transfers across model architectures.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ===== Limitations ===== -->
+<section>
+    <div class="container">
+        <span class="section-label">Section 6</span>
+        <h2>Limitations and Threats to Validity</h2>
+
+        <ul>
+            <li><strong>Single domain.</strong> All tasks are chart specification (JSON output). Results may not generalize to code generation, document writing, or other agent tasks.</li>
+            <li><strong>GLM-4.7-Flash failure.</strong> This model failed to produce valid JSON in 24/27 baseline/markdown runs (89%), making its data unreliable for format comparison outside the pseudocode condition.</li>
+            <li><strong>3 reps per cell.</strong> Sufficient to detect large effects (which we observe) but insufficient for formal statistical tests or confidence intervals.</li>
+            <li><strong>Automated evaluation only.</strong> The deep evaluator uses recursive DFS to find evidence in JSON output. It cannot assess visual quality, layout aesthetics, or whether the chart would actually look correct when rendered. No human scoring was performed.</li>
+            <li><strong>Evaluator co-evolution.</strong> Four evaluator detection patterns were updated in v2 to handle the new typed output structure. While these fixes are correct (matching documented fields), the risk of evaluator bias toward the pseudocode format exists.</li>
+            <li><strong>Author bias.</strong> The same team wrote both the markdown and pseudocode skills. Despite semantic equivalence verification, subtle authoring preferences could favor one format.</li>
+            <li><strong>Absent ≠ fail assumption.</strong> The deep score counts absent rules as 0. This penalizes simpler outputs that may be correct but lack explicit fields for every rule. Coverage partially addresses this.</li>
+            <li><strong>No temperature control.</strong> Runs used model defaults. Temperature variation could affect reproducibility.</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ===== Methodology Notes ===== -->
+<section>
+    <div class="container">
+        <span class="section-label">Section 7</span>
+        <h2>Methodology Notes</h2>
+
+        <h3>Deep evaluator design</h3>
+
+        <p>The deep evaluator (<code>evaluate_deep.py</code>) performs <strong>structure-agnostic recursive search</strong> over the entire JSON output tree. Where a schema-specific evaluator checks fixed paths, the deep evaluator searches all keys and values at any depth for evidence of each rule.</p>
+
+        <p>This design accommodates the wide variety of JSON schemas models produce. A font specification might appear at <code>config.font.family</code>, <code>style.typography.fontFamily</code>, or <code>chart.text.font</code> depending on the model and run.</p>
+
+        <h3>v2 evaluator fixes</h3>
+
+        <p>Four detection patterns were updated to handle the typed pseudocode output structure:</p>
+
+        <ul>
+            <li><strong>Rule 8 (data_labels):</strong> Now matches <code>list</code> type in addition to <code>bool</code>/<code>dict</code> for the <code>data_labels</code> key</li>
+            <li><strong>Rule 9 (y_zero_bars):</strong> Now searches for <code>y_min</code> key in addition to <code>min</code></li>
+            <li><strong>Rule 13 (key_insight):</strong> Now extracts annotations from dict-type <code>annotations.insight_annotation</code></li>
+            <li><strong>Rule 2 (one_highlight):</strong> Now detects <code>highlight_color</code> and <code>highlight_count</code> fields</li>
+        </ul>
+
+        <p>Additionally, the JSON extraction step now checks <code>permission_denials[].tool_input.content</code> for chart specs (Claude CLI sometimes routes JSON output through a denied Write tool call).</p>
+
+        <h3>Three-valued verdicts</h3>
+
+        <ul>
+            <li><strong>Pass:</strong> Evidence found that satisfies the rule</li>
+            <li><strong>Fail:</strong> Evidence found that violates the rule</li>
+            <li><strong>Absent:</strong> No relevant fields found anywhere in the JSON tree</li>
+        </ul>
+
+        <h3>Experiment artifacts</h3>
+
+        <ul>
+            <li><a href="evaluation-rubric.md">15-rule evaluation rubric</a></li>
+            <li><a href="evaluate_deep.py">Deep evaluator source code</a></li>
+            <li><a href="experiment-plan.md">Full experiment plan (v2.0)</a></li>
+            <li><a href="results-v2/scores_deep.csv">Raw deep scores CSV (v2)</a></li>
+            <li><a href="skills/chart-style-pseudocode/SKILL.md">Pseudocode skill v2</a></li>
+            <li><a href="skills/chart-style-markdown/SKILL.md">Markdown skill</a></li>
+        </ul>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== Footer ===== -->
+<footer class="page-footer">
+    <div class="container">
+        <p>Experiment results summary &middot; <a href="experiment-plan.md">Full experiment plan</a> &middot; <a href="evaluation-rubric.md">Evaluation rubric</a></p>
+        <p style="margin-top: 0.5rem; color: var(--text-light);">aictrl.dev &middot; February 2026</p>
+    </div>
+</footer>
+
+</body>
+</html>

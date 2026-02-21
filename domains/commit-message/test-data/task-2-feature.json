@@ -1,0 +1,29 @@
+{
+  "task_id": "2",
+  "complexity": "medium",
+  "change_type": "feature",
+  "description": "Add per-IP rate limiting middleware to the Express API. Configurable window (default 15min) and max requests (default 100). Uses sliding window algorithm with Redis backend. Returns 429 with Retry-After header when limit exceeded.",
+  "files_changed": ["src/middleware/rateLimit.ts", "src/app.ts", "tests/middleware/rateLimit.test.ts"],
+  "ticket": "PROJ-312",
+  "author": "Alice Developer <alice@example.com>",
+  "breaking_change": false,
+  "expected_type": "feat",
+  "allowed_scopes": ["auth", "api", "db", "ui", "core"],
+  "gitmoji_map": {
+    "fix": ":bug:",
+    "feat": ":sparkles:",
+    "docs": ":memo:",
+    "refactor": ":recycle:",
+    "test": ":white_check_mark:",
+    "perf": ":zap:",
+    "build": ":hammer:",
+    "ci": ":construction_worker:",
+    "chore": ":wrench:",
+    "revert": ":rewind:"
+  },
+  "jira_project": "PROJ",
+  "jira_number": "312",
+  "body_min_words": 30,
+  "body_max_words": 150,
+  "signed_off_by": "Alice Developer <alice@example.com>"
+}

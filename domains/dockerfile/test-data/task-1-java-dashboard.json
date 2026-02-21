@@ -1,0 +1,20 @@
+{
+  "task_id": "1",
+  "complexity": "simple",
+  "domain": "dockerfile",
+  "description": "Write a production Dockerfile for a Java analytics dashboard (like Metabase). The app is a single JAR file built with Maven. The build stage compiles the JAR. The runtime stage must: (1) use Eclipse Temurin 21 JRE Alpine as the base, (2) import AWS RDS root CA certificates and Azure DigiCert certificate into the Java truststore using keytool at build time so the app can connect to cloud databases over TLS, (3) install international font packages (fontconfig, ttf-dejavu) for PDF report generation with CJK characters, (4) run as a non-root user 'app' with UID 1001, (5) expose port 3000, (6) include a HEALTHCHECK using curl against http://localhost:3000/api/health. The app starts with: java -jar /app/app.jar",
+  "runtime": "java",
+  "build_tool": "maven",
+  "port": 3000,
+  "health_endpoint": "/api/health",
+  "multi_stage_required": true,
+  "has_cert_import": true,
+  "has_font_deps": true,
+  "requirements": {
+    "base_image": "eclipse-temurin:21",
+    "multi_stage": true,
+    "port": 3000,
+    "health_check": true,
+    "non_root_user": true
+  }
+}

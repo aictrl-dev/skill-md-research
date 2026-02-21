@@ -1,0 +1,23 @@
+{
+  "task_id": "3",
+  "complexity": "complex",
+  "domain": "dockerfile",
+  "description": "Write a production Dockerfile for a Rust + Python ML inference server (inspired by HuggingFace TGI / vLLM). The project has a Rust HTTP server (in server/, uses Cargo) that loads Python ML models via PyO3. The Dockerfile needs 4 stages: (1) 'chef' — uses cargo-chef to plan Rust dependencies from Cargo.toml and Cargo.lock (FROM rust:1.78 AS chef, install cargo-chef, run cargo chef prepare), (2) 'rust-builder' — cooks cached dependencies then builds the Rust binary (cargo chef cook --release, then COPY source and cargo build --release), (3) 'python-builder' — installs Python ML dependencies into a virtualenv (torch CPU, transformers, tokenizers, safetensors) using pip with --no-cache-dir, (4) 'runtime' — minimal Debian bookworm-slim final image that combines the Rust binary and Python virtualenv, runs as non-root user 'inference' with UID 1000, exposes port 8080 with a /health endpoint. Include a HEALTHCHECK with curl. Add LABEL metadata. The binary starts with: /usr/local/bin/inference-server --port 8080",
+  "runtime": "rust",
+  "port": 8080,
+  "health_endpoint": "/health",
+  "multi_stage_required": true,
+  "has_cargo_chef": true,
+  "has_python_deps": true,
+  "is_polyglot": true,
+  "targets": [],
+  "multi_target": false,
+  "requirements": {
+    "base_image": "rust:1.78",
+    "multi_stage": true,
+    "port": 8080,
+    "health_check": true,
+    "non_root_user": true,
+    "cache_optimization": true
+  }
+}

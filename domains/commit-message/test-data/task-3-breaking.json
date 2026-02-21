@@ -1,0 +1,30 @@
+{
+  "task_id": "3",
+  "complexity": "complex",
+  "change_type": "breaking",
+  "description": "Replace the jsonwebtoken library with jose for JWT handling. jose is a more modern, standards-compliant library with better TypeScript support and no native dependencies. All token signing/verification must be updated. Existing tokens will be invalid after this change — users must re-authenticate.",
+  "files_changed": ["src/auth/jwt.ts", "src/auth/middleware.ts", "src/auth/types.ts", "package.json"],
+  "ticket": "PROJ-189",
+  "author": "Alice Developer <alice@example.com>",
+  "breaking_change": true,
+  "breaking_change_description": "JWT tokens signed with jsonwebtoken are incompatible with jose. All active sessions will be invalidated. Users must log in again after deployment.",
+  "expected_type": "feat",
+  "allowed_scopes": ["auth", "api", "db", "ui", "core"],
+  "gitmoji_map": {
+    "fix": ":bug:",
+    "feat": ":sparkles:",
+    "docs": ":memo:",
+    "refactor": ":recycle:",
+    "test": ":white_check_mark:",
+    "perf": ":zap:",
+    "build": ":hammer:",
+    "ci": ":construction_worker:",
+    "chore": ":wrench:",
+    "revert": ":rewind:"
+  },
+  "jira_project": "PROJ",
+  "jira_number": "189",
+  "body_min_words": 30,
+  "body_max_words": 150,
+  "signed_off_by": "Alice Developer <alice@example.com>"
+}

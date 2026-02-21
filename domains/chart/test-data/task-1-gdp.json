@@ -1,0 +1,22 @@
+{
+  "task_id": "1",
+  "complexity": "simple",
+  "chart_type": "bar",
+  "data": [
+    {"category": "USA", "value": 25462},
+    {"category": "China", "value": 17963},
+    {"category": "Japan", "value": 4231},
+    {"category": "Germany", "value": 4072},
+    {"category": "India", "value": 3385}
+  ],
+  "metadata": {
+    "unit": "USD billions",
+    "year": 2023,
+    "source": "IMF World Economic Outlook, 2024"
+  },
+  "requirements": {
+    "highlight": "Show the gap between USA and China",
+    "title_guidance": "China is approximately 70% of US GDP",
+    "insight": "The US economy remains the largest, but China is closing the gap"
+  }
+}

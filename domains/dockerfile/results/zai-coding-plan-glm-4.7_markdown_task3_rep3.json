@@ -1,0 +1,13 @@
+{
+  "run_id": "zai-coding-plan-glm-4.7_markdown_task3_rep3",
+  "model": "zai-coding-plan/glm-4.7",
+  "condition": "markdown",
+  "task": "3",
+  "task_complexity": "complex",
+  "domain": "dockerfile",
+  "rep": 3,
+  "timestamp": "2026-02-21T07:31:20+00:00",
+  "duration_ms": 2226042,
+  "cli_tool": "opencode",
+  "raw_output": "{\"error\": \"empty output\"}"
+}

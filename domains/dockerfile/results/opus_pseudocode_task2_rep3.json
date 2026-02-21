@@ -1,0 +1,13 @@
+{
+  "run_id": "opus_pseudocode_task2_rep3",
+  "model": "opus",
+  "condition": "pseudocode",
+  "task": "2",
+  "task_complexity": "medium",
+  "domain": "dockerfile",
+  "rep": 3,
+  "timestamp": "2026-02-21T06:51:05+00:00",
+  "duration_ms": 19395,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":14870,\"duration_api_ms\":14838,\"num_turns\":1,\"result\":\"\\n\\n```dockerfile\\nFROM python:3.11-slim AS builder\\n\\nLABEL maintainer=\\\"ml-team\\\" \\\\\\n      version=\\\"1.0\\\" \\\\\\n      description=\\\"Python ML inference service\\\"\\n\\nWORKDIR /app\\n\\nCOPY requirements.txt .\\n\\nRUN pip install --no-cache-dir --prefix=/install \\\\\\n    torch --index-url https://download.pytorch.org/whl/cpu && \\\\\\n    pip install --no-cache-dir --prefix=/install \\\\\\n    fastapi uvicorn opencv-python-headless numpy scikit-learn \\\\\\n    -r requirements.txt\\n\\nCOPY download_model.py .\\n\\nRUN python download_model.py\\n\\nFROM python:3.11-slim\\n\\nLABEL maintainer=\\\"ml-team\\\" \\\\\\n      version=\\\"1.0\\\" \\\\\\n      description=\\\"Python ML inference service\\\"\\n\\nWORKDIR /app\\n\\nRUN apt-get update && \\\\\\n    apt-get install --no-install-recommends -y libgl1 libglib2.0-0 curl && \\\\\\n    rm -rf /var/lib/apt/lists/* && \\\\\\n    groupadd -r appuser && useradd -r -g appuser -d /app -s /sbin/nologin appuser\\n\\nCOPY --from=builder /install /usr/local\\n\\nCOPY --from=builder /app/model.pt ./model.pt\\n\\nCOPY . .\\n\\nRUN chown -R appuser:appuser /app\\n\\nUSER appuser\\n\\nEXPOSE 8000\\n\\nHEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\\\\\n    CMD [\\\"curl\\\", \\\"-f\\\", \\\"http://localhost:8000/health\\\"]\\n\\nCMD [\\\"uvicorn\\\", \\\"app:app\\\", \\\"--host\\\", \\\"0.0.0.0\\\", \\\"--port\\\", \\\"8000\\\"]\\n```\",\"stop_reason\":null,\"session_id\":\"3a235a72-90de-4f48-8510-53b7d626495f\",\"total_cost_usd\":0.0247485,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":28067,\"output_tokens\":428,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":3,\"outputTokens\":428,\"cacheReadInputTokens\":28067,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.0247485,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"d34506f3-9a22-44e2-9993-10011c007333\"}"
+}

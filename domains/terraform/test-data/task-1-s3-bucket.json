@@ -1,0 +1,20 @@
+{
+  "task_id": "1",
+  "complexity": "simple",
+  "domain": "terraform",
+  "description": "Write Terraform configuration for an AWS S3 bucket with the following requirements:\n\n- Bucket name passed as a variable\n- Server-side encryption enabled (AES256)\n- Versioning enabled\n- Block all public access\n- Lifecycle rule: transition objects to GLACIER after 90 days, expire after 365 days\n- Tags: Environment, Project, ManagedBy=terraform\n\nInclude the required AWS provider configuration pinned to a specific version.",
+  "provider": "aws",
+  "resources": ["aws_s3_bucket", "aws_s3_bucket_versioning", "aws_s3_bucket_server_side_encryption_configuration", "aws_s3_bucket_public_access_block", "aws_s3_bucket_lifecycle_configuration"],
+  "has_stateful_resources": true,
+  "requires_data_sources": false,
+  "requirements": {
+    "provider_pinned": true,
+    "variables_with_description": true,
+    "variables_with_type": true,
+    "outputs": true,
+    "tags": true,
+    "sensitive_values": false,
+    "data_sources": false,
+    "locals": true
+  }
+}

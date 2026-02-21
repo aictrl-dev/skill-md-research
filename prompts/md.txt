@@ -1,0 +1,187 @@
+---
+name: chart-style
+description: Generate charts following Economist/FT visual style. Use when creating data visualizations, bar charts, line charts, or any chart that needs professional styling.
+---
+
+# Chart Style Compliance
+
+Generate publication-quality charts following The Economist and Financial Times visual style guidelines.
+
+## Core Principle
+
+Every chart should communicate one clear insight. The title states the finding, not just the data.
+
+## Color Guidelines
+
+### Palette
+Use muted, professional colors. The default palette is:
+
+| Role | Color | Hex | Use Case |
+|------|-------|-----|----------|
+| Primary | Economist Blue | `#1A476F` | Main data series |
+| Accent | Red | `#C74634` | Highlight key point |
+| Secondary 1 | Teal | `#2D7282` | Second category |
+| Secondary 2 | Gold | `#E9C46A` | Third category |
+| Secondary 3 | Gray | `#5D666F` | Fourth category |
+| Background | Off-white | `#F5F5F5` | Chart area |
+
+### Rules
+1. Never use rainbow palettes or overly bright colors
+2. Highlight only ONE key data point with accent color
+3. Use consistent colors for the same category across related charts
+4. Never use red and green together (colorblind accessibility)
+5. Bars in single-series charts are one color (not gradient)
+
+## Typography
+
+### Title (Required)
+Write titles as full sentences that state the insight:
+- Good: "China's economy is 70% the size of America's"
+- Bad: "GDP by Country"
+
+The title answers "What's the story?" not "What's the data?"
+
+### Subtitle (Optional)
+Add context the title doesn't capture:
+- "Nominal GDP in US dollars, 2023"
+- "Index: 100 = January 2020"
+
+### Labels
+- Use sans-serif font (Inter, Helvetica, or system default)
+- Axis labels in sentence case, not all caps
+- Rotate x-axis labels only if necessary (avoid if possible)
+- Data labels on bars/points for charts with ≤8 values
+
+### Source Attribution (Required)
+Every chart must include source at bottom:
+```
+Source: World Bank | Chart: [Your Name/Organization]
+```
+
+## Axis Rules
+
+### Bar Charts
+- Y-axis MUST start at zero
+- No exceptions - truncated bars mislead readers
+- Order bars by value (descending) or logically (time, geography)
+
+### Line Charts
+- Y-axis can start at non-zero, but show axis break
+- For small changes, consider showing percentage change instead
+- Connect points with straight lines (no smooth curves)
+
+### General
+- Remove top and right spines (chart borders)
+- Gridlines should be subtle: light gray (#D0D0D0), optional dashed
+- Axis ticks extend inward, not outward
+- No redundant labels (if unit is clear, don't repeat)
+
+## Annotations
+
+### Callouts
+- Add text annotation pointing to the key insight
+- Use arrows or leader lines sparingly
+- Annotation text is 1-2 sentences max
+
+### Legends
+- Use legend only when >3 categories
+- For ≤3 categories, label directly on chart
+- Legend goes at top or right, never at bottom
+
+### Data Labels
+- Label data points directly when there's room
+- Format numbers appropriately (1.2B not 1,200,000,000)
+- Remove decimals unless meaningful (1.23% is fine, 1.23B is not)
+
+## Layout
+
+### Aspect Ratio
+- Time series: 16:9 (wider than tall)
+- Bar charts: 4:3 or 3:2
+- Never use square charts for time series
+
+### Margins
+- Leave white space around the chart
+- Title should have breathing room above
+- Source at bottom with clear separation
+
+### Data-Ink Ratio
+Maximize data-ink, minimize chartjunk:
+- No 3D effects
+- No drop shadows
+- No decorative elements
+- No background images
+
+## Chart Types
+
+### When to Use Bar Chart
+- Comparing discrete categories
+- Showing ranking
+- Part-to-whole (stacked bars)
+- Single point in time
+
+### When to Use Line Chart
+- Time series
+- Continuous data
+- Showing trends
+- Comparing rates of change
+
+### When to Use Scatter Plot
+- Correlation between two variables
+- Showing distribution
+- Identifying outliers
+
+### Never Use
+- Pie charts (use bar charts instead)
+- 3D charts (always misleading)
+- Area charts (line charts are clearer)
+
+## Output Format
+
+Generate charts as:
+1. SVG code (preferred for web)
+2. Python matplotlib/altair code
+3. D3.js code
+
+Include all styling in the output - the chart should be publication-ready.
+
+## Quick Checklist
+
+Before submitting, verify:
+- [ ] Title is a full sentence stating the insight
+- [ ] Source attribution included
+- [ ] Y-axis starts at zero (bar charts)
+- [ ] No rainbow/bright colors
+- [ ] Key data point highlighted
+- [ ] No red/green combination
+- [ ] Sans-serif font
+- [ ] Correct aspect ratio
+- [ ] No chartjunk (3D, shadows, decorations)
+
+---
+
+{
+  "task_id": "1",
+  "complexity": "simple",
+  "chart_type": "bar",
+  "data": [
+    {"category": "USA", "value": 25462},
+    {"category": "China", "value": 17963},
+    {"category": "Japan", "value": 4231},
+    {"category": "Germany", "value": 4072},
+    {"category": "India", "value": 3385}
+  ],
+  "metadata": {
+    "unit": "USD billions",
+    "year": 2023,
+    "source": "IMF World Economic Outlook, 2024"
+  },
+  "requirements": {
+    "highlight": "Show the gap between USA and China",
+    "title_guidance": "China is approximately 70% of US GDP",
+    "insight": "The US economy remains the largest, but China is closing the gap"
+  }
+}
+
+
+Generate a chart specification (JSON only). Output ONLY valid JSON.

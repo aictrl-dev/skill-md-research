@@ -1,0 +1,13 @@
+{
+  "run_id": "zai-coding-plan-glm-5_none_task2_rep3",
+  "model": "zai-coding-plan/glm-5",
+  "condition": "none",
+  "task": "2",
+  "task_complexity": "medium",
+  "domain": "dockerfile",
+  "rep": 3,
+  "timestamp": "2026-02-21T06:41:07+00:00",
+  "duration_ms": 34081,
+  "cli_tool": "opencode",
+  "raw_output": "{\"type\":\"step_start\",\"timestamp\":1771656054897,\"sessionID\":\"ses_38112489dffes4pC5FMuyZIG7b\",\"part\":{\"id\":\"prt_c7eee086f001kq5rHdL7Gqmjh7\",\"sessionID\":\"ses_38112489dffes4pC5FMuyZIG7b\",\"messageID\":\"msg_c7eedb7a3001QlmbilEdwJ0qrB\",\"type\":\"step-start\",\"snapshot\":\"98c626f5a273d2157918a4a9c9670bb8ff7c6544\"}}\n{\"type\":\"text\",\"timestamp\":1771656067548,\"sessionID\":\"ses_38112489dffes4pC5FMuyZIG7b\",\"part\":{\"id\":\"prt_c7eee1f33001R4sIpEFHHPNZav\",\"sessionID\":\"ses_38112489dffes4pC5FMuyZIG7b\",\"messageID\":\"msg_c7eedb7a3001QlmbilEdwJ0qrB\",\"type\":\"text\",\"text\":\"```dockerfile\\nFROM python:3.11-slim\\n\\nWORKDIR /app\\n\\nENV PYTHONDONTWRITEBYTECODE=1 \\\\\\n    PYTHONUNBUFFERED=1 \\\\\\n    PIP_NO_CACHE_DIR=1 \\\\\\n    PIP_DISABLE_PIP_VERSION_CHECK=1\\n\\nRUN apt-get update && apt-get install -y --no-install-recommends \\\\\\n    libgomp1 \\\\\\n    libglib2.0-0 \\\\\\n    libsm6 \\\\\\n    libxext6 \\\\\\n    libxrender1 \\\\\\n    && rm -rf /var/lib/apt/lists/*\\n\\nCOPY requirements.txt .\\nRUN pip install --no-cache-dir -r requirements.txt\\n\\nCOPY download_model.py .\\nRUN python download_model.py && rm download_model.py\\n\\nCOPY . .\\n\\nEXPOSE 8000\\n\\nHEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \\\\\\n    CMD python -c \\\"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\\\" || exit 1\\n\\nCMD [\\\"uvicorn\\\", \\\"main:app\\\", \\\"--host\\\", \\\"0.0.0.0\\\", \\\"--port\\\", \\\"8000\\\"]\\n```\\n\\nrequirements.txt would contain:\\n```\\ntorch --index-url https://download.pytorch.org/whl/cpu\\nopencv-python-headless\\nnumpy\\nscikit-learn\\nfastapi\\nuvicorn[standard]\\n```\",\"time\":{\"start\":1771656067548,\"end\":1771656067548}}}\n{\"type\":\"step_finish\",\"timestamp\":1771656067559,\"sessionID\":\"ses_38112489dffes4pC5FMuyZIG7b\",\"part\":{\"id\":\"prt_c7eee39dd001X1688bwLS7sV8u\",\"sessionID\":\"ses_38112489dffes4pC5FMuyZIG7b\",\"messageID\":\"msg_c7eedb7a3001QlmbilEdwJ0qrB\",\"type\":\"step-finish\",\"reason\":\"stop\",\"snapshot\":\"2e5fb9d1e1a17809532f2a18b74ff18d6b7934e9\",\"cost\":0,\"tokens\":{\"total\":16796,\"input\":7943,\"output\":469,\"reasoning\":0,\"cache\":{\"read\":8384,\"write\":0}}}}"
+}

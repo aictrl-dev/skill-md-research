@@ -1,0 +1,13 @@
+{
+  "run_id": "zai-coding-plan-glm-5_none_task3_rep5",
+  "model": "zai-coding-plan/glm-5",
+  "condition": "none",
+  "task": "3",
+  "task_complexity": "medium",
+  "domain": "sql-query",
+  "rep": 5,
+  "timestamp": "2026-02-20T22:16:29+00:00",
+  "duration_ms": 42119,
+  "cli_tool": "opencode",
+  "raw_output": "{\"type\":\"step_start\",\"timestamp\":1771625780222,\"sessionID\":\"ses_382e06b3fffeza4iX2MKn0z6cq\",\"part\":{\"id\":\"prt_c7d2013fc001wp6wT0t8zDfaAG\",\"sessionID\":\"ses_382e06b3fffeza4iX2MKn0z6cq\",\"messageID\":\"msg_c7d1f9504001hQQ8RoGP9JJYST\",\"type\":\"step-start\",\"snapshot\":\"46c5f4c7dabf65c7e612aaa48fe7f5fb7601ea19\"}}\n{\"type\":\"text\",\"timestamp\":1771625789056,\"sessionID\":\"ses_382e06b3fffeza4iX2MKn0z6cq\",\"part\":{\"id\":\"prt_c7d20243c001qFpxR92Vqmkmho\",\"sessionID\":\"ses_382e06b3fffeza4iX2MKn0z6cq\",\"messageID\":\"msg_c7d1f9504001hQQ8RoGP9JJYST\",\"type\":\"text\",\"text\":\"```sql\\nWITH category_items AS (\\n    SELECT \\n        COALESCE(c.name, 'Uncategorized') AS category_name,\\n        oi.item_id,\\n        oi.quantity\\n    FROM order_items oi\\n    JOIN products p ON oi.product_id = p.product_id\\n    LEFT JOIN categories c ON p.category_id = c.category_id\\n),\\napproved_returns AS (\\n    SELECT DISTINCT ON (r.item_id)\\n        r.item_id\\n    FROM returns r\\n    WHERE r.status = 'approved'\\n    ORDER BY r.item_id, r.return_date DESC\\n),\\ncategory_totals AS (\\n    SELECT \\n        ci.category_name,\\n        SUM(ci.quantity) AS total_items_sold\\n    FROM category_items ci\\n    GROUP BY ci.category_name\\n),\\ncategory_returns AS (\\n    SELECT \\n        ci.category_name,\\n        SUM(ci.quantity) AS total_items_returned\\n    FROM category_items ci\\n    JOIN approved_returns ar ON ci.item_id = ar.item_id\\n    GROUP BY ci.category_name\\n)\\nSELECT \\n    ct.category_name,\\n    ct.total_items_sold,\\n    COALESCE(cr.total_items_returned, 0) AS total_items_returned,\\n    ROUND(COALESCE(cr.total_items_returned, 0)::DECIMAL / ct.total_items_sold, 4) AS return_rate\\nFROM category_totals ct\\nLEFT JOIN category_returns cr ON ct.category_name = cr.category_name\\nORDER BY return_rate DESC;\\n```\",\"time\":{\"start\":1771625789056,\"end\":1771625789056}}}\n{\"type\":\"step_finish\",\"timestamp\":1771625789068,\"sessionID\":\"ses_382e06b3fffeza4iX2MKn0z6cq\",\"part\":{\"id\":\"prt_c7d203681001V0eQsif50uPHPv\",\"sessionID\":\"ses_382e06b3fffeza4iX2MKn0z6cq\",\"messageID\":\"msg_c7d1f9504001hQQ8RoGP9JJYST\",\"type\":\"step-finish\",\"reason\":\"stop\",\"snapshot\":\"83d38722b72efcbd96814f5a20aa9d920a449ec6\",\"cost\":0,\"tokens\":{\"total\":17015,\"input\":7863,\"output\":512,\"reasoning\":0,\"cache\":{\"read\":8640,\"write\":0}}}}"
+}

@@ -1,0 +1,13 @@
+{
+  "run_id": "haiku_pseudocode_task1_rep3",
+  "model": "haiku",
+  "condition": "pseudocode",
+  "task": "1",
+  "task_complexity": "simple",
+  "domain": "dockerfile",
+  "rep": 3,
+  "timestamp": "2026-02-21T07:37:38+00:00",
+  "duration_ms": 6399,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":4175,\"duration_api_ms\":4020,\"num_turns\":1,\"result\":\"```dockerfile\\nFROM maven:3.9-eclipse-temurin-21-alpine AS builder\\n\\nWORKDIR /build\\n\\nCOPY pom.xml .\\nRUN mvn dependency:resolve\\n\\nCOPY src ./src\\nRUN mvn clean package -DskipTests\\n\\nFROM eclipse-temurin:21-jre-alpine\\n\\nLABEL maintainer=\\\"analytics-team\\\" \\\\\\n      version=\\\"1.0\\\" \\\\\\n      description=\\\"Java analytics dashboard with cloud database support\\\"\\n\\nWORKDIR /app\\n\\nRUN apk add --no-cache \\\\\\n    curl \\\\\\n    fontconfig \\\\\\n    ttf-dejavu && \\\\\\n    rm -rf /var/cache/apk/*\\n\\nRUN apk add --no-cache ca-certificates && \\\\\\n    mkdir -p /tmp/certs && \\\\\\n    cd /tmp/certs && \\\\\\n    wget -q https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem && \\\\\\n    wget -q https://cacerts.digicert.com/DigiCertGlobalRootCA.crt && \\\\\\n    keytool -import -alias rds-ca -file global-bundle.pem -cacerts -storepass changeit -noprompt || true && \\\\\\n    keytool -import -alias digicert-ca -file DigiCertGlobalRootCA.crt -cacerts -storepass changeit -noprompt || true && \\\\\\n    rm -rf /tmp/certs && \\\\\\n    apk del ca-certificates\\n\\nRUN addgroup -g 1001 app && \\\\\\n    adduser -D -u 1001 -G app app\\n\\nCOPY --from=builder /build/target/*.jar /app/app.jar\\nRUN chown -R app:app /app\\n\\nUSER app\\n\\nEXPOSE 3000\\n\\nHEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\\\\\n    CMD curl -f http://localhost:3000/api/health || exit 1\\n\\nCMD [\\\"java\\\", \\\"-jar\\\", \\\"/app/app.jar\\\"]\\n```\",\"stop_reason\":null,\"session_id\":\"c0ff0b48-3043-47cc-b99d-d8ae9d55eec8\",\"total_cost_usd\":0.005556,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":30780,\"output_tokens\":495,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-haiku-4-5-20251001\":{\"inputTokens\":3,\"outputTokens\":495,\"cacheReadInputTokens\":30780,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.005556,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"f05db92d-e89d-40a3-af9b-29347877b822\"}"
+}

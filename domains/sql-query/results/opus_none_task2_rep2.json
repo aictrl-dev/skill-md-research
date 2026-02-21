@@ -1,0 +1,13 @@
+{
+  "run_id": "opus_none_task2_rep2",
+  "model": "opus",
+  "condition": "none",
+  "task": "2",
+  "task_complexity": "complex",
+  "domain": "sql-query",
+  "rep": 2,
+  "timestamp": "2026-02-20T22:07:38+00:00",
+  "duration_ms": 7562,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":6443,\"duration_api_ms\":6408,\"num_turns\":1,\"result\":\"\\n\\n-- 01_deduplicated_billing.sql\\n```sql\\nCREATE TEMPORARY TABLE deduplicated_billing AS\\nSELECT DISTINCT ON (subscription_id, event_month)\\n    event_id,\\n    subscription_id,\\n    event_month,\\n    amount,\\n    event_type\\nFROM billing_events\\nORDER BY subscription_id, event_month, event_id;\\n```\\n\\n-- 02_monthly_subscription_metrics.sql\\n```sql\\nSELECT\\n    b.event_month                                    AS month,\\n    COALESCE(p.tier, 'Unknown')                      AS tier,\\n    COALESCE(c.industry, 'Unknown')                  AS industry,\\n    COUNT(DISTINCT s.subscription_id)                 AS active_subscriptions,\\n    SUM(b.amount)                                    AS total_mrr,\\n    COUNT(DISTINCT s.user_id)                        AS unique_users\\nFROM deduplicated_billing b\\nJOIN subscriptions s USING (subscription_id)\\nJOIN users u USING (user_id)\\nLEFT JOIN plans p USING (plan_id)\\nLEFT JOIN companies c ON u.company_id = c.company_id\\nWHERE s.status = 'active'\\n  AND s.started_at <= b.event_month\\n  AND (s.ended_at IS NULL OR s.ended_at > b.event_month)\\nGROUP BY b.event_month, COALESCE(p.tier, 'Unknown'), COALESCE(c.industry, 'Unknown')\\nORDER BY month, tier, industry;\\n```\",\"stop_reason\":null,\"session_id\":\"ba50d712-8891-4ba6-a5a7-65672cc5eeea\",\"total_cost_usd\":0.0231465,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":27663,\"output_tokens\":372,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":3,\"outputTokens\":372,\"cacheReadInputTokens\":27663,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.0231465,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"e5738fa4-ac52-426e-adc6-dd4f55f64822\"}"
+}

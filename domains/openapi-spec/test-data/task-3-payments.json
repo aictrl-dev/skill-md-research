@@ -1,0 +1,14 @@
+{
+  "task_id": "3",
+  "complexity": "complex",
+  "description": "Design a REST API for a payment processing platform. The API manages four resources: Merchants (id, name, business_type, status), Payments (id, merchant_id, amount, currency, status enum: pending/processing/completed/failed/refunded, created_at), Refunds (id, payment_id, amount, reason, status, created_at), and Webhooks (id, merchant_id, url, events array, secret, is_active). The API uses OAuth2 client_credentials authentication. Payment creation should be asynchronous (return 202 Accepted). All paths should use /v1/ prefix. List endpoints should support pagination. The API should be production-ready.",
+  "resource_count": 4,
+  "operation_count": 10,
+  "requires_auth": true,
+  "auth_type": "oauth2",
+  "requires_pagination": true,
+  "has_async_operations": true,
+  "expected_paths": ["/v1/merchants", "/v1/merchants/{merchantId}", "/v1/payments", "/v1/payments/{paymentId}", "/v1/payments/{paymentId}/refunds", "/v1/webhooks"],
+  "expected_operations": ["listMerchants", "getMerchant", "createPayment", "getPayment", "listPayments", "createRefund", "listWebhooks", "createWebhook"],
+  "expected_schemas": ["Merchant", "Payment", "Refund", "Webhook"]
+}

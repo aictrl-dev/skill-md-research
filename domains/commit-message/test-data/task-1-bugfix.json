@@ -1,0 +1,29 @@
+{
+  "task_id": "1",
+  "complexity": "simple",
+  "change_type": "bugfix",
+  "description": "Fix null pointer exception in UserService.findById() when user record doesn't exist in database",
+  "files_changed": ["src/services/UserService.ts"],
+  "ticket": "PROJ-247",
+  "author": "Alice Developer <alice@example.com>",
+  "breaking_change": false,
+  "expected_type": "fix",
+  "allowed_scopes": ["auth", "api", "db", "ui", "core"],
+  "gitmoji_map": {
+    "fix": ":bug:",
+    "feat": ":sparkles:",
+    "docs": ":memo:",
+    "refactor": ":recycle:",
+    "test": ":white_check_mark:",
+    "perf": ":zap:",
+    "build": ":hammer:",
+    "ci": ":construction_worker:",
+    "chore": ":wrench:",
+    "revert": ":rewind:"
+  },
+  "jira_project": "PROJ",
+  "jira_number": "247",
+  "body_min_words": 30,
+  "body_max_words": 150,
+  "signed_off_by": "Alice Developer <alice@example.com>"
+}

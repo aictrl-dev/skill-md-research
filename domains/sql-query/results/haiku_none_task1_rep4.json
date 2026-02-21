@@ -1,0 +1,13 @@
+{
+  "run_id": "haiku_none_task1_rep4",
+  "model": "haiku",
+  "condition": "none",
+  "task": "1",
+  "task_complexity": "medium",
+  "domain": "sql-query",
+  "rep": 4,
+  "timestamp": "2026-02-20T22:06:50+00:00",
+  "duration_ms": 3629,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":2441,\"duration_api_ms\":2411,\"num_turns\":1,\"result\":\"\\n```sql\\n-- 01_customer_channel_attribution.sql\\n```sql\\nWITH latest_attribution AS (\\n  SELECT\\n    customer_id,\\n    channel,\\n    ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY attributed_at DESC) as rn\\n  FROM customer_channels\\n)\\nSELECT\\n  customer_id,\\n  channel\\nFROM latest_attribution\\nWHERE rn = 1\\n```\\n\\n-- 02_customer_revenue_by_channel.sql\\n```sql\\nSELECT\\n  COALESCE(ca.channel, 'unattributed') as channel,\\n  COALESCE(s.city, 'unknown') as city,\\n  SUM(t.amount) as total_revenue,\\n  COUNT(t.transaction_id) as transaction_count,\\n  COUNT(DISTINCT t.customer_id) as unique_customers\\nFROM transactions t\\nLEFT JOIN (\\n  WITH latest_attribution AS (\\n    SELECT\\n      customer_id,\\n      channel,\\n      ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY attributed_at DESC) as rn\\n    FROM customer_channels\\n  )\\n  SELECT customer_id, channel\\n  FROM latest_attribution\\n  WHERE rn = 1\\n) ca ON t.customer_id = ca.customer_id\\nLEFT JOIN stores s ON t.store_id = s.store_id\\nGROUP BY COALESCE(ca.channel, 'unattributed'), COALESCE(s.city, 'unknown')\\nORDER BY total_revenue DESC\\n```\",\"stop_reason\":null,\"session_id\":\"ad7cb7b4-869f-43a6-bec2-d9b8b4411411\",\"total_cost_usd\":0.004574,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":27610,\"output_tokens\":362,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-haiku-4-5-20251001\":{\"inputTokens\":3,\"outputTokens\":362,\"cacheReadInputTokens\":27610,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.004574,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"225f88a6-4136-46b1-960a-72916bec7eea\"}"
+}

@@ -1,0 +1,12 @@
+{
+  "run_id": "zai-coding-plan-glm-4.7-flash_pseudocode_task1_rep1",
+  "model": "zai-coding-plan/glm-4.7-flash",
+  "condition": "pseudocode",
+  "task": "1",
+  "task_complexity": "simple",
+  "rep": 1,
+  "timestamp": "2026-02-20T07:17:56+00:00",
+  "duration_ms": 33720,
+  "cli_tool": "opencode",
+  "raw_output": "{\"type\":\"step_start\",\"timestamp\":1771571848666,\"sessionID\":\"ses_38616ef49ffeeRl8m5DNHDjXO8\",\"part\":{\"id\":\"prt_c79e925d8001iFoc1UBNC8LMyo\",\"sessionID\":\"ses_38616ef49ffeeRl8m5DNHDjXO8\",\"messageID\":\"msg_c79e910ef001HWtd0ODFoIeg4S\",\"type\":\"step-start\",\"snapshot\":\"2dcd737d2d3a7f3f988fdb8d0aee103823c6b207\"}}\n\u001b[93m\u001b[1m! \u001b[0mpermission requested: external_directory (/tmp/*); auto-rejecting\n{\"type\":\"step_finish\",\"timestamp\":1771571876382,\"sessionID\":\"ses_38616ef49ffeeRl8m5DNHDjXO8\",\"part\":{\"id\":\"prt_c79e99218001dgVGgV0ev1X1KH\",\"sessionID\":\"ses_38616ef49ffeeRl8m5DNHDjXO8\",\"messageID\":\"msg_c79e910ef001HWtd0ODFoIeg4S\",\"type\":\"step-finish\",\"reason\":\"tool-calls\",\"snapshot\":\"2dcd737d2d3a7f3f988fdb8d0aee103823c6b207\",\"cost\":0,\"tokens\":{\"total\":18717,\"input\":9493,\"output\":645,\"reasoning\":0,\"cache\":{\"read\":8579,\"write\":0}}}}"
+}

@@ -1,0 +1,12 @@
+{
+  "task_id": "1",
+  "complexity": "simple",
+  "description": "Design a REST API for managing user accounts. The API should support creating, listing, retrieving, updating, and deleting users. Each user has: id (UUID), email (required, unique), name (required), role (enum: admin, user, viewer), created_at timestamp, updated_at timestamp, and is_active boolean (defaults to true). The API should be production-ready and well-documented. The list endpoint should support pagination.",
+  "resource_count": 1,
+  "operation_count": 5,
+  "requires_auth": false,
+  "requires_pagination": true,
+  "expected_paths": ["/users", "/users/{userId}"],
+  "expected_operations": ["listUsers", "createUser", "getUser", "updateUser", "deleteUser"],
+  "expected_schemas": ["User"]
+}

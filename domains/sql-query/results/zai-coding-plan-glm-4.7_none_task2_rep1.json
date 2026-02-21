@@ -1,0 +1,13 @@
+{
+  "run_id": "zai-coding-plan-glm-4.7_none_task2_rep1",
+  "model": "zai-coding-plan/glm-4.7",
+  "condition": "none",
+  "task": "2",
+  "task_complexity": "complex",
+  "domain": "sql-query",
+  "rep": 1,
+  "timestamp": "2026-02-20T22:09:34+00:00",
+  "duration_ms": 22268,
+  "cli_tool": "opencode",
+  "raw_output": "{\"type\":\"step_start\",\"timestamp\":1771625358675,\"sessionID\":\"ses_382e67124fferspb0LfIivihk5\",\"part\":{\"id\":\"prt_c7d19a550001lHMDFKZZ99Z7jb\",\"sessionID\":\"ses_382e67124fferspb0LfIivihk5\",\"messageID\":\"msg_c7d198f23001DcvDUQj0NQvlSv\",\"type\":\"step-start\",\"snapshot\":\"ee8487a0e9614e44f4c7dfaeab62f03b45e93f7f\"}}\n{\"type\":\"text\",\"timestamp\":1771625374455,\"sessionID\":\"ses_382e67124fferspb0LfIivihk5\",\"part\":{\"id\":\"prt_c7d19da1a001c9WDqM82uG8S2c\",\"sessionID\":\"ses_382e67124fferspb0LfIivihk5\",\"messageID\":\"msg_c7d198f23001DcvDUQj0NQvlSv\",\"type\":\"text\",\"text\":\"-- 01_base_data.sql\\n```sql\\nWITH deduped_billing_events AS (\\n  SELECT \\n    subscription_id,\\n    event_month,\\n    amount,\\n    ROW_NUMBER() OVER (PARTITION BY subscription_id, event_month ORDER BY event_id) AS rn\\n  FROM billing_events\\n),\\nsub_with_data AS (\\n  SELECT \\n    s.subscription_id,\\n    s.user_id,\\n    s.plan_id,\\n    s.started_at,\\n    s.ended_at,\\n    s.status,\\n    COALESCE(p.tier, 'Unknown') AS tier,\\n    COALESCE(c.industry, 'Unknown') AS industry\\n  FROM subscriptions s\\n  LEFT JOIN users u ON s.user_id = u.user_id\\n  LEFT JOIN companies c ON u.company_id = c.company_id\\n  LEFT JOIN plans p ON s.plan_id = p.plan_id\\n)\\nSELECT \\n  sd.subscription_id,\\n  sd.user_id,\\n  sd.plan_id,\\n  sd.started_at,\\n  sd.ended_at,\\n  sd.status,\\n  sd.tier,\\n  sd.industry,\\n  be.event_month,\\n  be.amount\\nFROM sub_with_data sd\\nLEFT JOIN deduped_billing_events be ON sd.subscription_id = be.subscription_id AND be.rn = 1;\\n```\",\"time\":{\"start\":1771625374454,\"end\":1771625374454}}}\n{\"type\":\"step_finish\",\"timestamp\":1771625374467,\"sessionID\":\"ses_382e67124fferspb0LfIivihk5\",\"part\":{\"id\":\"prt_c7d19e2f8001KJiHq9A0cqImSQ\",\"sessionID\":\"ses_382e67124fferspb0LfIivihk5\",\"messageID\":\"msg_c7d198f23001DcvDUQj0NQvlSv\",\"type\":\"step-finish\",\"reason\":\"stop\",\"snapshot\":\"b5ab3687851dc82d2f02dfebb3ebfab687ea8871\",\"cost\":0,\"tokens\":{\"total\":17761,\"input\":8125,\"output\":1220,\"reasoning\":962,\"cache\":{\"read\":8416,\"write\":0}}}}"
+}

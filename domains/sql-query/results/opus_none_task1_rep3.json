@@ -1,0 +1,13 @@
+{
+  "run_id": "opus_none_task1_rep3",
+  "model": "opus",
+  "condition": "none",
+  "task": "1",
+  "task_complexity": "medium",
+  "domain": "sql-query",
+  "rep": 3,
+  "timestamp": "2026-02-20T22:06:49+00:00",
+  "duration_ms": 6282,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":5061,\"duration_api_ms\":5029,\"num_turns\":1,\"result\":\"-- 01_customer_channel.sql\\n```sql\\nCREATE TEMPORARY TABLE customer_channel AS\\nSELECT DISTINCT ON (customer_id)\\n    customer_id,\\n    channel\\nFROM customer_channels\\nORDER BY customer_id, attributed_at DESC;\\n```\\n\\n-- 02_revenue_by_channel_city.sql\\n```sql\\nSELECT\\n    COALESCE(cc.channel, 'Unattributed') AS channel,\\n    COALESCE(s.city, 'Unknown')          AS city,\\n    SUM(t.amount)                        AS total_revenue,\\n    COUNT(*)                             AS transaction_count,\\n    COUNT(DISTINCT t.customer_id)        AS unique_customers\\nFROM transactions t\\nLEFT JOIN customer_channel cc USING (customer_id)\\nLEFT JOIN stores s USING (store_id)\\nGROUP BY\\n    COALESCE(cc.channel, 'Unattributed'),\\n    COALESCE(s.city, 'Unknown')\\nORDER BY total_revenue DESC;\\n```\",\"stop_reason\":null,\"session_id\":\"e8d41d53-7898-492c-9115-d80315f7a936\",\"total_cost_usd\":0.0199165,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":27603,\"output_tokens\":244,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":3,\"outputTokens\":244,\"cacheReadInputTokens\":27603,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.0199165,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"f491f0b7-177a-4329-b439-035dd72ecdad\"}"
+}

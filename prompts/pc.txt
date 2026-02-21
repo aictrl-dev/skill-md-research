@@ -1,0 +1,204 @@
+---
+name: chart-style-pseudocode
+description: Generate charts following Economist/FT visual style.
+---
+
+# Chart Style (Pseudocode)
+
+```python
+from dataclasses import dataclass
+from enum import Enum
+from typing import Literal
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CORE TYPES
+# ─────────────────────────────────────────────────────────────────────────────
+
+class ChartType(Enum):
+    BAR = "bar"
+    LINE = "line"
+    SCATTER = "scatter"
+
+class Color(Enum):
+    PRIMARY = "#1A476F"      # Main series
+    ACCENT = "#C74634"       # Highlight ONE point
+    TEAL = "#2D7282"         # Category 2
+    GOLD = "#E9C46A"         # Category 3
+    GRAY = "#5D666F"         # Category 4
+    GRID = "#D0D0D0"         # Gridlines
+
+@dataclass
+class Title:
+    text: str        # FULL SENTENCE stating finding, e.g. "China is 70% of US GDP"
+    subtitle: str | None = None  # Context: "Nominal GDP, 2023"
+
+@dataclass
+class Source:
+    data: str        # "World Bank"
+    credit: str      # "Chart: aictrl.dev"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VALIDATION RULES (15-item checklist)
+# ─────────────────────────────────────────────────────────────────────────────
+
+@dataclass
+class ColorRules:
+    highlight_count: int = 1    # Exactly ONE point highlighted
+    has_red: bool = False
+    has_green: bool = False
+    
+    def violations(self) -> list[str]:
+        v = []
+        if self.highlight_count > 1:
+            v.append("Highlight only ONE key point")
+        if self.has_red and self.has_green:
+            v.append("No red+green (accessibility)")
+        return v
+
+@dataclass
+class AxisRules:
+    chart_type: ChartType
+    y_min: float
+    show_top_spine: bool = False
+    show_right_spine: bool = False
+    
+    def violations(self) -> list[str]:
+        v = []
+        if self.chart_type == ChartType.BAR and self.y_min != 0:
+            v.append("Bar y-axis MUST start at 0")
+        if self.show_top_spine or self.show_right_spine:
+            v.append("Remove top/right spines")
+        return v
+
+@dataclass
+class LayoutRules:
+    width: int
+    height: int
+    chart_type: ChartType
+    
+    def violations(self) -> list[str]:
+        v = []
+        if self.chart_type == ChartType.LINE and self.width <= self.height:
+            v.append("Line charts: wider than tall (16:9)")
+        return v
+
+# ─────────────────────────────────────────────────────────────────────────────
+# COMPLETE SPEC
+# ─────────────────────────────────────────────────────────────────────────────
+
+@dataclass
+class ChartSpec:
+    title: Title
+    source: Source
+    chart_type: ChartType
+    colors: ColorRules
+    axes: AxisRules
+    layout: LayoutRules
+    
+    def validate(self) -> list[str]:
+        """Returns violations. Empty = compliant."""
+        v = []
+        
+        # Title rule
+        if len(self.title.text) < 20 or self.title.text.endswith(":"):
+            v.append("Title: full sentence, not label")
+        
+        v.extend(self.colors.violations())
+        v.extend(self.axes.violations())
+        v.extend(self.layout.violations())
+        
+        return v
+    
+    def is_compliant(self) -> bool:
+        return len(self.validate()) == 0
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CHART TYPE SELECTION
+# ─────────────────────────────────────────────────────────────────────────────
+
+def select_type(has_time: bool, showing_trend: bool, correlation: bool) -> ChartType:
+    """Decision logic for chart type."""
+    if correlation:
+        return ChartType.SCATTER
+    if has_time and showing_trend:
+        return ChartType.LINE
+    return ChartType.BAR
+
+# NEVER USE: Pie, 3D, Area (not in ChartType)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# NUMBER FORMATTING
+# ─────────────────────────────────────────────────────────────────────────────
+
+def format_num(n: float) -> str:
+    """1.2B, 850K, 1,234, 45.6%"""
+    if abs(n) >= 1e9: return f"{n/1e9:.1f}B"
+    if abs(n) >= 1e6: return f"{n/1e6:.1f}M"
+    if abs(n) >= 1e3: return f"{n:,.0f}"
+    if 0 < abs(n) < 1: return f"{n*100:.1f}%"
+    return f"{n:.1f}"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 15-RULE CHECKLIST
+# ─────────────────────────────────────────────────────────────────────────────
+
+# COLOR (4)
+# 1. Muted palette (not rainbow)
+# 2. One highlight
+# 3. No red+green
+# 4. Consistent category colors
+
+# TYPOGRAPHY (4)
+# 5. Title = full sentence
+# 6. Source present
+# 7. Sans-serif font
+# 8. Labels for ≤8 values
+
+# AXES (4)
+# 9. Y=0 for bars
+# 10. No top/right spine
+# 11. Gridlines subtle (#D0D0D0)
+# 12. No redundant labels
+
+# ANNOTATIONS (2)
+# 13. Key insight called out
+# 14. Legend only if >3 categories
+
+# LAYOUT (1)
+# 15. Correct aspect ratio
+```
+
+## Usage
+
+1. Construct `ChartSpec` with all fields
+2. Call `spec.validate()` → empty list = compliant
+3. Generate SVG/matplotlib/D3 output
+4. Verify 15-rule checklist passes
+
+---
+
+{
+  "task_id": "1",
+  "complexity": "simple",
+  "chart_type": "bar",
+  "data": [
+    {"category": "USA", "value": 25462},
+    {"category": "China", "value": 17963},
+    {"category": "Japan", "value": 4231},
+    {"category": "Germany", "value": 4072},
+    {"category": "India", "value": 3385}
+  ],
+  "metadata": {
+    "unit": "USD billions",
+    "year": 2023,
+    "source": "IMF World Economic Outlook, 2024"
+  },
+  "requirements": {
+    "highlight": "Show the gap between USA and China",
+    "title_guidance": "China is approximately 70% of US GDP",
+    "insight": "The US economy remains the largest, but China is closing the gap"
+  }
+}
+
+
+Generate a chart specification (JSON only). Output ONLY valid JSON.

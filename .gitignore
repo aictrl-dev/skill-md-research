@@ -1,0 +1,26 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+.venv/
+node_modules/
+*.egg-info/
+dist/
+build/
+.DS_Store
+*.swp
+*.swo
+*~
+
+# LaTeX build artifacts
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.toc
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.synctex.gz
+paper/*.pdf
+!paper/figures/*.pdf

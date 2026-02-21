@@ -1,0 +1,13 @@
+{
+  "task_id": "2",
+  "complexity": "medium",
+  "description": "Design a REST API for an e-commerce platform. The API manages three resources: Users (id, email, name, shipping address), Products (id, name, description, price, category, stock_count), and Orders (id, user_id, items array with product_id/quantity/unit_price, total, status enum: pending/confirmed/shipped/delivered/cancelled, created_at). The API requires JWT bearer authentication. List endpoints should support pagination. The API should be production-ready.",
+  "resource_count": 3,
+  "operation_count": 8,
+  "requires_auth": true,
+  "auth_type": "bearer",
+  "requires_pagination": true,
+  "expected_paths": ["/users", "/users/{userId}", "/products", "/orders", "/orders/{orderId}"],
+  "expected_operations": ["listUsers", "createUser", "getUser", "listProducts", "createOrder", "getOrder", "listOrders"],
+  "expected_schemas": ["User", "Product", "Order"]
+}

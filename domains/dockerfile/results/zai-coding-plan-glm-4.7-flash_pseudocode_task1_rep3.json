@@ -1,0 +1,13 @@
+{
+  "run_id": "zai-coding-plan-glm-4.7-flash_pseudocode_task1_rep3",
+  "model": "zai-coding-plan/glm-4.7-flash",
+  "condition": "pseudocode",
+  "task": "1",
+  "task_complexity": "simple",
+  "domain": "dockerfile",
+  "rep": 3,
+  "timestamp": "2026-02-21T07:59:35+00:00",
+  "duration_ms": 23306,
+  "cli_tool": "opencode",
+  "raw_output": "{\"type\":\"step_start\",\"timestamp\":1771660758629,\"sessionID\":\"ses_380ca4619ffev3DzQBcUYbEhDS\",\"part\":{\"id\":\"prt_c7f35ce63001Z0yTWm8OdfxS5F\",\"sessionID\":\"ses_380ca4619ffev3DzQBcUYbEhDS\",\"messageID\":\"msg_c7f35ba3e0011Oy9qApv2fQpfl\",\"type\":\"step-start\",\"snapshot\":\"7b3e3a0996a82bb5fc67908959a560772dc5dac8\"}}\n{\"type\":\"text\",\"timestamp\":1771660775928,\"sessionID\":\"ses_380ca4619ffev3DzQBcUYbEhDS\",\"part\":{\"id\":\"prt_c7f3603a9001s428W5f4XIiGOd\",\"sessionID\":\"ses_380ca4619ffev3DzQBcUYbEhDS\",\"messageID\":\"msg_c7f35ba3e0011Oy9qApv2fQpfl\",\"type\":\"text\",\"text\":\"```dockerfile\\n# Build stage\\nFROM maven:3.9-eclipse-temurin-21 AS builder\\n\\nWORKDIR /build\\n\\nCOPY pom.xml .\\nRUN mvn dependency:go-offline -B\\n\\nCOPY src ./src\\nRUN mvn clean package -DskipTests\\n\\n# Runtime stage\\nFROM eclipse-temurin:21-jre-alpine\\n\\n# Install system fonts for PDF generation\\nRUN apk add --no-cache fontconfig ttf-dejavu\\n\\n# Create non-root user\\nRUN addgroup -g 1001 appgroup && \\\\\\n    adduser -u 1001 -G appgroup -D app && \\\\\\n    mkdir -p /app && \\\\\\n    chown -R app:appgroup /app\\n\\nUSER app\\n\\nWORKDIR /app\\n\\n# Import AWS RDS root CA and Azure DigiCert certificates\\nCOPY certs/truststore.jks /app/truststore.jks\\n\\nENV JAVA_OPTS=\\\"-Djavax.net.ssl.trustStore=/app/truststore.jks \\\\\\n               -Djavax.net.ssl.trustStorePassword=changeit \\\\\\n               -Djavax.net.ssl.trustStoreType=jks\\\"\\n\\nEXPOSE 3000\\n\\nHEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\\\\\n  CMD curl -f http://localhost:3000/api/health || exit 1\\n\\nLABEL maintainer=\\\"analytics@example.com\\\" \\\\\\n      version=\\\"1.0\\\" \\\\\\n      description=\\\"Java analytics dashboard\\\"\\n\\nCMD [\\\"java\\\", \\\"-jar\\\", \\\"/app/app.jar\\\"]\\n```\",\"time\":{\"start\":1771660775928,\"end\":1771660775928}}}\n{\"type\":\"step_finish\",\"timestamp\":1771660775944,\"sessionID\":\"ses_380ca4619ffev3DzQBcUYbEhDS\",\"part\":{\"id\":\"prt_c7f3611fa001arQvl2tC1qdWOg\",\"sessionID\":\"ses_380ca4619ffev3DzQBcUYbEhDS\",\"messageID\":\"msg_c7f35ba3e0011Oy9qApv2fQpfl\",\"type\":\"step-finish\",\"reason\":\"stop\",\"snapshot\":\"08075f2eab674476a8dc7adb376c65e696e496d9\",\"cost\":0,\"tokens\":{\"total\":20858,\"input\":18999,\"output\":1383,\"reasoning\":0,\"cache\":{\"read\":476,\"write\":0}}}}"
+}

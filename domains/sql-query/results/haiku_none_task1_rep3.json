@@ -1,0 +1,13 @@
+{
+  "run_id": "haiku_none_task1_rep3",
+  "model": "haiku",
+  "condition": "none",
+  "task": "1",
+  "task_complexity": "medium",
+  "domain": "sql-query",
+  "rep": 3,
+  "timestamp": "2026-02-20T22:06:41+00:00",
+  "duration_ms": 3719,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":2584,\"duration_api_ms\":2547,\"num_turns\":1,\"result\":\"```sql\\n-- 01_customer_channel_attribution.sql\\nSELECT \\n  customer_id,\\n  channel,\\n  attributed_at,\\n  ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY attributed_at DESC) as rn\\nFROM customer_channels\\n```\\n\\n```sql\\n-- 02_revenue_by_attribution_channel.sql\\nWITH latest_attribution AS (\\n  SELECT \\n    customer_id,\\n    channel,\\n    attributed_at,\\n    ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY attributed_at DESC) as rn\\n  FROM customer_channels\\n),\\ncustomer_primary_channel AS (\\n  SELECT \\n    customer_id,\\n    channel\\n  FROM latest_attribution\\n  WHERE rn = 1\\n),\\ntransactions_with_channel AS (\\n  SELECT \\n    t.transaction_id,\\n    t.customer_id,\\n    t.store_id,\\n    t.amount,\\n    t.transaction_date,\\n    COALESCE(cpc.channel, 'unattributed') as channel,\\n    s.city\\n  FROM transactions t\\n  LEFT JOIN customer_primary_channel cpc ON t.customer_id = cpc.customer_id\\n  LEFT JOIN stores s ON t.store_id = s.store_id\\n)\\nSELECT \\n  channel,\\n  COALESCE(city, 'unknown') as city,\\n  SUM(amount) as total_revenue,\\n  COUNT(*) as transaction_count,\\n  COUNT(DISTINCT customer_id) as unique_customers\\nFROM transactions_with_channel\\nGROUP BY channel, COALESCE(city, 'unknown')\\nORDER BY channel, city\\n```\",\"stop_reason\":null,\"session_id\":\"95e15e82-e6ee-4a63-9e62-6922344ff232\",\"total_cost_usd\":0.004764,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":27610,\"output_tokens\":400,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-haiku-4-5-20251001\":{\"inputTokens\":3,\"outputTokens\":400,\"cacheReadInputTokens\":27610,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.004764,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"864b1e42-84ca-47a5-bc94-779de0b71c2f\"}"
+}

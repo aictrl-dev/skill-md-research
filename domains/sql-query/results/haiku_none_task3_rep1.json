@@ -1,0 +1,13 @@
+{
+  "run_id": "haiku_none_task3_rep1",
+  "model": "haiku",
+  "condition": "none",
+  "task": "3",
+  "task_complexity": "medium",
+  "domain": "sql-query",
+  "rep": 1,
+  "timestamp": "2026-02-20T22:07:59+00:00",
+  "duration_ms": 4759,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":3357,\"duration_api_ms\":3323,\"num_turns\":1,\"result\":\"```sql\\n-- product_return_rates.sql\\nSELECT \\n    COALESCE(c.name, 'Uncategorized') AS category_name,\\n    COUNT(oi.item_id) AS total_items_sold,\\n    COUNT(DISTINCT CASE \\n        WHEN r.return_id IS NOT NULL \\n        THEN oi.item_id \\n    END) AS total_items_returned,\\n    ROUND(\\n        COUNT(DISTINCT CASE \\n            WHEN r.return_id IS NOT NULL \\n            THEN oi.item_id \\n        END)::NUMERIC / COUNT(oi.item_id),\\n        4\\n    ) AS return_rate\\nFROM order_items oi\\nJOIN orders o ON oi.order_id = o.order_id\\nLEFT JOIN products p ON oi.product_id = p.product_id\\nLEFT JOIN categories c ON p.category_id = c.category_id\\nLEFT JOIN (\\n    SELECT DISTINCT \\n        item_id, \\n        return_id\\n    FROM returns\\n    WHERE status = 'approved'\\n    QUALIFY ROW_NUMBER() OVER (PARTITION BY item_id ORDER BY return_date DESC) = 1\\n) r ON oi.item_id = r.item_id\\nGROUP BY c.name\\nORDER BY category_name;\\n```\",\"stop_reason\":null,\"session_id\":\"b395a772-194d-4948-8c17-772b24994d7a\",\"total_cost_usd\":0.0072943,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":2546,\"cache_read_input_tokens\":25088,\"output_tokens\":320,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":2546,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-haiku-4-5-20251001\":{\"inputTokens\":3,\"outputTokens\":320,\"cacheReadInputTokens\":25088,\"cacheCreationInputTokens\":2546,\"webSearchRequests\":0,\"costUSD\":0.0072943,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"48e188fc-179f-4bf9-b11d-093b66c8bb8e\"}"
+}

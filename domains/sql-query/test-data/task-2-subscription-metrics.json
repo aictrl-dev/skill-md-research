@@ -1,0 +1,19 @@
+{
+  "task_id": "2",
+  "complexity": "complex",
+  "domain": "sql-query",
+  "description": "Write SQL to calculate monthly subscription metrics.\n\nSchema:\n  subscriptions (subscription_id INT PK, user_id INT FK, plan_id INT FK, started_at DATE, ended_at DATE, status VARCHAR)\n  users (user_id INT PK, name VARCHAR, email VARCHAR, company_id INT FK)  -- company_id is nullable\n  companies (company_id INT PK, name VARCHAR, industry VARCHAR)\n  plans (plan_id INT PK, name VARCHAR, tier VARCHAR, monthly_price DECIMAL(10,2))  -- not every plan_id in subscriptions has a matching row\n  billing_events (event_id INT PK, subscription_id INT FK, event_month DATE, amount DECIMAL(10,2), event_type VARCHAR)  -- duplicates exist per subscription/month\n\nRequirements:\n- billing_events has duplicate rows per subscription + event_month; pick one per combination\n- Some users have no company; handle the missing industry values\n- Some subscriptions reference plan_ids that don't exist in plans; handle missing tier values\n- Final output: month, tier, industry, active_subscriptions, total_mrr, unique_users\n- Group by month, tier, industry",
+  "tables": ["subscriptions", "users", "companies", "plans", "billing_events"],
+  "requires_left_join": true,
+  "requires_deduplication": true,
+  "nullable_dimension_columns": ["industry", "tier"],
+  "expected_model_count": 6,
+  "expected_models": [
+    "stg_subscriptions",
+    "stg_billing_events",
+    "stg_users",
+    "int_deduped_billing",
+    "int_user_companies",
+    "fct_monthly_metrics"
+  ]
+}

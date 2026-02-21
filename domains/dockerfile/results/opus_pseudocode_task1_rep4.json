@@ -1,0 +1,13 @@
+{
+  "run_id": "opus_pseudocode_task1_rep4",
+  "model": "opus",
+  "condition": "pseudocode",
+  "task": "1",
+  "task_complexity": "simple",
+  "domain": "dockerfile",
+  "rep": 4,
+  "timestamp": "2026-02-21T06:49:34+00:00",
+  "duration_ms": 21909,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":14752,\"duration_api_ms\":14722,\"num_turns\":1,\"result\":\"\\n\\n```dockerfile\\nFROM node:20-alpine AS builder\\n\\nLABEL maintainer=\\\"app-team\\\" \\\\\\n      description=\\\"Node.js Express API\\\"\\n\\nWORKDIR /app\\n\\nCOPY package.json package-lock.json ./\\n\\nRUN npm ci\\n\\nCOPY tsconfig.json ./\\nCOPY src/ ./src/\\n\\nRUN npm run build\\n\\nFROM node:20-alpine\\n\\nLABEL maintainer=\\\"app-team\\\" \\\\\\n      description=\\\"Node.js Express API\\\"\\n\\nRUN addgroup -S appgroup && adduser -S appuser -G appgroup\\n\\nWORKDIR /app\\n\\nCOPY package.json package-lock.json ./\\n\\nRUN npm ci --omit=dev && npm cache clean --force\\n\\nCOPY --from=builder /app/dist ./dist\\n\\nRUN chown -R appuser:appgroup /app\\n\\nUSER appuser\\n\\nEXPOSE 3000\\n\\nHEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\\\\\n  CMD [\\\"wget\\\", \\\"--no-verbose\\\", \\\"--tries=1\\\", \\\"--spider\\\", \\\"http://localhost:3000/health\\\"]\\n\\nCMD [\\\"node\\\", \\\"dist/index.js\\\"]\\n```\",\"stop_reason\":null,\"session_id\":\"dd872eda-805c-4774-9d2c-0d918f4384eb\",\"total_cost_usd\":0.0208005,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":28021,\"output_tokens\":271,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":3,\"outputTokens\":271,\"cacheReadInputTokens\":28021,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.0208005,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"7cf698b6-6539-47ca-85ed-e360ae252091\"}"
+}

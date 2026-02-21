@@ -1,0 +1,13 @@
+{
+  "run_id": "haiku_none_task2_rep1",
+  "model": "haiku",
+  "condition": "none",
+  "task": "2",
+  "task_complexity": "complex",
+  "domain": "sql-query",
+  "rep": 1,
+  "timestamp": "2026-02-20T22:07:08+00:00",
+  "duration_ms": 4377,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":2981,\"duration_api_ms\":2951,\"num_turns\":1,\"result\":\"```sql\\n-- subscriptions_metrics.sql\\nSELECT \\n    DATE_TRUNC('month', COALESCE(s.started_at, b.event_month))::DATE AS month,\\n    COALESCE(p.tier, 'unknown') AS tier,\\n    COALESCE(c.industry, 'unknown') AS industry,\\n    COUNT(DISTINCT s.subscription_id) AS active_subscriptions,\\n    SUM(b.amount) AS total_mrr,\\n    COUNT(DISTINCT u.user_id) AS unique_users\\nFROM subscriptions s\\nLEFT JOIN users u ON s.user_id = u.user_id\\nLEFT JOIN companies c ON u.company_id = c.company_id\\nLEFT JOIN plans p ON s.plan_id = p.plan_id\\nLEFT JOIN (\\n    SELECT \\n        subscription_id,\\n        event_month,\\n        amount,\\n        ROW_NUMBER() OVER (PARTITION BY subscription_id, event_month ORDER BY event_id) AS rn\\n    FROM billing_events\\n) b ON s.subscription_id = b.subscription_id \\n    AND b.rn = 1\\n    AND b.event_month >= s.started_at\\n    AND (s.ended_at IS NULL OR b.event_month < s.ended_at)\\nWHERE s.status = 'active'\\nGROUP BY \\n    DATE_TRUNC('month', COALESCE(s.started_at, b.event_month))::DATE,\\n    COALESCE(p.tier, 'unknown'),\\n    COALESCE(c.industry, 'unknown')\\nORDER BY month, tier, industry;\\n```\",\"stop_reason\":null,\"session_id\":\"621d450c-e35e-499c-8223-ebe260dac9a2\",\"total_cost_usd\":0.007724300000000001,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":2582,\"cache_read_input_tokens\":25088,\"output_tokens\":397,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":2582,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-haiku-4-5-20251001\":{\"inputTokens\":3,\"outputTokens\":397,\"cacheReadInputTokens\":25088,\"cacheCreationInputTokens\":2582,\"webSearchRequests\":0,\"costUSD\":0.007724300000000001,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"85f42e5c-6c9b-4304-80d6-39fb865bc10e\"}"
+}

@@ -1,0 +1,13 @@
+{
+  "run_id": "opus_none_task1_rep3",
+  "model": "opus",
+  "condition": "none",
+  "task": "1",
+  "task_complexity": "simple",
+  "domain": "dockerfile",
+  "rep": 3,
+  "timestamp": "2026-02-21T06:28:06+00:00",
+  "duration_ms": 6323,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":3699,\"duration_api_ms\":3672,\"num_turns\":1,\"result\":\"\\n\\n```dockerfile\\nFROM node:20-alpine AS builder\\nWORKDIR /app\\nCOPY package.json package-lock.json ./\\nRUN npm ci\\nCOPY . .\\nRUN npx tsc\\n\\nFROM node:20-alpine\\nRUN apk add --no-cache curl\\nENV NODE_ENV=production\\nWORKDIR /app\\nCOPY package.json package-lock.json ./\\nRUN npm ci --omit=dev\\nCOPY --from=builder /app/dist ./dist\\nUSER node\\nEXPOSE 3000\\nHEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \\\\\\n  CMD curl -f http://localhost:3000/health || exit 1\\nCMD [\\\"node\\\", \\\"dist/index.js\\\"]\\n```\",\"stop_reason\":null,\"session_id\":\"5d1bfe18-38c6-4d27-affc-9257541e3da6\",\"total_cost_usd\":0.017218999999999998,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":25158,\"output_tokens\":185,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-4-6\":{\"inputTokens\":3,\"outputTokens\":185,\"cacheReadInputTokens\":25158,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.017218999999999998,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"99b064d2-188c-4aba-9826-66bac580c047\"}"
+}
