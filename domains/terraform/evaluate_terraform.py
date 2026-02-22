@@ -85,10 +85,12 @@ def extract_terraform(raw_output: str) -> tuple[str | None, str | None]:
     except json.JSONDecodeError:
         pass
 
-    # Step 1b: Fallback to permission_denials (Haiku sometimes tries Write tool)
-    if "resource " not in text_to_search and "variable " not in text_to_search:
+    # Step 1b: Fallback to permission_denials (models sometimes use Write tool)
+    # Check for HCL block patterns (not just keyword mentions in summaries)
+    has_hcl = bool(re.search(r'\b(resource|variable)\s+"', text_to_search))
+    if not has_hcl:
         denied_content = extract_from_permission_denials(raw_output)
-        if denied_content and ("resource " in denied_content or "variable " in denied_content):
+        if denied_content and re.search(r'\b(resource|variable)\s', denied_content):
             text_to_search = denied_content
 
     # Step 2: Try fenced code blocks (most common)
