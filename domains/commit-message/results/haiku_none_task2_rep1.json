@@ -1,0 +1,13 @@
+{
+  "run_id": "haiku_none_task2_rep1",
+  "model": "haiku",
+  "condition": "none",
+  "task": "2",
+  "task_complexity": "medium",
+  "domain": "commit-message",
+  "rep": 1,
+  "timestamp": "2026-02-21T22:10:28+00:00",
+  "duration_ms": 4176,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":1499,\"duration_api_ms\":1470,\"num_turns\":1,\"result\":\"```\\nfeat: add per-IP rate limiting middleware with Redis backend\\n\\n- Implement sliding window algorithm for rate limiting\\n- Configurable time window (default 15 minutes) and request limit (default 100)\\n- Return 429 status with Retry-After header when limit exceeded\\n- Add middleware integration to Express app\\n- Include comprehensive test coverage\\n\\nFiles: src/middleware/rateLimit.ts, src/app.ts, tests/middleware/rateLimit.test.ts\\nTicket: PROJ-312\\n\\nCo-Authored-By: Alice Developer <alice@example.com>\\n```\",\"stop_reason\":null,\"session_id\":\"ad4fdba9-086b-4714-9b07-7861a305c761\",\"total_cost_usd\":0.00696725,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":2843,\"cache_read_input_tokens\":27305,\"output_tokens\":136,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":2843,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-haiku-4-5-20251001\":{\"inputTokens\":3,\"outputTokens\":136,\"cacheReadInputTokens\":27305,\"cacheCreationInputTokens\":2843,\"webSearchRequests\":0,\"costUSD\":0.00696725,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"92191231-1897-46f7-8a17-7768414344d3\"}"
+}

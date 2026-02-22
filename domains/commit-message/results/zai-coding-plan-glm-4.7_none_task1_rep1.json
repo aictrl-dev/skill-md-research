@@ -1,0 +1,13 @@
+{
+  "run_id": "zai-coding-plan-glm-4.7_none_task1_rep1",
+  "model": "zai-coding-plan/glm-4.7",
+  "condition": "none",
+  "task": "1",
+  "task_complexity": "simple",
+  "domain": "commit-message",
+  "rep": 1,
+  "timestamp": "2026-02-22T01:09:54+00:00",
+  "duration_ms": 7792,
+  "cli_tool": "opencode",
+  "raw_output": "{\"type\":\"step_start\",\"timestamp\":1771722592212,\"sessionID\":\"ses_37d1ac21effelRzNUWv3IT7Mxe\",\"part\":{\"id\":\"prt_c82e54fd2001XLKNofUfprk6Vo\",\"sessionID\":\"ses_37d1ac21effelRzNUWv3IT7Mxe\",\"messageID\":\"msg_c82e53e150017NZYTTMmoogPNq\",\"type\":\"step-start\",\"snapshot\":\"6b2d5e58a976df698d42c4add51590817ae17be6\"}}\n{\"type\":\"text\",\"timestamp\":1771722594752,\"sessionID\":\"ses_37d1ac21effelRzNUWv3IT7Mxe\",\"part\":{\"id\":\"prt_c82e5585d001IQktEdXeeU3vkA\",\"sessionID\":\"ses_37d1ac21effelRzNUWv3IT7Mxe\",\"messageID\":\"msg_c82e53e150017NZYTTMmoogPNq\",\"type\":\"text\",\"text\":\"```\\nfix(UserService): Fix null pointer exception when user record doesn't exist in database\\n\\nCloses: PROJ-247\\n```\",\"time\":{\"start\":1771722594752,\"end\":1771722594752}}}\n{\"type\":\"step_finish\",\"timestamp\":1771722594760,\"sessionID\":\"ses_37d1ac21effelRzNUWv3IT7Mxe\",\"part\":{\"id\":\"prt_c82e559c1001d21t7PfbP7jT4R\",\"sessionID\":\"ses_37d1ac21effelRzNUWv3IT7Mxe\",\"messageID\":\"msg_c82e53e150017NZYTTMmoogPNq\",\"type\":\"step-finish\",\"reason\":\"stop\",\"snapshot\":\"6b2d5e58a976df698d42c4add51590817ae17be6\",\"cost\":0,\"tokens\":{\"total\":11258,\"input\":10434,\"output\":348,\"reasoning\":317,\"cache\":{\"read\":476,\"write\":0}}}}"
+}

@@ -1,0 +1,13 @@
+{
+  "run_id": "haiku_none_task3_rep3",
+  "model": "haiku",
+  "condition": "none",
+  "task": "3",
+  "task_complexity": "complex",
+  "domain": "commit-message",
+  "rep": 3,
+  "timestamp": "2026-02-22T00:59:22+00:00",
+  "duration_ms": 3858,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":1274,\"duration_api_ms\":1243,\"num_turns\":1,\"result\":\"```\\nfeat!: replace jsonwebtoken with jose for JWT handling\\n\\njose is a more modern, standards-compliant library with better TypeScript\\nsupport and no native dependencies. All token signing/verification has been\\nupdated to use jose.\\n\\nBREAKING CHANGE: JWT tokens signed with jsonwebtoken are incompatible with\\njose. All active sessions will be invalidated and users must re-authenticate\\nafter deployment.\\n\\nRefs: PROJ-189\\nCo-Authored-By: Alice Developer <alice@example.com>\\n```\",\"stop_reason\":null,\"session_id\":\"24f96327-8ed9-4eae-beb4-20e84fe2b56e\",\"total_cost_usd\":0.0036120000000000006,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":30190,\"output_tokens\":118,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-haiku-4-5-20251001\":{\"inputTokens\":3,\"outputTokens\":118,\"cacheReadInputTokens\":30190,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.0036120000000000006,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"a2e60004-134b-4a62-b54b-73ebbbf822b6\"}"
+}

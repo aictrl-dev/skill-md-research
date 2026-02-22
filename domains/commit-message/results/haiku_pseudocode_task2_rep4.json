@@ -1,0 +1,13 @@
+{
+  "run_id": "haiku_pseudocode_task2_rep4",
+  "model": "haiku",
+  "condition": "pseudocode",
+  "task": "2",
+  "task_complexity": "medium",
+  "domain": "commit-message",
+  "rep": 4,
+  "timestamp": "2026-02-22T01:01:46+00:00",
+  "duration_ms": 3892,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":1437,\"duration_api_ms\":1405,\"num_turns\":1,\"result\":\"```\\nfeat(api): :sparkles: add per-IP rate limiting middleware\\n\\nWhy:\\nThe API lacks protection against abuse and has no request rate limits.\\nA single client can make unlimited requests, potentially causing service\\ndegradation for all users and exhausting server resources.\\n\\nWhat:\\nImplement sliding window rate limiter middleware using Redis backend.\\nConfigurable per-IP with default 100 requests per 15-minute window.\\nReturns 429 Too Many Requests with Retry-After header when exceeded.\\n\\nTicket: PROJ-312\\nSigned-off-by: Alice Developer <alice@example.com>\\n```\",\"stop_reason\":null,\"session_id\":\"e9930665-b8ab-4c64-b74f-1b12acc379cb\",\"total_cost_usd\":0.0041995,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":34865,\"output_tokens\":142,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-haiku-4-5-20251001\":{\"inputTokens\":3,\"outputTokens\":142,\"cacheReadInputTokens\":34865,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.0041995,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"e0baa2f2-94e5-4947-8dce-7f31574c2b1e\"}"
+}

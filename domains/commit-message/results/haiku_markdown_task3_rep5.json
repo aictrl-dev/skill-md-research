@@ -1,0 +1,13 @@
+{
+  "run_id": "haiku_markdown_task3_rep5",
+  "model": "haiku",
+  "condition": "markdown",
+  "task": "3",
+  "task_complexity": "complex",
+  "domain": "commit-message",
+  "rep": 5,
+  "timestamp": "2026-02-22T01:00:57+00:00",
+  "duration_ms": 3350,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":1257,\"duration_api_ms\":1228,\"num_turns\":1,\"result\":\"```\\nfeat(auth)!: :sparkles: replace jsonwebtoken with jose\\n\\nWhy:\\nThe jsonwebtoken library has known CVEs and lacks native\\nTypeScript types. jose is standards-compliant and provides\\nfull TS support with zero native dependencies.\\n\\nWhat:\\nMigrate all token signing from jwt.sign() to jose SignJWT\\nbuilder pattern. Verification now uses jwtVerify() with\\nexplicit algorithm allowlist.\\n\\nBREAKING CHANGE: JWT tokens signed with jsonwebtoken are\\nincompatible with jose. All active sessions will be\\ninvalidated. Users must log in again after deployment.\\n\\nTicket: PROJ-189\\nSigned-off-by: Alice Developer <alice@example.com>\\n```\",\"stop_reason\":null,\"session_id\":\"0825a300-421a-42b3-9451-000e69a2ef60\",\"total_cost_usd\":0.0040373,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":32143,\"output_tokens\":164,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-haiku-4-5-20251001\":{\"inputTokens\":3,\"outputTokens\":164,\"cacheReadInputTokens\":32143,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.0040373,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"5b9b5dfc-b63e-4304-9dea-a3f1f30f8ae7\"}"
+}

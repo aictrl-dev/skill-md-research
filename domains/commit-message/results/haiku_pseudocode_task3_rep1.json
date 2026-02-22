@@ -1,0 +1,13 @@
+{
+  "run_id": "haiku_pseudocode_task3_rep1",
+  "model": "haiku",
+  "condition": "pseudocode",
+  "task": "3",
+  "task_complexity": "complex",
+  "domain": "commit-message",
+  "rep": 1,
+  "timestamp": "2026-02-21T23:31:14+00:00",
+  "duration_ms": 5076,
+  "cli_tool": "claude",
+  "raw_output": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":2966,\"duration_api_ms\":2928,\"num_turns\":1,\"result\":\"```\\nfeat(auth)!: :sparkles: replace jsonwebtoken with jose\\n\\nWhy:\\nThe jsonwebtoken library has known CVEs and lacks native TypeScript\\ntypes. jose is standards-compliant, provides full TS support, and\\nhas zero native dependencies, reducing attack surface and maintenance\\nburden.\\n\\nWhat:\\nMigrate all token signing from jwt.sign() to jose SignJWT builder\\npattern. Token verification now uses jwtVerify() with explicit\\nalgorithm allowlist. Updated auth middleware to handle jose Promise\\nreturn values. Dependencies updated in package.json.\\n\\nBREAKING CHANGE: JWT tokens signed with jsonwebtoken are incompatible\\nwith jose. All active sessions will be invalidated. Users must log in\\nagain after deployment.\\n\\nTicket: PROJ-189\\nSigned-off-by: Alice Developer <alice@example.com>\\n```\",\"stop_reason\":null,\"session_id\":\"6263ad26-59dd-4b62-8ba4-c76753a90599\",\"total_cost_usd\":0.0131935,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":7600,\"cache_read_input_tokens\":27305,\"output_tokens\":192,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":7600,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-haiku-4-5-20251001\":{\"inputTokens\":3,\"outputTokens\":192,\"cacheReadInputTokens\":27305,\"cacheCreationInputTokens\":7600,\"webSearchRequests\":0,\"costUSD\":0.0131935,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"uuid\":\"98d15234-735b-48fc-b4d5-dfcc8cc4fcd7\"}"
+}
