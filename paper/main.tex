@@ -1,0 +1,1002 @@
+\documentclass[sigconf,nonacm]{acmart}
+
+% ─── Packages ────────────────────────────────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{balance}
+
+% ─── Listings Setup ──────────────────────────────────────────────────────────
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  xleftmargin=1em,
+  xrightmargin=1em,
+  numbers=none,
+}
+
+% ─── Metadata ────────────────────────────────────────────────────────────────
+\setcopyright{none}
+\settopmatter{printacmref=false}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\pagestyle{plain}
+
+\begin{document}
+
+\title{Pseudocode Beats Prose: Comparing Instruction Formats\\for LLM Rule Compliance Across Multiple Structured-Output Domains}
+
+\author{Bulat Yapparov}
+\affiliation{%
+  \institution{aictrl.dev}
+  \country{United Kingdom}
+}
+\email{bulat@aictrl.dev}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% §1  ABSTRACT
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{abstract}
+LLM-based coding agents increasingly rely on \emph{skill files}---structured
+instruction documents that specify style rules, constraints, and conventions
+for generated artifacts. Although skill files are widely adopted (e.g., Claude
+Code SKILL.md, Cursor rules), no study has compared how their \emph{format}
+affects compliance. We present a controlled experiment comparing three
+conditions---no skill (baseline), Markdown prose, and Python
+pseudocode---across four structured-output domains (Chart, Dockerfile,
+SQL, and Terraform), four models from two families (Claude and GLM), and three
+task complexities. In 629 scored runs evaluated against 12--15 automated binary
+rules per domain, we find: (1)~skill files reduce failure rates by 3.7$\times$
+versus the baseline (Cliff's $\delta = 0.778$, \emph{large});
+(2)~pseudocode format further reduces failure rates from 10.7\% to 7.6\%
+versus Markdown ($p < 0.001$, Cliff's $\delta = 0.171$); (3)~the
+pseudocode advantage is strongest on the frontier model Claude Opus~4.6
+(5.0\% vs.\ 9.0\% failure rate), while GLM-5 shows no significant format
+preference (6.8\% vs.\ 5.9\%); and (4)~pseudocode tightens the failure-rate
+distribution (Levene's $F = 10.90$, $p = 0.001$; variance ratio 1.59),
+increasing the probability of meeting a 10\% production-quality threshold
+by up to 21 percentage points. We release all data, skills, evaluators, and
+analysis scripts at
+\url{https://github.com/aictrl-dev/skill-md-research}.
+\end{abstract}
+
+\maketitle
+
+% ─────────────────────────────────────────────────────────────────────────────
+% §2  INTRODUCTION
+% ─────────────────────────────────────────────────────────────────────────────
+
+\section{Introduction}\label{sec:intro}
+
+Large language model (LLM) agents that generate code, configuration, and
+structured artifacts are now widely deployed in development
+workflows~\cite{plaat2025agentic}. To steer these agents, practitioners write
+\emph{skill files}: instruction documents specifying style rules, structural
+constraints, and domain conventions. Claude Code uses \texttt{SKILL.md}
+files; Cursor uses \texttt{.cursor/rules}; Windsurf uses
+\texttt{.windsurfrules}. SkillsBench~\cite{li2026skillsbench} found that
+curated skill files raise agent pass rates by 16.2 percentage points, but
+examined only skill \emph{presence} versus absence, not skill \emph{format}.
+
+Today, most skill files are written as Markdown prose---natural language with
+headings, bullet lists, and code examples. An alternative is to express the
+same rules as Python pseudocode: dataclasses for schemas, enums for valid
+values, and typed function signatures with validation logic. Pseudocode
+prompting has shown 7--16 F1 point gains on NLP classification
+tasks~\cite{mishra2023prompting}, but its effect on structured-output
+generation in realistic agentic domains is unstudied.
+
+Meanwhile, He et al.~\cite{he2024prompt} found that prompt format (Markdown,
+JSON, YAML, plain text) can cause up to 40\% performance variation, and that
+the optimal format differs across model families (IoU~$< 0.2$). This
+raises a practical question: \emph{does it matter how we write skill files?}
+
+We address this question with a controlled factorial experiment:
+
+\begin{itemize}
+  \item \textbf{3 conditions}: no skill (baseline), Markdown prose, Python
+    pseudocode---encoding the same rules in each format.
+  \item \textbf{4 domains}: Vega-Lite chart generation, Dockerfile generation,
+    dbt-style SQL pipelines, and Terraform
+    infrastructure-as-code---covering different output modalities
+    (JSON, Dockerfile, SQL, HCL).
+  \item \textbf{4 models} from 2 families: Claude Haiku~4.5 and Opus~4.6
+    (Anthropic); GLM-4.7 and GLM-5 (ZhipuAI).
+  \item \textbf{3 task complexities} per domain (simple, medium, complex),
+    with up to 5 repetitions per cell.
+\end{itemize}
+
+\noindent
+This yields 629 evaluated runs, each scored against 12--15 domain-specific
+binary rules by automated evaluators.
+
+\paragraph{Contributions.}
+(1)~The first empirical comparison of instruction \emph{format} for LLM skill
+files, extending prior work on skill \emph{presence}~\cite{li2026skillsbench}
+and pseudocode on NLP tasks~\cite{mishra2023prompting}.
+(2)~A multi-domain evaluation across four structured-output domains and two
+model families, testing generalization.
+(3)~Evidence that pseudocode reduces output \emph{variability}, not just the
+mean, increasing the probability of meeting quality thresholds.
+(4)~Open release of all skill files, evaluators, data, and analysis
+scripts.\footnote{\url{https://github.com/aictrl-dev/skill-md-research}}
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+% §3  RELATED WORK
+% ─────────────────────────────────────────────────────────────────────────────
+
+\section{Related Work}\label{sec:related}
+
+\paragraph{Prompt Format Effects.}
+He et al.~\cite{he2024prompt} compared plain text, Markdown, JSON, and YAML
+across six benchmarks, finding up to 40\% variation on code translation for
+GPT-3.5-turbo and more robustness for GPT-4, but no single universally optimal
+format. Sclar et al.~\cite{sclar2024quantifying} quantified sensitivity to
+spurious formatting changes in few-shot settings, reporting up to 76 accuracy
+points difference on LLaMA-2-13B. Errica et al.~\cite{errica2025sensitivity}
+proposed sensitivity and consistency metrics for prompt rephrasings. Ngweta et
+al.~\cite{ngweta2025mof} introduced Mixture of Formats to improve robustness.
+Liu et al.~\cite{liu2025cfpo} jointly optimized prompt content and format.
+None of these studies included pseudocode as a format or tested on agentic
+structured-output tasks.
+
+\paragraph{Pseudocode Prompting.}
+Mishra et al.~\cite{mishra2023prompting} created pseudocode prompts for 132
+NLP tasks from Super-NaturalInstructions, finding 7--16 F1 point improvements
+on classification and 12--38\% ROUGE-L gains using BLOOM and CodeGen.
+Ablations showed that code comments, docstrings, and structural cues all
+contributed. Kumar et al.~\cite{kumar2025training} extended this to
+training-time augmentation with pseudocode. Chae et
+al.~\cite{chae2024compilers} used pseudocode as an intermediate reasoning
+representation. These works tested traditional NLP tasks, not agentic
+structured-output generation.
+
+\paragraph{Agent Skills.}
+SkillsBench~\cite{li2026skillsbench} benchmarked 86 tasks across 11 domains
+with 7,308 trajectories, finding curated skills raise pass rates by 16.2pp,
+but self-generated skills provide no benefit. Xu and
+Yan~\cite{xu2026agentskills} formalized agent skills as composable packages.
+Neither compared skill \emph{formats}. Our work extends SkillsBench by asking
+whether \emph{how} the skill is written matters, not just \emph{whether} one
+is provided.
+
+\paragraph{Code as Prompt.}
+Madaan et al.~\cite{madaan2022language} showed that language models of code
+are few-shot commonsense learners, and Singh et
+al.~\cite{singh2023progprompt} used code-like specifications for robotic task
+planning. These suggest that LLMs trained on code may respond better to
+code-formatted instructions---a hypothesis our pseudocode condition tests.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+% §4  METHODOLOGY
+% ─────────────────────────────────────────────────────────────────────────────
+
+\section{Methodology}\label{sec:method}
+
+\subsection{Research Questions}\label{sec:rqs}
+
+\begin{description}
+  \item[RQ1 (Skill Efficacy)] Does having a skill file improve rule compliance
+    over a no-skill baseline?
+  \item[RQ2 (Format Effect)] Does pseudocode format outperform Markdown prose
+    for rule compliance?
+  \item[RQ3 (Generalization)] Does the format effect generalize across domains
+    and model families?
+  \item[RQ4 (Efficiency)] How do skill files affect token consumption and
+    per-run cost?
+  \item[RQ5 (Reliability)] Does pseudocode format reduce output
+    \emph{variability}, yielding tighter failure-rate distributions?
+\end{description}
+
+\subsection{Independent Variable: Instruction Format}\label{sec:iv}
+
+We test three conditions (Table~\ref{tab:conditions}). The Markdown and
+pseudocode skills encode \emph{identical} semantic content---the same rules,
+thresholds, and examples---differing only in surface format. Both skill
+conditions prepend the skill document to the task prompt; the no-skill
+condition includes only the task data and a generic instruction.
+
+\begin{table}[t]
+\caption{Instruction conditions. Line counts are averaged across the four
+domains.}
+\label{tab:conditions}
+\centering\small
+\begin{tabular}{llrl}
+\toprule
+\textbf{Condition} & \textbf{Format} & \textbf{Lines} & \textbf{Description} \\
+\midrule
+No skill & None & 0 & Task data + generic prompt \\
+Markdown & Prose & 211 & Headings, tables, bullets \\
+Pseudocode & Python & 274 & Dataclasses, enums, typed fns \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The pseudocode format uses Python-like dataclasses to define schemas
+(\texttt{@dataclass} with typed fields), enums to constrain valid values
+(\texttt{class Color(Enum)}), and validation functions
+(\texttt{def violations() -> list[str]}) that return a list of rule
+violations. The Markdown format expresses the same rules as prose with
+tables, code examples in fenced blocks, and checklists.
+
+\subsection{Domains and Tasks}\label{sec:domains}
+
+We evaluate across four structured-output domains (Table~\ref{tab:domains}),
+selected for diversity in output modality and the availability of deterministic
+automated evaluation.
+
+\begin{table}[t]
+\caption{Evaluation domains with rule counts and task descriptions.}
+\label{tab:domains}
+\centering\small
+\begin{tabular}{llcl}
+\toprule
+\textbf{Domain} & \textbf{Output} & \textbf{Rules} & \textbf{Tasks (simple / medium / complex)} \\
+\midrule
+Chart & Vega-Lite JSON & 15 & GDP bars / AI trends / Cloud revenue \\
+Dockerfile & Dockerfile & 13 & Java dashboard / Analytics / Rust ML \\
+SQL (dbt) & SQL models & 12 & Revenue report / Subscriptions / Returns \\
+Terraform & HCL config & 13 & S3 bucket / VPC+EC2 / ECS Fargate \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Each domain has three tasks at increasing complexity. Chart tasks range from a
+simple bar chart to a multi-series line chart with annotations. Dockerfile
+tasks range from a single-stage Java application to a multi-target Rust
+monorepo build. SQL tasks range from a
+revenue aggregation with six models to a return-rate analysis requiring
+deduplication and window functions. Terraform tasks range from an S3 bucket to
+a full ECS Fargate deployment with ALB, RDS, and IAM.
+
+\subsection{Models}\label{sec:models}
+
+We test four models from two families spanning two capability tiers
+(Table~\ref{tab:models}), enabling cross-family and cross-tier comparisons
+following the finding by He et al.~\cite{he2024prompt} that format preferences
+often do not transfer across model families.
+
+\begin{table}[t]
+\caption{Models used in the experiment.}
+\label{tab:models}
+\centering\small
+\begin{tabular}{llll}
+\toprule
+\textbf{Model} & \textbf{Family} & \textbf{Tier} & \textbf{Interface} \\
+\midrule
+Claude Haiku 4.5 & Anthropic & Economy & Claude Code CLI \\
+Claude Opus 4.6 & Anthropic & Frontier & Claude Code CLI \\
+GLM-4.7 & ZhipuAI & Mid-tier & OpenCode CLI \\
+GLM-5 & ZhipuAI & Frontier & OpenCode CLI \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All models were invoked with default temperature settings to reflect
+ecologically valid conditions. The three original domains (Dockerfile, SQL,
+Terraform) have 5 repetitions per cell yielding 4 models $\times$ 3 conditions
+$\times$ 3 tasks $\times$ 5 reps = 180 runs each. Chart uses 3 repetitions
+(81 runs after excluding GLM-4.7, which was not tested in that domain). In total,
+we have 629 scored runs across four domains.
+
+\subsection{Evaluation Pipeline}\label{sec:eval}
+
+Each domain has a dedicated automated evaluator (Python script) that:
+
+\begin{enumerate}
+  \item \textbf{Extracts} the structured output from raw LLM response text
+    (handling multiple response formats: JSONL, fenced code blocks, plain text).
+  \item \textbf{Validates} structural integrity (e.g., at least one
+    \texttt{FROM} instruction for Dockerfile, at least one \texttt{resource}
+    block for Terraform).
+  \item \textbf{Checks} 12--15 binary rules specific to the domain
+    (Table~\ref{tab:rules}).
+\end{enumerate}
+
+\begin{table}[t]
+\caption{Rule categories by domain. Each rule yields a binary pass/fail per
+run. SQL rules 1--10 produce per-file pass rates across all model files.}
+\label{tab:rules}
+\centering\small
+\begin{tabular}{p{2.2cm}cp{5.3cm}}
+\toprule
+\textbf{Domain} & \textbf{N} & \textbf{Rule Categories} \\
+\midrule
+Chart & 15 & Color palette, accent colors, accessibility (no red+green),
+  title, source citation, font, data labels, y-axis origin, spines, grid,
+  units, annotations, legend vs.\ direct labels, dimensions \\
+Dockerfile & 13 & Base image tags, security (USER, secrets), structure
+  (multi-stage, WORKDIR), cache (deps-first), layers (combined RUN), apt
+  practices, HEALTHCHECK, EXPOSE, LABEL, exec form CMD, no ADD \\
+SQL (dbt) & 12 & Keywords uppercase, one clause/line, table aliases, column
+  aliases, no SELECT~*, comment headers, LEFT JOIN only, COALESCE unknown,
+  ROW\_NUMBER dedup, one CTE/file, Jinja ref(), layer naming \\
+Terraform & 13 & snake\_case naming, variable description/type, outputs, tags,
+  variable grouping, file structure, no hardcoded IDs, provider pinned,
+  backend configured, sensitive marked, data sources, locals block \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The primary metric is \textbf{failure rate}:
+\[
+  \text{failure\_rate} = 1 - \frac{\text{rules\_passed}}{\text{rules\_scored}}
+\]
+where \texttt{rules\_scored} excludes conditional rules that are not applicable
+to a given task (e.g., the Terraform \emph{sensitive} rule is only scored when
+the task contains secret values).
+
+\subsection{Statistical Methods}\label{sec:stats}
+
+We use non-parametric tests throughout, as rule compliance scores are bounded
+and often ceiling-compressed.
+
+\begin{itemize}
+  \item \textbf{Mann-Whitney U} (one-tailed for directional hypotheses
+    RQ1--RQ2; two-tailed for RQ3 cross-family comparisons).
+  \item \textbf{Cliff's delta}~\cite{cliff1993dominance} for effect size,
+    using standard thresholds: $|\delta| < 0.147$ negligible,
+    $< 0.33$ small, $< 0.474$ medium, $\geq 0.474$ large.
+  \item \textbf{Bootstrap 95\% confidence intervals} (10,000 resamples,
+    percentile method, seed 42)~\cite{efron1994bootstrap} for mean failure
+    rates by model~$\times$~condition.
+  \item \textbf{Levene's test} (median variant) for equality of variances
+    between conditions (RQ5). We report the variance ratio
+    $\sigma^2_{\text{MD}} / \sigma^2_{\text{PC}}$ and 90\% highest-density
+    intervals (HDI) of the raw failure-rate distributions.
+\end{itemize}
+
+We report results per domain and pooled across all four domains. For pooled
+analyses, failure rates are computed per run (normalized to each domain's rule
+count) and then aggregated.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+% §5  RESULTS
+% ─────────────────────────────────────────────────────────────────────────────
+
+\section{Results}\label{sec:results}
+
+\subsection{RQ1: Skill Files Reduce Failure Rates}\label{sec:rq1}
+
+Pooling both skill conditions (Markdown and pseudocode) against the no-skill
+baseline across all four domains and four models, skill files produce a
+\textbf{large} reduction in failure rate (Table~\ref{tab:rq1}).
+
+\begin{table}[t]
+\caption{RQ1: Skill files vs.\ no-skill baseline (629 runs pooled).}
+\label{tab:rq1}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Condition} & \textbf{N} & \textbf{Mean FR} & \textbf{Cliff's $\delta$} & \textbf{$p$} \\
+\midrule
+No skill & 210 & 33.7\% & \multirow{2}{*}{0.778 (large)} & \multirow{2}{*}{$< 0.001$} \\
+Skill (both) & 419 & 9.2\% & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The effect is consistent across all four domains
+(Table~\ref{tab:rq1_domain} and Figure~\ref{fig:condition_bars}).
+SQL shows the largest baseline failure rate (50.1\% $\to$ 13.7\%),
+while Dockerfile shows the strongest relative improvement (18.7\% $\to$ 4.2\%).
+
+\begin{table}[t]
+\caption{RQ1 per domain: failure rate by condition.}
+\label{tab:rq1_domain}
+\centering\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Domain} & \textbf{No skill} & \textbf{Markdown} & \textbf{Pseudocode} \\
+\midrule
+Chart & 20.9\% & 5.7\% & 2.8\% \\
+Dockerfile & 18.7\% & 4.2\% & 4.2\% \\
+SQL (dbt) & 50.1\% & 16.9\% & 10.5\% \\
+Terraform & 39.0\% & 13.7\% & 10.5\% \\
+\midrule
+\textbf{Pooled} & \textbf{33.7\%} & \textbf{10.7\%} & \textbf{7.6\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig1_condition_bars.pdf}
+\Description{Grouped bar chart showing failure rates for three conditions
+(No skill, Markdown, Pseudocode) across Pooled, Chart, Dockerfile,
+SQL, and Terraform domains. No skill bars are tallest, pseudocode bars are
+shortest.}
+\caption{Failure rate by condition and domain with 95\% bootstrap CIs.
+Skill files consistently reduce failure rates across all four domains,
+with pseudocode (dark blue) achieving the lowest rates.}
+\label{fig:condition_bars}
+\end{figure}
+
+\subsection{RQ2: Pseudocode Outperforms Markdown}\label{sec:rq2}
+
+Comparing the two skill formats directly, pseudocode reduces pooled failure
+rate from 10.7\% (Markdown) to 7.6\% (pseudocode), a statistically
+significant difference (Mann-Whitney $U = 25688$, $p < 0.001$, one-tailed),
+with a small effect size (Cliff's $\delta = 0.171$).
+
+Per-domain results (Table~\ref{tab:rq2}) show that the effect is strongest
+in SQL ($\delta = 0.495$, large) and Chart ($\delta = 0.318$, small).
+Dockerfile shows a negligible effect ($\delta = 0.015$), where both formats
+achieve near-ceiling compliance ($<$4.2\% failure rate).
+A per-rule breakdown (Appendix~\ref{app:per-rule}) reveals that the SQL
+advantage concentrates in two correlated rules where Markdown-guided models
+use a \texttt{SELECT~*} shortcut in staging CTEs, while pseudocode models
+avoid it. In Terraform, the advantage comes from variable descriptions,
+types, and outputs---rules that map directly to pseudocode dataclass fields.
+
+\begin{table}[t]
+\caption{RQ2: Pseudocode vs.\ Markdown per domain. Positive $\delta$ favors
+pseudocode. \textsuperscript{*}$p < 0.05$.}
+\label{tab:rq2}
+\centering\small
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Domain} & \textbf{MD FR} & \textbf{PC FR} & \textbf{$\delta$} & \textbf{Mag.} & \textbf{$p$} \\
+\midrule
+Chart\textsuperscript{*} & 5.7\% & 2.8\% & 0.318 & small & 0.015 \\
+Dockerfile & 4.2\% & 4.2\% & 0.015 & negl. & 0.437 \\
+SQL (dbt)\textsuperscript{*} & 16.9\% & 10.5\% & 0.495 & large & $< 0.001$ \\
+Terraform\textsuperscript{*} & 13.7\% & 10.5\% & 0.150 & small & 0.048 \\
+\midrule
+\textbf{Pooled}\textsuperscript{*} & \textbf{10.7\%} & \textbf{7.6\%} & \textbf{0.171} & & $< \textbf{0.001}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\subsection{RQ3: Generalization Across Models and Families}\label{sec:rq3}
+
+\paragraph{Cross-domain consistency.}
+All four domains show a positive pseudocode effect (Chart, Dockerfile,
+SQL, and Terraform). The mean
+Cliff's delta across domains is $+0.244$ (small positive). The binomial test
+for direction consistency ($4/4$ positive) yields $p = 0.12$.
+
+\paragraph{Cross-family analysis.}
+Table~\ref{tab:rq3_family} and Figure~\ref{fig:model_heatmap} show the
+pseudocode effect separated by model family. For Claude models, the effect is
+statistically significant in Chart ($\delta = 0.472$, medium) and SQL
+($\delta = 0.982$, large), with Terraform trending positive ($\delta = 0.252$,
+$p = 0.053$), but not significant in Dockerfile. For GLM models, the effect is not statistically
+significant in any individual domain, though the direction is positive in
+three of four domains.
+
+\begin{table}[t]
+\caption{RQ3: Cliff's delta (pseudocode vs.\ Markdown) by family and domain.
+Two-tailed tests. \textsuperscript{*}$p < 0.05$.}
+\label{tab:rq3_family}
+\centering\small
+\begin{tabular}{llrrl}
+\toprule
+\textbf{Family} & \textbf{Domain} & \textbf{$\delta$} & \textbf{$p$} & \textbf{Mag.} \\
+\midrule
+\multirow{4}{*}{Claude} & Chart\textsuperscript{*} & 0.472 & 0.005 & medium \\
+ & Dockerfile & 0.100 & 0.435 & negl. \\
+ & SQL\textsuperscript{*} & 0.982 & $< 0.001$ & large \\
+ & Terraform & 0.252 & 0.053 & small \\
+\midrule
+\multirow{4}{*}{GLM} & Chart & 0.099 & 0.750 & negl. \\
+ & Dockerfile & $-0.053$ & 0.673 & negl. \\
+ & SQL & 0.093 & 0.532 & negl. \\
+ & Terraform & 0.033 & 0.798 & negl. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\columnwidth]{figures/fig2_model_heatmap.pdf}
+\Description{Heatmap showing failure rates for four models across three
+conditions. Opus 4.6 with pseudocode achieves the lowest rate at 5.0 percent.}
+\caption{Failure rate (\%) by model and condition. Darker green indicates
+lower failure rates. The white line separates Claude (top) and GLM (bottom)
+families.}
+\label{fig:model_heatmap}
+\end{figure}
+
+\paragraph{Frontier model analysis.}
+The pseudocode advantage is most pronounced on frontier models
+(Table~\ref{tab:rq3_frontier} and Figure~\ref{fig:pseudocode_advantage}).
+Claude Opus~4.6 shows a pooled failure rate of
+5.0\% (pseudocode) vs.\ 9.0\% (Markdown), a 44\% relative reduction. GLM-5
+shows 6.8\% vs.\ 5.9\%, with pseudocode slightly \emph{underperforming}
+Markdown ($-15\%$ relative).
+
+\begin{table}[t]
+\caption{Failure rates for frontier models: Markdown vs.\ pseudocode.}
+\label{tab:rq3_frontier}
+\centering\small
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Model} & \textbf{MD FR} & \textbf{PC FR} & \textbf{$\Delta$} & \textbf{Rel.\ $\downarrow$} \\
+\midrule
+Claude Opus 4.6 & 9.0\% & 5.0\% & $+3.9$pp & $-44\%$ \\
+GLM-5 & 5.9\% & 6.8\% & $-0.9$pp & $+15\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig3_pseudocode_advantage.pdf}
+\Description{Forest plot showing pseudocode advantage in percentage points
+for each model. All four models show positive values (pseudocode better).}
+\caption{Pseudocode advantage per model (Markdown FR $-$ Pseudocode FR)
+with 95\% bootstrap CIs. Three of four models favor pseudocode (blue dots),
+with Opus~4.6 showing the largest advantage; GLM-5's CI crosses zero.}
+\label{fig:pseudocode_advantage}
+\end{figure}
+
+\subsection{RQ4: Token Efficiency}\label{sec:rq4}
+
+Skill files increase both input and output token consumption.
+Pseudocode prompts are 30.8\% longer than no-skill prompts (5{,}597
+vs.\ 4{,}279 mean input tokens), while Markdown adds 21.5\%
+(5{,}198 tokens). Both formats also produce \emph{longer} outputs:
+$+$46.2\% for pseudocode and $+$40.3\% for Markdown relative to the
+no-skill baseline (1{,}621 and 1{,}556 vs.\ 1{,}109 mean output tokens).
+Models generate more structured, multi-section output when guided by a
+skill file.
+
+Comparing the two skill formats directly, pseudocode prompts are only
+8\% longer than Markdown and produce 4\% more output tokens.
+For Claude models (where cost data is available), the mean cost per
+run is \$0.061 (pseudocode) vs.\ \$0.054 (Markdown) vs.\ \$0.045
+(no-skill). The pseudocode--Markdown cost premium of \$0.007 per run
+buys a 29\% relative reduction in failure rate (RQ2), a favorable
+tradeoff for production workloads where rework cost from non-compliant
+output far exceeds the token premium.
+
+
+\subsection{RQ5: Pseudocode Reduces Output Variability}\label{sec:rq5}
+
+Beyond lowering mean failure rates (RQ2), pseudocode also \emph{tightens}
+the failure-rate distribution. We assess this with three complementary
+measures: variance ratio via Levene's test, 90\% highest-density interval
+(HDI) widths, and the probability of meeting a 10\% production-quality
+threshold.
+
+\paragraph{Pooled variance.}
+Pooling across all models and domains, Markdown runs have a sample variance
+of 0.0093 compared to 0.0059 for pseudocode---a ratio of 1.59.
+Levene's test confirms unequal variances ($F = 10.90$, $p = 0.001$).
+
+\paragraph{Per-model HDI narrowing.}
+Table~\ref{tab:rq5_hdi} shows the 90\% HDI width of the raw failure-rate
+distribution per model. Pseudocode produces a narrower HDI for three of four
+models, with the largest narrowing on Haiku~4.5 (30.8\% $\to$ 16.7\%, a 46\%
+reduction) and Opus~4.6 (17.3\% $\to$ 9.8\%, a 44\% reduction).
+
+\begin{table}[t]
+\caption{RQ5: 90\% HDI width of the failure-rate distribution and
+P(FR~$<$~10\%) per model. HDI narrowing indicates tighter distributions
+under pseudocode.}
+\label{tab:rq5_hdi}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model} & \textbf{HDI$_\text{MD}$} & \textbf{HDI$_\text{PC}$} & \textbf{Narrowing} & \textbf{$\Delta$P(FR $<$ 10\%)} \\
+\midrule
+Haiku 4.5 & 30.8\% & 16.7\% & $+14.1$pp (46\%) & $+22.2$pp \\
+Opus 4.6 & 17.3\% & 9.8\% & $+7.6$pp (44\%) & $+20.9$pp \\
+GLM-4.7 & 30.8\% & 23.1\% & $+7.7$pp (25\%) & $+8.9$pp \\
+GLM-5 & 15.4\% & 15.4\% & $+0.0$pp (0\%) & $-1.8$pp \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Production-quality threshold.}
+The probability of a run achieving $<$10\% failure rate increases under
+pseudocode for three of four models
+(Figure~\ref{fig:variance_violin}). The increase is largest for Opus~4.6
+(71.7\% $\to$ 92.6\%, $+20.9$pp) and Haiku~4.5 (46.3\% $\to$ 68.5\%,
+$+22.2$pp). Pseudocode not only lowers the mean but concentrates runs in the
+low-defect region.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig4_variance_violin.pdf}
+\Description{Split violin plot showing failure-rate distributions for
+Markdown (left, light blue) and pseudocode (right, dark blue) per model.
+Pseudocode distributions are tighter and shifted lower. A dashed red line
+marks the 10 percent threshold.}
+\caption{Failure-rate distributions by model and format (split violin).
+Left halves are Markdown; right halves are pseudocode. The dashed line marks
+the 10\% production-quality threshold. Pseudocode distributions are tighter
+and more concentrated below the threshold.}
+\label{fig:variance_violin}
+\end{figure}
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+% §6  DISCUSSION
+% ─────────────────────────────────────────────────────────────────────────────
+
+\section{Discussion}\label{sec:discussion}
+
+\paragraph{Why pseudocode works.}
+We hypothesize that pseudocode's advantage stems from two mechanisms.
+First, \emph{type constraints act as explicit contracts}: a dataclass field
+\texttt{sensitive: bool = True} is less ambiguous than the prose ``mark
+sensitive variables with the sensitive flag.'' The LLM's code pre-training
+makes it more likely to satisfy typed specifications.
+Second, \emph{validation functions signal expected checks}: a
+\texttt{violations()} method that returns a list of failure conditions
+provides the model with an explicit checklist in a format it processes
+natively during code generation.
+
+\paragraph{Skill-induced complexity.}
+The per-rule breakdown (Appendix~\ref{app:per-rule}) reveals that skills can
+\emph{hurt} compliance on individual rules. In SQL, both skill formats
+instruct multi-layer dbt pipelines with staging models. Most models take a
+shortcut---writing \texttt{SELECT * FROM source} in staging CTEs---that
+simultaneously violates two rules (clause-per-line and no-\texttt{SELECT~*}).
+Without the skill, models write monolithic queries that avoid this pattern
+entirely. The skill's structural guidance creates more surface area for
+violations, even though it explicitly forbids \texttt{SELECT~*}. This
+highlights a design tension: richer architectural guidance may introduce
+failure modes that simpler instructions avoid.
+
+\paragraph{Ceiling effects in Dockerfile.}
+The Dockerfile domain shows no significant pseudocode advantage,
+likely because both formats achieve near-ceiling compliance
+($<$4.2\% failure rate).
+The rules themselves may be simple enough that any reminder suffices. The SQL,
+Chart, and Terraform domains, with higher failure rates and more nuanced rules
+(e.g., ``COALESCE nullable dimensions to `(unknown)'\,'', ``muted color
+palette''), provide more room for format to matter.
+
+\paragraph{Claude vs.\ GLM divergence.}
+The pseudocode effect is statistically significant for Claude models in three
+of four domains but not for GLM models individually
+(Table~\ref{tab:rq3_family}). This aligns with He et al.'s finding that format
+preferences do not transfer across model families~\cite{he2024prompt}. However,
+Claude Opus~4.6 shows a substantial practical improvement
+(Table~\ref{tab:rq3_frontier}), while GLM-5 shows no pseudocode advantage
+(Markdown is slightly better). The effect appears
+strongest in the Claude family, suggesting that format preferences may
+be model-family-dependent~\cite{he2024prompt}.
+
+\paragraph{Reliability beyond the mean.}
+RQ5 reveals that pseudocode's benefit extends beyond mean reduction to
+\emph{variance reduction}. The pooled variance ratio of 1.59 (Levene's
+$p = 0.001$) means that Markdown runs have 59\% more spread. Practically,
+this manifests as a higher probability of meeting a production-quality
+threshold ($<$10\% failure rate): on Opus~4.6, pseudocode achieves 92.6\%
+versus 71.7\% for Markdown. For teams deploying LLM agents at scale, reduced
+variance translates to fewer outlier failures and more predictable behavior.
+
+\paragraph{Practical recommendations.}
+For practitioners writing skill files:
+\begin{enumerate}
+  \item \textbf{Any skill file helps}. The 3.7$\times$ failure rate reduction
+    from the baseline (RQ1) dwarfs the format effect.
+  \item \textbf{Pseudocode offers a small additional advantage} in domains
+    with complex, nuanced rules. For domains where skills already achieve
+    near-perfect compliance (e.g., Dockerfile), format matters less.
+  \item \textbf{The pseudocode advantage scales with model capability}.
+    Frontier models benefit more, suggesting that as models improve, the
+    format advantage may increase.
+  \item \textbf{Semantic content matters more than format}. The gap between
+    any-skill and no-skill is $8\times$ larger than the gap between
+    pseudocode and Markdown (24.6pp vs.\ 3.1pp).
+\end{enumerate}
+
+\paragraph{Comparison to prior work.}
+Mishra et al.~\cite{mishra2023prompting} found 7--16 F1 point gains from
+pseudocode on NLP tasks using BLOOM and CodeGen. Our work extends this to
+structured-output generation using modern frontier models (2025--2026 vintage)
+and finds a smaller but consistent advantage. The smaller effect size is
+expected: our Markdown baseline is already a well-structured skill file (not
+plain text), making the comparison stricter. SkillsBench~\cite{li2026skillsbench}
+found a 16.2pp skill presence effect; our 24.6pp pooled effect
+(33.7\% $\to$ 9.2\%) is comparable in magnitude, despite measuring
+compliance rather than pass rate.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+% §7  THREATS TO VALIDITY
+% ─────────────────────────────────────────────────────────────────────────────
+
+\section{Threats to Validity}\label{sec:threats}
+
+\paragraph{Internal validity.}
+Automated evaluators may produce false positives or false negatives. We
+mitigated this by documenting edge cases in per-domain rubrics and iterating
+evaluator logic on pilot runs before the main experiment. Evaluators were
+finalized before data collection. The same author wrote both Markdown and
+pseudocode skills, which could introduce systematic bias; we verified semantic
+equivalence through independent rule-by-rule comparison
+(Section~\ref{sec:iv}).
+
+\paragraph{Construct validity.}
+Rule compliance is a proxy for output quality, not a direct measure. A
+Dockerfile that passes all 13 rules may still be functionally incorrect (e.g.,
+wrong base image for the application). We include outcome checks (correct
+port, runtime match) for Dockerfile and Terraform, but these are secondary
+metrics.
+
+\paragraph{External validity.}
+We test four domains, all producing text-based structured output. Results may
+not generalize to interactive agent tasks, multi-turn conversations, or visual
+output. We test two model families; other families (GPT, Gemini, Llama) may
+respond differently. The three tasks per domain provide limited coverage of
+each domain's full complexity space. Not all models are tested in all domains
+(Chart lacks GLM-4.7).
+
+\paragraph{Reliability.}
+The three original domains have 5 repetitions per cell; Chart has 3
+repetitions. Fewer repetitions reduce statistical
+power for per-domain analyses in Chart. Some cells in the original
+domains have 4 or 6 repetitions due to calibration runs, which we include in
+the analysis. One Terraform run (Opus, Markdown, task~3, rep~5) was excluded
+because the CLI infrastructure repeatedly blocked the model's file-write
+attempts, producing an incomplete output unrelated to model capability; the
+remaining four repetitions of that cell scored consistently (12/13 rules).
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+% §8  CONCLUSION
+% ─────────────────────────────────────────────────────────────────────────────
+
+\section{Conclusion}\label{sec:conclusion}
+
+We presented the first controlled comparison of instruction format for LLM
+skill files. Across 629 runs spanning four structured-output domains and four
+models from two families, we find that (1)~skill files provide a large and
+consistent compliance improvement over no-skill baselines,
+(2)~pseudocode format offers a statistically significant additional advantage
+over Markdown prose, particularly for complex rule sets and frontier models,
+and (3)~pseudocode reduces output variability, yielding 59\% lower variance
+and increasing the probability of meeting production-quality thresholds by up
+to 21 percentage points.
+
+The practical implication is clear: writing skill files in pseudocode rather
+than Markdown is a low-cost intervention that reduces output defects by an
+additional 29\% (10.7\% $\to$ 7.6\% failure rate) while also tightening the
+distribution, with no downside beyond slightly longer input prompts. For
+practitioners authoring skill files for LLM agents, we recommend starting
+with any well-structured skill file (the largest effect), and considering
+pseudocode format for domains with complex constraints where both lower
+failure rates and predictable behavior matter.
+
+Future work should extend this comparison to interactive agentic tasks with
+tool use, additional model families, more domains (e.g., Kubernetes manifests,
+CI/CD pipelines), and user studies measuring skill file authoring effort.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+% REFERENCES
+% ─────────────────────────────────────────────────────────────────────────────
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+% APPENDIX
+% ─────────────────────────────────────────────────────────────────────────────
+
+\appendix
+
+\section{Prompt Templates}\label{app:prompts}
+
+All three conditions use the same task data (JSON object with task
+requirements). The conditions differ in the instruction prefix.
+
+\paragraph{No-skill condition.}
+The task JSON is followed by a domain-specific generic instruction
+(e.g., ``Generate a Dockerfile. Output ONLY the Dockerfile.'').
+
+\paragraph{Markdown condition.}
+The skill file (Markdown prose with headings, tables, and checklists) is
+prepended to the task JSON.
+
+\paragraph{Pseudocode condition.}
+The skill file (Python pseudocode with dataclasses, enums, and validation
+functions) is prepended to the task JSON.
+
+Full prompt templates and skill files are available in the repository under
+\texttt{domains/\{domain\}/skills/} and \texttt{prompts/}.
+
+
+\section{Per-Domain Rule Details}\label{app:rules}
+
+\paragraph{Chart / Vega-Lite (15 scored rules).}
+(1)~Muted/professional color palette, (2)~Accent colors ($\leq$2 highlights),
+(3)~Accessibility (no red+green conflict), (4)~Single chart type consistency,
+(5)~Insight-driven title ($\geq$25 chars), (6)~Source citation, (7)~Sans-serif
+font, (8)~Data labels when $\leq$8 points, (9)~Y-axis origin at zero,
+(10)~Minimal spines, (11)~Subtle grid colors, (12)~Units in $\geq$2 locations,
+(13)~Key annotations, (14)~Direct labels vs.\ legend, (15)~Chart dimensions.
+
+\paragraph{Dockerfile (13 scored rules).}
+(1)~Specific image tag on every FROM, (2)~Non-root USER, (3)~No secrets in
+ENV/ARG, (4)~Multi-stage build, (5)~WORKDIR before COPY/RUN, (6)~Dependencies
+before source code, (7)~Combined RUN instructions ($\leq$2 adjacent),
+(8)~apt-get best practices, (9)~HEALTHCHECK present, (10)~EXPOSE documented,
+(11)~LABEL metadata, (12)~Exec form CMD/ENTRYPOINT, (13)~No unnecessary ADD.
+
+\paragraph{SQL / dbt (12 scored rules).}
+(1)~Keywords uppercase, (2)~One clause per line, (3)~Table aliases,
+(4)~Column aliases with AS, (5)~No SELECT *, (6)~Comment header,
+(7)~LEFT JOIN only, (8)~COALESCE to `(unknown)', (9)~ROW\_NUMBER dedup,
+(10)~One CTE per file, (11)~Jinja ref(), (12)~Layer naming conventions.
+
+\paragraph{Terraform (13 scored rules).}
+(1)~snake\_case naming, (2)~Variable descriptions, (3)~Variable type
+constraints, (4)~Outputs defined, (5)~Tags on taggable resources,
+(6)~Variable grouping, (7)~File structure hints, (8)~No hardcoded IDs,
+(9)~Provider version pinned, (10)~Backend configured, (11)~Sensitive values
+marked, (12)~Data sources for lookups, (13)~Locals block present.
+
+
+\section{Per-Rule Pass Rate Breakdown}\label{app:per-rule}
+
+Tables~\ref{tab:per-rule-chart}--\ref{tab:per-rule-terraform} show pass rates
+for every scored rule by condition, revealing where the pseudocode advantage
+concentrates and where skills can \emph{hurt} compliance.
+
+\paragraph{Largest pseudocode advantages.}
+SQL rules~2 and~5 (one clause per line, no \texttt{SELECT~*}) show the
+largest pseudocode--Markdown gaps (+53.3pp and +52.9pp). Both rules fail
+together because Markdown-guided models create staging models with
+\texttt{SELECT * FROM source} on a single line---a shortcut that violates
+both rules simultaneously. Pseudocode models avoid this pattern (98.6\%
+and 98.2\% pass). In the Chart domain, rules~8 (data labels) and~12 (unit
+labels) show +33.3pp and +41.2pp gaps; the pseudocode validation functions
+explicitly check these. Terraform rules~2--4 (variable descriptions, types,
+outputs) show +13--15pp, consistent with pseudocode's typed dataclass
+fields making these requirements harder to miss.
+
+\paragraph{Largest Markdown advantages.}
+Chart rule~2 (accent color limit) shows the largest Markdown advantage
+($-36.6$pp). The Markdown skill uses a clear table for this rule,
+while the pseudocode encodes it as a validation function that may be
+less salient. SQL rule~9 (ROW\_NUMBER dedup, $-12.5$pp) and Terraform
+rule~1 (naming, $-10.0$pp) also favor Markdown modestly.
+
+\paragraph{Skill-induced complexity in SQL.}
+Rules~2 and~5 illustrate a subtle effect: the skill instructs a
+multi-layer dbt pipeline with staging models, creating more
+opportunities for \texttt{SELECT~*} violations than monolithic queries.
+Despite the skill explicitly forbidding \texttt{SELECT~*}, most models
+(except GLM-5) take a shortcut in staging CTEs. This correlation is
+near-perfect ($r = 0.996$ between rule~2 and rule~5 scores).
+
+\begin{table}[h]
+\caption{Chart: per-rule pass rate (\%) by condition.}
+\label{tab:per-rule-chart}
+\centering\small
+\begin{tabular}{llrrrr}
+\toprule
+\textbf{\#} & \textbf{Rule} & \textbf{None} & \textbf{MD} & \textbf{PC} & \textbf{PC$-$MD} \\
+\midrule
+1  & Muted palette        &   5.9 & 100.0 & 100.0 &    0.0 \\
+2  & Accent $\leq$2       & 100.0 &  95.8 &  59.3 & $-$36.6 \\
+3  & Color accessibility  &  94.1 & 100.0 & 100.0 &    0.0 \\
+4  & Single chart type    & 100.0 & 100.0 & 100.0 &    0.0 \\
+5  & Insight title        &  77.8 & 100.0 & 100.0 &    0.0 \\
+6  & Source citation      & 100.0 & 100.0 & 100.0 &    0.0 \\
+7  & Sans-serif font      & 100.0 & 100.0 & 100.0 &    0.0 \\
+8  & Data labels          &   3.7 &  66.7 & 100.0 &  +33.3 \\
+9  & Y-axis origin zero   & 100.0 &  95.5 & 100.0 &   +4.5 \\
+10 & Minimal spines       &  ---  & 100.0 & 100.0 &    0.0 \\
+11 & Subtle grid          &  ---  & 100.0 & 100.0 &    0.0 \\
+12 & Units in $\geq$2 loc & 100.0 &  58.8 & 100.0 &  +41.2 \\
+13 & Key annotations      & 100.0 &  88.9 & 100.0 &  +11.1 \\
+14 & Direct labels        &  85.2 &  95.5 & 100.0 &   +4.5 \\
+15 & Chart dimensions     &  ---  & 100.0 & 100.0 &    0.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\caption{Dockerfile: per-rule pass rate (\%) by condition.}
+\label{tab:per-rule-dockerfile}
+\centering\small
+\begin{tabular}{llrrrr}
+\toprule
+\textbf{\#} & \textbf{Rule} & \textbf{None} & \textbf{MD} & \textbf{PC} & \textbf{PC$-$MD} \\
+\midrule
+1  & Specific tag         &  92.1 & 100.0 &  98.4 &   $-$1.6 \\
+2  & Non-root USER        &  66.7 & 100.0 & 100.0 &    0.0 \\
+3  & No secrets           &  98.4 & 100.0 & 100.0 &    0.0 \\
+4  & Multi-stage          &  88.9 & 100.0 & 100.0 &    0.0 \\
+5  & WORKDIR first        &  82.5 &  96.8 &  93.7 &   $-$3.2 \\
+6  & Deps before source   &  60.3 &  57.1 &  63.5 &   +6.3 \\
+7  & Combined RUN         &  88.9 &  92.1 &  90.5 &   $-$1.6 \\
+8  & apt-get practices    &  98.4 & 100.0 & 100.0 &    0.0 \\
+9  & HEALTHCHECK          &  69.8 & 100.0 & 100.0 &    0.0 \\
+10 & EXPOSE               &  96.8 & 100.0 & 100.0 &    0.0 \\
+11 & LABEL metadata       &  19.0 & 100.0 & 100.0 &    0.0 \\
+12 & Exec form CMD        &  96.8 & 100.0 & 100.0 &    0.0 \\
+13 & No ADD               &  98.4 & 100.0 & 100.0 &    0.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\caption{SQL (dbt): per-rule pass rate (\%) by condition. Rules~2 and~5 are
+correlated because \texttt{SELECT * FROM source} violates both.}
+\label{tab:per-rule-sql}
+\centering\small
+\begin{tabular}{llrrrr}
+\toprule
+\textbf{\#} & \textbf{Rule} & \textbf{None} & \textbf{MD} & \textbf{PC} & \textbf{PC$-$MD} \\
+\midrule
+1  & Keywords uppercase      &  90.8 & 100.0 & 100.0 &    0.0 \\
+2  & Clause per line         &  94.6 &  45.3 &  98.6 &  +53.3 \\
+3  & Table aliases           &  67.6 &  99.5 &  99.4 &   $-$0.2 \\
+4  & Column aliases (AS)     &  87.4 &  97.9 &  97.9 &    0.0 \\
+5  & No SELECT *             &  95.4 &  45.3 &  98.2 &  +52.9 \\
+6  & Comment header          &  24.6 &  98.8 &  90.5 &   $-$8.3 \\
+7  & LEFT JOIN only          &  36.7 &  97.8 &  98.3 &   +0.6 \\
+8  & COALESCE unknown        &   0.0 &  44.4 &  40.3 &   $-$4.0 \\
+9  & ROW\_NUMBER dedup       &  31.7 &  72.1 &  59.6 &  $-$12.5 \\
+10 & One CTE per file        &  70.3 &  99.1 &  99.5 &   +0.5 \\
+11 & Jinja ref()             &   0.0 &  98.3 &  95.0 &   $-$3.3 \\
+12 & Layer naming            &   0.0 &  98.3 &  96.7 &   $-$1.7 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\caption{Terraform: per-rule pass rate (\%) by condition.}
+\label{tab:per-rule-terraform}
+\centering\small
+\begin{tabular}{llrrrr}
+\toprule
+\textbf{\#} & \textbf{Rule} & \textbf{None} & \textbf{MD} & \textbf{PC} & \textbf{PC$-$MD} \\
+\midrule
+1  & snake\_case naming       &  33.3 &  94.9 &  83.3 &  $-$11.6 \\
+2  & Variable descriptions    &  61.7 &  76.3 &  90.0 &  +13.7 \\
+3  & Variable types           &  76.7 &  76.3 &  90.0 &  +13.7 \\
+4  & Outputs defined          &  56.7 &  78.0 &  91.7 &  +13.7 \\
+5  & Tags on resources        &  68.3 & 100.0 & 100.0 &    0.0 \\
+6  & Lifecycle ignore         &  95.0 & 100.0 & 100.0 &    0.0 \\
+7  & Variable separation      &  95.0 &  98.3 & 100.0 &   +1.7 \\
+8  & File structure           &  95.0 & 100.0 & 100.0 &    0.0 \\
+9  & No hardcoded IDs         &  43.3 &  30.5 &  23.3 &   $-$7.2 \\
+10 & Provider pinned          &  70.0 & 100.0 & 100.0 &    0.0 \\
+11 & Backend configured       &   0.0 &  88.1 & 100.0 &  +11.9 \\
+12 & Sensitive marked         &  88.3 &  91.5 &  95.0 &   +3.5 \\
+13 & Data sources             &  90.0 &  98.3 &  91.7 &   $-$6.6 \\
+14 & Locals block             &  15.0 &  89.8 &  98.3 &   +8.5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\section{Reproduction}\label{app:repro}
+
+All materials are available at
+\url{https://github.com/aictrl-dev/skill-md-research}:
+
+\begin{itemize}
+  \item \texttt{domains/\{domain\}/skills/} --- Matched skill file pairs
+  \item \texttt{domains/\{domain\}/test-data/} --- Task JSON files
+  \item \texttt{domains/\{domain\}/evaluate\_*.py} --- Automated evaluators
+  \item \texttt{domains/\{domain\}/results/scores.csv} --- Raw scored data
+  \item \texttt{scripts/recompute\_stats.py} --- Cross-domain statistics
+  \item \texttt{scripts/generate\_figures.py} --- Figure generation
+  \item \texttt{scripts/variability\_analysis.py} --- Reusable variability
+    analysis (HDI, Levene, threshold rates, violin plots)
+\end{itemize}
+
+
+\end{document}
