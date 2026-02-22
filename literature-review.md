@@ -1,7 +1,9 @@
 # Literature Review: Instruction Format Effects on LLM Performance
 
-**Last updated**: 2026-02-20
+**Last updated**: 2026-02-21
 **Purpose**: Assess novelty and position the pseudocode vs markdown skill format experiment against existing work.
+
+> **Related Research**: See `research/task-decomposition/` for literature on task decomposition and chained execution.
 
 ---
 
