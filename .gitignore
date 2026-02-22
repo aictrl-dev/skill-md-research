@@ -24,3 +24,7 @@ paper/*.fls
 paper/*.synctex.gz
 paper/*.pdf
 !paper/figures/*.pdf
+
+# Raw experiment outputs (zipped per domain; scores.csv is tracked)
+domains/*/results/*.json
+domains/chart/results-v2/*.json
