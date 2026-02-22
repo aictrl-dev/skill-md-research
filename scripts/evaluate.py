@@ -89,12 +89,19 @@ def extract_from_permission_denials(raw_output: str) -> str | None:
     2. Opencode CLI: JSONL with tool_use events where part.tool="write" and
        part.state.input.content contains the file content.
 
-    Returns the extracted text content, or None if no useful content found.
+    When the model writes multiple files (e.g. main.tf, variables.tf, outputs.tf),
+    all files are concatenated. If the same file path is written multiple times,
+    only the last version is kept.
+
+    Returns the concatenated text content, or None if no useful content found.
     """
     if not raw_output:
         return None
 
-    candidates = []
+    # Map file_path -> content (last write wins for deduplication)
+    file_contents: dict[str, str] = {}
+    # Fallback list for candidates without file paths
+    anonymous_candidates = []
 
     # Format 1: Claude CLI JSON with permission_denials
     try:
@@ -106,13 +113,17 @@ def extract_from_permission_denials(raw_output: str) -> str | None:
                     continue
                 tool_input = denial.get("tool_input") or {}
                 content = tool_input.get("content", "")
+                file_path = tool_input.get("file_path", "")
                 if isinstance(content, str) and len(content) > 20:
-                    candidates.append(content)
+                    if file_path:
+                        file_contents[file_path] = content
+                    else:
+                        anonymous_candidates.append(content)
     except json.JSONDecodeError:
         pass
 
     # Format 2: Opencode JSONL with tool_use write events
-    if not candidates and "\n" in raw_output and raw_output.lstrip().startswith("{"):
+    if not file_contents and not anonymous_candidates and "\n" in raw_output and raw_output.lstrip().startswith("{"):
         for line in raw_output.strip().split("\n"):
             try:
                 evt = json.loads(line)
@@ -124,16 +135,24 @@ def extract_from_permission_denials(raw_output: str) -> str | None:
                 state = part.get("state", {})
                 inp = state.get("input", {})
                 content = inp.get("content", "")
+                file_path = inp.get("filePath", "") or inp.get("path", "")
                 if isinstance(content, str) and len(content) > 20:
-                    candidates.append(content)
+                    if file_path:
+                        file_contents[file_path] = content
+                    else:
+                        anonymous_candidates.append(content)
             except (json.JSONDecodeError, KeyError):
                 continue
 
-    if not candidates:
+    if not file_contents and not anonymous_candidates:
         return None
 
-    # Return the longest candidate (most complete output)
-    return max(candidates, key=len)
+    # Concatenate all unique file contents (deduped by path, last write wins)
+    if file_contents:
+        return "\n\n".join(file_contents.values())
+
+    # Fallback: if no file paths, return the longest anonymous candidate
+    return max(anonymous_candidates, key=len)
 
 
 # ─── JSON Extraction ─────────────────────────────────────────────────────────
