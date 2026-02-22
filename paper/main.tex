@@ -188,7 +188,8 @@ code-formatted instructions---a hypothesis our pseudocode condition tests.
     for rule compliance?
   \item[RQ3 (Generalization)] Does the format effect generalize across domains
     and model families?
-  \item[RQ4 (Efficiency)] Does instruction format affect token consumption?
+  \item[RQ4 (Efficiency)] How do skill files affect token consumption and
+    per-run cost?
   \item[RQ5 (Reliability)] Does pseudocode format reduce output
     \emph{variability}, yielding tighter failure-rate distributions?
 \end{description}
@@ -541,12 +542,23 @@ with Opus~4.6 and GLM-5 showing the largest advantages.}
 
 \subsection{RQ4: Token Efficiency}\label{sec:rq4}
 
-Pseudocode skill files are longer than Markdown (274 vs.\ 211 lines on
-average across four domains), resulting in higher input token counts. However, because pseudocode
-constrains output structure more tightly, we observe comparable or slightly
-lower output token counts across conditions. The net cost difference is
-negligible relative to the quality improvement, as input tokens are
-substantially cheaper than output tokens for all tested models.
+Skill files increase both input and output token consumption.
+Pseudocode prompts are 30.8\% longer than no-skill prompts (5{,}597
+vs.\ 4{,}279 mean input tokens), while Markdown adds 21.5\%
+(5{,}198 tokens). Both formats also produce \emph{longer} outputs:
+$+$46.2\% for pseudocode and $+$40.3\% for Markdown relative to the
+no-skill baseline (1{,}621 and 1{,}556 vs.\ 1{,}109 mean output tokens).
+Models generate more structured, multi-section output when guided by a
+skill file.
+
+Comparing the two skill formats directly, pseudocode prompts are only
+8\% longer than Markdown and produce 4\% more output tokens.
+For Claude models (where cost data is available), the mean cost per
+run is \$0.061 (pseudocode) vs.\ \$0.054 (Markdown) vs.\ \$0.045
+(no-skill). The pseudocode--Markdown cost premium of \$0.007 per run
+buys a 32\% relative reduction in failure rate (RQ2), a favorable
+tradeoff for production workloads where rework cost from non-compliant
+output far exceeds the token premium.
 
 
 \subsection{RQ5: Pseudocode Reduces Output Variability}\label{sec:rq5}
