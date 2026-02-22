@@ -301,6 +301,61 @@ def validate_commit(msg: CommitMessage, raw: str, task: dict) -> list[tuple[str,
 # 12. BREAKING CHANGE footer (when applicable, min 10 chars)
 # 13. Ticket footer with JIRA-style reference (PROJ-123)
 # 14. Subject line <= 50 characters
+
+# -----------------------------------------------------------------------------
+# COMPLIANT EXAMPLES
+# -----------------------------------------------------------------------------
+
+# Example 1: Simple bug fix (45 chars subject)
+# fix(db): :bug: handle null record in findById
+#
+# Why:
+# UserService.findById() throws a null pointer exception when
+# querying for a user ID that does not exist in the database.
+# This crashes the request handler silently.
+#
+# What:
+# Add null check after database query and return a proper 404
+# response with descriptive error message instead of crashing.
+#
+# Ticket: PROJ-247
+# Signed-off-by: Alice Developer <alice@example.com>
+
+# Example 2: Feature (39 chars subject)
+# feat(api): :sparkles: add rate limiting
+#
+# Why:
+# The API has no protection against abuse. A single client can
+# make unlimited requests, potentially causing service degradation
+# for all users.
+#
+# What:
+# Implement sliding window rate limiter backed by Redis. Default
+# config allows 100 requests per 15-minute window. Returns 429
+# with Retry-After header when the limit is exceeded.
+#
+# Ticket: PROJ-312
+# Signed-off-by: Alice Developer <alice@example.com>
+
+# Example 3: Breaking change (39 chars subject)
+# feat(auth)!: :sparkles: replace jwt lib
+#
+# Why:
+# The jsonwebtoken library has known CVEs and lacks native
+# TypeScript types. jose is standards-compliant and provides
+# full TS support with zero native dependencies.
+#
+# What:
+# Migrate all token signing from jwt.sign() to jose SignJWT
+# builder pattern. Verification now uses jwtVerify() with
+# explicit algorithm allowlist.
+#
+# BREAKING CHANGE: JWT tokens signed with jsonwebtoken are
+# incompatible with jose. All active sessions will be
+# invalidated. Users must log in again after deployment.
+#
+# Ticket: PROJ-189
+# Signed-off-by: Alice Developer <alice@example.com>
 ```
 
 ## Usage

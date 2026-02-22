@@ -75,7 +75,7 @@ Example: `fix(db): :bug: handle null record in findById`
 
 For breaking changes, add `!` after the scope, before the colon:
 ```
-feat(auth)!: :sparkles: replace jsonwebtoken with jose
+feat(auth)!: :sparkles: replace jwt lib
 ```
 
 A `BREAKING CHANGE:` footer is also required (see Footers section).
@@ -200,7 +200,7 @@ Signed-off-by: Alice Developer <alice@example.com>
 ### Breaking Change
 
 ```
-feat(auth)!: :sparkles: replace jsonwebtoken with jose
+feat(auth)!: :sparkles: replace jwt lib
 
 Why:
 The jsonwebtoken library has known CVEs and lacks native
