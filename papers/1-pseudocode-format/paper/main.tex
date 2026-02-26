@@ -20,6 +20,9 @@
 }
 
 % ─── Metadata ────────────────────────────────────────────────────────────────
+% NOTE: Remove \setcopyright{none}, \settopmatter{printacmref=false}, and the
+% footnotetextcopyrightpermission override before final submission if the
+% conference requires specific ACM rights management metadata.
 \setcopyright{none}
 \settopmatter{printacmref=false}
 \renewcommand\footnotetextcopyrightpermission[1]{}
@@ -173,6 +176,19 @@ are few-shot commonsense learners, and Singh et
 al.~\cite{singh2023progprompt} used code-like specifications for robotic task
 planning. These suggest that LLMs trained on code may respond better to
 code-formatted instructions---a hypothesis our pseudocode condition tests.
+Our use of validation functions like \texttt{violations()} builds on the
+self-refinement loops proposed by Madaan et
+al.~\cite{madaan2023selfrefine}, but moves the validation logic from a
+multi-turn feedback loop into the zero-shot instruction itself.
+
+\paragraph{Constrained Decoding and Domain-Specific Generation.}
+Willard and Louf~\cite{willard2023efficient} enforce schema compliance via
+constrained decoding at inference time. Our pseudocode approach achieves high
+compliance through structural priors alone, without requiring specialized
+inference-time engines. In domain-specific generation, Liu et
+al.~\cite{liu2024survey} survey Text-to-SQL methods in the LLM era, and Lyu
+et al.~\cite{lyu2026automatic} address automatic Dockerfile generation---two
+of the four domains in our evaluation.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -242,12 +258,12 @@ automated evaluation.
 \centering\small
 \begin{tabular}{llcl}
 \toprule
-\textbf{Domain} & \textbf{Output} & \textbf{Rules} & \textbf{Tasks (simple / medium / complex)} \\
+\textbf{Domain} & \textbf{Output} & \textbf{Rules} & \textbf{Tasks (S\,/\,M\,/\,C)} \\
 \midrule
-Chart & Vega-Lite JSON & 15 & GDP bars / AI trends / Cloud revenue \\
-Dockerfile & Dockerfile & 13 & Java dashboard / Analytics / Rust ML \\
-SQL (dbt) & SQL models & 12 & Revenue report / Subscriptions / Returns \\
-Terraform & HCL config & 13 & S3 bucket / VPC+EC2 / ECS Fargate \\
+Chart & Vega-Lite & 15 & GDP / AI trends / Cloud \\
+Dockerfile & Dockerfile & 13 & Java / Analytics / Rust \\
+SQL (dbt) & SQL & 12 & Revenue / Subs. / Returns \\
+Terraform & HCL & 13 & S3 / VPC+EC2 / ECS \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -680,6 +696,15 @@ from providing a computationally-aligned representation that leverages the
 model's code pre-training, rather than from formatting alone. Ablation
 studies isolating the contribution of types, validation logic, and Python
 syntax would help disentangle these factors.
+
+\paragraph{Relation to constrained decoding.}
+Frameworks like Outlines~\cite{willard2023efficient} enforce structural
+compliance by constraining the token sampling process at inference time,
+guaranteeing schema adherence. Our pseudocode approach operates at the
+\emph{prompt} level instead, achieving 92.9\% pooled compliance through
+structural priors alone. The two techniques are complementary:
+constrained decoding guarantees syntactic validity, while pseudocode
+skills guide semantic compliance with domain rules.
 
 \paragraph{Skill-induced complexity.}
 The per-rule breakdown (Appendix~\ref{app:per-rule}) reveals that skills can
