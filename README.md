@@ -7,13 +7,46 @@ Experiment comparing two formats for writing LLM coding skill instructions:
 
 We measure instruction compliance: given a set of domain-specific rules encoded in both formats, which format produces more rule-conformant outputs?
 
+## Repository Structure
+
+This repo contains three research papers, each in its own folder:
+
+```
+papers/
+├── 1-pseudocode-format/       # Original skill format experiment
+│   ├── paper/                 # LaTeX paper source
+│   ├── domains/               # 6 domain evaluators + results
+│   ├── models/                # SQL model definitions
+│   ├── scripts/               # Runner & analysis scripts
+│   ├── prompts/               # Prompt templates (none/md/pc)
+│   ├── experiment-plan.md     # Experiment design doc
+│   ├── experiment-results.html
+│   ├── evaluation-rubric.md
+│   └── skill-comparison.md
+│
+├── 2-task-decomposition/      # Task decomposition research
+│   ├── literature-review.md
+│   ├── experiment-harness/    # Tasks, prompts, scripts, results
+│   └── ...
+│
+└── 3-kpi-targets/             # KPI target experiment
+    ├── paper/                 # Paper draft
+    ├── domains/               # Chart, SQL, Dockerfile, Terraform
+    ├── analysis/              # Analysis scripts & reports
+    ├── RESULTS.md
+    └── ...
+
+literature-review.md           # Shared across papers
+RESEARCH_STATUS.md             # Overall status tracker
+```
+
 ## Experiment Design
 
 **3 conditions** (no-skill, markdown, pseudocode) x **3 tasks per domain** (simple/medium/complex) x **N models** x **3 repetitions**
 
 Each domain has 14 rules evaluated by automated checkers. The dependent variable is `failure_rate = 1 - (rules_passed / rules_scored)`.
 
-## Domains
+## Domains (Paper 1)
 
 | Domain | Output Format | Scored Rules | Description |
 |--------|--------------|-------------:|-------------|
@@ -24,33 +57,6 @@ Each domain has 14 rules evaluated by automated checkers. The dependent variable
 | SQL Query | SQL | 12/12 | Analytical query style |
 | Terraform | HCL | 13/14 | Infrastructure as Code (1 manual) |
 
-## Repository Structure
-
-```
-domains/
-  chart/                    # Original domain (Vega-Lite chart specs)
-    skills/                 # Markdown and pseudocode SKILL.md files
-    test-data/              # Task JSON files (3 tasks)
-    results/                # Raw model outputs + scores.csv
-  commit-message/           # Conventional Commits
-  dockerfile/               # Docker best practices
-  openapi-spec/             # OpenAPI 3.x specifications
-  sql-query/                # SQL query style guide
-  terraform/                # Terraform/IaC conventions
-
-scripts/
-  evaluate.py               # Chart domain evaluator (shared helpers)
-  evaluate_deep.py          # Chart domain deep evaluator (15 rules)
-  analyze.py                # Single-domain statistical analysis
-  analyze_all.py            # Cross-domain aggregation + stats
-  bootstrap_ci.py           # Bootstrap confidence intervals
-  run-experiment.sh         # Original chart experiment runner
-  run-domain-experiment.sh  # Multi-domain experiment runner
-
-prompts/                    # Prompt templates (none/md/pc conditions)
-paper/                      # LaTeX paper source (forthcoming)
-```
-
 ## Running Experiments
 
 ### Prerequisites
@@ -59,24 +65,24 @@ paper/                      # LaTeX paper source (forthcoming)
 - `claude` CLI (Anthropic) or `opencode` CLI (for non-Anthropic models)
 - API keys for target models
 
-### Single Domain Run
+### Single Domain Run (Paper 1)
 
 ```bash
 # Run all conditions for a domain
-./scripts/run-domain-experiment.sh --domain dockerfile
+./papers/1-pseudocode-format/scripts/run-domain-experiment.sh --domain dockerfile
 
 # Run a single model
-./scripts/run-single-model.sh --domain dockerfile --model haiku
+./papers/1-pseudocode-format/scripts/run-single-model.sh --domain dockerfile --model haiku
 ```
 
 ### Evaluate Results
 
 ```bash
 # Score a single domain
-python domains/dockerfile/evaluate_dockerfile.py
+python papers/1-pseudocode-format/domains/dockerfile/evaluate_dockerfile.py
 
 # Cross-domain analysis
-python scripts/analyze_all.py
+python papers/1-pseudocode-format/scripts/analyze_all.py
 ```
 
 ## Models Tested

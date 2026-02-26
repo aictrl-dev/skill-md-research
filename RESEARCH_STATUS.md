@@ -1,6 +1,6 @@
 # Research Status Summary
 
-**Last updated**: 2026-02-22
+**Last updated**: 2026-02-26
 
 ---
 
@@ -10,32 +10,42 @@
 
 | Component | Status | Location |
 |-----------|--------|----------|
-| Experiment design | Done | `experiment-plan.md` |
-| 6 domain evaluators | Done | `domains/*/evaluate_*.py` |
-| Runner scripts | Done | `scripts/run-*.sh` |
-| Analysis scripts | Done | `scripts/analyze*.py` |
-| Results | Collected | `domains/*/results/` |
+| Experiment design | Done | `papers/1-pseudocode-format/experiment-plan.md` |
+| 6 domain evaluators | Done | `papers/1-pseudocode-format/domains/*/evaluate_*.py` |
+| Runner scripts | Done | `papers/1-pseudocode-format/scripts/run-*.sh` |
+| Analysis scripts | Done | `papers/1-pseudocode-format/scripts/analyze*.py` |
+| Results | Collected | `papers/1-pseudocode-format/domains/*/results/` |
 
-### 2. Task Decomposition Research (NEW)
+### 2. Task Decomposition Research
 
 | Component | Status | Location |
 |-----------|--------|----------|
-| Literature review | Done | `research/task-decomposition/literature-review.md` |
-| Product implications | Done | `research/task-decomposition/implications-aictrl.md` |
-| Enterprise decomposition | Done | `research/task-decomposition/enterprise-decomposition.md` |
-| Codebase selection | Done | `research/task-decomposition/codebase-selection.md` |
-| Experiment design | Done | `research/task-decomposition/experiment-enterprise.md` |
-| Task specs (4) | Done | `research/task-decomposition/experiment-harness/tasks/` |
-| Prompts (7) | Done | `research/task-decomposition/experiment-harness/prompts/` |
-| Runner scripts | Done | `research/task-decomposition/experiment-harness/scripts/` |
-| Outline codebase | Cloned | `research/task-decomposition/experiment-harness/codebase/` |
+| Literature review | Done | `papers/2-task-decomposition/literature-review.md` |
+| Product implications | Done | `papers/2-task-decomposition/implications-aictrl.md` |
+| Enterprise decomposition | Done | `papers/2-task-decomposition/enterprise-decomposition.md` |
+| Codebase selection | Done | `papers/2-task-decomposition/codebase-selection.md` |
+| Experiment design | Done | `papers/2-task-decomposition/experiment-enterprise.md` |
+| Task specs (4) | Done | `papers/2-task-decomposition/experiment-harness/tasks/` |
+| Prompts (7) | Done | `papers/2-task-decomposition/experiment-harness/prompts/` |
+| Runner scripts | Done | `papers/2-task-decomposition/experiment-harness/scripts/` |
+| Outline codebase | Cloned | `papers/2-task-decomposition/experiment-harness/codebase/` |
+
+### 3. KPI Targets Experiment
+
+| Component | Status | Location |
+|-----------|--------|----------|
+| Experiment design | Done | `papers/3-kpi-targets/experiment-design.md` |
+| Results | Done | `papers/3-kpi-targets/RESULTS.md` |
+| Domains | Done | `papers/3-kpi-targets/domains/` |
+| Analysis | Done | `papers/3-kpi-targets/analysis/` |
+| Paper | Done | `papers/3-kpi-targets/paper/` |
 
 ---
 
 ## Files Created This Session
 
 ```
-research/task-decomposition/
+papers/2-task-decomposition/
 ├── README.md (updated)
 ├── QUICK_REFERENCE.md (new)
 ├── literature-review.md (new)
@@ -74,12 +84,12 @@ research/task-decomposition/
 
 ## Key Hypotheses
 
-### Skill Format (Original)
+### Skill Format (Paper 1)
 - H1: Pseudocode > Markdown > No-skill for instruction compliance
 - H2: Effect stronger on complex tasks
 - H3: Effect stronger on smaller models
 
-### Task Decomposition (NEW)
+### Task Decomposition (Paper 2)
 - H1: Stack decomposition wins for CRUD
 - H2: Domain decomposition wins for workflows
 - H3: Journey decomposition wins for UI flows
@@ -122,13 +132,13 @@ research/task-decomposition/
 
 ```bash
 # Run decomposition experiment
-cd research/task-decomposition/experiment-harness
+cd papers/2-task-decomposition/experiment-harness
 ./scripts/run-decomposition-experiment.sh --pilot
 
 # Evaluate results
 python scripts/evaluate.py --run-dir results/outline_crud_001/stack_full/rep_1
 
 # Run original skill format experiment
-cd /home/bulat/code/skill-md-research
+cd papers/1-pseudocode-format
 ./scripts/run-domain-experiment.sh --domain chart
 ```
