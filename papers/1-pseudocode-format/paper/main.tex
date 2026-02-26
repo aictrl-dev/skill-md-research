@@ -911,8 +911,9 @@ prepended to the task JSON.
 The skill file (Python pseudocode with dataclasses, enums, and validation
 functions) is prepended to the task JSON.
 
-Full prompt templates and skill files are available in the repository under
-\texttt{papers/1-pseudocode-format/domains/\{domain\}/skills/} and \texttt{papers/1-pseudocode-format/prompts/}.
+Full prompt templates and skill files are available in the repository
+under \texttt{domains/\{domain\}/skills/} and \texttt{prompts/}
+(relative to \texttt{papers/1-pseudocode-format/}).
 
 
 \section{Per-Domain Rule Details}\label{app:rules}
@@ -1088,15 +1089,16 @@ correlated because \texttt{SELECT * FROM source} violates both.}
 All materials are available at
 \url{https://github.com/aictrl-dev/skill-md-research}:
 
+All paths below are relative to \texttt{papers/1-pseudocode-format/}:
 \begin{itemize}
-  \item \texttt{papers/1-pseudocode-format/domains/\{domain\}/skills/} --- Matched skill file pairs
-  \item \texttt{papers/1-pseudocode-format/domains/\{domain\}/test-data/} --- Task JSON files
-  \item \texttt{papers/1-pseudocode-format/domains/\{domain\}/evaluate\_*.py} --- Automated evaluators
-  \item \texttt{papers/1-pseudocode-format/domains/\{domain\}/results/scores.csv} --- Raw scored data
-  \item \texttt{papers/1-pseudocode-format/paper/compute\_stats.py} --- Cross-domain statistics
-  \item \texttt{papers/1-pseudocode-format/scripts/generate\_figures.py} --- Figure generation
-  \item \texttt{papers/1-pseudocode-format/scripts/variability\_analysis.py} --- Reusable variability
-    analysis (HDI, Levene, threshold rates, violin plots)
+  \item \texttt{domains/\{domain\}/skills/} --- Matched skill file pairs
+  \item \texttt{domains/\{domain\}/test-data/} --- Task JSON files
+  \item \texttt{domains/\{domain\}/evaluate\_*.py} --- Automated evaluators
+  \item \texttt{domains/\{domain\}/results/scores.csv} --- Raw scored data
+  \item \texttt{paper/compute\_stats.py} --- Cross-domain statistics
+  \item \texttt{scripts/generate\_figures.py} --- Figure generation
+  \item \texttt{scripts/variability\_analysis.py} --- Variability analysis
+    (HDI, Levene, threshold rates, violin plots)
 \end{itemize}
 
 
