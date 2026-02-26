@@ -30,9 +30,6 @@ STANDARD_DOMAINS = {
     "terraform":  ROOT / "domains" / "terraform" / "results" / "scores.csv",
 }
 
-# Gemini scores (produced by scripts/score_gemini_for_figures.py)
-GEMINI_CSV = ROOT / "research" / "kpi-target-experiment" / "gemini_scores.csv"
-
 FIG_DIR = ROOT / "paper" / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -55,13 +52,12 @@ CONDITION_ORDER = ["none", "markdown", "pseudocode"]
 CONDITION_LABELS = {"none": "No skill", "markdown": "Markdown", "pseudocode": "Pseudocode"}
 CONDITION_COLORS = {"none": "#bdbdbd", "markdown": "#6baed6", "pseudocode": "#2171b5"}
 
-MODEL_ORDER = ["haiku", "opus", "glm-4.7", "glm-5", "gemini-3.1-pro-preview"]
+MODEL_ORDER = ["haiku", "opus", "glm-4.7", "glm-5"]
 MODEL_LABELS = {
     "haiku": "Haiku 4.5",
     "opus": "Opus 4.6",
     "glm-4.7": "GLM-4.7",
     "glm-5": "GLM-5",
-    "gemini-3.1-pro-preview": "Gemini 3.1 Pro",
 }
 DOMAIN_LABELS = {
     "chart": "Chart",
@@ -101,32 +97,6 @@ def load_all() -> pd.DataFrame:
             )
 
         frames.append(df)
-
-    # Load Gemini data if available
-    if GEMINI_CSV.exists():
-        gdf = pd.read_csv(GEMINI_CSV)
-        # Normalize domain names to match standard domains
-        domain_map = {"sql-query": "sql"}
-        gdf["domain"] = gdf["domain"].map(lambda d: domain_map.get(d, d))
-
-        # Chart: use fail_count/(pass+fail), same as baseline
-        chart_mask = gdf["domain"] == "chart"
-        chart_total = gdf.loc[chart_mask, "pass_count"] + gdf.loc[chart_mask, "fail_count"]
-        gdf.loc[chart_mask, "failure_rate"] = np.where(
-            chart_total > 0,
-            gdf.loc[chart_mask, "fail_count"] / chart_total,
-            1.0,
-        )
-
-        # Other domains: use 1 - auto_score/scored_rules
-        other_mask = ~chart_mask
-        gdf.loc[other_mask, "failure_rate"] = np.where(
-            gdf.loc[other_mask, "scored_rules"] > 0,
-            1 - gdf.loc[other_mask, "auto_score"] / gdf.loc[other_mask, "scored_rules"],
-            1.0,
-        )
-
-        frames.append(gdf)
 
     data = pd.concat(frames, ignore_index=True)
     # Remove GLM-4.7-Flash
@@ -219,9 +189,8 @@ def fig2_model_heatmap(data: pd.DataFrame):
             ax.text(j, i, f"{val:.1f}%", ha="center", va="center",
                     fontsize=8, color=color, fontweight="bold")
 
-    # White dividers between families: Claude (0-1), GLM (2-3), Gemini (4)
+    # White divider between families: Claude (0-1), GLM (2-3)
     ax.axhline(y=1.5, color="white", linewidth=2.5)
-    ax.axhline(y=3.5, color="white", linewidth=2.5)
 
     cbar = fig.colorbar(im, ax=ax, shrink=0.8, pad=0.02)
     cbar.set_label("Failure rate (%)", fontsize=8)
