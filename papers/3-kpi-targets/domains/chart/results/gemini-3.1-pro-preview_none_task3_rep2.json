@@ -1,0 +1,13 @@
+{
+  "run_id": "gemini-3.1-pro-preview_none_task3_rep2",
+  "model": "gemini-3.1-pro-preview",
+  "condition": "none",
+  "task": "3",
+  "task_complexity": "complex",
+  "domain": "chart",
+  "rep": 2,
+  "timestamp": "2026-02-25T23:44:11+00:00",
+  "duration_ms": 29484,
+  "cli_tool": "gemini",
+  "raw_output": "Loaded cached credentials.\n{\n  \"session_id\": \"a2b8bb32-e14f-4622-9237-9d9259a52bb7\",\n  \"response\": \"```json\\n{\\n  \\\"type\\\": \\\"line\\\",\\n  \\\"data\\\": {\\n    \\\"series\\\": [\\n      {\\n        \\\"name\\\": \\\"AWS\\\",\\n        \\\"values\\\": [21.3, 22.1, 23.1, 24.2, 25.0, 26.0, 27.5, 28.8]\\n      },\\n      {\\n        \\\"name\\\": \\\"Azure\\\",\\n        \\\"values\\\": [21.0, 23.0, 24.0, 25.0, 26.0, 28.0, 29.0, 30.0]\\n      },\\n      {\\n        \\\"name\\\": \\\"GCP\\\",\\n        \\\"values\\\": [7.0, 8.0, 8.4, 9.2, 9.6, 10.3, 11.4, 12.0]\\n      }\\n    ]\\n  },\\n  \\\"metadata\\\": {\\n    \\\"unit\\\": \\\"USD billions\\\",\\n    \\\"source\\\": \\\"Company earnings reports (Amazon, Microsoft, Alphabet), 2023-2024\\\",\\n    \\\"note\\\": \\\"Azure figures include cloud infrastructure services only\\\"\\n  },\\n  \\\"annotations\\\": {\\n    \\\"highlight\\\": \\\"The crossover point where Azure overtook AWS\\\",\\n    \\\"insight\\\": \\\"Azure surpassed AWS in quarterly revenue in Q2 2024\\\",\\n    \\\"note\\\": \\\"GCP remains distant third but growing fastest percentage-wise\\\"\\n  }\\n}\\n```\",\n  \"stats\": {\n    \"models\": {\n      \"gemini-3.1-pro-preview\": {\n        \"api\": {\n          \"totalRequests\": 1,\n          \"totalErrors\": 0,\n          \"totalLatencyMs\": 25836\n        },\n        \"tokens\": {\n          \"input\": 9213,\n          \"prompt\": 9213,\n          \"candidates\": 352,\n          \"total\": 11471,\n          \"cached\": 0,\n          \"thoughts\": 1906,\n          \"tool\": 0\n        }\n      }\n    },\n    \"tools\": {\n      \"totalCalls\": 0,\n      \"totalSuccess\": 0,\n      \"totalFail\": 0,\n      \"totalDurationMs\": 0,\n      \"totalDecisions\": {\n        \"accept\": 0,\n        \"reject\": 0,\n        \"modify\": 0,\n        \"auto_accept\": 0\n      },\n      \"byName\": {}\n    },\n    \"files\": {\n      \"totalLinesAdded\": 0,\n      \"totalLinesRemoved\": 0\n    }\n  }\n}"
+}

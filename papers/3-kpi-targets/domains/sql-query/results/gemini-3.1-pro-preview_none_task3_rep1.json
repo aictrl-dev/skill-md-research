@@ -1,0 +1,13 @@
+{
+  "run_id": "gemini-3.1-pro-preview_none_task3_rep1",
+  "model": "gemini-3.1-pro-preview",
+  "condition": "none",
+  "task": "3",
+  "task_complexity": "medium",
+  "domain": "sql-query",
+  "rep": 1,
+  "timestamp": "2026-02-25T23:59:29+00:00",
+  "duration_ms": 23908,
+  "cli_tool": "gemini",
+  "raw_output": "Loaded cached credentials.\n{\n  \"session_id\": \"bb3e5bb7-59ae-4bf8-b725-561256fb419a\",\n  \"response\": \"-- return_rates_by_category.sql\\n```sql\\nWITH ApprovedReturns AS (\\n    SELECT DISTINCT item_id\\n    FROM returns\\n    WHERE LOWER(status) = 'approved'\\n)\\nSELECT \\n    COALESCE(c.name, 'Uncategorized') AS category_name,\\n    SUM(oi.quantity) AS total_items_sold,\\n    SUM(CASE WHEN ar.item_id IS NOT NULL THEN oi.quantity ELSE 0 END) AS total_items_returned,\\n    CAST(SUM(CASE WHEN ar.item_id IS NOT NULL THEN oi.quantity ELSE 0 END) AS DECIMAL(10,4)) / NULLIF(SUM(oi.quantity), 0) AS return_rate\\nFROM order_items oi\\nJOIN products p ON oi.product_id = p.product_id\\nLEFT JOIN categories c ON p.category_id = c.category_id\\nLEFT JOIN ApprovedReturns ar ON oi.item_id = ar.item_id\\nGROUP BY COALESCE(c.name, 'Uncategorized');\\n```\",\n  \"stats\": {\n    \"models\": {\n      \"gemini-3.1-pro-preview\": {\n        \"api\": {\n          \"totalRequests\": 1,\n          \"totalErrors\": 0,\n          \"totalLatencyMs\": 20307\n        },\n        \"tokens\": {\n          \"input\": 9276,\n          \"prompt\": 9276,\n          \"candidates\": 236,\n          \"total\": 10861,\n          \"cached\": 0,\n          \"thoughts\": 1349,\n          \"tool\": 0\n        }\n      }\n    },\n    \"tools\": {\n      \"totalCalls\": 0,\n      \"totalSuccess\": 0,\n      \"totalFail\": 0,\n      \"totalDurationMs\": 0,\n      \"totalDecisions\": {\n        \"accept\": 0,\n        \"reject\": 0,\n        \"modify\": 0,\n        \"auto_accept\": 0\n      },\n      \"byName\": {}\n    },\n    \"files\": {\n      \"totalLinesAdded\": 0,\n      \"totalLinesRemoved\": 0\n    }\n  }\n}"
+}

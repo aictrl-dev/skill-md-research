@@ -1,0 +1,13 @@
+{
+  "run_id": "gemini-3.1-pro-preview_none_task2_rep3",
+  "model": "gemini-3.1-pro-preview",
+  "condition": "none",
+  "task": "2",
+  "task_complexity": "complex",
+  "domain": "sql-query",
+  "rep": 3,
+  "timestamp": "2026-02-25T23:59:00+00:00",
+  "duration_ms": 18169,
+  "cli_tool": "gemini",
+  "raw_output": "Loaded cached credentials.\n{\n  \"session_id\": \"07250dc6-aec4-4763-b9a2-09ead4cf20f9\",\n  \"response\": \"-- monthly_subscription_metrics.sql\\n```sql\\nWITH DeduplicatedBilling AS (\\n    SELECT \\n        subscription_id, \\n        event_month, \\n        amount,\\n        ROW_NUMBER() OVER(PARTITION BY subscription_id, event_month ORDER BY event_id DESC) as rn\\n    FROM billing_events\\n),\\nUniqueBilling AS (\\n    SELECT \\n        subscription_id, \\n        event_month, \\n        amount\\n    FROM DeduplicatedBilling\\n    WHERE rn = 1\\n)\\nSELECT \\n    b.event_month AS month,\\n    COALESCE(p.tier, 'Unknown') AS tier,\\n    COALESCE(c.industry, 'Unknown') AS industry,\\n    COUNT(DISTINCT s.subscription_id) AS active_subscriptions,\\n    SUM(b.amount) AS total_mrr,\\n    COUNT(DISTINCT s.user_id) AS unique_users\\nFROM UniqueBilling b\\nJOIN subscriptions s ON b.subscription_id = s.subscription_id\\nJOIN users u ON s.user_id = u.user_id\\nLEFT JOIN companies c ON u.company_id = c.company_id\\nLEFT JOIN plans p ON s.plan_id = p.plan_id\\nGROUP BY \\n    b.event_month,\\n    COALESCE(p.tier, 'Unknown'),\\n    COALESCE(c.industry, 'Unknown')\\nORDER BY \\n    month, \\n    tier, \\n    industry;\\n```\",\n  \"stats\": {\n    \"models\": {\n      \"gemini-3.1-pro-preview\": {\n        \"api\": {\n          \"totalRequests\": 1,\n          \"totalErrors\": 0,\n          \"totalLatencyMs\": 14538\n        },\n        \"tokens\": {\n          \"input\": 2340,\n          \"prompt\": 9300,\n          \"candidates\": 337,\n          \"total\": 11022,\n          \"cached\": 6960,\n          \"thoughts\": 1385,\n          \"tool\": 0\n        }\n      }\n    },\n    \"tools\": {\n      \"totalCalls\": 0,\n      \"totalSuccess\": 0,\n      \"totalFail\": 0,\n      \"totalDurationMs\": 0,\n      \"totalDecisions\": {\n        \"accept\": 0,\n        \"reject\": 0,\n        \"modify\": 0,\n        \"auto_accept\": 0\n      },\n      \"byName\": {}\n    },\n    \"files\": {\n      \"totalLinesAdded\": 0,\n      \"totalLinesRemoved\": 0\n    }\n  }\n}"
+}

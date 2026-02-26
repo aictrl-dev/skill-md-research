@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Motivation Framing Improves LLM Agent Performance</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 2.2cm 1.8cm 2.5cm 1.8cm;
+            @bottom-center {
+                content: counter(page);
+                font-family: 'Times New Roman', Times, serif;
+                font-size: 10pt;
+            }
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 10pt;
+            line-height: 1.35;
+            color: #000;
+            margin: 0;
+            padding: 0;
+            column-count: 2;
+            column-gap: 0.6cm;
+            orphans: 3;
+            widows: 3;
+        }
+
+        /* ─── Title block: full width ─── */
+        .title-block {
+            column-span: all;
+            text-align: center;
+            margin-bottom: 1.2em;
+        }
+
+        .title-block h1 {
+            font-size: 17pt;
+            line-height: 1.25;
+            margin: 0 0 0.4em 0;
+            font-weight: bold;
+        }
+
+        .title-block .authors {
+            font-size: 11pt;
+            margin-bottom: 0.2em;
+        }
+
+        .title-block .affiliation {
+            font-size: 9pt;
+            color: #444;
+            margin-bottom: 0.1em;
+        }
+
+        .title-block .email {
+            font-size: 9pt;
+            font-family: 'Courier New', monospace;
+            color: #444;
+        }
+
+        /* ─── Abstract ─── */
+        .abstract-block {
+            column-span: all;
+            margin: 0 2cm 1.5em 2cm;
+            font-size: 9pt;
+        }
+
+        .abstract-block .abstract-title {
+            font-weight: bold;
+            font-size: 10pt;
+            text-align: center;
+            margin-bottom: 0.3em;
+        }
+
+        .abstract-block p {
+            text-align: justify;
+            margin: 0 0 0.5em 0;
+            text-indent: 1em;
+        }
+
+        .abstract-block p:first-of-type {
+            text-indent: 0;
+        }
+
+        .abstract-block .keywords {
+            font-size: 8.5pt;
+            margin-top: 0.5em;
+        }
+
+        /* ─── Sections ─── */
+        h2 {
+            font-size: 12pt;
+            margin: 1.2em 0 0.4em 0;
+            text-transform: none;
+        }
+
+        h3 {
+            font-size: 10pt;
+            font-weight: bold;
+            font-style: italic;
+            margin: 0.8em 0 0.3em 0;
+        }
+
+        h4 {
+            font-size: 10pt;
+            font-weight: bold;
+            margin: 0.6em 0 0.2em 0;
+        }
+
+        p {
+            text-align: justify;
+            margin: 0 0 0.5em 0;
+            text-indent: 1em;
+        }
+
+        p.noindent, .noindent {
+            text-indent: 0;
+        }
+
+        /* ─── Tables ─── */
+        .table-wrapper {
+            break-inside: avoid;
+            margin: 0.8em 0;
+        }
+
+        .table-caption {
+            font-size: 9pt;
+            font-weight: bold;
+            margin-bottom: 0.3em;
+            text-align: left;
+            text-indent: 0;
+        }
+
+        .table-caption span {
+            font-weight: normal;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8.5pt;
+            margin: 0;
+        }
+
+        th, td {
+            padding: 2px 4px;
+            text-align: center;
+            border-top: none;
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        th {
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+        }
+
+        td:first-child, th:first-child {
+            text-align: left;
+        }
+
+        thead tr:first-child th {
+            border-top: 2px solid #000;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 2px solid #000;
+        }
+
+        .midrule td {
+            border-top: 1px solid #000;
+        }
+
+        .bold { font-weight: bold; }
+
+        /* ─── Full-width elements ─── */
+        .full-width {
+            column-span: all;
+            margin: 0.8em 0;
+        }
+
+        .full-width table {
+            margin: 0 auto;
+            width: 90%;
+        }
+
+        /* ─── Figures ─── */
+        .figure {
+            break-inside: avoid;
+            margin: 0.8em 0;
+            text-align: center;
+        }
+
+        .figure-caption {
+            font-size: 9pt;
+            text-align: left;
+            margin-top: 0.3em;
+            text-indent: 0;
+        }
+
+        .figure-caption strong {
+            font-weight: bold;
+        }
+
+        /* ─── CSS bar chart ─── */
+        .bar-chart-container {
+            margin: 0.5em 0;
+            font-size: 8.5pt;
+        }
+
+        .bar-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+
+        .bar-group .label {
+            width: 55px;
+            text-align: right;
+            padding-right: 6px;
+            font-size: 8pt;
+        }
+
+        .bar-group .bar-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .bar-group .bar {
+            height: 14px;
+            display: inline-block;
+        }
+
+        .bar-baseline { background: #b0b0b0; }
+        .bar-target { background: #2563eb; }
+
+        .bar-group .val {
+            font-size: 7.5pt;
+            color: #333;
+        }
+
+        .bar-legend {
+            font-size: 8pt;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        .bar-legend .swatch {
+            display: inline-block;
+            width: 12px;
+            height: 8px;
+            margin-right: 2px;
+            vertical-align: middle;
+        }
+
+        /* ─── Lists ─── */
+        ul, ol {
+            margin: 0.3em 0 0.5em 1.5em;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 0.15em;
+            text-indent: 0;
+        }
+
+        /* ─── Blockquote (for intervention example) ─── */
+        .intervention-box {
+            border: 1px solid #999;
+            background: #f8f8f8;
+            padding: 6px 8px;
+            font-size: 8.5pt;
+            margin: 0.5em 0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.3;
+            break-inside: avoid;
+        }
+
+        /* ─── References ─── */
+        .references {
+            font-size: 8.5pt;
+        }
+
+        .references p {
+            text-indent: -1.5em;
+            padding-left: 1.5em;
+            margin-bottom: 0.3em;
+            text-align: left;
+        }
+
+        .references .ref-num {
+            font-weight: normal;
+        }
+
+        /* ─── Footnotes / superscript ─── */
+        sup { font-size: 7pt; line-height: 0; }
+
+        /* ─── Page break helper ─── */
+        .page-break { break-before: page; }
+
+        /* ─── Emphasis ─── */
+        .highlight-box {
+            border: 2px solid #2563eb;
+            padding: 8px 10px;
+            margin: 0.8em 0;
+            text-align: center;
+            break-inside: avoid;
+        }
+
+        .highlight-box .big-number {
+            font-size: 20pt;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .highlight-box .big-label {
+            font-size: 9pt;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- TITLE BLOCK -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="title-block">
+    <h1>Motivation Framing Improves LLM Agent Performance:<br>
+    KPI Targets and Historical Context Increase<br>
+    Output Quality by 17.6%</h1>
+    <div class="authors">Bulat Yapparov</div>
+    <div class="affiliation">aictrl.dev</div>
+    <div class="affiliation">United Kingdom</div>
+    <div class="email">bulat@aictrl.dev</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- ABSTRACT -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="abstract-block">
+    <div class="abstract-title">Abstract</div>
+    <p>Large language models (LLMs) deployed as coding agents apply uniform
+    computational effort regardless of task difficulty, unlike humans who
+    adapt effort based on goals and challenges. We investigate whether
+    <em>motivation framing</em>&mdash;providing explicit performance targets
+    with historical context&mdash;can improve LLM output quality in
+    structured-output generation tasks. We conduct a controlled experiment
+    across four LLM models (Claude Haiku&nbsp;4.5, Claude Opus&nbsp;4.6,
+    GLM-4.7, GLM-5) in two domains (dbt SQL pipelines and Vega-Lite chart
+    specifications), comparing standard skill-based prompting against
+    prompting augmented with KPI targets (97% rule compliance) and
+    historical performance benchmarks.</p>
+
+    <p>In the SQL domain (n=120, fully paired), motivation framing improves
+    output quality by <strong>17.6%</strong> (9.41&rarr;11.06 out of 12
+    rules, all four models improving). The effect is largest for the weakest
+    model (GLM-4.7: +28%) and smallest for the strongest (Opus: +12%).
+    Models exhibit qualitatively different effort strategies: some increase
+    token output (Haiku: +21% tokens, +16% quality), while others improve
+    focus without additional effort (GLM-4.7: +3% tokens, +28% quality).
+    Partial results from the Chart domain (n=17 paired runs for one model)
+    show a more complex picture, with the target improving specific
+    attention-directed rules but degrading others. These findings suggest
+    that goal-setting theory from organizational psychology can inform
+    prompt engineering for AI agents, though the intervention&rsquo;s
+    effectiveness may depend on domain characteristics.</p>
+
+    <p class="keywords noindent"><strong>Keywords:</strong> large language models,
+    prompt engineering, motivation framing, goal-setting theory, test-time compute,
+    agent performance, structured output</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- 1. INTRODUCTION -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<h2>1&ensp;Introduction</h2>
+
+<p class="noindent">Recent advances in large language models have demonstrated that
+increased computational effort at inference time&mdash;through
+chain-of-thought reasoning [1], self-consistency sampling [2], or
+best-of-N selection [3]&mdash;consistently improves output quality.
+However, LLMs do not naturally allocate effort adaptively based on task
+difficulty. Wu et al. [4] find that &ldquo;models generate long traces
+for trivial problems while failing to extend reasoning for difficult
+tasks,&rdquo; a fundamental limitation for practical deployment.</p>
+
+<p>This stands in sharp contrast to human performance, where ambitious
+goals and challenging targets systematically improve outcomes. Decades of
+organizational psychology research&mdash;summarized in Locke &amp;
+Latham&rsquo;s goal-setting theory [5]&mdash;demonstrate that specific,
+difficult goals lead to higher performance than vague or easy goals,
+through mechanisms of attention direction, effort regulation, persistence,
+and strategy development.</p>
+
+<p>This raises a natural question: <strong>Can motivation
+framing&mdash;providing explicit performance targets and historical
+benchmarks&mdash;change how LLMs allocate effort and improve their output
+quality?</strong></p>
+
+<p>We present the first systematic study of motivation framing for LLM
+coding agents. Our contributions are:</p>
+
+<ol>
+    <li><strong>Novel intervention.</strong> A prompt engineering technique
+    combining KPI targets (97% compliance), historical performance context
+    (baseline, skill-enhanced, and top-performer scores), and
+    attention-focusing guidance on low-baseline rules.</li>
+
+    <li><strong>Empirical validation.</strong> A controlled A/B experiment
+    across 4 models from 2 families, 2 structured-output domains, 3 task
+    complexities, and 5 repetitions per cell. The SQL domain provides
+    complete paired data (n=120); the Chart domain provides partial
+    replication.</li>
+
+    <li><strong>Mechanistic findings.</strong> Quality improvement of
+    17.6% in the SQL domain, with qualitatively different effort
+    strategies across models&mdash;some increase tokens (effort-based),
+    others improve rule targeting without additional tokens
+    (focus-based)&mdash;suggesting goal-setting theory applies to AI
+    systems.</li>
+</ol>
+
+<p>Section 2 reviews related work. Section 3 describes the intervention
+and experimental design. Section 4 presents results. Section 5 discusses
+mechanisms and implications. Section 6 concludes.</p>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- 2. RELATED WORK -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<h2>2&ensp;Related Work</h2>
+
+<h3>2.1&ensp;Test-Time Compute and Effort Allocation</h3>
+
+<p class="noindent">The relationship between computational effort and
+output quality in LLMs is well-established. Best-of-N sampling [6] and
+self-consistency [2] improve outcomes by generating multiple responses
+and selecting the best. Chain-of-thought prompting [1] improves reasoning
+by encouraging longer, step-by-step outputs. Snell et al. [3] showed
+that scaling test-time compute can be more effective than scaling model
+parameters.</p>
+
+<p>However, effort allocation remains non-adaptive. Wu et al. [4] find
+that reasoning models fail to calibrate trace length to problem
+difficulty, suggesting LLMs lack an internal mechanism for adaptive
+effort. Our work addresses this gap by providing <em>external</em>
+motivation cues that may trigger adaptive behavior.</p>
+
+<h3>2.2&ensp;Prompt Engineering for Performance</h3>
+
+<p class="noindent">Prompt engineering has primarily focused on
+instruction design. He et al. [7] found that prompt format (Markdown,
+JSON, YAML, plain text) causes up to 40% performance variation across
+benchmarks. Role prompting [8] assigns personas; few-shot learning [9]
+provides examples; self-consistency [2] aggregates reasoning paths.
+SkillsBench [10] found that curated skill files raise agent pass rates by
+16.2 percentage points.</p>
+
+<p>None of these techniques explicitly address <em>motivation</em> or
+goal-setting. Prompts specify <em>what</em> to do, not <em>how well</em>
+or <em>how hard to try</em>. Our work opens a new dimension of prompt
+engineering: conveying performance expectations rather than just task
+instructions.</p>
+
+<h3>2.3&ensp;Goal-Setting Theory</h3>
+
+<p class="noindent">Locke &amp; Latham [5] established that specific,
+challenging goals improve human performance through four mechanisms:
+(1)&nbsp;directing attention toward goal-relevant activities,
+(2)&nbsp;regulating effort expenditure, (3)&nbsp;increasing persistence,
+and (4)&nbsp;promoting task-relevant strategy development. The theory
+predicts that goals affect performance monotonically up to the limits of
+ability, with specific difficult goals outperforming &ldquo;do your
+best&rdquo; instructions.</p>
+
+<p>We test whether analogous dynamics apply to LLMs. Our intervention
+maps directly onto the four mechanisms: the KPI target directs attention
+(mechanism&nbsp;1), historical context signals required effort
+(mechanism&nbsp;2), the ambitious 97% target encourages persistence
+(mechanism&nbsp;3), and rule-specific guidance promotes strategy
+development (mechanism&nbsp;4).</p>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- 3. METHOD -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<h2>3&ensp;Method</h2>
+
+<h3>3.1&ensp;Intervention Design</h3>
+
+<p class="noindent">We augment standard skill-based prompting with a
+<em>motivation framing module</em> consisting of three components,
+prepended to the existing prompt:</p>
+
+<p><strong>KPI Target.</strong> An explicit compliance goal:
+&ldquo;Your target for this task is to achieve 97% compliance (13.6 out
+of 14 rules passing).&rdquo;</p>
+
+<p><strong>Historical Context.</strong> Anchoring information from
+prior evaluations: &ldquo;Baseline: 73%, Skill-enhanced: 77%,
+Top-performer: 86%. Your model family: 76%.&rdquo;</p>
+
+<p><strong>Attention-Focusing Guidance.</strong> Specific rules with
+low baseline pass rates: &ldquo;Pay particular attention to: Rule&nbsp;7
+LEFT JOIN only (~35% baseline), Rule&nbsp;8 COALESCE nullable columns
+(~25% baseline).&rdquo;</p>
+
+<p>The historical context numbers are derived from prior experiment data
+(the skill format comparison study conducted on the same domains). The
+rule-specific guidance highlights rules where models historically
+struggle most, creating a prioritized checklist.</p>
+
+<h3>3.2&ensp;Experimental Design</h3>
+
+<p class="noindent">We use a between-subjects design comparing two
+conditions (Table&nbsp;1). Both conditions include the same base
+skill file (Markdown format) and task specification. The treatment
+adds only the motivation framing module.</p>
+
+<div class="table-wrapper">
+    <p class="table-caption">Table 1. <span>Experimental conditions.</span></p>
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align:left">Condition</th>
+                <th>Description</th>
+                <th>n (SQL)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align:left">markdown (control)</td>
+                <td>Task + Markdown skill</td>
+                <td>60</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">markdown+target (treatment)</td>
+                <td>Task + Markdown skill + KPI framing</td>
+                <td>60</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<p><strong>Models.</strong> We test four models spanning two families
+and two capability tiers (Table&nbsp;2), following the finding by He
+et al. [7] that format preferences do not transfer across model
+families.</p>
+
+<div class="table-wrapper">
+    <p class="table-caption">Table 2. <span>Models tested.</span></p>
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align:left">Model</th>
+                <th>Family</th>
+                <th>Tier</th>
+                <th>Interface</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align:left">Claude Haiku 4.5</td>
+                <td>Anthropic</td>
+                <td>Economy</td>
+                <td>Claude Code CLI</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">Claude Opus 4.6</td>
+                <td>Anthropic</td>
+                <td>Frontier</td>
+                <td>Claude Code CLI</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">GLM-4.7</td>
+                <td>ZhipuAI</td>
+                <td>Mid-tier</td>
+                <td>OpenCode CLI</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">GLM-5</td>
+                <td>ZhipuAI</td>
+                <td>Frontier</td>
+                <td>OpenCode CLI</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<p><strong>Domains.</strong> We test two structured-output domains with
+fully automated evaluation:</p>
+
+<ul>
+    <li><strong>SQL Query (dbt):</strong> Generate multi-file dbt-style
+    analytics pipelines. 14 binary evaluation rules covering syntax
+    conventions (keywords uppercase, one clause per line), structural
+    patterns (table aliases, column aliases, no SELECT&nbsp;*), dbt-specific
+    requirements (comment headers, LEFT JOIN only, COALESCE nullables,
+    ROW_NUMBER deduplication, one CTE per file, Jinja ref()), and
+    organization (layer naming, file count, DAG order).</li>
+
+    <li><strong>Chart (Vega-Lite):</strong> Generate visualization
+    specifications. 15 binary rules covering aesthetics (muted palette,
+    accent limits, accessibility), structure (single chart type, insight
+    title, source citation), typography (sans-serif font, data labels),
+    axes (y-axis origin, minimal spines, subtle grid, units), and layout
+    (annotations, direct labels vs. legend, aspect ratio).</li>
+</ul>
+
+<p><strong>Tasks.</strong> Three tasks per domain at increasing
+complexity: simple, medium, and complex. SQL tasks range from a
+revenue aggregation to a subscription metrics pipeline requiring
+deduplication and window functions.</p>
+
+<p><strong>Repetitions.</strong> 5 per cell (model &times;
+condition &times; task), yielding 4&nbsp;models &times;
+3&nbsp;tasks &times; 5&nbsp;reps = 60 runs per condition in the SQL
+domain.</p>
+
+<h3>3.3&ensp;Hypotheses</h3>
+
+<p class="noindent">Based on goal-setting theory:</p>
+
+<ul>
+    <li><strong>H1:</strong> The target condition produces higher rule
+    compliance scores than the control.</li>
+    <li><strong>H2:</strong> The target condition produces more output
+    tokens (indicating increased effort).</li>
+    <li><strong>H3:</strong> The target effect is larger for weaker
+    (lower-baseline) models.</li>
+</ul>
+
+<h3>3.4&ensp;Technical Notes</h3>
+
+<p class="noindent">To ensure valid comparison, both conditions include
+the instruction: &ldquo;IMPORTANT: Output your answer as TEXT only. Do
+NOT use file writing tools.&rdquo; This was necessary because motivation
+framing initially caused GLM models to attempt file-writing tool calls
+instead of text output, producing extraction failures. With this
+instruction, the SQL domain achieved 100% extraction rate (62/62
+runs).</p>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- 4. RESULTS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<h2>4&ensp;Results</h2>
+
+<h3>4.1&ensp;SQL Domain: Primary Finding</h3>
+
+<p class="noindent">Across all four models and three task complexities in
+the SQL domain, motivation framing improves mean compliance score from
+9.41 to 11.06 out of 12 rules&mdash;a <strong>17.6% improvement</strong>
+(Table&nbsp;3). All four models show positive improvement, ranging from
++12% (Opus) to +28% (GLM-4.7).</p>
+
+<div class="table-wrapper full-width">
+    <p class="table-caption">Table 3. <span>SQL domain results: per-model scores and token usage under control (markdown) and treatment (markdown+target) conditions. n=15 runs per model per condition (3&nbsp;tasks &times; 5&nbsp;reps).</span></p>
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align:left">Model</th>
+                <th>Baseline<br>Score</th>
+                <th>Target<br>Score</th>
+                <th>&Delta;&nbsp;Score</th>
+                <th>Baseline<br>Tokens</th>
+                <th>Target<br>Tokens</th>
+                <th>&Delta;&nbsp;Tokens</th>
+                <th>Strategy</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align:left">Haiku 4.5</td>
+                <td>9.35</td>
+                <td><strong>10.87</strong></td>
+                <td>+1.51 (+16%)</td>
+                <td>913</td>
+                <td>1,104</td>
+                <td>+21%</td>
+                <td>Effort</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">Opus 4.6</td>
+                <td>9.97</td>
+                <td><strong>11.21</strong></td>
+                <td>+1.24 (+12%)</td>
+                <td>858</td>
+                <td>951</td>
+                <td>+11%</td>
+                <td>Balanced</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">GLM-4.7</td>
+                <td>8.61</td>
+                <td><strong>11.06</strong></td>
+                <td><strong>+2.45 (+28%)</strong></td>
+                <td>1,382</td>
+                <td>1,422</td>
+                <td>+3%</td>
+                <td><strong>Focus</strong></td>
+            </tr>
+            <tr>
+                <td style="text-align:left">GLM-5</td>
+                <td>9.69</td>
+                <td><strong>11.13</strong></td>
+                <td>+1.44 (+15%)</td>
+                <td>1,175</td>
+                <td>2,022</td>
+                <td>+72%</td>
+                <td>Effort</td>
+            </tr>
+            <tr class="midrule">
+                <td style="text-align:left"><strong>Overall</strong></td>
+                <td><strong>9.41</strong></td>
+                <td><strong>11.06</strong></td>
+                <td><strong>+1.66 (+17.6%)</strong></td>
+                <td><strong>1,079</strong></td>
+                <td><strong>1,354</strong></td>
+                <td><strong>+25.5%</strong></td>
+                <td>&mdash;</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>4.2&ensp;Score Improvement Across Models</h3>
+
+<p class="noindent">Figure 1 visualizes the per-model improvement. Every
+model achieves a higher target score than its baseline. The improvement
+magnitude is inversely correlated with baseline performance: GLM-4.7
+(lowest baseline at 8.61) shows the largest gain (+2.45 points), while
+Opus (highest baseline at 9.97) shows the smallest (+1.24).</p>
+
+<div class="figure">
+    <div class="bar-chart-container">
+        <div class="bar-group">
+            <span class="label">Haiku</span>
+            <div class="bar-area">
+                <span class="bar bar-baseline" style="width: 78%;"></span>
+            </div>
+            <span class="val">9.35</span>
+        </div>
+        <div class="bar-group">
+            <span class="label"></span>
+            <div class="bar-area">
+                <span class="bar bar-target" style="width: 91%;"></span>
+            </div>
+            <span class="val">10.87</span>
+        </div>
+
+        <div class="bar-group" style="margin-top: 6px;">
+            <span class="label">Opus</span>
+            <div class="bar-area">
+                <span class="bar bar-baseline" style="width: 83%;"></span>
+            </div>
+            <span class="val">9.97</span>
+        </div>
+        <div class="bar-group">
+            <span class="label"></span>
+            <div class="bar-area">
+                <span class="bar bar-target" style="width: 93%;"></span>
+            </div>
+            <span class="val">11.21</span>
+        </div>
+
+        <div class="bar-group" style="margin-top: 6px;">
+            <span class="label">GLM-4.7</span>
+            <div class="bar-area">
+                <span class="bar bar-baseline" style="width: 72%;"></span>
+            </div>
+            <span class="val">8.61</span>
+        </div>
+        <div class="bar-group">
+            <span class="label"></span>
+            <div class="bar-area">
+                <span class="bar bar-target" style="width: 92%;"></span>
+            </div>
+            <span class="val">11.06</span>
+        </div>
+
+        <div class="bar-group" style="margin-top: 6px;">
+            <span class="label">GLM-5</span>
+            <div class="bar-area">
+                <span class="bar bar-baseline" style="width: 81%;"></span>
+            </div>
+            <span class="val">9.69</span>
+        </div>
+        <div class="bar-group">
+            <span class="label"></span>
+            <div class="bar-area">
+                <span class="bar bar-target" style="width: 93%;"></span>
+            </div>
+            <span class="val">11.13</span>
+        </div>
+
+        <div class="bar-legend">
+            <span class="swatch" style="background:#b0b0b0;"></span>Baseline&emsp;
+            <span class="swatch" style="background:#2563eb;"></span>Target
+        </div>
+    </div>
+    <p class="figure-caption noindent"><strong>Figure 1.</strong>
+    SQL domain compliance scores (out of 12) per model under baseline and
+    target conditions. All models improve; GLM-4.7 shows the largest gain.</p>
+</div>
+
+<h3>4.3&ensp;Effort-Quality Trade-offs</h3>
+
+<p class="noindent">Models exhibit qualitatively different responses to
+motivation framing (Table&nbsp;3, rightmost column):</p>
+
+<ul>
+    <li><strong>Effort-based</strong> (Haiku, GLM-5): Models generate
+    substantially more tokens (+21% and +72% respectively) and convert
+    additional effort into quality gains.</li>
+
+    <li><strong>Focus-based</strong> (GLM-4.7): The model produces
+    essentially the same number of tokens (+3%) but achieves the largest
+    quality gain (+28%). This suggests the intervention improved
+    <em>strategy</em>&mdash;better allocation of existing effort to
+    critical rules&mdash;rather than increasing total effort.</li>
+
+    <li><strong>Balanced</strong> (Opus): Moderate token increase (+11%)
+    coupled with moderate quality gain (+12%). As the highest-baseline
+    model, Opus has less room for improvement.</li>
+</ul>
+
+<p>GLM-4.7&rsquo;s focus-based strategy is the most practically valuable:
+it provides the largest quality improvement at essentially zero
+additional cost. This parallels findings in human goal-setting research,
+where challenging goals sometimes improve performance through better
+strategy rather than increased effort [5].</p>
+
+<h3>4.4&ensp;Per-Task Breakdown</h3>
+
+<p class="noindent">Table&nbsp;4 shows the breakdown by model and task
+complexity in the SQL domain. The target effect is positive across
+all 12 model&ndash;task combinations except one (GLM-5 on task&nbsp;2,
+&minus;0.21). GLM-4.7 on task&nbsp;3 (complex) shows the single largest
+improvement: +3.46 points (7.39&rarr;10.85), suggesting the intervention
+is most valuable when the base performance is weakest.</p>
+
+<div class="table-wrapper">
+    <p class="table-caption">Table 4. <span>SQL per-task score improvement. All values are mean scores out of 12.</span></p>
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align:left">Model</th>
+                <th>Task</th>
+                <th>Baseline</th>
+                <th>Target</th>
+                <th>&Delta; Score</th>
+                <th>&Delta; Tokens</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align:left">Haiku</td><td>1</td><td>9.89</td><td>11.39</td><td>+1.50</td><td>+21%</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">Haiku</td><td>2</td><td>9.16</td><td>10.68</td><td>+1.52</td><td>+25%</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">Haiku</td><td>3</td><td>9.01</td><td>10.43</td><td>+1.42</td><td>+23%</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">Opus</td><td>1</td><td>10.17</td><td>11.50</td><td>+1.33</td><td>+9%</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">Opus</td><td>2</td><td>9.80</td><td>11.35</td><td>+1.55</td><td>&minus;2%</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">Opus</td><td>3</td><td>9.93</td><td>10.71</td><td>+0.78</td><td>+35%</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">GLM-4.7</td><td>1</td><td>9.35</td><td>11.17</td><td>+1.81</td><td>+14%</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">GLM-4.7</td><td>2</td><td>9.10</td><td>11.14</td><td>+2.05</td><td>0%</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">GLM-4.7</td><td>3</td><td>7.39</td><td>10.85</td><td><strong>+3.46</strong></td><td>&minus;1%</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">GLM-5</td><td>1</td><td>9.20</td><td>11.50</td><td>+2.30</td><td>+41%</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">GLM-5</td><td>2</td><td>10.71</td><td>10.50</td><td>&minus;0.21</td><td>+5%</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">GLM-5</td><td>3</td><td>9.17</td><td>11.45</td><td>+2.28</td><td>+274%*</td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="noindent" style="font-size: 8pt; margin-top: 2px;">*GLM-5 task&nbsp;3 showed extreme token variance; some runs exceeded 4,000 tokens.</p>
+</div>
+
+<h3>4.5&ensp;Hypothesis Validation (SQL Domain)</h3>
+
+<div class="table-wrapper">
+    <p class="table-caption">Table 5. <span>Hypothesis validation summary.</span></p>
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align:left">Hypothesis</th>
+                <th>Result</th>
+                <th style="text-align:left">Evidence</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align:left">H1: Target improves scores</td>
+                <td><strong>Confirmed</strong></td>
+                <td style="text-align:left">+17.6% across all 4 models</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">H2: Target increases tokens</td>
+                <td>Partially</td>
+                <td style="text-align:left">+25.5% mean, but GLM-4.7 +3%</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">H3: Larger effect for weaker models</td>
+                <td><strong>Confirmed</strong></td>
+                <td style="text-align:left">GLM-4.7 +28% &gt; Opus +12%</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>4.6&ensp;Chart Domain: Partial Replication</h3>
+
+<p class="noindent">The Chart domain experiment is incomplete: only GLM-5
+has both baseline and target data (n=9 baseline, n=8 target). The
+remaining models have either only baseline runs (Haiku, Opus) or only
+target runs (GLM-4.7), preventing paired comparison.</p>
+
+<p>For GLM-5, the results diverge from the SQL pattern: mean score
+<em>decreased</em> from 12.33 to 11.38 out of 15 (&minus;7.8%), while
+token usage increased by 77%. At the per-rule level, motivation framing
+improved rules that were specifically called out in the attention
+guidance (source citation +22pp, data labels +18pp, y-axis origin +22pp,
+spine removal +32pp) but degraded rules that were <em>not</em>
+mentioned (legend handling &minus;75pp, accent limits &minus;40pp,
+gridlines &minus;31pp). This suggests the intervention
+successfully <em>directed</em> attention but may have caused
+<em>neglect</em> of unmentioned rules&mdash;an attention
+reallocation effect consistent with goal-setting theory&rsquo;s prediction
+that goals direct attention toward goal-relevant activities at the expense
+of goal-irrelevant ones [5].</p>
+
+<p>We report the Chart results transparently but caution that with n=17
+paired runs for a single model, no reliable cross-domain conclusions
+can be drawn. Full Chart replication is planned.</p>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- 5. DISCUSSION -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<h2>5&ensp;Discussion</h2>
+
+<h3>5.1&ensp;Mechanism: Focus vs. Effort</h3>
+
+<p class="noindent">The most striking finding is the heterogeneity of
+model responses. The variation in token&ndash;quality relationships
+suggests motivation framing operates through at least two distinct
+mechanisms:</p>
+
+<ol>
+    <li><strong>Effort allocation.</strong> Some models (Haiku, GLM-5)
+    respond by generating substantially more content. The additional
+    tokens may include more thorough implementations, additional
+    comments, or more careful formatting. This parallels the
+    effort-regulation mechanism in human goal-setting.</li>
+
+    <li><strong>Attention focus.</strong> GLM-4.7 achieves a +28% quality
+    improvement with only +3% more tokens. The model appears to
+    <em>redistribute</em> its existing effort toward the specific rules
+    highlighted in the intervention, rather than simply working harder.
+    This parallels the attention-direction mechanism.</li>
+</ol>
+
+<p>The focus-based strategy is practically more valuable: it provides
+quality improvement at minimal additional cost. Understanding which
+models favor which strategy could inform per-model prompt
+optimization.</p>
+
+<h3>5.2&ensp;Model-Level Heterogeneity</h3>
+
+<p class="noindent">Consistent with H3, the largest quality gains occur
+for models with lower baselines (Table&nbsp;3). This mirrors human
+goal-setting research, where challenging targets have larger effects for
+lower-performing individuals&mdash;they have more room for improvement
+and the target provides more &ldquo;stretch.&rdquo;</p>
+
+<p>The inverse correlation between baseline and improvement (r&nbsp;=
+&minus;0.89 across the four models) suggests a diminishing-returns
+pattern: as models approach ceiling performance, additional
+motivation framing yields smaller marginal gains. For Opus at 9.97/12
+baseline, the 97% target is only 1.6 points above current performance;
+for GLM-4.7 at 8.61, it represents a 5-point stretch.</p>
+
+<h3>5.3&ensp;Chart Domain: Attention Reallocation</h3>
+
+<p class="noindent">The Chart domain&rsquo;s negative overall result for
+GLM-5 does not necessarily contradict the effectiveness of motivation
+framing. The per-rule analysis reveals a clear pattern: rules mentioned
+in the attention guidance improved substantially (+18 to +32pp), while
+unmentioned rules degraded (&minus;31 to &minus;75pp). This is
+consistent with the <em>attention tunneling</em> effect documented in
+human goal-setting: specific goals improve performance on goal-relevant
+dimensions but can impair performance on unmonitored dimensions [5].</p>
+
+<p>This suggests that the intervention design matters: comprehensive
+rule coverage in the attention guidance may be necessary to avoid
+creating blind spots. The SQL domain&rsquo;s success may partly reflect
+the fact that its 14 rules are more structurally interdependent (correct
+dbt pipeline structure tends to satisfy multiple rules simultaneously),
+while Chart rules are more independent.</p>
+
+<h3>5.4&ensp;Implications for AI Engineering</h3>
+
+<ol>
+    <li><strong>Motivation framing is a viable prompt engineering
+    technique</strong>, especially for structured-output tasks with
+    well-defined quality rules. The SQL domain shows consistent
+    improvement across all tested models.</li>
+
+    <li><strong>Cost&ndash;quality trade-offs are model-dependent.</strong>
+    GLM-4.7 offers essentially free quality gains (+28% quality, +3%
+    tokens); GLM-5 requires 72% more tokens for a 15% gain. Practitioners
+    should profile their model&rsquo;s response before deploying.</li>
+
+    <li><strong>Attention guidance must be comprehensive.</strong>
+    Highlighting specific rules can create tunnel vision on those rules
+    at the expense of others. If using attention guidance, it should
+    cover all critical quality dimensions.</li>
+
+    <li><strong>Weaker models benefit most.</strong> For teams using
+    economy-tier models to reduce costs, motivation framing can partially
+    bridge the quality gap with premium models at minimal additional
+    expense.</li>
+</ol>
+
+<h3>5.5&ensp;Limitations</h3>
+
+<ul>
+    <li><strong>Single target level.</strong> We test only 97%
+    compliance. Goal-setting theory predicts an inverted-U relationship
+    between goal difficulty and performance; 100% or 80% targets may
+    produce different effects.</li>
+
+    <li><strong>Two domains.</strong> SQL results are strong; Chart
+    results are incomplete. The effectiveness of motivation framing
+    may depend on domain characteristics (rule interdependence,
+    evaluation granularity).</li>
+
+    <li><strong>Four models.</strong> We test two families (Claude, GLM).
+    Other families (GPT, Gemini, Llama) may respond differently to
+    motivation framing.</li>
+
+    <li><strong>No statistical significance tests.</strong> With n=15
+    per model&ndash;condition cell and bounded scores, we report
+    descriptive statistics. Formal hypothesis testing with bootstrapped
+    confidence intervals is planned for the complete dataset.</li>
+
+    <li><strong>Ceiling effects.</strong> Several model&ndash;task
+    combinations achieve near-perfect scores under the target condition,
+    compressing the measurable improvement range.</li>
+
+    <li><strong>Confound: rule-specific guidance.</strong> The
+    intervention bundles three components (KPI target, historical
+    context, rule guidance). We cannot isolate which component drives
+    the improvement. The rule-specific guidance may function more as an
+    &ldquo;explicit checklist&rdquo; than a motivational cue.</li>
+</ul>
+
+<h3>5.6&ensp;Future Work</h3>
+
+<ul>
+    <li><strong>Target calibration:</strong> Test 80%, 90%, 97%, and 100%
+    targets to map the goal-difficulty&ndash;performance curve for
+    LLMs.</li>
+    <li><strong>Component ablation:</strong> Separate the effects of
+    KPI target, historical context, and rule-specific guidance.</li>
+    <li><strong>Alternative framings:</strong> Test competition
+    (&ldquo;outperform other models&rdquo;), loss aversion
+    (&ldquo;avoid dropping below&rdquo;), and growth mindset
+    prompts.</li>
+    <li><strong>Cross-domain replication:</strong> Complete the Chart
+    domain and extend to additional domains (Dockerfile, Terraform).</li>
+    <li><strong>Mechanism studies:</strong> Analyze attention patterns
+    and per-rule improvement trajectories to distinguish effort
+    from focus effects.</li>
+</ul>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- 6. CONCLUSION -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<h2>6&ensp;Conclusion</h2>
+
+<p class="noindent">This paper demonstrates that motivation
+framing&mdash;providing explicit KPI targets, historical performance
+context, and attention-focusing guidance&mdash;improves LLM output
+quality by 17.6% in the SQL domain across four tested models from two
+families. The intervention draws on goal-setting theory from
+organizational psychology and appears to operate through both
+effort allocation (more tokens) and attention focus (better targeting of
+critical rules), with effects largest for weaker models.</p>
+
+<p>Partial results from the Chart domain reveal an important nuance:
+attention guidance can create tunnel vision, improving mentioned rules
+while degrading unmentioned ones. This suggests that effective
+motivation framing requires comprehensive coverage of quality
+dimensions.</p>
+
+<p>These findings open a new direction for prompt engineering focused on
+<em>motivation</em> rather than just <em>instruction</em>. As LLMs are
+increasingly deployed as autonomous coding agents, understanding how to
+frame performance expectations&mdash;not just task
+specifications&mdash;becomes increasingly valuable for practitioners
+seeking higher-quality outputs.</p>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- REFERENCES -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<h2>References</h2>
+
+<div class="references">
+<p>[1] J. Wei, X. Wang, D. Schuurmans, M. Bosma, B. Ichter, F. Xia,
+E. Chi, Q. Le, and D. Zhou, &ldquo;Chain-of-thought prompting elicits
+reasoning in large language models,&rdquo; in <em>Proc. NeurIPS</em>,
+2022.</p>
+
+<p>[2] X. Wang, J. Wei, D. Schuurmans, Q. Le, E. Chi, S. Narang,
+A. Chowdhery, and D. Zhou, &ldquo;Self-consistency improves chain of
+thought reasoning in language models,&rdquo; in <em>Proc. ICLR</em>,
+2023.</p>
+
+<p>[3] C. Snell, J. Lee, K. Xu, and A. Kumar, &ldquo;Scaling LLM
+test-time compute optimally can be more effective than scaling model
+size,&rdquo; <em>arXiv:2408.03314</em>, 2024.</p>
+
+<p>[4] Y. Wu et al., &ldquo;Do reasoning models show better reasoning?
+An in-depth analysis with adaptive reasoning,&rdquo;
+<em>arXiv:2511.10788</em>, 2025.</p>
+
+<p>[5] E. A. Locke and G. P. Latham, &ldquo;Building a practically
+useful theory of goal setting and task motivation: A 35-year
+odyssey,&rdquo; <em>American Psychologist</em>, vol. 57, no. 9,
+pp. 705&ndash;717, 2002.</p>
+
+<p>[6] N. Stiennon et al., &ldquo;Learning to summarize from human
+feedback,&rdquo; in <em>Proc. NeurIPS</em>, 2020.</p>
+
+<p>[7] J. He, M. Rungta, D. Koleczek, A. Sekhon, F. X. Wang, and
+S. A. Hasan, &ldquo;Does prompt formatting have any impact on LLM
+performance?&rdquo; <em>arXiv:2411.10541</em>, 2024.</p>
+
+<p>[8] X. Kong, T. Zhao, W. Lu, L. Zhai, Y. Liu, Z. Chen, and
+C. Chen, &ldquo;Better zero-shot reasoning with role-play
+prompting,&rdquo; <em>arXiv:2308.07702</em>, 2024.</p>
+
+<p>[9] T. B. Brown et al., &ldquo;Language models are few-shot
+learners,&rdquo; in <em>Proc. NeurIPS</em>, 2020.</p>
+
+<p>[10] X. Li et al., &ldquo;SkillsBench: Benchmarking how well agent
+skills work across diverse tasks,&rdquo; <em>arXiv:2602.12670</em>,
+2026.</p>
+
+<p>[11] M. Mishra, P. Kumar, R. Bhat, R. Murthy, D. Contractor, and
+S. Tamilselvam, &ldquo;Prompting with pseudo-code instructions,&rdquo;
+in <em>Proc. EMNLP</em>, pp. 15178&ndash;15197, 2023.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- APPENDIX -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+<h2 class="page-break">Appendix A: Intervention Template</h2>
+
+<p class="noindent">The following template was prepended to the control prompt for the
+treatment condition (SQL domain variant shown):</p>
+
+<div class="intervention-box">
+## Performance Context<br><br>
+Your target for this task is to achieve 97% compliance<br>
+(13.6 out of 14 rules passing).<br><br>
+In previous evaluations on similar tasks:<br>
+- The baseline model achieved 73% compliance<br>
+- The skill-enhanced model achieved 77% compliance<br>
+- The top-performing model achieved 86% compliance<br>
+- Your model family has historically achieved 76% compliance<br><br>
+To reach the 97% target, pay particular attention to:<br>
+- Rule 7: LEFT JOIN only (~35% baseline pass rate)<br>
+- Rule 8: COALESCE nullable columns (~25% baseline)<br>
+- Rule 9: ROW_NUMBER deduplication (~32% baseline)<br>
+- Rule 11: Jinja ref() syntax (~0% baseline)<br>
+- Rule 12: Layer naming conventions (~0% baseline)
+</div>
+
+<h2>Appendix B: SQL Domain Per-Task Descriptions</h2>
+
+<p class="noindent"><strong>Task 1 (Simple).</strong> Customer channel
+attribution: generate a dbt pipeline computing revenue by marketing
+channel and city, with staging, intermediate, and mart layers.</p>
+
+<p><strong>Task 2 (Medium).</strong> Subscription metrics: compute monthly
+MRR, churn rate, and active users from raw subscription events, requiring
+window functions and deduplication.</p>
+
+<p><strong>Task 3 (Complex).</strong> Product returns: analyze return rates
+by category with seasonal patterns, requiring ROW_NUMBER deduplication,
+COALESCE for null handling, and multi-layer DAG structure.</p>
+
+</body>
+</html>

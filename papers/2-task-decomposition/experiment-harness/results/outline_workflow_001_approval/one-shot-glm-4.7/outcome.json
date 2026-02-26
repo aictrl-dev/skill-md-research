@@ -1,0 +1,71 @@
+{
+  "code_blocks_found": 8,
+  "files_applied": 8,
+  "apply_results": [
+    {
+      "file": "server/migrations/20240101000000-add-approval-state.ts",
+      "action": "overwritten",
+      "success": true,
+      "error": null
+    },
+    {
+      "file": "server/models/Document.ts",
+      "action": "overwritten",
+      "success": true,
+      "error": null
+    },
+    {
+      "file": "server/routes/api/documents/approval.ts",
+      "action": "overwritten",
+      "success": true,
+      "error": null
+    },
+    {
+      "file": "server/presenters/document.ts",
+      "action": "overwritten",
+      "success": true,
+      "error": null
+    },
+    {
+      "file": "server/migrations/20240101000000-add-approval-state.ts",
+      "action": "overwritten",
+      "success": true,
+      "error": null
+    },
+    {
+      "file": "server/models/Document.ts",
+      "action": "overwritten",
+      "success": true,
+      "error": null
+    },
+    {
+      "file": "server/routes/api/documents/approval.ts",
+      "action": "overwritten",
+      "success": true,
+      "error": null
+    },
+    {
+      "file": "server/presenters/document.ts",
+      "action": "overwritten",
+      "success": true,
+      "error": null
+    }
+  ],
+  "typecheck": {
+    "success": false,
+    "errors": [],
+    "output": "\n\u001b[41m                                                                               \u001b[0m\n\u001b[41m\u001b[37m                This is not the tsc command you are looking for                \u001b[0m\n\u001b[41m                                                                               \u001b[0m\n\nTo get access to the TypeScript compiler, \u001b[34mtsc\u001b[0m, from the command line either:\n\n- Use \u001b[1mnpm install typescript\u001b[0m to first add TypeScript to your project \u001b[1mbefore\u001b[0m using npx\n- Use \u001b[1myarn\u001b[0m to avoid accidentally running code from un-installed packages\n"
+  },
+  "lint": {
+    "success": false,
+    "errors": [
+      "[Errno 2] No such file or directory: 'yarn'"
+    ],
+    "output": ""
+  },
+  "outcome": {
+    "compiles": false,
+    "passes_lint": false,
+    "success": false
+  }
+}

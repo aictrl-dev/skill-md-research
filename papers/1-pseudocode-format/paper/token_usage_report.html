@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Token Usage Analysis &mdash; Skill File Experiment</title>
+<style>
+    :root {
+        --bg: #fafbfc;
+        --card-bg: #ffffff;
+        --border: #e1e4e8;
+        --text: #24292e;
+        --text-secondary: #586069;
+        --accent: #0366d6;
+        --green: #28a745;
+        --red: #d73a49;
+        --orange: #e36209;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    h1 {
+        font-size: 1.8rem;
+        border-bottom: 2px solid var(--accent);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    h2 {
+        font-size: 1.4rem;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--accent);
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 0.3rem;
+    }
+    h3 {
+        font-size: 1.15rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+    }
+    h4 {
+        font-size: 1.05rem;
+        margin-top: 1rem;
+        margin-bottom: 0.4rem;
+        color: var(--text-secondary);
+    }
+    p { margin-bottom: 0.8rem; color: var(--text-secondary); }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1.5rem;
+        background: var(--card-bg);
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        font-size: 0.9rem;
+    }
+    table.compact { font-size: 0.82rem; }
+    th, td {
+        padding: 0.55rem 0.75rem;
+        text-align: right;
+        border-bottom: 1px solid var(--border);
+    }
+    th {
+        background: #f6f8fa;
+        font-weight: 600;
+        text-align: right;
+        white-space: nowrap;
+    }
+    td:first-child, th:first-child {
+        text-align: left;
+    }
+    tr:hover { background: rgba(3,102,214,0.04); }
+    tr.total-row { background: #f0f4ff; font-weight: 600; }
+    .std { color: #999; font-size: 0.85em; }
+    .pct-pos { color: var(--red); font-weight: 600; }
+    .pct-neg { color: var(--green); font-weight: 600; }
+    .pct-neutral { color: var(--text-secondary); }
+    .summary-box {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.06);
+    }
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .stat-card {
+        text-align: center;
+        padding: 1rem;
+        background: #f6f8fa;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+    }
+    .stat-num {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent);
+    }
+    .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-top: 0.2rem;
+    }
+    .findings {
+        list-style: none;
+        padding: 0;
+    }
+    .findings li {
+        padding: 0.4rem 0;
+        padding-left: 1.2rem;
+        position: relative;
+    }
+    .findings li::before {
+        content: "\25B6";
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+        font-size: 0.7rem;
+        top: 0.55rem;
+    }
+    .verdict-box {
+        background: #f0f7ff;
+        border: 1px solid #c8e1ff;
+        border-radius: 6px;
+        padding: 1rem 1.5rem;
+        margin: 1rem 0;
+    }
+    .table-scroll {
+        overflow-x: auto;
+    }
+    table.heatmap td {
+        font-weight: 600;
+        text-align: center;
+    }
+    table.heatmap th {
+        text-align: center;
+    }
+    .nav {
+        position: sticky;
+        top: 0;
+        background: var(--bg);
+        padding: 0.5rem 0;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+        z-index: 100;
+        font-size: 0.9rem;
+    }
+    .nav a {
+        color: var(--accent);
+        text-decoration: none;
+        margin-right: 1.5rem;
+    }
+    .nav a:hover { text-decoration: underline; }
+    .note {
+        background: #fffbdd;
+        border: 1px solid #f9c513;
+        border-radius: 4px;
+        padding: 0.75rem 1rem;
+        margin: 1rem 0;
+        font-size: 0.9rem;
+    }
+    footer {
+        margin-top: 3rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+</style>
+</head>
+<body>
+
+<h1>Token Usage Analysis &mdash; Skill File Experiment</h1>
+<p>Generated from scores CSV data across 4 domains. Evaluates token efficiency for RQ4.</p>
+
+<div class="nav">
+    <a href="#per-condition">Per-Condition</a>
+    <a href="#per-model">Per-Model</a>
+    <a href="#heatmap">Heatmap</a>
+    <a href="#cost">Cost</a>
+    <a href="#duration">Duration</a>
+    <a href="#key-question">Key Question</a>
+    <a href="#detailed">Detailed</a>
+</div>
+
+<div class="note">
+    <strong>Note on input tokens:</strong> For Claude models (Haiku, Opus), most prompt tokens appear as <code>cache_read_tokens</code> + <code>cache_write_tokens</code>,
+    with <code>input_tokens</code> showing only the uncached portion. "Total Input" = input_tokens + cache_read + cache_write.
+    For GLM models, all prompt tokens appear in <code>input_tokens</code>. Cost figures include all token types.
+</div>
+
+<div class="note">
+    <strong>Note on cost data:</strong> GLM models (zai-coding-plan) report <code>total_cost_usd = 0</code> in all runs
+    (likely self-hosted or cost not tracked by the CLI). Cost analysis is therefore meaningful only for Claude Haiku and Opus.
+    Token counts and durations are available for all models.
+</div>
+
+
+    <div class="summary-box">
+        <h2>Executive Summary</h2>
+        <div class="stat-grid">
+            <div class="stat-card"><div class="stat-num">787</div><div class="stat-label">Total Runs</div></div>
+            <div class="stat-card"><div class="stat-num">5</div><div class="stat-label">Models</div></div>
+            <div class="stat-card"><div class="stat-num">4</div><div class="stat-label">Domains</div></div>
+            <div class="stat-card"><div class="stat-num">$17.17</div><div class="stat-label">Total Cost</div></div>
+            <div class="stat-card"><div class="stat-num">25,292,641</div><div class="stat-label">Total Tokens</div></div>
+            <div class="stat-card"><div class="stat-num">$0.0218</div><div class="stat-label">Mean Cost/Run</div></div>
+        </div>
+        <h3>Key Findings (All Domains Pooled)</h3>
+        <ul class="findings">
+            <li>Markdown skill files increase mean output tokens by <strong>+38.4%</strong> vs. no skill file.</li><li>Pseudocode skill files increase mean output tokens by <strong>+46.8%</strong> vs. no skill file.</li><li>Markdown increases mean cost by <strong>+19.9%</strong>; pseudocode by <strong>+37.6%</strong>.</li><li>Markdown increases total input tokens by <strong>+17.1%</strong>; pseudocode by <strong>+25.5%</strong>.</li><li>Markdown changes mean duration by <strong>-37.9%</strong>; pseudocode by <strong>-26.7%</strong>.</li>
+        </ul>
+    </div>
+    
+<h2 id="per-condition">1. Per-Condition Token Usage by Domain</h2>
+<p>Mean values per run. "Total Input" = input_tokens + cache_read + cache_write (full prompt size). % change relative to "none" condition.</p>
+
+        <h3>Chart</h3>
+        <table>
+            <thead><tr>
+                <th>Condition</th><th>N</th>
+                <th>Mean Input Tokens</th><th>&Delta;%</th>
+                <th>Mean Output Tokens</th><th>&Delta;%</th>
+                <th>Mean Cost (USD)</th><th>&Delta;%</th>
+                <th>Mean Duration</th><th>&Delta;%</th>
+            </tr></thead>
+            <tbody><tr>
+                <td><strong>No Skill File</strong></td>
+                <td>36</td>
+                <td>35,614 <span class="std">&plusmn;22,881</span></td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>962 <span class="std">&plusmn;504</span></td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>$0.0198</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>26.2s</td>
+                <td class="pct-neutral">&mdash;</td>
+            </tr><tr>
+                <td><strong>Markdown</strong></td>
+                <td>36</td>
+                <td>35,179 <span class="std">&plusmn;21,831</span></td>
+                <td class="pct-neutral">-1.2%</td>
+                <td>1,562 <span class="std">&plusmn;960</span></td>
+                <td class="pct-pos">+62.4%</td>
+                <td>$0.0342</td>
+                <td class="pct-pos">+72.3%</td>
+                <td>37.7s</td>
+                <td class="pct-pos">+43.8%</td>
+            </tr><tr>
+                <td><strong>Pseudocode</strong></td>
+                <td>36</td>
+                <td>32,631 <span class="std">&plusmn;18,084</span></td>
+                <td class="pct-neg">-8.4%</td>
+                <td>1,252 <span class="std">&plusmn;422</span></td>
+                <td class="pct-pos">+30.2%</td>
+                <td>$0.0483</td>
+                <td class="pct-pos">+143.8%</td>
+                <td>63.4s</td>
+                <td class="pct-pos">+141.9%</td>
+            </tr></tbody>
+        </table>
+        
+
+        <h3>Dockerfile</h3>
+        <table>
+            <thead><tr>
+                <th>Condition</th><th>N</th>
+                <th>Mean Input Tokens</th><th>&Delta;%</th>
+                <th>Mean Output Tokens</th><th>&Delta;%</th>
+                <th>Mean Cost (USD)</th><th>&Delta;%</th>
+                <th>Mean Duration</th><th>&Delta;%</th>
+            </tr></thead>
+            <tbody><tr>
+                <td><strong>No Skill File</strong></td>
+                <td>78</td>
+                <td>20,506 <span class="std">&plusmn;7,698</span></td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>544 <span class="std">&plusmn;254</span></td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>$0.0096</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>58.8s</td>
+                <td class="pct-neutral">&mdash;</td>
+            </tr><tr>
+                <td><strong>Markdown</strong></td>
+                <td>77</td>
+                <td>21,860 <span class="std">&plusmn;5,331</span></td>
+                <td class="pct-pos">+6.6%</td>
+                <td>807 <span class="std">&plusmn;679</span></td>
+                <td class="pct-pos">+48.5%</td>
+                <td>$0.0079</td>
+                <td class="pct-neg">-17.9%</td>
+                <td>35.2s</td>
+                <td class="pct-neg">-40.2%</td>
+            </tr><tr>
+                <td><strong>Pseudocode</strong></td>
+                <td>78</td>
+                <td>25,059 <span class="std">&plusmn;14,631</span></td>
+                <td class="pct-pos">+22.2%</td>
+                <td>952 <span class="std">&plusmn;598</span></td>
+                <td class="pct-pos">+75.0%</td>
+                <td>$0.0106</td>
+                <td class="pct-pos">+10.5%</td>
+                <td>32.4s</td>
+                <td class="pct-neg">-44.9%</td>
+            </tr></tbody>
+        </table>
+        
+
+        <h3>Sql Query</h3>
+        <table>
+            <thead><tr>
+                <th>Condition</th><th>N</th>
+                <th>Mean Input Tokens</th><th>&Delta;%</th>
+                <th>Mean Output Tokens</th><th>&Delta;%</th>
+                <th>Mean Cost (USD)</th><th>&Delta;%</th>
+                <th>Mean Duration</th><th>&Delta;%</th>
+            </tr></thead>
+            <tbody><tr>
+                <td><strong>No Skill File</strong></td>
+                <td>75</td>
+                <td>20,903 <span class="std">&plusmn;5,425</span></td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>688 <span class="std">&plusmn;373</span></td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>$0.0062</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>25.1s</td>
+                <td class="pct-neutral">&mdash;</td>
+            </tr><tr>
+                <td><strong>Markdown</strong></td>
+                <td>75</td>
+                <td>22,631 <span class="std">&plusmn;7,007</span></td>
+                <td class="pct-pos">+8.3%</td>
+                <td>1,101 <span class="std">&plusmn;422</span></td>
+                <td class="pct-pos">+60.1%</td>
+                <td>$0.0125</td>
+                <td class="pct-pos">+99.7%</td>
+                <td>41.0s</td>
+                <td class="pct-pos">+63.3%</td>
+            </tr><tr>
+                <td><strong>Pseudocode</strong></td>
+                <td>75</td>
+                <td>23,186 <span class="std">&plusmn;6,065</span></td>
+                <td class="pct-pos">+10.9%</td>
+                <td>1,127 <span class="std">&plusmn;460</span></td>
+                <td class="pct-pos">+63.9%</td>
+                <td>$0.0107</td>
+                <td class="pct-pos">+71.4%</td>
+                <td>38.7s</td>
+                <td class="pct-pos">+54.3%</td>
+            </tr></tbody>
+        </table>
+        
+
+        <h3>Terraform</h3>
+        <table>
+            <thead><tr>
+                <th>Condition</th><th>N</th>
+                <th>Mean Input Tokens</th><th>&Delta;%</th>
+                <th>Mean Output Tokens</th><th>&Delta;%</th>
+                <th>Mean Cost (USD)</th><th>&Delta;%</th>
+                <th>Mean Duration</th><th>&Delta;%</th>
+            </tr></thead>
+            <tbody><tr>
+                <td><strong>No Skill File</strong></td>
+                <td>74</td>
+                <td>35,651 <span class="std">&plusmn;33,885</span></td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>2,071 <span class="std">&plusmn;1,584</span></td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>$0.0390</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>175.0s</td>
+                <td class="pct-neutral">&mdash;</td>
+            </tr><tr>
+                <td><strong>Markdown</strong></td>
+                <td>75</td>
+                <td>48,680 <span class="std">&plusmn;55,141</span></td>
+                <td class="pct-pos">+36.5%</td>
+                <td>2,522 <span class="std">&plusmn;2,087</span></td>
+                <td class="pct-pos">+21.8%</td>
+                <td>$0.0400</td>
+                <td class="pct-pos">+2.7%</td>
+                <td>73.5s</td>
+                <td class="pct-neg">-58.0%</td>
+            </tr><tr>
+                <td><strong>Pseudocode</strong></td>
+                <td>72</td>
+                <td>54,948 <span class="std">&plusmn;55,513</span></td>
+                <td class="pct-pos">+54.1%</td>
+                <td>2,871 <span class="std">&plusmn;2,283</span></td>
+                <td class="pct-pos">+38.6%</td>
+                <td>$0.0445</td>
+                <td class="pct-pos">+14.2%</td>
+                <td>98.7s</td>
+                <td class="pct-neg">-43.6%</td>
+            </tr></tbody>
+        </table>
+        
+<h2 id="per-model">2. Per-Model Token Usage (All Domains Pooled)</h2>
+
+    <table>
+        <thead><tr>
+            <th>Model</th><th>N</th>
+            <th>Mean Input</th><th>Mean Output</th>
+            <th>Mean Cost</th><th>Total Cost</th>
+            <th>Mean Duration</th>
+        </tr></thead>
+        <tbody><tr>
+            <td><strong>Claude Opus</strong></td>
+            <td>162</td>
+            <td>52,369</td>
+            <td>1,548</td>
+            <td>$0.0896</td>
+            <td>$14.52</td>
+            <td>37.7s</td>
+        </tr><tr>
+            <td><strong>Claude Haiku</strong></td>
+            <td>162</td>
+            <td>46,343</td>
+            <td>1,617</td>
+            <td>$0.0163</td>
+            <td>$2.65</td>
+            <td>22.5s</td>
+        </tr><tr>
+            <td><strong>GLM-4.7</strong></td>
+            <td>135</td>
+            <td>18,147</td>
+            <td>1,476</td>
+            <td>$0.0000</td>
+            <td>$0.00</td>
+            <td>41.9s</td>
+        </tr><tr>
+            <td><strong>GLM-4.7-flash</strong></td>
+            <td>157</td>
+            <td>17,500</td>
+            <td>1,182</td>
+            <td>$0.0000</td>
+            <td>$0.00</td>
+            <td>126.3s</td>
+        </tr><tr>
+            <td><strong>GLM-5</strong></td>
+            <td>171</td>
+            <td>17,668</td>
+            <td>1,081</td>
+            <td>$0.0000</td>
+            <td>$0.00</td>
+            <td>73.6s</td>
+        </tr></tbody>
+    </table>
+    
+<h3>Per-Model x Condition Breakdown</h3>
+
+        <h4>Claude Haiku</h4>
+        <table class="compact">
+            <thead><tr>
+                <th>Condition</th><th>N</th><th>Mean Input</th><th>Mean Output</th><th>&Delta;% Out</th>
+                <th>Mean Cost</th><th>&Delta;% Cost</th><th>Mean Duration</th>
+            </tr></thead>
+            <tbody><tr>
+                <td>No Skill File</td>
+                <td>54</td>
+                <td>39,867</td>
+                <td>1,185</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>$0.0120</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>20.2s</td>
+            </tr><tr>
+                <td>Markdown</td>
+                <td>54</td>
+                <td>48,817</td>
+                <td>1,798</td>
+                <td class="pct-pos">+51.8%</td>
+                <td>$0.0171</td>
+                <td class="pct-pos">+42.0%</td>
+                <td>24.2s</td>
+            </tr><tr>
+                <td>Pseudocode</td>
+                <td>54</td>
+                <td>50,345</td>
+                <td>1,868</td>
+                <td class="pct-pos">+57.7%</td>
+                <td>$0.0199</td>
+                <td class="pct-pos">+65.0%</td>
+                <td>23.2s</td>
+            </tr></tbody>
+        </table>
+        
+
+        <h4>Claude Opus</h4>
+        <table class="compact">
+            <thead><tr>
+                <th>Condition</th><th>N</th><th>Mean Input</th><th>Mean Output</th><th>&Delta;% Out</th>
+                <th>Mean Cost</th><th>&Delta;% Cost</th><th>Mean Duration</th>
+            </tr></thead>
+            <tbody><tr>
+                <td>No Skill File</td>
+                <td>54</td>
+                <td>45,763</td>
+                <td>1,315</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>$0.0771</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>42.6s</td>
+            </tr><tr>
+                <td>Markdown</td>
+                <td>54</td>
+                <td>53,604</td>
+                <td>1,698</td>
+                <td class="pct-pos">+29.2%</td>
+                <td>$0.0898</td>
+                <td class="pct-pos">+16.5%</td>
+                <td>36.0s</td>
+            </tr><tr>
+                <td>Pseudocode</td>
+                <td>54</td>
+                <td>57,741</td>
+                <td>1,632</td>
+                <td class="pct-pos">+24.1%</td>
+                <td>$0.1019</td>
+                <td class="pct-pos">+32.1%</td>
+                <td>34.6s</td>
+            </tr></tbody>
+        </table>
+        
+
+        <h4>GLM-4.7</h4>
+        <table class="compact">
+            <thead><tr>
+                <th>Condition</th><th>N</th><th>Mean Input</th><th>Mean Output</th><th>&Delta;% Out</th>
+                <th>Mean Cost</th><th>&Delta;% Cost</th><th>Mean Duration</th>
+            </tr></thead>
+            <tbody><tr>
+                <td>No Skill File</td>
+                <td>45</td>
+                <td>16,419</td>
+                <td>1,251</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>$0.0000</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>54.5s</td>
+            </tr><tr>
+                <td>Markdown</td>
+                <td>45</td>
+                <td>18,331</td>
+                <td>1,481</td>
+                <td class="pct-pos">+18.4%</td>
+                <td>$0.0000</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>38.0s</td>
+            </tr><tr>
+                <td>Pseudocode</td>
+                <td>45</td>
+                <td>19,691</td>
+                <td>1,696</td>
+                <td class="pct-pos">+35.6%</td>
+                <td>$0.0000</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>33.3s</td>
+            </tr></tbody>
+        </table>
+        
+
+        <h4>GLM-4.7-flash</h4>
+        <table class="compact">
+            <thead><tr>
+                <th>Condition</th><th>N</th><th>Mean Input</th><th>Mean Output</th><th>&Delta;% Out</th>
+                <th>Mean Cost</th><th>&Delta;% Cost</th><th>Mean Duration</th>
+            </tr></thead>
+            <tbody><tr>
+                <td>No Skill File</td>
+                <td>53</td>
+                <td>15,808</td>
+                <td>987</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>$0.0000</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>162.1s</td>
+            </tr><tr>
+                <td>Markdown</td>
+                <td>53</td>
+                <td>17,405</td>
+                <td>1,193</td>
+                <td class="pct-pos">+20.9%</td>
+                <td>$0.0000</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>77.7s</td>
+            </tr><tr>
+                <td>Pseudocode</td>
+                <td>51</td>
+                <td>19,359</td>
+                <td>1,374</td>
+                <td class="pct-pos">+39.2%</td>
+                <td>$0.0000</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>139.6s</td>
+            </tr></tbody>
+        </table>
+        
+
+        <h4>GLM-5</h4>
+        <table class="compact">
+            <thead><tr>
+                <th>Condition</th><th>N</th><th>Mean Input</th><th>Mean Output</th><th>&Delta;% Out</th>
+                <th>Mean Cost</th><th>&Delta;% Cost</th><th>Mean Duration</th>
+            </tr></thead>
+            <tbody><tr>
+                <td>No Skill File</td>
+                <td>57</td>
+                <td>15,559</td>
+                <td>672</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>$0.0000</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>104.0s</td>
+            </tr><tr>
+                <td>Markdown</td>
+                <td>57</td>
+                <td>17,893</td>
+                <td>1,253</td>
+                <td class="pct-pos">+86.4%</td>
+                <td>$0.0000</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>62.6s</td>
+            </tr><tr>
+                <td>Pseudocode</td>
+                <td>57</td>
+                <td>19,552</td>
+                <td>1,319</td>
+                <td class="pct-pos">+96.2%</td>
+                <td>$0.0000</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>54.1s</td>
+            </tr></tbody>
+        </table>
+        
+<h2 id="heatmap">3. Output Tokens Heatmap: Model &times; Condition</h2>
+<p>Mean output tokens per run. Cell colour intensity indicates relative magnitude (darker = more tokens).</p>
+
+        <h3>Chart</h3>
+        <table class="heatmap"><thead><tr><th>Model</th><th>No Skill File</th><th>Markdown</th><th>Pseudocode</th></tr></thead><tbody><tr><td><strong>Claude Haiku</strong></td><td style="background-color: rgba(66,133,244,0.34458632615057205);">1,490</td><td style="background-color: rgba(66,133,244,0.6);">2,556</td><td style="background-color: rgba(66,133,244,0.3744080872572493);">1,614</td></tr><tr><td><strong>Claude Opus</strong></td><td style="background-color: rgba(66,133,244,0.22721468475658424);">999</td><td style="background-color: rgba(66,133,244,0.45559989358872044);">1,953</td><td style="background-color: rgba(66,133,244,0.27991487097632356);">1,220</td></tr><tr><td><strong>GLM-4.7-flash</strong></td><td style="background-color: rgba(66,133,244,0.20122372971534985);">891</td><td style="background-color: rgba(66,133,244,0.21662676243681833);">955</td><td style="background-color: rgba(66,133,244,0.26586858206969943);">1,161</td></tr><tr><td><strong>GLM-5</strong></td><td style="background-color: rgba(66,133,244,0.1);">468</td><td style="background-color: rgba(66,133,244,0.17544559723330674);">783</td><td style="background-color: rgba(66,133,244,0.23075285980313914);">1,014</td></tr></tbody></table>
+        
+
+        <h3>Dockerfile</h3>
+        <table class="heatmap"><thead><tr><th>Model</th><th>No Skill File</th><th>Markdown</th><th>Pseudocode</th></tr></thead><tbody><tr><td><strong>Claude Haiku</strong></td><td style="background-color: rgba(66,133,244,0.1826289095519865);">581</td><td style="background-color: rgba(66,133,244,0.17970555085939705);">575</td><td style="background-color: rgba(66,133,244,0.22003381234150465);">652</td></tr><tr><td><strong>Claude Opus</strong></td><td style="background-color: rgba(66,133,244,0.1);">424</td><td style="background-color: rgba(66,133,244,0.1267328825021133);">475</td><td style="background-color: rgba(66,133,244,0.2742040011270781);">754</td></tr><tr><td><strong>GLM-4.7</strong></td><td style="background-color: rgba(66,133,244,0.24916173570019723);">707</td><td style="background-color: rgba(66,133,244,0.38627782473936323);">966</td><td style="background-color: rgba(66,133,244,0.6);">1,371</td></tr><tr><td><strong>GLM-4.7-flash</strong></td><td style="background-color: rgba(66,133,244,0.19530853761622993);">605</td><td style="background-color: rgba(66,133,244,0.42149398220826795);">1,033</td><td style="background-color: rgba(66,133,244,0.4441462383770076);">1,076</td></tr><tr><td><strong>GLM-5</strong></td><td style="background-color: rgba(66,133,244,0.10096858269935195);">426</td><td style="background-color: rgba(66,133,244,0.38831478350709114);">970</td><td style="background-color: rgba(66,133,244,0.3592279515356438);">915</td></tr></tbody></table>
+        
+
+        <h3>Sql Query</h3>
+        <table class="heatmap"><thead><tr><th>Model</th><th>No Skill File</th><th>Markdown</th><th>Pseudocode</th></tr></thead><tbody><tr><td><strong>Claude Haiku</strong></td><td style="background-color: rgba(66,133,244,0.149642480365725);">438</td><td style="background-color: rgba(66,133,244,0.3583518930957684);">913</td><td style="background-color: rgba(66,133,244,0.38337826749501824);">970</td></tr><tr><td><strong>Claude Opus</strong></td><td style="background-color: rgba(66,133,244,0.1);">325</td><td style="background-color: rgba(66,133,244,0.33411675067401236);">858</td><td style="background-color: rgba(66,133,244,0.2795510491149924);">734</td></tr><tr><td><strong>GLM-4.7</strong></td><td style="background-color: rgba(66,133,244,0.4147931074903294);">1,041</td><td style="background-color: rgba(66,133,244,0.5569511194467237);">1,365</td><td style="background-color: rgba(66,133,244,0.5449068104559841);">1,337</td></tr><tr><td><strong>GLM-4.7-flash</strong></td><td style="background-color: rgba(66,133,244,0.43384128472629235);">1,085</td><td style="background-color: rgba(66,133,244,0.4929785488219435);">1,219</td><td style="background-color: rgba(66,133,244,0.6);">1,463</td></tr><tr><td><strong>GLM-5</strong></td><td style="background-color: rgba(66,133,244,0.19896260696284143);">550</td><td style="background-color: rgba(66,133,244,0.46270659946079007);">1,150</td><td style="background-color: rgba(66,133,244,0.45491149923807295);">1,132</td></tr></tbody></table>
+        
+
+        <h3>Terraform</h3>
+        <table class="heatmap"><thead><tr><th>Model</th><th>No Skill File</th><th>Markdown</th><th>Pseudocode</th></tr></thead><tbody><tr><td><strong>Claude Haiku</strong></td><td style="background-color: rgba(66,133,244,0.29506746900072944);">2,352</td><td style="background-color: rgba(66,133,244,0.4828637855579869);">3,451</td><td style="background-color: rgba(66,133,244,0.6);">4,136</td></tr><tr><td><strong>Claude Opus</strong></td><td style="background-color: rgba(66,133,244,0.47145559810357407);">3,384</td><td style="background-color: rgba(66,133,244,0.5098399890590809);">3,609</td><td style="background-color: rgba(66,133,244,0.5177607585703866);">3,655</td></tr><tr><td><strong>GLM-4.7</strong></td><td style="background-color: rgba(66,133,244,0.23576996717724288);">2,006</td><td style="background-color: rgba(66,133,244,0.2541871808898615);">2,113</td><td style="background-color: rgba(66,133,244,0.2999338986141503);">2,381</td></tr><tr><td><strong>GLM-4.7-flash</strong></td><td style="background-color: rgba(66,133,244,0.12437692117328332);">1,354</td><td style="background-color: rgba(66,133,244,0.1422479029905179);">1,458</td><td style="background-color: rgba(66,133,244,0.2000353300510576);">1,796</td></tr><tr><td><strong>GLM-5</strong></td><td style="background-color: rgba(66,133,244,0.1);">1,211</td><td style="background-color: rgba(66,133,244,0.23074398249452957);">1,976</td><td style="background-color: rgba(66,133,244,0.26419356309263314);">2,172</td></tr></tbody></table>
+        
+
+    <h3>All Domains Pooled</h3>
+    <table class="heatmap"><thead><tr><th>Model</th><th>No Skill File</th><th>Markdown</th><th>Pseudocode</th><th>&Delta;% (md vs none)</th><th>&Delta;% (ps vs none)</th></tr></thead><tbody><tr><td><strong>Claude Haiku</strong></td><td style="background-color: rgba(66,133,244,0.31427203806528625);">1,185</td><td style="background-color: rgba(66,133,244,0.5706106170536067);">1,798</td><td style="background-color: rgba(66,133,244,0.6);">1,868</td><td class="pct-pos">+51.8%</td><td class="pct-pos">+57.7%</td></tr><tr><td><strong>Claude Opus</strong></td><td style="background-color: rgba(66,133,244,0.3686466536034513);">1,315</td><td style="background-color: rgba(66,133,244,0.5288756808284415);">1,698</td><td style="background-color: rgba(66,133,244,0.501134951705483);">1,632</td><td class="pct-pos">+29.2%</td><td class="pct-pos">+24.1%</td></tr><tr><td><strong>GLM-4.7</strong></td><td style="background-color: rgba(66,133,244,0.3420375356963903);">1,251</td><td style="background-color: rgba(66,133,244,0.4382631898416527);">1,481</td><td style="background-color: rgba(66,133,244,0.528089280694822);">1,696</td><td class="pct-pos">+18.4%</td><td class="pct-pos">+35.6%</td></tr><tr><td><strong>GLM-4.7-flash</strong></td><td style="background-color: rgba(66,133,244,0.23164598896439367);">987</td><td style="background-color: rgba(66,133,244,0.3176686534099089);">1,193</td><td style="background-color: rgba(66,133,244,0.3934411140460877);">1,374</td><td class="pct-pos">+20.9%</td><td class="pct-pos">+39.2%</td></tr><tr><td><strong>GLM-5</strong></td><td style="background-color: rgba(66,133,244,0.1);">672</td><td style="background-color: rgba(66,133,244,0.3427004191907053);">1,253</td><td style="background-color: rgba(66,133,244,0.37024968122767066);">1,319</td><td class="pct-pos">+86.4%</td><td class="pct-pos">+96.2%</td></tr></tbody></table>
+    
+<h2 id="cost">4. Cost Analysis</h2>
+
+    <h3>Total Cost by Domain &times; Condition (USD)</h3>
+    <table><thead><tr><th>Domain</th><th>No Skill File</th><th>Markdown</th><th>Pseudocode</th><th>Total</th></tr></thead><tbody><tr><td><strong>chart</strong></td><td>$0.71</td><td>$1.23</td><td>$1.74</td><td><strong>$3.68</strong></td></tr><tr><td><strong>dockerfile</strong></td><td>$0.75</td><td>$0.61</td><td>$0.83</td><td><strong>$2.18</strong></td></tr><tr><td><strong>sql-query</strong></td><td>$0.47</td><td>$0.94</td><td>$0.80</td><td><strong>$2.21</strong></td></tr><tr><td><strong>terraform</strong></td><td>$2.89</td><td>$3.00</td><td>$3.21</td><td><strong>$9.10</strong></td></tr><tr class="total-row"><td><strong>ALL DOMAINS</strong></td><td>$4.82</td><td>$5.77</td><td>$6.57</td><td><strong>$17.17</strong></td></tr></tbody></table>
+    
+
+    <h3>Mean Cost per Run: Model &times; Condition (USD)</h3>
+    <table class="heatmap"><thead><tr><th>Model</th><th>No Skill File</th><th>Markdown</th><th>Pseudocode</th></tr></thead><tbody><tr><td><strong>Claude Haiku</strong></td><td style="background-color: rgba(166,243,155,0.3);">$0.0120</td><td style="background-color: rgba(171,238,155,0.3);">$0.0171</td><td style="background-color: rgba(174,235,155,0.3);">$0.0199</td></tr><tr><td><strong>Claude Opus</strong></td><td style="background-color: rgba(230,179,155,0.3);">$0.0771</td><td style="background-color: rgba(243,166,155,0.3);">$0.0898</td><td style="background-color: rgba(255,155,155,0.3);">$0.1019</td></tr><tr><td><strong>GLM-4.7</strong></td><td style="background-color: rgba(155,255,155,0.3);">$0.0000</td><td style="background-color: rgba(155,255,155,0.3);">$0.0000</td><td style="background-color: rgba(155,255,155,0.3);">$0.0000</td></tr><tr><td><strong>GLM-4.7-flash</strong></td><td style="background-color: rgba(155,255,155,0.3);">$0.0000</td><td style="background-color: rgba(155,255,155,0.3);">$0.0000</td><td style="background-color: rgba(155,255,155,0.3);">$0.0000</td></tr><tr><td><strong>GLM-5</strong></td><td style="background-color: rgba(155,255,155,0.3);">$0.0000</td><td style="background-color: rgba(155,255,155,0.3);">$0.0000</td><td style="background-color: rgba(155,255,155,0.3);">$0.0000</td></tr></tbody></table>
+    
+<h3>Claude-Only Cost Analysis (Haiku + Opus)</h3>
+<p>Since GLM models report zero cost, this isolates cost effects for Claude models only.</p>
+
+    <table>
+        <thead><tr>
+            <th>Condition</th><th>N</th>
+            <th>Mean Input</th><th>&Delta;%</th>
+            <th>Mean Output</th><th>&Delta;%</th>
+            <th>Mean Cost</th><th>&Delta;%</th>
+            <th>Total Cost</th>
+        </tr></thead>
+        <tbody><tr>
+            <td><strong>No Skill File</strong></td>
+            <td>108</td>
+            <td>42,815</td>
+            <td class="pct-neutral">&mdash;</td>
+            <td>1,250</td>
+            <td class="pct-neutral">&mdash;</td>
+            <td>$0.0446</td>
+            <td class="pct-neutral">&mdash;</td>
+            <td>$4.82</td>
+        </tr><tr>
+            <td><strong>Markdown</strong></td>
+            <td>108</td>
+            <td>51,211</td>
+            <td class="pct-pos">+19.6%</td>
+            <td>1,748</td>
+            <td class="pct-pos">+39.9%</td>
+            <td>$0.0535</td>
+            <td class="pct-pos">+19.9%</td>
+            <td>$5.77</td>
+        </tr><tr>
+            <td><strong>Pseudocode</strong></td>
+            <td>108</td>
+            <td>54,043</td>
+            <td class="pct-pos">+26.2%</td>
+            <td>1,750</td>
+            <td class="pct-pos">+40.0%</td>
+            <td>$0.0609</td>
+            <td class="pct-pos">+36.5%</td>
+            <td>$6.57</td>
+        </tr></tbody>
+    </table>
+    
+<h2 id="duration">5. Duration Analysis</h2>
+<div class="note"><strong>Note on outliers:</strong> Some GLM-4.7-flash runs have extreme
+    durations (up to ~66 minutes for a single run in Terraform). These outliers heavily skew the mean for the
+    "none" condition. Median values are more robust. The apparent duration <em>decrease</em> with skill files
+    in the Executive Summary is driven by these GLM outliers in the baseline.</div>
+
+        <h3>Chart</h3>
+        <table>
+            <thead><tr><th>Condition</th><th>Mean</th><th>&Delta;%</th><th>Median</th><th>Std Dev</th><th>P95</th></tr></thead>
+            <tbody><tr>
+                <td>No Skill File</td>
+                <td>26.2s</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>21.6s</td>
+                <td>17.4s</td>
+                <td>67.4s</td>
+            </tr><tr>
+                <td>Markdown</td>
+                <td>37.7s</td>
+                <td class="pct-pos">+43.8%</td>
+                <td>26.6s</td>
+                <td>31.8s</td>
+                <td>87.2s</td>
+            </tr><tr>
+                <td>Pseudocode</td>
+                <td>63.4s</td>
+                <td class="pct-pos">+141.9%</td>
+                <td>62.3s</td>
+                <td>40.3s</td>
+                <td>93.9s</td>
+            </tr></tbody>
+        </table>
+        
+
+        <h3>Dockerfile</h3>
+        <table>
+            <thead><tr><th>Condition</th><th>Mean</th><th>&Delta;%</th><th>Median</th><th>Std Dev</th><th>P95</th></tr></thead>
+            <tbody><tr>
+                <td>No Skill File</td>
+                <td>58.8s</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>34.4s</td>
+                <td>68.6s</td>
+                <td>147.0s</td>
+            </tr><tr>
+                <td>Markdown</td>
+                <td>35.2s</td>
+                <td class="pct-neg">-40.2%</td>
+                <td>27.2s</td>
+                <td>40.4s</td>
+                <td>85.6s</td>
+            </tr><tr>
+                <td>Pseudocode</td>
+                <td>32.4s</td>
+                <td class="pct-neg">-44.9%</td>
+                <td>21.7s</td>
+                <td>35.4s</td>
+                <td>81.0s</td>
+            </tr></tbody>
+        </table>
+        
+
+        <h3>Sql Query</h3>
+        <table>
+            <thead><tr><th>Condition</th><th>Mean</th><th>&Delta;%</th><th>Median</th><th>Std Dev</th><th>P95</th></tr></thead>
+            <tbody><tr>
+                <td>No Skill File</td>
+                <td>25.1s</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>20.8s</td>
+                <td>23.1s</td>
+                <td>74.6s</td>
+            </tr><tr>
+                <td>Markdown</td>
+                <td>41.0s</td>
+                <td class="pct-pos">+63.3%</td>
+                <td>35.2s</td>
+                <td>42.6s</td>
+                <td>78.0s</td>
+            </tr><tr>
+                <td>Pseudocode</td>
+                <td>38.7s</td>
+                <td class="pct-pos">+54.3%</td>
+                <td>27.9s</td>
+                <td>39.9s</td>
+                <td>91.5s</td>
+            </tr></tbody>
+        </table>
+        
+
+        <h3>Terraform</h3>
+        <table>
+            <thead><tr><th>Condition</th><th>Mean</th><th>&Delta;%</th><th>Median</th><th>Std Dev</th><th>P95</th></tr></thead>
+            <tbody><tr>
+                <td>No Skill File</td>
+                <td>175.0s</td>
+                <td class="pct-neutral">&mdash;</td>
+                <td>81.7s</td>
+                <td>439.7s</td>
+                <td>297.0s</td>
+            </tr><tr>
+                <td>Markdown</td>
+                <td>73.5s</td>
+                <td class="pct-neg">-58.0%</td>
+                <td>38.2s</td>
+                <td>156.0s</td>
+                <td>219.2s</td>
+            </tr><tr>
+                <td>Pseudocode</td>
+                <td>98.7s</td>
+                <td class="pct-neg">-43.6%</td>
+                <td>33.6s</td>
+                <td>461.0s</td>
+                <td>121.1s</td>
+            </tr></tbody>
+        </table>
+        
+<h3>Mean Duration by Model (All Domains)</h3>
+
+    <table><thead><tr><th>Model</th><th>No Skill File</th><th>Markdown</th><th>Pseudocode</th><th>&Delta;% (md)</th><th>&Delta;% (ps)</th></tr></thead><tbody><tr><td><strong>Claude Haiku</strong></td><td>20.2s</td><td>24.2s</td><td>23.2s</td><td class="pct-pos">+19.9%</td><td class="pct-pos">+14.6%</td></tr><tr><td><strong>Claude Opus</strong></td><td>42.6s</td><td>36.0s</td><td>34.6s</td><td class="pct-neg">-15.4%</td><td class="pct-neg">-18.8%</td></tr><tr><td><strong>GLM-4.7</strong></td><td>54.5s</td><td>38.0s</td><td>33.3s</td><td class="pct-neg">-30.3%</td><td class="pct-neg">-38.9%</td></tr><tr><td><strong>GLM-4.7-flash</strong></td><td>162.1s</td><td>77.7s</td><td>139.6s</td><td class="pct-neg">-52.0%</td><td class="pct-neg">-13.9%</td></tr><tr><td><strong>GLM-5</strong></td><td>104.0s</td><td>62.6s</td><td>54.1s</td><td class="pct-neg">-39.8%</td><td class="pct-neg">-48.0%</td></tr></tbody></table>
+    
+<h2 id="key-question">6. Key Question: Token Efficiency of Skill Files</h2>
+<p><strong>Question:</strong> Do skill files (markdown/pseudocode) cost more input tokens
+    (longer prompt) but produce shorter/more efficient outputs? Or do they produce longer outputs too?</p>
+
+        <h3>Chart</h3>
+        <table>
+            <thead><tr><th>Condition</th><th>&Delta; Input</th><th>&Delta; Output</th><th>&Delta; Cost</th><th>&Delta; Duration</th><th>Output Verdict</th></tr></thead>
+            <tbody><tr>
+                <td><strong>Markdown</strong></td>
+                <td class="pct-neutral">-1.2%</td>
+                <td class="pct-pos">+62.4%</td>
+                <td class="pct-pos">+72.3%</td>
+                <td class="pct-pos">+43.8%</td>
+                <td>longer</td>
+            </tr><tr>
+                <td><strong>Pseudocode</strong></td>
+                <td class="pct-neg">-8.4%</td>
+                <td class="pct-pos">+30.2%</td>
+                <td class="pct-pos">+143.8%</td>
+                <td class="pct-pos">+141.9%</td>
+                <td>longer</td>
+            </tr></tbody>
+        </table>
+        
+
+        <h3>Dockerfile</h3>
+        <table>
+            <thead><tr><th>Condition</th><th>&Delta; Input</th><th>&Delta; Output</th><th>&Delta; Cost</th><th>&Delta; Duration</th><th>Output Verdict</th></tr></thead>
+            <tbody><tr>
+                <td><strong>Markdown</strong></td>
+                <td class="pct-pos">+6.6%</td>
+                <td class="pct-pos">+48.5%</td>
+                <td class="pct-neg">-17.9%</td>
+                <td class="pct-neg">-40.2%</td>
+                <td>longer</td>
+            </tr><tr>
+                <td><strong>Pseudocode</strong></td>
+                <td class="pct-pos">+22.2%</td>
+                <td class="pct-pos">+75.0%</td>
+                <td class="pct-pos">+10.5%</td>
+                <td class="pct-neg">-44.9%</td>
+                <td>longer</td>
+            </tr></tbody>
+        </table>
+        
+
+        <h3>Sql Query</h3>
+        <table>
+            <thead><tr><th>Condition</th><th>&Delta; Input</th><th>&Delta; Output</th><th>&Delta; Cost</th><th>&Delta; Duration</th><th>Output Verdict</th></tr></thead>
+            <tbody><tr>
+                <td><strong>Markdown</strong></td>
+                <td class="pct-pos">+8.3%</td>
+                <td class="pct-pos">+60.1%</td>
+                <td class="pct-pos">+99.7%</td>
+                <td class="pct-pos">+63.3%</td>
+                <td>longer</td>
+            </tr><tr>
+                <td><strong>Pseudocode</strong></td>
+                <td class="pct-pos">+10.9%</td>
+                <td class="pct-pos">+63.9%</td>
+                <td class="pct-pos">+71.4%</td>
+                <td class="pct-pos">+54.3%</td>
+                <td>longer</td>
+            </tr></tbody>
+        </table>
+        
+
+        <h3>Terraform</h3>
+        <table>
+            <thead><tr><th>Condition</th><th>&Delta; Input</th><th>&Delta; Output</th><th>&Delta; Cost</th><th>&Delta; Duration</th><th>Output Verdict</th></tr></thead>
+            <tbody><tr>
+                <td><strong>Markdown</strong></td>
+                <td class="pct-pos">+36.5%</td>
+                <td class="pct-pos">+21.8%</td>
+                <td class="pct-pos">+2.7%</td>
+                <td class="pct-neg">-58.0%</td>
+                <td>longer</td>
+            </tr><tr>
+                <td><strong>Pseudocode</strong></td>
+                <td class="pct-pos">+54.1%</td>
+                <td class="pct-pos">+38.6%</td>
+                <td class="pct-pos">+14.2%</td>
+                <td class="pct-neg">-43.6%</td>
+                <td>longer</td>
+            </tr></tbody>
+        </table>
+        
+
+    <h3>Overall Verdict</h3>
+    <div class="verdict-box">
+    
+
+        <p><strong>Markdown:</strong>
+        Input tokens change: <span class="pct-pos">+17.1%</span>,
+        Output tokens change: <span class="pct-pos">+38.4%</span>,
+        Cost change: <span class="pct-pos">+19.9%</span></p>
+        
+
+        <p><strong>Pseudocode:</strong>
+        Input tokens change: <span class="pct-pos">+25.5%</span>,
+        Output tokens change: <span class="pct-pos">+46.8%</span>,
+        Cost change: <span class="pct-pos">+37.6%</span></p>
+        
+</div>
+<h2 id="detailed">7. Detailed Per-Domain Per-Model Breakdown</h2>
+<h3>Chart</h3>
+
+        <div class="table-scroll">
+        <table class="compact"><thead><tr><th rowspan='2'>Model</th><th colspan='4'>No Skill File</th><th colspan='4'>Markdown</th><th colspan='4'>Pseudocode</th></tr><tr><th>Input</th><th>Output</th><th>Cost</th><th>Duration</th><th>Input</th><th>Output</th><th>Cost</th><th>Duration</th><th>Input</th><th>Output</th><th>Cost</th><th>Duration</th></tr></thead><tbody><tr><td><strong>Claude Haiku</strong></td><td>64,378</td><td>1,490</td><td>$0.0149</td><td>14.2s</td><td>67,238</td><td>2,556</td><td>$0.0227</td><td>19.4s</td><td>61,874</td><td>1,614</td><td>$0.0345</td><td>54.5s</td></tr><tr><td><strong>Claude Opus</strong></td><td>45,158</td><td>999</td><td>$0.0645</td><td>24.1s</td><td>37,657</td><td>1,953</td><td>$0.1140</td><td>42.4s</td><td>30,454</td><td>1,220</td><td>$0.1589</td><td>55.2s</td></tr><tr><td><strong>GLM-4.7-flash</strong></td><td>16,463</td><td>891</td><td>$0.0000</td><td>37.1s</td><td>17,913</td><td>955</td><td>$0.0000</td><td>51.7s</td><td>19,104</td><td>1,161</td><td>$0.0000</td><td>78.6s</td></tr><tr><td><strong>GLM-5</strong></td><td>16,458</td><td>468</td><td>$0.0000</td><td>29.4s</td><td>17,907</td><td>783</td><td>$0.0000</td><td>37.2s</td><td>19,091</td><td>1,014</td><td>$0.0000</td><td>65.2s</td></tr></tbody></table>
+        </div>
+        
+<h3>Dockerfile</h3>
+
+        <div class="table-scroll">
+        <table class="compact"><thead><tr><th rowspan='2'>Model</th><th colspan='4'>No Skill File</th><th colspan='4'>Markdown</th><th colspan='4'>Pseudocode</th></tr><tr><th>Input</th><th>Output</th><th>Cost</th><th>Duration</th><th>Input</th><th>Output</th><th>Cost</th><th>Duration</th><th>Input</th><th>Output</th><th>Cost</th><th>Duration</th></tr></thead><tbody><tr><td><strong>Claude Haiku</strong></td><td>27,979</td><td>581</td><td>$0.0082</td><td>5.7s</td><td>29,627</td><td>575</td><td>$0.0068</td><td>5.9s</td><td>30,842</td><td>652</td><td>$0.0076</td><td>7.0s</td></tr><tr><td><strong>Claude Opus</strong></td><td>28,572</td><td>424</td><td>$0.0416</td><td>34.7s</td><td>26,856</td><td>475</td><td>$0.0336</td><td>33.1s</td><td>38,431</td><td>754</td><td>$0.0475</td><td>26.9s</td></tr><tr><td><strong>GLM-4.7</strong></td><td>16,325</td><td>707</td><td>$0.0000</td><td>75.6s</td><td>17,858</td><td>966</td><td>$0.0000</td><td>26.8s</td><td>19,524</td><td>1,371</td><td>$0.0000</td><td>39.1s</td></tr><tr><td><strong>GLM-4.7-flash</strong></td><td>15,235</td><td>605</td><td>$0.0000</td><td>109.3s</td><td>18,243</td><td>1,033</td><td>$0.0000</td><td>34.3s</td><td>18,222</td><td>1,076</td><td>$0.0000</td><td>37.9s</td></tr><tr><td><strong>GLM-5</strong></td><td>15,434</td><td>426</td><td>$0.0000</td><td>67.1s</td><td>17,373</td><td>970</td><td>$0.0000</td><td>68.9s</td><td>19,407</td><td>915</td><td>$0.0000</td><td>47.8s</td></tr></tbody></table>
+        </div>
+        
+<h3>Sql Query</h3>
+
+        <div class="table-scroll">
+        <table class="compact"><thead><tr><th rowspan='2'>Model</th><th colspan='4'>No Skill File</th><th colspan='4'>Markdown</th><th colspan='4'>Pseudocode</th></tr><tr><th>Input</th><th>Output</th><th>Cost</th><th>Duration</th><th>Input</th><th>Output</th><th>Cost</th><th>Duration</th><th>Input</th><th>Output</th><th>Cost</th><th>Duration</th></tr></thead><tbody><tr><td><strong>Claude Haiku</strong></td><td>27,641</td><td>438</td><td>$0.0055</td><td>4.7s</td><td>31,056</td><td>913</td><td>$0.0117</td><td>23.2s</td><td>30,251</td><td>970</td><td>$0.0095</td><td>22.9s</td></tr><tr><td><strong>Claude Opus</strong></td><td>27,337</td><td>325</td><td>$0.0257</td><td>8.3s</td><td>27,302</td><td>858</td><td>$0.0507</td><td>27.5s</td><td>28,270</td><td>734</td><td>$0.0440</td><td>23.7s</td></tr><tr><td><strong>GLM-4.7</strong></td><td>16,514</td><td>1,041</td><td>$0.0000</td><td>29.5s</td><td>18,267</td><td>1,365</td><td>$0.0000</td><td>49.6s</td><td>18,762</td><td>1,337</td><td>$0.0000</td><td>28.2s</td></tr><tr><td><strong>GLM-4.7-flash</strong></td><td>16,516</td><td>1,085</td><td>$0.0000</td><td>47.2s</td><td>18,633</td><td>1,219</td><td>$0.0000</td><td>66.3s</td><td>19,514</td><td>1,463</td><td>$0.0000</td><td>82.4s</td></tr><tr><td><strong>GLM-5</strong></td><td>16,510</td><td>550</td><td>$0.0000</td><td>35.7s</td><td>17,898</td><td>1,150</td><td>$0.0000</td><td>38.4s</td><td>19,133</td><td>1,132</td><td>$0.0000</td><td>36.4s</td></tr></tbody></table>
+        </div>
+        
+<h3>Terraform</h3>
+
+        <div class="table-scroll">
+        <table class="compact"><thead><tr><th rowspan='2'>Model</th><th colspan='4'>No Skill File</th><th colspan='4'>Markdown</th><th colspan='4'>Pseudocode</th></tr><tr><th>Input</th><th>Output</th><th>Cost</th><th>Duration</th><th>Input</th><th>Output</th><th>Cost</th><th>Duration</th><th>Input</th><th>Output</th><th>Cost</th><th>Duration</th></tr></thead><tbody><tr><td><strong>Claude Haiku</strong></td><td>49,275</td><td>2,352</td><td>$0.0207</td><td>53.8s</td><td>74,716</td><td>3,451</td><td>$0.0295</td><td>46.6s</td><td>83,026</td><td>4,136</td><td>$0.0337</td><td>20.8s</td></tr><tr><td><strong>Claude Opus</strong></td><td>81,742</td><td>3,384</td><td>$0.1718</td><td>95.9s</td><td>116,223</td><td>3,609</td><td>$0.1708</td><td>43.7s</td><td>122,895</td><td>3,655</td><td>$0.1800</td><td>40.7s</td></tr><tr><td><strong>GLM-4.7</strong></td><td>16,418</td><td>2,006</td><td>$0.0000</td><td>58.4s</td><td>18,868</td><td>2,113</td><td>$0.0000</td><td>37.6s</td><td>20,786</td><td>2,381</td><td>$0.0000</td><td>32.6s</td></tr><tr><td><strong>GLM-4.7-flash</strong></td><td>15,240</td><td>1,354</td><td>$0.0000</td><td>422.0s</td><td>15,088</td><td>1,458</td><td>$0.0000</td><td>145.2s</td><td>20,778</td><td>1,796</td><td>$0.0000</td><td>383.8s</td></tr><tr><td><strong>GLM-5</strong></td><td>14,220</td><td>1,211</td><td>$0.0000</td><td>261.4s</td><td>18,505</td><td>1,976</td><td>$0.0000</td><td>94.4s</td><td>20,423</td><td>2,172</td><td>$0.0000</td><td>72.7s</td></tr></tbody></table>
+        </div>
+        
+
+<footer>
+    Report generated on 2026-02-22 &bull; Data from 787 experiment runs across 4 domains and 5 models.
+</footer>
+
+</body>
+</html>
