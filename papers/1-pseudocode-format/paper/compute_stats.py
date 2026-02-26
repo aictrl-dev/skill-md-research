@@ -34,7 +34,7 @@ EXCLUDE_MODELS = {"glm-4.7-flash"}
 
 def load_chart():
     """Load Chart domain from scores_deep.csv (pass_count/fail_count)."""
-    path = os.path.join(DOMAINS_DIR, "chart", "results", "scores_deep.csv")
+    path = os.path.join(DOMAINS_DIR, "chart", "results-v2", "scores_deep.csv")
     if not os.path.exists(path):
         print(f"WARNING: Chart data not found at {path}", file=sys.stderr)
         return pd.DataFrame()
