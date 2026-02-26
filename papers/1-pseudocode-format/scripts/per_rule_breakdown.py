@@ -9,11 +9,17 @@ pd.set_option("display.max_rows", 200)
 pd.set_option("display.width", 160)
 pd.set_option("display.max_colwidth", 40)
 
+import os
+
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+_PAPER1_ROOT = os.path.dirname(_SCRIPT_DIR)  # papers/1-pseudocode-format/
+_DOMAINS_DIR = os.path.join(_PAPER1_ROOT, "domains")
+
 DOMAINS = {
-    "chart": "/home/bulat/code/skill-md-research/domains/chart/results-v2/scores_deep.csv",
-    "dockerfile": "/home/bulat/code/skill-md-research/domains/dockerfile/results/scores.csv",
-    "sql-query": "/home/bulat/code/skill-md-research/domains/sql-query/results/scores.csv",
-    "terraform": "/home/bulat/code/skill-md-research/domains/terraform/results/scores.csv",
+    "chart": os.path.join(_DOMAINS_DIR, "chart", "results-v2", "scores_deep.csv"),
+    "dockerfile": os.path.join(_DOMAINS_DIR, "dockerfile", "results", "scores.csv"),
+    "sql-query": os.path.join(_DOMAINS_DIR, "sql-query", "results", "scores.csv"),
+    "terraform": os.path.join(_DOMAINS_DIR, "terraform", "results", "scores.csv"),
 }
 
 EXCLUDE_MODELS = {"glm-4.7-flash"}
