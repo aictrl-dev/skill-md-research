@@ -923,8 +923,9 @@ prepended to the task JSON.
 The skill file (Python pseudocode with dataclasses, enums, and validation
 functions) is prepended to the task JSON.
 
-Full prompt templates and skill files are available in the repository under
-\texttt{papers/1-pseudocode-format/domains/\{domain\}/skills/} and \texttt{papers/1-pseudocode-format/prompts/}.
+Full prompt templates and skill files are available in the repository
+under \texttt{domains/\{domain\}/skills/} and \texttt{prompts/}
+(relative to \texttt{papers/1-pseudocode-format/}).
 
 
 \section{Per-Domain Rule Details}\label{app:rules}
@@ -1120,6 +1121,7 @@ A dataset card and Gebru et~al.\ (2021) datasheet are included.
 The dataset is released under CC-BY-4.0.
 
 \paragraph{Repository layout.}
+All paths below are relative to \texttt{papers/1-pseudocode-format/}:
 \begin{itemize}
   \item \texttt{benchmarks/run\_all\_evals.sh} --- One-command reproduction pipeline
   \item \texttt{benchmarks/skill-md-dataset/} --- Standalone Skill-MD benchmark
@@ -1129,6 +1131,7 @@ The dataset is released under CC-BY-4.0.
   \item \texttt{domains/\{domain\}/results/raw\_outputs.zip} --- Raw LLM outputs
   \item \texttt{paper/compute\_stats.py} --- Cross-domain statistics
   \item \texttt{scripts/generate\_figures.py} --- Figure generation
+  \item \texttt{scripts/variability\_analysis.py} --- Variability analysis
 \end{itemize}
 
 \noindent All paths are relative to \texttt{papers/1-pseudocode-format/}.
