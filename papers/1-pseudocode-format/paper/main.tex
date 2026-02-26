@@ -199,10 +199,13 @@ code-formatted instructions---a hypothesis our pseudocode condition tests.
 \subsection{Independent Variable: Instruction Format}\label{sec:iv}
 
 We test three conditions (Table~\ref{tab:conditions}). The Markdown and
-pseudocode skills encode \emph{identical} semantic content---the same rules,
-thresholds, and examples---differing only in surface format. Both skill
-conditions prepend the skill document to the task prompt; the no-skill
-condition includes only the task data and a generic instruction.
+pseudocode skills encode the same rules, thresholds, and examples. However,
+the formats are not purely cosmetic: pseudocode provides additional
+\emph{structural priors}---typed fields, closed enums, and explicit
+validation functions---that have no direct Markdown analogue
+(Section~\ref{sec:discussion}). Both skill conditions prepend the skill
+document to the task prompt; the no-skill condition includes only the task
+data and a generic instruction.
 
 \begin{table}[t]
 \caption{Instruction conditions. Line counts are averaged across the four
@@ -668,6 +671,15 @@ Second, \emph{validation functions signal expected checks}: a
 \texttt{violations()} method that returns a list of failure conditions
 provides the model with an explicit checklist in a format it processes
 natively during code generation.
+Importantly, these mechanisms suggest that the pseudocode advantage is not
+merely a surface-level formatting effect. Typed dataclasses define
+\emph{data structures}, enums create \emph{closed token sets}, and
+validation functions specify \emph{executable checks}---structural priors
+that are absent from equivalent prose. The benefit may therefore stem partly
+from providing a computationally-aligned representation that leverages the
+model's code pre-training, rather than from formatting alone. Ablation
+studies isolating the contribution of types, validation logic, and Python
+syntax would help disentangle these factors.
 
 \paragraph{Skill-induced complexity.}
 The per-rule breakdown (Appendix~\ref{app:per-rule}) reveals that skills can
@@ -700,6 +712,13 @@ with the largest effects in Chart ($\delta = 0.247$) and
 Terraform ($\delta = 0.222$), though a notable exception is SQL where
 Gemini shows a large \emph{negative} effect ($\delta = -0.704$, $p = 0.007$),
 meaning pseudocode significantly hurts compliance for this family--domain pair.
+A possible mechanism is over-literal interpretation of class-level structure:
+the SQL pseudocode skill defines rules within a \texttt{PerFileRules} class,
+and Gemini may apply per-file logic too aggressively---losing points on
+pipeline-level rules (e.g., \texttt{COALESCE}, deduplication) that are
+architecturally appropriate only in specific dbt layers rather than in every
+model file. The SQL evaluation metric, which averages pass rates across files,
+may amplify this effect.
 This aligns with He et al.'s finding that format
 preferences do not transfer across model families~\cite{he2024prompt}.
 The three frontier models (Opus~4.6, GLM-5, Gemini~3.1~Pro) each show a
@@ -762,9 +781,10 @@ Automated evaluators may produce false positives or false negatives. We
 mitigated this by documenting edge cases in per-domain rubrics and iterating
 evaluator logic on pilot runs before the main experiment. Evaluators were
 finalized before data collection. The same author wrote both Markdown and
-pseudocode skills, which could introduce systematic bias; we verified semantic
-equivalence through independent rule-by-rule comparison
-(Section~\ref{sec:iv}).
+pseudocode skills, which could introduce systematic bias; we verified that both
+formats encode the same rules through independent rule-by-rule comparison
+(Section~\ref{sec:iv}), though the formats differ in structural richness
+(typed fields, enums, validation functions) beyond surface presentation.
 
 \paragraph{Construct validity.}
 Rule compliance is a proxy for output quality, not a direct measure. A
@@ -827,7 +847,12 @@ failure rates and predictable behavior matter.
 Future work should extend this comparison to interactive agentic tasks with
 tool use, additional models (e.g., GPT, Llama), more domains
 (e.g., Kubernetes manifests, CI/CD pipelines), and user studies measuring
-skill file authoring effort.
+skill file authoring effort. Ablation studies that isolate the contributions
+of type annotations, validation functions, and Python syntax would clarify
+whether the pseudocode advantage derives from structural priors or surface
+formatting. Hybrid approaches---such as Markdown with embedded JSON schemas
+or TypeScript interfaces---may achieve comparable compliance gains with lower
+authoring overhead.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
