@@ -30,6 +30,8 @@ STANDARD_DOMAINS = {
     "terraform":  ROOT / "domains" / "terraform" / "results" / "scores.csv",
 }
 
+GEMINI_CSV = ROOT.parent / "3-kpi-targets" / "gemini_scores.csv"
+
 FIG_DIR = ROOT / "paper" / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -52,12 +54,13 @@ CONDITION_ORDER = ["none", "markdown", "pseudocode"]
 CONDITION_LABELS = {"none": "No skill", "markdown": "Markdown", "pseudocode": "Pseudocode"}
 CONDITION_COLORS = {"none": "#bdbdbd", "markdown": "#6baed6", "pseudocode": "#2171b5"}
 
-MODEL_ORDER = ["haiku", "opus", "glm-4.7", "glm-5"]
+MODEL_ORDER = ["haiku", "opus", "glm-4.7", "glm-5", "gemini-3.1-pro-preview"]
 MODEL_LABELS = {
     "haiku": "Haiku 4.5",
     "opus": "Opus 4.6",
     "glm-4.7": "GLM-4.7",
     "glm-5": "GLM-5",
+    "gemini-3.1-pro-preview": "Gemini 3.1 Pro",
 }
 DOMAIN_LABELS = {
     "chart": "Chart",
@@ -68,12 +71,13 @@ DOMAIN_LABELS = {
 
 
 def load_all() -> pd.DataFrame:
-    """Load and unify scores from all four domains.
+    """Load and unify scores from all four domains plus Gemini.
 
     Chart uses verdict-based scoring: failure_rate = fail_count / (pass_count + fail_count).
     Other domains use: failure_rate = 1 - auto_score / scored_rules.
     Extraction failures (scored_rules == 0 or pass+fail == 0) → failure_rate = 1.0.
     GLM-4.7-Flash is excluded.
+    Gemini 3.1 Pro is loaded from a separate CSV.
     """
     frames = []
     for domain, path in STANDARD_DOMAINS.items():
@@ -97,6 +101,30 @@ def load_all() -> pd.DataFrame:
             )
 
         frames.append(df)
+
+    # Load Gemini data
+    if GEMINI_CSV.exists():
+        gdf = pd.read_csv(GEMINI_CSV)
+        # Normalize domain: sql-query → sql
+        gdf["domain"] = gdf["domain"].replace({"sql-query": "sql"})
+        # Chart rows: use fail_count/(pass_count+fail_count) for failure rate
+        chart_mask = gdf["domain"] == "chart"
+        chart_total = gdf.loc[chart_mask, "pass_count"] + gdf.loc[chart_mask, "fail_count"]
+        gdf.loc[chart_mask, "failure_rate"] = np.where(
+            chart_total > 0,
+            gdf.loc[chart_mask, "fail_count"] / chart_total,
+            1.0,
+        )
+        # Non-chart rows: use 1 - auto_score/scored_rules
+        non_chart = ~chart_mask
+        gdf.loc[non_chart, "failure_rate"] = np.where(
+            gdf.loc[non_chart, "scored_rules"] > 0,
+            1 - gdf.loc[non_chart, "auto_score"] / gdf.loc[non_chart, "scored_rules"],
+            1.0,
+        )
+        frames.append(gdf)
+    else:
+        print(f"WARNING: Gemini CSV not found at {GEMINI_CSV}", file=sys.stderr)
 
     data = pd.concat(frames, ignore_index=True)
     # Remove GLM-4.7-Flash
@@ -174,7 +202,7 @@ def fig2_model_heatmap(data: pd.DataFrame):
             subset = data[(data["model"] == m) & (data["condition"] == c)]
             matrix[i, j] = subset["failure_rate"].mean() * 100
 
-    fig, ax = plt.subplots(figsize=(4.0, 3.2))
+    fig, ax = plt.subplots(figsize=(4.0, 3.6))
     im = ax.imshow(matrix, cmap="RdYlGn_r", aspect="auto", vmin=0, vmax=65)
 
     ax.set_xticks(range(len(conds)))
@@ -189,8 +217,9 @@ def fig2_model_heatmap(data: pd.DataFrame):
             ax.text(j, i, f"{val:.1f}%", ha="center", va="center",
                     fontsize=8, color=color, fontweight="bold")
 
-    # White divider between families: Claude (0-1), GLM (2-3)
+    # White dividers between families: Claude (0-1), GLM (2-3), Gemini (4)
     ax.axhline(y=1.5, color="white", linewidth=2.5)
+    ax.axhline(y=3.5, color="white", linewidth=2.5)
 
     cbar = fig.colorbar(im, ax=ax, shrink=0.8, pad=0.02)
     cbar.set_label("Failure rate (%)", fontsize=8)
@@ -207,7 +236,7 @@ def fig2_model_heatmap(data: pd.DataFrame):
 def fig3_pseudocode_advantage(data: pd.DataFrame):
     """Forest plot: Markdown FR − Pseudocode FR per model, with bootstrap CIs."""
     models = MODEL_ORDER
-    fig, ax = plt.subplots(figsize=(5.5, 3.0))
+    fig, ax = plt.subplots(figsize=(5.5, 3.4))
 
     for i, m in enumerate(models):
         md_fr = data[(data["model"] == m) & (data["condition"] == "markdown")]["failure_rate"].values
