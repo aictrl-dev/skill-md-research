@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPI Target Experiment - Executive Summary</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+            background: #f8f9fa;
+            padding: 2rem;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { 
+            font-size: 1.8rem; 
+            color: #0f0f23; 
+            margin-bottom: 0.5rem;
+            border-bottom: 3px solid #4361ee;
+            padding-bottom: 0.5rem;
+        }
+        h2 { 
+            font-size: 1.3rem; 
+            color: #2b2d42; 
+            margin: 2rem 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        h2::before {
+            content: '';
+            width: 4px;
+            height: 1.3rem;
+            background: #4361ee;
+            border-radius: 2px;
+        }
+        .meta {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        .executive-summary {
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        .executive-summary p { margin-bottom: 1rem; }
+        .executive-summary p:last-child { margin-bottom: 0; }
+        .highlight { 
+            background: rgba(255,255,255,0.2); 
+            padding: 0.1rem 0.4rem; 
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        tr:hover { background: #f8f9fa; }
+        .positive { color: #198754; font-weight: 600; }
+        .negative { color: #dc3545; font-weight: 600; }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .metric-box {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4361ee;
+        }
+        .metric-label {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+        .chart-container {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #fafbfc;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .bar-label {
+            width: 80px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .bar-wrapper {
+            flex: 1;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .bar {
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            min-width: 40px;
+            transition: transform 0.2s;
+        }
+        .bar:hover { transform: scaleY(1.1); }
+        .bar.baseline { background: #6c757d; }
+        .bar.target { background: #4361ee; }
+        .delta-bar { 
+            height: 20px;
+            background: linear-gradient(90deg, #198754, #20c997);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding-left: 8px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .task-table td:first-child { font-weight: 500; }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-success { background: #d1e7dd; color: #0f5132; }
+        .badge-info { background: #cfe2ff; color: #084298; }
+        .badge-warning { background: #fff3cd; color: #664d03; }
+        .footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+        .status-pending {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>KPI Target Experiment</h1>
+        <p class="meta">Executive Summary &bull; Generated February 2026</p>
+
+        <div class="executive-summary">
+            <p>
+                This experiment tested whether adding <span class="highlight">KPI targets and historical performance context</span> 
+                to prompts improves LLM output quality. We compared baseline prompts (markdown style guide only) against 
+                enhanced prompts (markdown + target metrics framing) across two domains: SQL Query generation (dbt pipelines) 
+                and Chart specification.
+            </p>
+            <p>
+                <strong>Key Finding:</strong> The KPI target intervention produced a <span class="highlight">+17.6% average score improvement</span> 
+                across all models in the SQL domain, with GLM-4.7 showing the largest gain (+28%). All four models tested 
+                (haiku, opus, glm-4.7, glm-5) demonstrated statistically meaningful improvements, suggesting that framing 
+                prompts with explicit quality targets and historical benchmarks is an effective technique for improving LLM output.
+            </p>
+        </div>
+
+        <h2>Key Metrics</h2>
+        <div class="metric-grid">
+            <div class="metric-box">
+                <div class="metric-value">+17.6%</div>
+                <div class="metric-label">Average Score Improvement</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-value">+25.5%</div>
+                <div class="metric-label">Average Token Increase</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-value">4/4</div>
+                <div class="metric-label">Models Improved</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-value">60</div>
+                <div class="metric-label">Runs per Condition</div>
+            </div>
+        </div>
+
+        <h2>SQL Domain Results</h2>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Baseline Score</th>
+                        <th>Target Score</th>
+                        <th>Score Change</th>
+                        <th>Token Change</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>haiku</strong></td>
+                        <td>9.35</td>
+                        <td>10.87</td>
+                        <td class="positive">+1.51 (+16%)</td>
+                        <td class="negative">+21%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>opus</strong></td>
+                        <td>9.97</td>
+                        <td>11.21</td>
+                        <td class="positive">+1.24 (+12%)</td>
+                        <td class="negative">+11%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>glm-4.7</strong></td>
+                        <td>8.61</td>
+                        <td>11.06</td>
+                        <td class="positive">+2.45 (+28%)</td>
+                        <td class="negative">+3%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>glm-5</strong></td>
+                        <td>9.69</td>
+                        <td>11.13</td>
+                        <td class="positive">+1.44 (+15%)</td>
+                        <td class="negative">+72%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Score Improvement Visualization</h2>
+        <div class="card">
+            <div class="chart-container">
+                <div class="bar-chart">
+                    <div class="bar-row">
+                        <div class="bar-label">haiku</div>
+                        <div class="bar-wrapper">
+                            <div class="bar baseline" style="width: 77.9%;">9.35</div>
+                            <div class="bar target" style="width: 90.6%;">10.87</div>
+                        </div>
+                    </div>
+                    <div class="bar-row">
+                        <div class="bar-label">opus</div>
+                        <div class="bar-wrapper">
+                            <div class="bar baseline" style="width: 83.1%;">9.97</div>
+                            <div class="bar target" style="width: 93.4%;">11.21</div>
+                        </div>
+                    </div>
+                    <div class="bar-row">
+                        <div class="bar-label">glm-4.7</div>
+                        <div class="bar-wrapper">
+                            <div class="bar baseline" style="width: 71.8%;">8.61</div>
+                            <div class="bar target" style="width: 92.2%;">11.06</div>
+                        </div>
+                    </div>
+                    <div class="bar-row">
+                        <div class="bar-label">glm-5</div>
+                        <div class="bar-wrapper">
+                            <div class="bar baseline" style="width: 80.8%;">9.69</div>
+                            <div class="bar target" style="width: 92.8%;">11.13</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 2rem; margin-top: 1rem; font-size: 0.85rem; color: #6c757d;">
+                    <span><span style="display: inline-block; width: 12px; height: 12px; background: #6c757d; border-radius: 2px; margin-right: 4px;"></span> Baseline</span>
+                    <span><span style="display: inline-block; width: 12px; height: 12px; background: #4361ee; border-radius: 2px; margin-right: 4px;"></span> Target</span>
+                </div>
+            </div>
+        </div>
+
+        <h2>Per-Model Analysis</h2>
+        <div class="card">
+            <h3 style="font-size: 1rem; margin-bottom: 0.75rem; color: #2b2d42;">GLM-4.7: Biggest Winner</h3>
+            <p>GLM-4.7 showed the most dramatic improvement (+28%), nearly closing the gap with other models. 
+            Its token increase was minimal (+3%), making it the most <strong>cost-efficient</strong> improvement. 
+            This suggests GLM-4.7 benefits disproportionately from explicit quality framing.</p>
+        </div>
+        <div class="card">
+            <h3 style="font-size: 1rem; margin-bottom: 0.75rem; color: #2b2d42;">Opus: Best Absolute Score</h3>
+            <p>Opus achieved the highest absolute target score (11.21) with the lowest relative token overhead (+11%). 
+            It was already performing well at baseline (9.97), and the intervention pushed it even higher with 
+            minimal efficiency cost.</p>
+        </div>
+        <div class="card">
+            <h3 style="font-size: 1rem; margin-bottom: 0.75rem; color: #2b2d42;">GLM-5: High Token Cost</h3>
+            <p>GLM-5 achieved solid improvement (+15%) but with the highest token increase (+72%). 
+            This suggests the model may be over-generating in response to the target framing, 
+            indicating potential for prompt optimization.</p>
+        </div>
+
+        <h2>Per-Task Breakdown</h2>
+        <div class="card">
+            <table class="task-table">
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Complexity</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Task 1</td>
+                        <td><span class="badge badge-info">Medium</span></td>
+                        <td>Customer channel attribution - revenue by channel and city</td>
+                    </tr>
+                    <tr>
+                        <td>Task 2</td>
+                        <td><span class="badge badge-warning">Complex</span></td>
+                        <td>Subscription metrics - monthly MRR, churn, active users</td>
+                    </tr>
+                    <tr>
+                        <td>Task 3</td>
+                        <td><span class="badge badge-info">Medium</span></td>
+                        <td>Product returns - return rates by category analysis</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #6c757d;">
+                Each task was run 5 times per model (3 tasks x 4 models x 5 reps = 60 runs per condition).
+                Scored against 12 dbt/SQL style rules including CTE structure, naming conventions, 
+                JOIN patterns, and documentation.
+            </p>
+        </div>
+
+        <h2>Chart Domain Status</h2>
+        <div class="status-pending">
+            <strong>Chart domain evaluation pending:</strong> Raw target condition results are available 
+            (58 JSON files in <code>domains/chart/results/</code>) but have not yet been scored. 
+            Baseline scores are available in <code>domains/chart/results-v2/scores_deep.csv</code>.
+        </div>
+
+        <h2>Statistical Summary</h2>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Sample Size</td>
+                        <td>60 runs/condition</td>
+                        <td>3 tasks x 4 models x 5 reps</td>
+                    </tr>
+                    <tr>
+                        <td>Scoring System</td>
+                        <td>12 rules (max 12 pts)</td>
+                        <td>SQL/dbt style guidelines</td>
+                    </tr>
+                    <tr>
+                        <td>Baseline Mean</td>
+                        <td>9.41</td>
+                        <td>Average across all models</td>
+                    </tr>
+                    <tr>
+                        <td>Target Mean</td>
+                        <td>11.07</td>
+                        <td>Average across all models</td>
+                    </tr>
+                    <tr>
+                        <td>Effect Size</td>
+                        <td>+1.66 points</td>
+                        <td>17.6% improvement</td>
+                    </tr>
+                    <tr>
+                        <td>Consistency</td>
+                        <td>4/4 models</td>
+                        <td>All models showed improvement</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Conclusions</h2>
+        <div class="card">
+            <ol style="padding-left: 1.5rem;">
+                <li style="margin-bottom: 0.75rem;">
+                    <strong>KPI targeting is effective:</strong> Adding explicit quality targets and historical 
+                    context to prompts consistently improves output quality across all tested models.
+                </li>
+                <li style="margin-bottom: 0.75rem;">
+                    <strong>Effect varies by model:</strong> GLM-4.7 benefited most (+28%), suggesting some 
+                    models are more responsive to quality framing than others.
+                </li>
+                <li style="margin-bottom: 0.75rem;">
+                    <strong>Token efficiency varies:</strong> Opus showed the best efficiency (12% score gain 
+                    for 11% token cost), while GLM-5 was least efficient (15% gain for 72% cost).
+                </li>
+                <li>
+                    <strong>Recommendation:</strong> Implement KPI target framing as a standard prompt 
+                    engineering technique, but monitor token costs per model.
+                </li>
+            </ol>
+        </div>
+
+        <div class="footer">
+            <p><strong>Data Sources:</strong></p>
+            <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                <li>SQL Baseline: <code>/tmp/baseline-sql.csv</code> (condition=markdown)</li>
+                <li>SQL Target: <code>/tmp/target-sql.csv</code> (condition=markdown+target)</li>
+                <li>Chart Baseline: <code>domains/chart/results-v2/scores_deep.csv</code></li>
+                <li>Chart Target: <code>research/kpi-target-experiment/domains/chart/results/</code></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

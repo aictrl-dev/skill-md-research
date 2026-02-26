@@ -1,0 +1,13 @@
+{
+  "run_id": "gemini-3.1-pro-preview_none_task3_rep3",
+  "model": "gemini-3.1-pro-preview",
+  "condition": "none",
+  "task": "3",
+  "task_complexity": "medium",
+  "domain": "sql-query",
+  "rep": 3,
+  "timestamp": "2026-02-26T00:00:35+00:00",
+  "duration_ms": 22686,
+  "cli_tool": "gemini",
+  "raw_output": "Loaded cached credentials.\n{\n  \"session_id\": \"c3d8a9e9-c164-4094-bf0f-e3bdddd969a7\",\n  \"response\": \"-- product_return_rates.sql\\n```sql\\nWITH ApprovedReturns AS (\\n    SELECT item_id\\n    FROM returns\\n    WHERE LOWER(status) = 'approved'\\n    GROUP BY item_id\\n)\\nSELECT \\n    COALESCE(c.name, 'Uncategorized') AS category_name,\\n    SUM(oi.quantity) AS total_items_sold,\\n    SUM(CASE WHEN ar.item_id IS NOT NULL THEN oi.quantity ELSE 0 END) AS total_items_returned,\\n    CAST(SUM(CASE WHEN ar.item_id IS NOT NULL THEN oi.quantity ELSE 0 END) AS DECIMAL(10,4)) / NULLIF(SUM(oi.quantity), 0) AS return_rate\\nFROM order_items oi\\nJOIN products p \\n    ON oi.product_id = p.product_id\\nLEFT JOIN categories c \\n    ON p.category_id = c.category_id\\nLEFT JOIN ApprovedReturns ar \\n    ON oi.item_id = ar.item_id\\nGROUP BY \\n    COALESCE(c.name, 'Uncategorized');\\n```\",\n  \"stats\": {\n    \"models\": {\n      \"gemini-3.1-pro-preview\": {\n        \"api\": {\n          \"totalRequests\": 1,\n          \"totalErrors\": 0,\n          \"totalLatencyMs\": 19129\n        },\n        \"tokens\": {\n          \"input\": 5814,\n          \"prompt\": 9294,\n          \"candidates\": 252,\n          \"total\": 10785,\n          \"cached\": 3480,\n          \"thoughts\": 1239,\n          \"tool\": 0\n        }\n      }\n    },\n    \"tools\": {\n      \"totalCalls\": 0,\n      \"totalSuccess\": 0,\n      \"totalFail\": 0,\n      \"totalDurationMs\": 0,\n      \"totalDecisions\": {\n        \"accept\": 0,\n        \"reject\": 0,\n        \"modify\": 0,\n        \"auto_accept\": 0\n      },\n      \"byName\": {}\n    },\n    \"files\": {\n      \"totalLinesAdded\": 0,\n      \"totalLinesRemoved\": 0\n    }\n  }\n}"
+}

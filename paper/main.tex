@@ -48,18 +48,20 @@ Code SKILL.md, Cursor rules), no study has compared how their \emph{format}
 affects compliance. We present a controlled experiment comparing three
 conditions---no skill (baseline), Markdown prose, and Python
 pseudocode---across four structured-output domains (Chart, Dockerfile,
-SQL, and Terraform), four models from two families (Claude and GLM), and three
-task complexities. In 629 scored runs evaluated against 12--15 automated binary
-rules per domain, we find: (1)~skill files reduce failure rates by 3.7$\times$
-versus the baseline (Cliff's $\delta = 0.778$, \emph{large});
-(2)~pseudocode format further reduces failure rates from 10.7\% to 7.6\%
-versus Markdown ($p < 0.001$, Cliff's $\delta = 0.171$); (3)~the
-pseudocode advantage is strongest on the frontier model Claude Opus~4.6
-(5.0\% vs.\ 9.0\% failure rate), while GLM-5 shows no significant format
-preference (6.8\% vs.\ 5.9\%); and (4)~pseudocode tightens the failure-rate
-distribution (Levene's $F = 10.90$, $p = 0.001$; variance ratio 1.59),
-increasing the probability of meeting a 10\% production-quality threshold
-by up to 21 percentage points. We release all data, skills, evaluators, and
+SQL, and Terraform), five models from three families (Claude, GLM, and
+Gemini), and three
+task complexities. In 737 scored runs evaluated against 12--15 automated binary
+rules per domain, we find: (1)~skill files reduce failure rates by 4.0$\times$
+versus the baseline (33.4\% to 8.4\%; Cliff's $\delta = 0.781$, \emph{large});
+(2)~pseudocode format further reduces failure rates from 9.8\% to 7.1\%, a
+28\% relative reduction versus Markdown ($p = 0.003$, Cliff's $\delta = 0.141$);
+(3)~the pseudocode advantage is strongest on Claude Opus~4.6
+(5.0\% vs.\ 9.0\% failure rate, a 44\% relative reduction), while
+Gemini~3.1~Pro achieves the lowest overall failure rate (4.1\% with
+pseudocode); and (4)~pseudocode tightens
+the failure-rate distribution (variance ratio 1.60; Levene's $F = 9.38$,
+$p = 0.002$), increasing the probability of meeting a 10\% production-quality
+threshold by up to 22 percentage points. We release all data, skills, evaluators, and
 analysis scripts at
 \url{https://github.com/aictrl-dev/skill-md-research}.
 \end{abstract}
@@ -104,21 +106,21 @@ We address this question with a controlled factorial experiment:
     dbt-style SQL pipelines, and Terraform
     infrastructure-as-code---covering different output modalities
     (JSON, Dockerfile, SQL, HCL).
-  \item \textbf{4 models} from 2 families: Claude Haiku~4.5 and Opus~4.6
-    (Anthropic); GLM-4.7 and GLM-5 (ZhipuAI).
+  \item \textbf{5 models} from 3 families: Claude Haiku~4.5 and Opus~4.6
+    (Anthropic); GLM-4.7 and GLM-5 (ZhipuAI); Gemini~3.1~Pro (Google).
   \item \textbf{3 task complexities} per domain (simple, medium, complex),
     with up to 5 repetitions per cell.
 \end{itemize}
 
 \noindent
-This yields 629 evaluated runs, each scored against 12--15 domain-specific
+This yields 737 evaluated runs, each scored against 12--15 domain-specific
 binary rules by automated evaluators.
 
 \paragraph{Contributions.}
 (1)~The first empirical comparison of instruction \emph{format} for LLM skill
 files, extending prior work on skill \emph{presence}~\cite{li2026skillsbench}
 and pseudocode on NLP tasks~\cite{mishra2023prompting}.
-(2)~A multi-domain evaluation across four structured-output domains and two
+(2)~A multi-domain evaluation across four structured-output domains and three
 model families, testing generalization.
 (3)~Evidence that pseudocode reduces output \emph{variability}, not just the
 mean, increasing the probability of meeting quality thresholds.
@@ -257,7 +259,7 @@ a full ECS Fargate deployment with ALB, RDS, and IAM.
 
 \subsection{Models}\label{sec:models}
 
-We test four models from two families spanning two capability tiers
+We test five models from three families spanning multiple capability tiers
 (Table~\ref{tab:models}), enabling cross-family and cross-tier comparisons
 following the finding by He et al.~\cite{he2024prompt} that format preferences
 often do not transfer across model families.
@@ -274,16 +276,21 @@ Claude Haiku 4.5 & Anthropic & Economy & Claude Code CLI \\
 Claude Opus 4.6 & Anthropic & Frontier & Claude Code CLI \\
 GLM-4.7 & ZhipuAI & Mid-tier & OpenCode CLI \\
 GLM-5 & ZhipuAI & Frontier & OpenCode CLI \\
+Gemini 3.1 Pro & Google & Frontier & Gemini CLI \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 All models were invoked with default temperature settings to reflect
-ecologically valid conditions. The three original domains (Dockerfile, SQL,
-Terraform) have 5 repetitions per cell yielding 4 models $\times$ 3 conditions
-$\times$ 3 tasks $\times$ 5 reps = 180 runs each. Chart uses 3 repetitions
-(81 runs after excluding GLM-4.7, which was not tested in that domain). In total,
-we have 629 scored runs across four domains.
+ecologically valid conditions. For the four original models, the three original
+domains (Dockerfile, SQL, Terraform) have 5 repetitions per cell yielding
+4 models $\times$ 3 conditions $\times$ 3 tasks $\times$ 5 reps = 180 runs
+each. Chart uses 3 repetitions (81 runs after excluding GLM-4.7, which was
+not tested in that domain), giving 629 runs for the four original models.
+Gemini~3.1~Pro was added subsequently across all four domains with 3
+repetitions per cell (3 conditions $\times$ 3 tasks $\times$ 3 reps $\times$
+4 domains = 108 runs). In total, we have 737 scored runs across five models
+and four domains.
 
 \subsection{Evaluation Pipeline}\label{sec:eval}
 
@@ -330,7 +337,12 @@ The primary metric is \textbf{failure rate}:
 \]
 where \texttt{rules\_scored} excludes conditional rules that are not applicable
 to a given task (e.g., the Terraform \emph{sensitive} rule is only scored when
-the task contains secret values).
+the task contains secret values). We adopt failure rate as our primary metric
+rather than pass rate because, in the context of agentic automation, failure
+rate directly represents the human-in-the-loop intervention cost. A reduction
+from 10\% to 1\% failure represents a 10-fold improvement in automation
+reliability, a delta that is more clearly captured by failure-rate ratios than
+by absolute gains in pass-rate percentage points.
 
 \subsection{Statistical Methods}\label{sec:stats}
 
@@ -366,27 +378,27 @@ count) and then aggregated.
 \subsection{RQ1: Skill Files Reduce Failure Rates}\label{sec:rq1}
 
 Pooling both skill conditions (Markdown and pseudocode) against the no-skill
-baseline across all four domains and four models, skill files produce a
+baseline across all four domains and five models, skill files produce a
 \textbf{large} reduction in failure rate (Table~\ref{tab:rq1}).
 
 \begin{table}[t]
-\caption{RQ1: Skill files vs.\ no-skill baseline (629 runs pooled).}
+\caption{RQ1: Skill files vs.\ no-skill baseline (737 runs pooled).}
 \label{tab:rq1}
 \centering\small
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Condition} & \textbf{N} & \textbf{Mean FR} & \textbf{Cliff's $\delta$} & \textbf{$p$} \\
 \midrule
-No skill & 210 & 33.7\% & \multirow{2}{*}{0.778 (large)} & \multirow{2}{*}{$< 0.001$} \\
-Skill (both) & 419 & 9.2\% & & \\
+No skill & 246 & 33.4\% & \multirow{2}{*}{0.781 (large)} & \multirow{2}{*}{$< 0.001$} \\
+Skill (both) & 491 & 8.4\% & & \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 The effect is consistent across all four domains
 (Table~\ref{tab:rq1_domain} and Figure~\ref{fig:condition_bars}).
-SQL shows the largest baseline failure rate (50.1\% $\to$ 13.7\%),
-while Dockerfile shows the strongest relative improvement (18.7\% $\to$ 4.2\%).
+SQL shows the highest baseline failure rate (51.2\%),
+while Dockerfile shows the strongest relative improvement (17.5\% $\to$ 3.8\%).
 
 \begin{table}[t]
 \caption{RQ1 per domain: failure rate by condition.}
@@ -396,12 +408,12 @@ while Dockerfile shows the strongest relative improvement (18.7\% $\to$ 4.2\%).
 \toprule
 \textbf{Domain} & \textbf{No skill} & \textbf{Markdown} & \textbf{Pseudocode} \\
 \midrule
-Chart & 20.9\% & 5.7\% & 2.8\% \\
-Dockerfile & 18.7\% & 4.2\% & 4.2\% \\
-SQL (dbt) & 50.1\% & 16.9\% & 10.5\% \\
-Terraform & 39.0\% & 13.7\% & 10.5\% \\
+Chart & 22.8\% & 4.9\% & 2.3\% \\
+Dockerfile & 17.5\% & 4.1\% & 3.8\% \\
+SQL (dbt) & 51.2\% & 15.3\% & 10.2\% \\
+Terraform & 37.8\% & 12.9\% & 9.9\% \\
 \midrule
-\textbf{Pooled} & \textbf{33.7\%} & \textbf{10.7\%} & \textbf{7.6\%} \\
+\textbf{Pooled} & \textbf{33.4\%} & \textbf{9.8\%} & \textbf{7.1\%} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -423,14 +435,17 @@ with pseudocode (dark blue) achieving the lowest rates.}
 \subsection{RQ2: Pseudocode Outperforms Markdown}\label{sec:rq2}
 
 Comparing the two skill formats directly, pseudocode reduces pooled failure
-rate from 10.7\% (Markdown) to 7.6\% (pseudocode), a statistically
-significant difference (Mann-Whitney $U = 25688$, $p < 0.001$, one-tailed),
-with a small effect size (Cliff's $\delta = 0.171$).
+rate from 9.8\% (Markdown) to 7.1\% (pseudocode), a 28\% relative reduction.
+This is a statistically significant difference
+($p = 0.003$, one-tailed), with a negligible-to-small effect size
+(Cliff's $\delta = 0.141$).
 
 Per-domain results (Table~\ref{tab:rq2}) show that the effect is strongest
-in SQL ($\delta = 0.495$, large) and Chart ($\delta = 0.318$, small).
-Dockerfile shows a negligible effect ($\delta = 0.015$), where both formats
-achieve near-ceiling compliance ($<$4.2\% failure rate).
+in SQL ($\delta = 0.358$, medium). Chart shows a small effect
+($\delta = 0.292$, $p = 0.009$) and Terraform shows a small effect
+($\delta = 0.151$, $p = 0.032$).
+Dockerfile shows a negligible effect ($\delta = 0.034$), where both formats
+achieve near-ceiling compliance ($<$4.1\% failure rate).
 A per-rule breakdown (Appendix~\ref{app:per-rule}) reveals that the SQL
 advantage concentrates in two correlated rules where Markdown-guided models
 use a \texttt{SELECT~*} shortcut in staging CTEs, while pseudocode models
@@ -446,12 +461,12 @@ pseudocode. \textsuperscript{*}$p < 0.05$.}
 \toprule
 \textbf{Domain} & \textbf{MD FR} & \textbf{PC FR} & \textbf{$\delta$} & \textbf{Mag.} & \textbf{$p$} \\
 \midrule
-Chart\textsuperscript{*} & 5.7\% & 2.8\% & 0.318 & small & 0.015 \\
-Dockerfile & 4.2\% & 4.2\% & 0.015 & negl. & 0.437 \\
-SQL (dbt)\textsuperscript{*} & 16.9\% & 10.5\% & 0.495 & large & $< 0.001$ \\
-Terraform\textsuperscript{*} & 13.7\% & 10.5\% & 0.150 & small & 0.048 \\
+Chart\textsuperscript{*} & 4.9\% & 2.3\% & 0.292 & small & 0.009 \\
+Dockerfile & 4.1\% & 3.8\% & 0.034 & negl. & 0.347 \\
+SQL (dbt)\textsuperscript{*} & 15.3\% & 10.2\% & 0.358 & medium & $< 0.001$ \\
+Terraform\textsuperscript{*} & 12.9\% & 9.9\% & 0.151 & small & 0.032 \\
 \midrule
-\textbf{Pooled}\textsuperscript{*} & \textbf{10.7\%} & \textbf{7.6\%} & \textbf{0.171} & & $< \textbf{0.001}$ \\
+\textbf{Pooled}\textsuperscript{*} & \textbf{9.8\%} & \textbf{7.1\%} & \textbf{0.141} & & $\textbf{0.003}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -462,17 +477,22 @@ Terraform\textsuperscript{*} & 13.7\% & 10.5\% & 0.150 & small & 0.048 \\
 \paragraph{Cross-domain consistency.}
 All four domains show a positive pseudocode effect (Chart, Dockerfile,
 SQL, and Terraform). The mean
-Cliff's delta across domains is $+0.244$ (small positive). The binomial test
+Cliff's delta across domains is $+0.209$ (small positive). The binomial test
 for direction consistency ($4/4$ positive) yields $p = 0.12$.
 
 \paragraph{Cross-family analysis.}
 Table~\ref{tab:rq3_family} and Figure~\ref{fig:model_heatmap} show the
 pseudocode effect separated by model family. For Claude models, the effect is
-statistically significant in Chart ($\delta = 0.472$, medium) and SQL
-($\delta = 0.982$, large), with Terraform trending positive ($\delta = 0.252$,
+statistically significant in SQL
+($\delta = 0.982$, large) and Chart ($\delta = 0.472$, medium, $p = 0.005$),
+with Terraform trending positive ($\delta = 0.252$,
 $p = 0.053$), but not significant in Dockerfile. For GLM models, the effect is not statistically
-significant in any individual domain, though the direction is positive in
-three of four domains.
+significant in any individual domain. For Gemini, the effect is positive in three of four domains, with small
+effects in Chart ($\delta = 0.247$) and Terraform ($\delta = 0.222$),
+though most do not reach statistical significance individually. Notably,
+Gemini shows a \emph{negative} pseudocode effect in SQL
+($\delta = -0.704$, large, $p = 0.007$), where pseudocode is significantly
+worse than Markdown---the only large negative effect in our data.
 
 \begin{table}[t]
 \caption{RQ3: Cliff's delta (pseudocode vs.\ Markdown) by family and domain.
@@ -492,6 +512,11 @@ Two-tailed tests. \textsuperscript{*}$p < 0.05$.}
  & Dockerfile & $-0.053$ & 0.673 & negl. \\
  & SQL & 0.093 & 0.532 & negl. \\
  & Terraform & 0.033 & 0.798 & negl. \\
+\midrule
+\multirow{4}{*}{Gemini} & Chart & 0.247 & 0.249 & small \\
+ & Dockerfile & 0.136 & 0.573 & negl. \\
+ & SQL\textsuperscript{*} & $-0.704$ & 0.007 & large \\
+ & Terraform & 0.222 & 0.169 & small \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -499,21 +524,23 @@ Two-tailed tests. \textsuperscript{*}$p < 0.05$.}
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.85\columnwidth]{figures/fig2_model_heatmap.pdf}
-\Description{Heatmap showing failure rates for four models across three
-conditions. Opus 4.6 with pseudocode achieves the lowest rate at 5.0 percent.}
+\Description{Heatmap showing failure rates for five models across three
+conditions. Gemini 3.1 Pro with pseudocode achieves the lowest rate at 4.1 percent.}
 \caption{Failure rate (\%) by model and condition. Darker green indicates
-lower failure rates. The white line separates Claude (top) and GLM (bottom)
-families.}
+lower failure rates. White lines separate Claude (top), GLM (middle), and
+Gemini (bottom) families.}
 \label{fig:model_heatmap}
 \end{figure}
 
 \paragraph{Frontier model analysis.}
-The pseudocode advantage is most pronounced on frontier models
+The pseudocode advantage is most pronounced on Claude's frontier model
 (Table~\ref{tab:rq3_frontier} and Figure~\ref{fig:pseudocode_advantage}).
 Claude Opus~4.6 shows a pooled failure rate of
-5.0\% (pseudocode) vs.\ 9.0\% (Markdown), a 44\% relative reduction. GLM-5
-shows 6.8\% vs.\ 5.9\%, with pseudocode slightly \emph{underperforming}
-Markdown ($-15\%$ relative).
+5.0\% (pseudocode) vs.\ 9.0\% (Markdown), a 44\% relative reduction.
+Gemini~3.1~Pro achieves the lowest failure rate of all models
+(4.1\% pseudocode, 4.6\% Markdown), with a small pseudocode advantage.
+GLM-5 shows 6.8\% vs.\ 5.9\%, with pseudocode slightly \emph{underperforming}
+Markdown ($+15\%$ relative).
 
 \begin{table}[t]
 \caption{Failure rates for frontier models: Markdown vs.\ pseudocode.}
@@ -525,6 +552,7 @@ Markdown ($-15\%$ relative).
 \midrule
 Claude Opus 4.6 & 9.0\% & 5.0\% & $+3.9$pp & $-44\%$ \\
 GLM-5 & 5.9\% & 6.8\% & $-0.9$pp & $+15\%$ \\
+Gemini 3.1 Pro & 4.6\% & 4.1\% & $+0.4$pp & $-10\%$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -534,9 +562,9 @@ GLM-5 & 5.9\% & 6.8\% & $-0.9$pp & $+15\%$ \\
 \centering
 \includegraphics[width=\columnwidth]{figures/fig3_pseudocode_advantage.pdf}
 \Description{Forest plot showing pseudocode advantage in percentage points
-for each model. All four models show positive values (pseudocode better).}
+for each model. Four of five models show positive values (pseudocode better).}
 \caption{Pseudocode advantage per model (Markdown FR $-$ Pseudocode FR)
-with 95\% bootstrap CIs. Three of four models favor pseudocode (blue dots),
+with 95\% bootstrap CIs. Four of five models favor pseudocode,
 with Opus~4.6 showing the largest advantage; GLM-5's CI crosses zero.}
 \label{fig:pseudocode_advantage}
 \end{figure}
@@ -557,7 +585,7 @@ Comparing the two skill formats directly, pseudocode prompts are only
 For Claude models (where cost data is available), the mean cost per
 run is \$0.061 (pseudocode) vs.\ \$0.054 (Markdown) vs.\ \$0.045
 (no-skill). The pseudocode--Markdown cost premium of \$0.007 per run
-buys a 29\% relative reduction in failure rate (RQ2), a favorable
+buys a 28\% relative reduction in failure rate (RQ2), a favorable
 tradeoff for production workloads where rework cost from non-compliant
 output far exceeds the token premium.
 
@@ -572,14 +600,15 @@ threshold.
 
 \paragraph{Pooled variance.}
 Pooling across all models and domains, Markdown runs have a sample variance
-of 0.0093 compared to 0.0059 for pseudocode---a ratio of 1.59.
-Levene's test confirms unequal variances ($F = 10.90$, $p = 0.001$).
+of 0.0086 compared to 0.0054 for pseudocode---a ratio of 1.60.
+Levene's test confirms unequal variances ($F = 9.38$, $p = 0.002$).
 
 \paragraph{Per-model HDI narrowing.}
 Table~\ref{tab:rq5_hdi} shows the 90\% HDI width of the raw failure-rate
-distribution per model. Pseudocode produces a narrower HDI for three of four
-models, with the largest narrowing on Haiku~4.5 (30.8\% $\to$ 16.7\%, a 46\%
-reduction) and Opus~4.6 (17.3\% $\to$ 9.8\%, a 44\% reduction).
+distribution per model. Pseudocode produces a narrower HDI for four of five
+models, with the largest narrowing on Opus~4.6 (17.3\% $\to$ 10.7\%, a 38\%
+reduction). Gemini~3.1~Pro already has a very tight HDI under both formats
+($<$10\%), reflecting its consistently high compliance.
 
 \begin{table}[t]
 \caption{RQ5: 90\% HDI width of the failure-rate distribution and
@@ -591,29 +620,30 @@ under pseudocode.}
 \toprule
 \textbf{Model} & \textbf{HDI$_\text{MD}$} & \textbf{HDI$_\text{PC}$} & \textbf{Narrowing} & \textbf{$\Delta$P(FR $<$ 10\%)} \\
 \midrule
-Haiku 4.5 & 30.8\% & 16.7\% & $+14.1$pp (46\%) & $+22.2$pp \\
-Opus 4.6 & 17.3\% & 9.8\% & $+7.6$pp (44\%) & $+20.9$pp \\
-GLM-4.7 & 30.8\% & 23.1\% & $+7.7$pp (25\%) & $+8.9$pp \\
+Haiku 4.5 & 38.5\% & 31.2\% & $+7.3$pp (19\%) & $+22.2$pp \\
+Opus 4.6 & 17.3\% & 10.7\% & $+6.6$pp (38\%) & $+20.9$pp \\
+GLM-4.7 & 30.8\% & 29.3\% & $+1.4$pp (5\%) & $+8.9$pp \\
 GLM-5 & 15.4\% & 15.4\% & $+0.0$pp (0\%) & $-1.8$pp \\
+Gemini 3.1 Pro & 8.5\% & 9.8\% & $-1.2$pp ($-14\%$) & $+2.8$pp \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \paragraph{Production-quality threshold.}
 The probability of a run achieving $<$10\% failure rate increases under
-pseudocode for three of four models
-(Figure~\ref{fig:variance_violin}). The increase is largest for Opus~4.6
-(71.7\% $\to$ 92.6\%, $+20.9$pp) and Haiku~4.5 (46.3\% $\to$ 68.5\%,
-$+22.2$pp). Pseudocode not only lowers the mean but concentrates runs in the
+pseudocode for four of five models
+(Figure~\ref{fig:variance_violin}). The increase is largest for Haiku~4.5
+($+22.2$pp) and Opus~4.6 ($+20.9$pp).
+Pseudocode not only lowers the mean but concentrates runs in the
 low-defect region.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig4_variance_violin.pdf}
 \Description{Split violin plot showing failure-rate distributions for
-Markdown (left, light blue) and pseudocode (right, dark blue) per model.
-Pseudocode distributions are tighter and shifted lower. A dashed red line
-marks the 10 percent threshold.}
+Markdown (left, light blue) and pseudocode (right, dark blue) per model
+across five models. Pseudocode distributions are tighter and shifted lower
+for most models. A dashed red line marks the 10 percent threshold.}
 \caption{Failure-rate distributions by model and format (split violin).
 Left halves are Markdown; right halves are pseudocode. The dashed line marks
 the 10\% production-quality threshold. Pseudocode distributions are tighter
@@ -654,46 +684,59 @@ failure modes that simpler instructions avoid.
 \paragraph{Ceiling effects in Dockerfile.}
 The Dockerfile domain shows no significant pseudocode advantage,
 likely because both formats achieve near-ceiling compliance
-($<$4.2\% failure rate).
+($<$4.1\% failure rate).
 The rules themselves may be simple enough that any reminder suffices. The SQL,
 Chart, and Terraform domains, with higher failure rates and more nuanced rules
 (e.g., ``COALESCE nullable dimensions to `(unknown)'\,'', ``muted color
 palette''), provide more room for format to matter.
 
-\paragraph{Claude vs.\ GLM divergence.}
-The pseudocode effect is statistically significant for Claude models in three
-of four domains but not for GLM models individually
-(Table~\ref{tab:rq3_family}). This aligns with He et al.'s finding that format
-preferences do not transfer across model families~\cite{he2024prompt}. However,
-Claude Opus~4.6 shows a substantial practical improvement
-(Table~\ref{tab:rq3_frontier}), while GLM-5 shows no pseudocode advantage
-(Markdown is slightly better). The effect appears
-strongest in the Claude family, suggesting that format preferences may
-be model-family-dependent~\cite{he2024prompt}.
+\paragraph{Cross-family divergence.}
+The pseudocode effect is statistically significant for Claude models in SQL
+($\delta = 0.982$, large) and Chart ($\delta = 0.472$, medium), and trends
+positive in Terraform, but is
+not significant for GLM models individually (Table~\ref{tab:rq3_family}).
+Gemini~3.1~Pro shows a positive pseudocode direction in three of four domains,
+with the largest effects in Chart ($\delta = 0.247$) and
+Terraform ($\delta = 0.222$), though a notable exception is SQL where
+Gemini shows a large \emph{negative} effect ($\delta = -0.704$, $p = 0.007$),
+meaning pseudocode significantly hurts compliance for this family--domain pair.
+This aligns with He et al.'s finding that format
+preferences do not transfer across model families~\cite{he2024prompt}.
+The three frontier models (Opus~4.6, GLM-5, Gemini~3.1~Pro) each show a
+different pattern: Opus strongly favors pseudocode, GLM-5 slightly favors
+Markdown, and Gemini favors pseudocode modestly overall but with a strong
+reversal in SQL. Format preferences
+are model-family-dependent, though the \emph{direction} favors pseudocode
+in two of three families.
 
 \paragraph{Reliability beyond the mean.}
 RQ5 reveals that pseudocode's benefit extends beyond mean reduction to
-\emph{variance reduction}. The pooled variance ratio of 1.59 (Levene's
-$p = 0.001$) means that Markdown runs have 59\% more spread. Practically,
-this manifests as a higher probability of meeting a production-quality
-threshold ($<$10\% failure rate): on Opus~4.6, pseudocode achieves 92.6\%
-versus 71.7\% for Markdown. For teams deploying LLM agents at scale, reduced
-variance translates to fewer outlier failures and more predictable behavior.
+\emph{variance reduction} for most models. The pooled variance ratio of
+1.60 (Levene's $p = 0.002$) means Markdown runs have 60\% more spread.
+Pseudocode narrows the HDI for four of five models, with the largest effect
+on Haiku~4.5 (HDI width 38.5\% $\to$ 31.2\%) and Opus~4.6
+(17.3\% $\to$ 10.7\%).
+Practically, this manifests as a higher probability of meeting a
+production-quality threshold ($<$10\% failure rate): Haiku~4.5 gains
+$+22.2$pp and Opus~4.6 gains $+20.9$pp under pseudocode.
+For teams deploying LLM agents at scale, reduced variance translates to
+fewer outlier failures and more predictable behavior.
 
 \paragraph{Practical recommendations.}
 For practitioners writing skill files:
 \begin{enumerate}
-  \item \textbf{Any skill file helps}. The 3.7$\times$ failure rate reduction
+  \item \textbf{Any skill file helps}. The 4.0$\times$ failure rate reduction
     from the baseline (RQ1) dwarfs the format effect.
   \item \textbf{Pseudocode offers a small additional advantage} in domains
     with complex, nuanced rules. For domains where skills already achieve
     near-perfect compliance (e.g., Dockerfile), format matters less.
-  \item \textbf{The pseudocode advantage scales with model capability}.
-    Frontier models benefit more, suggesting that as models improve, the
-    format advantage may increase.
+  \item \textbf{The pseudocode advantage is model-dependent}.
+    Some frontier models (Opus~4.6) benefit strongly, while others
+    (GLM-5) show no preference or even slight reversal; Gemini shows
+    a mixed pattern with a strong negative effect in SQL.
   \item \textbf{Semantic content matters more than format}. The gap between
-    any-skill and no-skill is $8\times$ larger than the gap between
-    pseudocode and Markdown (24.6pp vs.\ 3.1pp).
+    any-skill and no-skill is $9\times$ larger than the gap between
+    pseudocode and Markdown (25.0pp vs.\ 2.7pp).
 \end{enumerate}
 
 \paragraph{Comparison to prior work.}
@@ -703,8 +746,8 @@ structured-output generation using modern frontier models (2025--2026 vintage)
 and finds a smaller but consistent advantage. The smaller effect size is
 expected: our Markdown baseline is already a well-structured skill file (not
 plain text), making the comparison stricter. SkillsBench~\cite{li2026skillsbench}
-found a 16.2pp skill presence effect; our 24.6pp pooled effect
-(33.7\% $\to$ 9.2\%) is comparable in magnitude, despite measuring
+found a 16.2pp skill presence effect; our 25.0pp pooled effect
+(33.4\% $\to$ 8.4\%) is comparable in magnitude, despite measuring
 compliance rather than pass rate.
 
 
@@ -733,20 +776,22 @@ metrics.
 \paragraph{External validity.}
 We test four domains, all producing text-based structured output. Results may
 not generalize to interactive agent tasks, multi-turn conversations, or visual
-output. We test two model families; other families (GPT, Gemini, Llama) may
+output. We test three model families; other families (GPT, Llama) may
 respond differently. The three tasks per domain provide limited coverage of
 each domain's full complexity space. Not all models are tested in all domains
 (Chart lacks GLM-4.7).
 
 \paragraph{Reliability.}
-The three original domains have 5 repetitions per cell; Chart has 3
-repetitions. Fewer repetitions reduce statistical
-power for per-domain analyses in Chart. Some cells in the original
+The three original domains have 5 repetitions per cell for the four original
+models; Chart and Gemini~3.1~Pro use 3 repetitions. Fewer repetitions reduce
+statistical power for per-domain analyses. Some cells in the original
 domains have 4 or 6 repetitions due to calibration runs, which we include in
 the analysis. One Terraform run (Opus, Markdown, task~3, rep~5) was excluded
 because the CLI infrastructure repeatedly blocked the model's file-write
 attempts, producing an incomplete output unrelated to model capability; the
 remaining four repetitions of that cell scored consistently (12/13 rules).
+Gemini~3.1~Pro was added as a fifth model after the initial four-model
+experiment, using the same evaluation pipeline and identical skill files.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -756,27 +801,33 @@ remaining four repetitions of that cell scored consistently (12/13 rules).
 \section{Conclusion}\label{sec:conclusion}
 
 We presented the first controlled comparison of instruction format for LLM
-skill files. Across 629 runs spanning four structured-output domains and four
-models from two families, we find that (1)~skill files provide a large and
+skill files. Across 737 runs spanning four structured-output domains and five
+models from three families, we find that (1)~skill files provide a large and
 consistent compliance improvement over no-skill baselines,
 (2)~pseudocode format offers a statistically significant additional advantage
-over Markdown prose, particularly for complex rule sets and frontier models,
-and (3)~pseudocode reduces output variability, yielding 59\% lower variance
-and increasing the probability of meeting production-quality thresholds by up
-to 21 percentage points.
+over Markdown prose ($p = 0.003$), though the effect size is small and
+varies by model family,
+and (3)~pseudocode reduces output variability (variance ratio 1.60,
+$p = 0.002$), increasing the probability of meeting production-quality
+thresholds by up to 22 percentage points.
 
 The practical implication is clear: writing skill files in pseudocode rather
 than Markdown is a low-cost intervention that reduces output defects by an
-additional 29\% (10.7\% $\to$ 7.6\% failure rate) while also tightening the
-distribution, with no downside beyond slightly longer input prompts. For
+additional 28\% (9.8\% $\to$ 7.1\% failure rate) while also tightening the
+distribution for most models, with no downside beyond slightly longer input
+prompts. The format advantage is model-dependent: Claude Opus~4.6
+benefits substantially ($-44\%$ relative reduction), Gemini~3.1~Pro
+achieves the lowest overall failure rate (4.1\% with pseudocode), while
+GLM-5 shows no format preference. For
 practitioners authoring skill files for LLM agents, we recommend starting
 with any well-structured skill file (the largest effect), and considering
 pseudocode format for domains with complex constraints where both lower
 failure rates and predictable behavior matter.
 
 Future work should extend this comparison to interactive agentic tasks with
-tool use, additional model families, more domains (e.g., Kubernetes manifests,
-CI/CD pipelines), and user studies measuring skill file authoring effort.
+tool use, additional models (e.g., GPT, Llama), more domains
+(e.g., Kubernetes manifests, CI/CD pipelines), and user studies measuring
+skill file authoring effort.
 
 
 % ─────────────────────────────────────────────────────────────────────────────

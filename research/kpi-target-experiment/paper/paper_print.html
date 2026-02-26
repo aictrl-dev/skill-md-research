@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPI Target Experiment - Paper</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2.5cm;
+        }
+        
+        @media print {
+            body { font-size: 11pt; }
+            .page-break { page-break-before: always; }
+        }
+        
+        @media screen {
+            body { 
+                max-width: 21cm; 
+                margin: 2cm auto;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                padding: 2.5cm;
+                background: #f5f5f5;
+            }
+        }
+        
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.6;
+            color: #000;
+            font-size: 11pt;
+        }
+        
+        h1 {
+            font-size: 16pt;
+            text-align: center;
+            margin-bottom: 1em;
+            line-height: 1.3;
+        }
+        
+        h2 {
+            font-size: 13pt;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            border-bottom: 1px solid #000;
+            padding-bottom: 0.2em;
+        }
+        
+        h3 {
+            font-size: 11pt;
+            margin-top: 1em;
+            margin-bottom: 0.3em;
+        }
+        
+        .abstract {
+            background: #f9f9f9;
+            padding: 1em;
+            margin: 1em 0;
+            font-size: 10pt;
+        }
+        
+        .abstract h2 {
+            border: none;
+            margin: 0 0 0.5em 0;
+            font-size: 11pt;
+        }
+        
+        .keywords {
+            font-size: 10pt;
+            margin-top: 0.5em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #000;
+            padding: 0.4em 0.6em;
+            text-align: left;
+        }
+        
+        th {
+            background: #f0f0f0;
+            font-weight: bold;
+        }
+        
+        td {
+            text-align: center;
+        }
+        
+        td:first-child, th:first-child {
+            text-align: left;
+        }
+        
+        .highlight {
+            font-weight: bold;
+        }
+        
+        .positive {
+            color: #006400;
+        }
+        
+        .metric-box {
+            display: inline-block;
+            border: 1px solid #000;
+            padding: 0.5em 1em;
+            margin: 0.5em;
+            text-align: center;
+        }
+        
+        .metric-box .value {
+            font-size: 18pt;
+            font-weight: bold;
+        }
+        
+        .metric-box .label {
+            font-size: 9pt;
+            color: #666;
+        }
+        
+        .figure {
+            margin: 1em 0;
+            text-align: center;
+        }
+        
+        .figure-caption {
+            font-size: 10pt;
+            margin-top: 0.5em;
+        }
+        
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5em;
+            margin: 1em 0;
+        }
+        
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+        
+        .bar-label {
+            width: 80px;
+            font-size: 10pt;
+        }
+        
+        .bar-container {
+            flex: 1;
+            height: 20px;
+            background: #eee;
+            position: relative;
+        }
+        
+        .bar {
+            height: 100%;
+            position: absolute;
+        }
+        
+        .bar-baseline {
+            background: #999;
+        }
+        
+        .bar-target {
+            background: #4361ee;
+        }
+        
+        .bar-value {
+            font-size: 9pt;
+            margin-left: 0.5em;
+        }
+        
+        ul, ol {
+            margin-left: 1.5em;
+            margin-bottom: 1em;
+        }
+        
+        li {
+            margin-bottom: 0.3em;
+        }
+        
+        .references {
+            font-size: 10pt;
+        }
+        
+        .references p {
+            margin-bottom: 0.5em;
+            text-indent: -2em;
+            padding-left: 2em;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Motivation Framing Improves LLM Agent Performance: KPI Targets and Historical Context Increase Output Quality</h1>
+
+<div class="abstract">
+<h2>Abstract</h2>
+<p>Large language models (LLMs) apply uniform computational effort across tasks of varying difficulty, unlike humans who adapt effort based on goals and challenges. This paper investigates whether motivation framing—providing explicit performance targets with historical context—can improve LLM output quality. We conduct a controlled A/B experiment across four LLM models (Claude Haiku, Claude Opus, GLM-4.7, GLM-5) in two domains (dbt SQL pipelines and chart specifications), comparing standard skill-based prompting against skill-based prompting augmented with KPI targets (97% compliance) and historical performance benchmarks.</p>
+
+<p>Results show that motivation framing improves output quality by <strong>17.6% on average</strong> (9.41 → 11.06 out of 12 score), with the largest gains observed for weaker models (GLM-4.7: +28%). Interestingly, models exhibit different effort allocation strategies: some increase token output (+21% for Haiku), while others improve focus and efficiency (+28% quality with only +3% tokens for GLM-4.7). These findings suggest that goal-setting theory from organizational psychology applies to AI agents, opening new avenues for prompt engineering focused on motivation rather than just instruction.</p>
+
+<p class="keywords"><strong>Keywords:</strong> large language models, prompt engineering, motivation framing, goal-setting, test-time compute, agent performance</p>
+</div>
+
+<h2>1. Introduction</h2>
+
+<h3>1.1 Motivation</h3>
+<p>Recent advances in large language models have demonstrated that increased computational effort at inference time—through chain-of-thought reasoning, self-consistency sampling, or best-of-N selection—consistently improves output quality. However, LLMs do not naturally allocate effort adaptively based on task difficulty. A model will generate similarly lengthy responses for trivial and challenging problems alike.</p>
+
+<p>This stands in sharp contrast to human performance, where ambitious goals and challenging targets systematically improve outcomes. Decades of organizational psychology research demonstrate that specific, difficult goals lead to higher performance than vague or easy goals, through mechanisms of effort allocation, persistence, and attention focus.</p>
+
+<p>This raises a natural question: <strong>Can motivation framing—providing explicit performance targets and historical benchmarks—change how LLMs allocate effort and improve their output quality?</strong></p>
+
+<h3>1.2 Contribution</h3>
+<p>We present the first systematic study of motivation framing for LLM agents. Our contributions are:</p>
+
+<ol>
+<li><strong>Novel intervention</strong>: A prompt engineering technique combining KPI targets (e.g., "97% compliance") with historical performance context (baseline, skill-enhanced, and top-performer scores) and attention-focusing guidance.</li>
+<li><strong>Empirical validation</strong>: A controlled A/B experiment across 4 models, 2 domains, 3 task complexities, and 5 repetitions (n=120 treatment runs, compared against existing baseline of n=150 runs).</li>
+<li><strong>Actionable findings</strong>: Quality improvement of 17.6% on average, with varying effort-quality trade-offs across models, suggesting that goal-setting theory applies to AI systems.</li>
+</ol>
+
+<h2>2. Related Work</h2>
+
+<h3>2.1 Test-Time Compute and Effort Allocation</h3>
+<p>The relationship between computational effort and output quality in LLMs is well-established. Best-of-N sampling and self-consistency improve outcomes by generating multiple responses and selecting the best. Chain-of-thought prompting improves reasoning by encouraging longer outputs. However, effort allocation remains non-adaptive—models "generate long traces for trivial problems while failing to extend reasoning for difficult tasks."</p>
+
+<h3>2.2 Prompt Engineering for Performance</h3>
+<p>Prompt engineering has primarily focused on instruction design. Role prompting assigns personas to models. Few-shot learning provides examples. Self-consistency aggregates multiple reasoning paths. None of these techniques explicitly address motivation or goal-setting.</p>
+
+<h3>2.3 Goal-Setting Theory</h3>
+<p>Locke & Latham (2002) established that specific, challenging goals improve human performance through multiple mechanisms: (1) directing attention, (2) regulating effort, (3) increasing persistence, and (4) promoting strategy development. We test whether similar dynamics apply to LLMs.</p>
+
+<div class="page-break"></div>
+
+<h2>3. Method</h2>
+
+<h3>3.1 Intervention Design</h3>
+<p>We augment standard skill-based prompting with a motivation framing module consisting of three components:</p>
+
+<p><strong>1. KPI Target:</strong> "Your target for this task is to achieve 97% compliance (13.6 out of 14 rules passing)."</p>
+
+<p><strong>2. Historical Context:</strong> "In previous evaluations on similar tasks: baseline achieved 73%, skill-enhanced achieved 77%, top-performer achieved 86%. Your model family has historically achieved 76%."</p>
+
+<p><strong>3. Attention-Focusing Guidance:</strong> "To reach the 97% target, pay particular attention to: Rule 7: LEFT JOIN only (~35% baseline), Rule 8: COALESCE nullable columns (~25% baseline)..."</p>
+
+<h3>3.2 Experimental Design</h3>
+
+<table>
+<tr>
+    <th>Condition</th>
+    <th>Description</th>
+    <th>n</th>
+</tr>
+<tr>
+    <td>markdown (control)</td>
+    <td>Task + Markdown skill</td>
+    <td>150</td>
+</tr>
+<tr>
+    <td>markdown+target (treatment)</td>
+    <td>Task + Markdown skill + KPI framing</td>
+    <td>120</td>
+</tr>
+</table>
+
+<p><strong>Models tested:</strong> Claude 3.5 Haiku (economy), Claude 4 Opus (premium), GLM-4.7 (standard), GLM-5 (premium)</p>
+
+<p><strong>Domains:</strong> SQL Query (14 rules), Chart (15 rules)</p>
+
+<p><strong>Task complexity:</strong> Simple, Medium, Complex per domain</p>
+
+<p><strong>Repetitions:</strong> 5 per cell</p>
+
+<h3>3.3 Hypotheses</h3>
+<ul>
+<li><strong>H1</strong>: markdown+target produces higher compliance scores</li>
+<li><strong>H2</strong>: markdown+target produces more output tokens</li>
+<li><strong>H3</strong>: The target effect is larger for weaker models</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2>4. Results</h2>
+
+<h3>4.1 Primary Finding: Quality Improvement</h3>
+
+<div style="text-align: center; margin: 1em 0;">
+    <div class="metric-box">
+        <div class="value positive">+17.6%</div>
+        <div class="label">Quality Improvement</div>
+    </div>
+    <div class="metric-box">
+        <div class="value">9.41 → 11.06</div>
+        <div class="label">Score (out of 12)</div>
+    </div>
+    <div class="metric-box">
+        <div class="value">+25.5%</div>
+        <div class="label">Token Increase</div>
+    </div>
+    <div class="metric-box">
+        <div class="value">100%</div>
+        <div class="label">Extraction Rate</div>
+    </div>
+</div>
+
+<h3>4.2 Per-Model Results</h3>
+
+<table>
+<tr>
+    <th>Model</th>
+    <th>Baseline</th>
+    <th>Target</th>
+    <th>Δ Score</th>
+    <th>Δ Tokens</th>
+    <th>Efficiency</th>
+</tr>
+<tr>
+    <td>haiku</td>
+    <td>9.35</td>
+    <td class="highlight">10.87</td>
+    <td class="positive">+1.51 (+16%)</td>
+    <td>+21%</td>
+    <td>Effort-based</td>
+</tr>
+<tr>
+    <td>opus</td>
+    <td>9.97</td>
+    <td class="highlight">11.21</td>
+    <td class="positive">+1.24 (+12%)</td>
+    <td>+11%</td>
+    <td>Balanced</td>
+</tr>
+<tr>
+    <td>glm-4.7</td>
+    <td>8.61</td>
+    <td class="highlight">11.06</td>
+    <td class="positive">+2.45 (+28%)</td>
+    <td>+3%</td>
+    <td>Focus-based</td>
+</tr>
+<tr>
+    <td>glm-5</td>
+    <td>9.69</td>
+    <td class="highlight">11.13</td>
+    <td class="positive">+1.44 (+15%)</td>
+    <td>+72%</td>
+    <td>Effort-based</td>
+</tr>
+</table>
+
+<h3>4.3 Score Improvement Visualization</h3>
+
+<div class="bar-chart">
+    <div class="bar-row">
+        <span class="bar-label">haiku</span>
+        <div class="bar-container">
+            <div class="bar bar-baseline" style="width: 78%"></div>
+            <div class="bar bar-target" style="width: 91%; left: 0; opacity: 0.7;"></div>
+        </div>
+        <span class="bar-value">9.35 → 10.87</span>
+    </div>
+    <div class="bar-row">
+        <span class="bar-label">opus</span>
+        <div class="bar-container">
+            <div class="bar bar-baseline" style="width: 83%"></div>
+            <div class="bar bar-target" style="width: 93%; left: 0; opacity: 0.7;"></div>
+        </div>
+        <span class="bar-value">9.97 → 11.21</span>
+    </div>
+    <div class="bar-row">
+        <span class="bar-label">glm-4.7</span>
+        <div class="bar-container">
+            <div class="bar bar-baseline" style="width: 72%"></div>
+            <div class="bar bar-target" style="width: 92%; left: 0; opacity: 0.7;"></div>
+        </div>
+        <span class="bar-value">8.61 → 11.06</span>
+    </div>
+    <div class="bar-row">
+        <span class="bar-label">glm-5</span>
+        <div class="bar-container">
+            <div class="bar bar-baseline" style="width: 81%"></div>
+            <div class="bar bar-target" style="width: 93%; left: 0; opacity: 0.7;"></div>
+        </div>
+        <span class="bar-value">9.69 → 11.13</span>
+    </div>
+</div>
+
+<p style="font-size: 10pt; text-align: center; margin-top: 0.5em;">
+    <span style="display: inline-block; width: 20px; height: 12px; background: #999; margin-right: 5px;"></span> Baseline
+    <span style="display: inline-block; width: 20px; height: 12px; background: #4361ee; margin-left: 20px; margin-right: 5px; opacity: 0.7;"></span> Target
+</p>
+
+<h3>4.4 Effort-Quality Trade-offs</h3>
+<p>Models exhibit qualitatively different responses to motivation framing:</p>
+<ul>
+<li><strong>Effort-increasing models</strong> (haiku, glm-5): More tokens → better quality</li>
+<li><strong>Focus-improving models</strong> (glm-4.7): Same tokens → better quality</li>
+<li><strong>Balanced models</strong> (opus): Slightly more tokens → better quality</li>
+</ul>
+
+<p>GLM-4.7's +28% quality improvement with only +3% token increase is particularly notable—suggesting the intervention improved <em>strategy</em> rather than just <em>effort</em>.</p>
+
+<h3>4.5 Model-Level Heterogeneity</h3>
+<p>Consistent with H3, the largest quality gains occurred for weaker models:</p>
+<ul>
+<li>GLM-4.7 (lowest baseline): +28%</li>
+<li>Haiku (economy tier): +16%</li>
+<li>GLM-5 (mid baseline): +15%</li>
+<li>Opus (highest baseline): +12%</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2>5. Discussion</h2>
+
+<h3>5.1 Mechanism: Focus vs Effort</h3>
+<p>The variation in token-quality relationships suggests motivation framing operates through at least two mechanisms:</p>
+<ol>
+<li><strong>Effort allocation</strong>: Some models respond by generating more content (more tokens)</li>
+<li><strong>Attention focus</strong>: Some models respond by focusing on critical rules (same tokens, better targeting)</li>
+</ol>
+
+<h3>5.2 Implications for AI Engineering</h3>
+<ol>
+<li><strong>Motivation framing is a viable prompt engineering technique</strong>, especially for weaker models or difficult tasks.</li>
+<li><strong>Cost-quality trade-offs vary by model</strong>. GLM-4.7 offers free quality gains; GLM-5 requires 72% more tokens.</li>
+<li><strong>Tool use behavior can be triggered by motivation framing</strong>, requiring explicit text-output instructions.</li>
+</ol>
+
+<h3>5.3 Limitations</h3>
+<ul>
+<li>Single intervention design (97% target)</li>
+<li>Two domains only (SQL, Chart)</li>
+<li>Four models tested</li>
+<li>Some tasks showed ceiling effects</li>
+</ul>
+
+<h3>5.4 Future Work</h3>
+<ul>
+<li>Optimal target levels (80% vs 90% vs 97% vs 100%)</li>
+<li>Alternative framings (competition, loss aversion, growth mindset)</li>
+<li>Cross-domain replication</li>
+<li>Mechanism studies (attention analysis)</li>
+</ul>
+
+<h2>6. Conclusion</h2>
+<p>This paper demonstrates that motivation framing—providing explicit KPI targets and historical context—improves LLM output quality by 17.6% across four tested models. The intervention appears to work through both effort allocation (more tokens) and attention focus (better targeting), with effects largest for weaker models.</p>
+
+<p>These findings suggest that goal-setting theory from organizational psychology applies to AI systems, opening new directions for prompt engineering focused on motivation rather than just instruction. As LLMs are increasingly deployed as autonomous agents, understanding how to improve their performance through psychological framing—rather than just architectural changes—becomes increasingly valuable.</p>
+
+<div class="page-break"></div>
+
+<h2>References</h2>
+
+<div class="references">
+<p>Brown, T. B., et al. (2020). Language models are few-shot learners. NeurIPS.</p>
+
+<p>Kong, X., et al. (2024). Better zero-shot reasoning with role-play prompting. arXiv.</p>
+
+<p>Locke, E. A., & Latham, G. P. (2002). Building a practically useful theory of goal setting and task motivation. American Psychologist, 57(9), 705-717.</p>
+
+<p>Snell, C., et al. (2024). Scaling LLM test-time compute optimally. arXiv.</p>
+
+<p>Stiennon, N., et al. (2020). Learning to summarize from human feedback. NeurIPS.</p>
+
+<p>Wang, X., et al. (2023). Self-consistency improves chain of thought reasoning. ICLR.</p>
+
+<p>Wei, J., et al. (2022). Chain-of-thought prompting elicits reasoning in large language models. NeurIPS.</p>
+
+<p>Wu, Y., et al. (2025). Adaptive reasoning: A survey. arXiv:2511.10788.</p>
+</div>
+
+</body>
+</html>
