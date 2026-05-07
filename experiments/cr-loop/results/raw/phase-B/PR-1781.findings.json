@@ -1,0 +1,28 @@
+{
+  "prNumber": 1781,
+  "runId": "2026-05-06T18-50-18-367721",
+  "executionId": "phase-a-1781-2026-05-06T18-50-18-367721",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1781-2026-05-06T14-55-10-4032103",
+      "executionRunId": "phase-a-1781-2026-05-06T14-55-10-4032103"
+    },
+    {
+      "reviewId": "phase-a-1781-2026-05-06T18-50-18-367721",
+      "executionRunId": "phase-a-1781-2026-05-06T18-50-18-367721"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1781-2026-05-06T18-50-18-367721",
+      "findingId": "96366d0e3f8f8ab5",
+      "file": "server/mcp/tools/skills.ts",
+      "line": null,
+      "severity": "high",
+      "title": "Task existence oracle across org boundaries",
+      "description": "The task is fetched with an unscoped getTask(taskId) call, then a 'not_found' error is returned before the org membership check. An attacker in org A can distinguish between 'task ID does not exist' vs 'task exists but belongs to another org', enabling cross-organization task ID enumeration. In a security-focused PR, the org guard should be evaluated before leaking existence information, or both cases should return an identical error.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

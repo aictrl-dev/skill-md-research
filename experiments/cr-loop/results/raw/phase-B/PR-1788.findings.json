@@ -1,0 +1,83 @@
+{
+  "prNumber": 1788,
+  "runId": "2026-05-06T19-56-15-510804",
+  "executionId": "phase-a-1788-2026-05-06T19-56-15-510804",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1788-2026-05-06T14-32-13-3969789",
+      "executionRunId": "phase-a-1788-2026-05-06T14-32-13-3969789"
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T19-56-15-510804",
+      "executionRunId": ""
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1788-2026-05-06T19-56-15-510804",
+      "findingId": "026d0aafa28ccf14",
+      "file": "ui/src/utils/formatDuration.ts",
+      "line": null,
+      "severity": "low",
+      "title": "JSDoc migration TODO lacks issue reference",
+      "description": "JSDoc says 'migrating them is tracked as a separate refactor' but references no issue number. Per project convention (no TODOs without an issue reference), this should cite the tracking issue or be removed.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T19-56-15-510804",
+      "findingId": "51184f09a01a86f9",
+      "file": "ui/src/utils/formatNumber.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Missing unit test for new formatNumber utility",
+      "description": "formatNumber has no unit test file, while the sibling formatDuration (also new in this PR) has a full test suite at ui/src/utils/__tests__/formatDuration.test.ts. Both are exported utilities under the same directory and should have consistent test coverage.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T19-56-15-510804",
+      "findingId": "5494ed95e2403183",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "medium",
+      "title": "NaN can leak past null guard in firstReviewLatencyMs",
+      "description": "firstReviewLatencyMs can be NaN (not null) when pr.openedAt is an invalid/empty string: `new Date(pr.openedAt).getTime()` returns NaN, `earliestReviewStart - NaN` = NaN. The guard `firstReviewLatencyMs !== null` passes because `NaN !== null` is true. formatDuration() handles NaN correctly today (returns '—'), but the null-check is semantically wrong for a NaN-capable code path and will silently break if anyone later refactors to a truthiness guard.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T19-56-15-510804",
+      "findingId": "6ad1c4814e538fed",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "low",
+      "title": "Spread into Math.min/max risks RangeError on huge arrays",
+      "description": "Math.min(...completedReviewTimes) / Math.max(...completedReviewTimes) uses spread which throws RangeError when the array exceeds the engine's max argument count (~65 536 in V8). Practically impossible for per-PR review counts but a defensive reduce would be future-proof.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T19-56-15-510804",
+      "findingId": "762010728874a7dd",
+      "file": "ui/src/utils/formatDuration.ts",
+      "line": null,
+      "severity": "low",
+      "title": "Multi-day durations silently truncate hour remainder",
+      "description": "formatDuration truncates the hours remainder for multi-day durations: 36 hours renders as '1d' instead of '1d 12h'. This is asymmetric with the sub-day format that preserves remainder minutes ('2h 5m').",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T19-56-15-510804",
+      "findingId": "7f7c1b16a388319d",
+      "file": "ui/src/utils/formatNumber.ts",
+      "line": null,
+      "severity": "low",
+      "title": "toLocaleString() without locale is non-deterministic",
+      "description": "toLocaleString() without an explicit locale produces locale-dependent output (e.g. '1,000' vs '1.000' vs '1 000'). Fine for user-facing display but will cause snapshot/visual-regression test flakiness across CI runners with different locales. Consider toLocaleString('en-US') or Intl.NumberFormat('en-US').format(n) for deterministic output.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

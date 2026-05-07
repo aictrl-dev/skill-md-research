@@ -1,0 +1,73 @@
+{
+  "prNumber": 1781,
+  "runId": "2026-05-07T06-45-42-1946202",
+  "executionId": "phase-a-1781-2026-05-07T06-45-42-1946202",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1781-2026-05-06T14-55-10-4032103",
+      "executionRunId": "phase-a-1781-2026-05-06T14-55-10-4032103"
+    },
+    {
+      "reviewId": "phase-a-1781-2026-05-06T18-50-18-367721",
+      "executionRunId": "phase-a-1781-2026-05-06T18-50-18-367721"
+    },
+    {
+      "reviewId": "phase-a-1781-2026-05-06T21-24-31-697962",
+      "executionRunId": "phase-a-1781-2026-05-06T21-24-31-697962"
+    },
+    {
+      "reviewId": "phase-a-1781-2026-05-06T22-13-45-836233",
+      "executionRunId": "phase-a-1781-2026-05-06T22-13-45-836233"
+    },
+    {
+      "reviewId": "phase-a-1781-2026-05-07T06-45-42-1946202",
+      "executionRunId": "phase-a-1781-2026-05-07T06-45-42-1946202"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1781-2026-05-07T06-45-42-1946202",
+      "findingId": "294fc90e7b1714f4",
+      "file": "server/mcp/tools/skills.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Misleading forbidden message when no session org",
+      "description": "When getCurrentOrgId() returns null, orgId is undefined and the guard `!orgId` fires — but the error says \"Task does not belong to your organization\" even though the real reason is no session org. The parallel guard in code-review.ts (requireOrgMatch) correctly says \"org_id must match session org (none)\". The ambiguous message makes debugging harder and breaks the invariant that all null-session-org errors surface a consistent diagnostic.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1781-2026-05-07T06-45-42-1946202",
+      "findingId": "2d1e3edab7af9848",
+      "file": "server/mcp/tools/skills.ts",
+      "line": null,
+      "severity": "high",
+      "title": "Cross-org task ID enumeration via distinct errors",
+      "description": "The guard returns 'forbidden' with message 'Task does not belong to your organization' when the task exists but belongs to another org, versus 'not_found' when the task doesn't exist. This distinction allows an attacker to enumerate valid task IDs across org boundaries — they can confirm a task ID is valid by observing the forbidden vs not_found response. A fail-closed approach should return the same 'not_found' error for both cases.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1781-2026-05-07T06-45-42-1946202",
+      "findingId": "728ea1b288d271d4",
+      "file": "server/mcp/tools/code-review.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Error message leaks session org ID to caller",
+      "description": "requireOrgMatch returns `org_id must match session org (${sessionOrg || 'none'})`, revealing the authenticated session's org ID (or the fact that no session org exists) to the tool caller. While org IDs are low-sensitivity, consolidating this message into a shared function used by three handlers increases the exposure surface. A generic message would prevent enumeration of session state.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1781-2026-05-07T06-45-42-1946202",
+      "findingId": "7ca30d66eb6e97a6",
+      "file": "server/mcp/tools/skills.ts",
+      "line": null,
+      "severity": "high",
+      "title": "Skill access by ID bypasses org-scoping (IDOR)",
+      "description": "The load_skill (line 191) and list_skill_files (line 261) cases fetch skills via skillsManager.getSkill(skillId), which reads directly from Firestore with no org filter. Meanwhile listAvailableSkills() (line 128) correctly scopes by orgId — confirming skills are org-scoped resources. Any authenticated user can read org-scoped skill content, instructions, and files from another org by supplying the ID. The PR adds an org check for the recommend_skills→task path but misses the two skill-by-ID paths in the same handler.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

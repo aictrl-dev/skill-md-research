@@ -1,0 +1,20 @@
+{
+  "prNumber": 1803,
+  "runId": "2026-05-07T00-08-21-1138775",
+  "executionId": "phase-a-1803-2026-05-07T00-08-21-1138775",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1803-2026-05-06T16-06-44-20529",
+      "executionRunId": "phase-a-1803-2026-05-06T16-06-44-20529"
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T20-04-25-528444",
+      "executionRunId": "phase-a-1803-2026-05-06T20-04-25-528444"
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-07T00-08-21-1138775",
+      "executionRunId": "phase-a-1803-2026-05-07T00-08-21-1138775"
+    }
+  ],
+  "findings": []
+}

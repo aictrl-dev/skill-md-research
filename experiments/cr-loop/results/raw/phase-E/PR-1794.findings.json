@@ -1,0 +1,128 @@
+{
+  "prNumber": 1794,
+  "runId": "2026-05-07T07-42-56-2087463",
+  "executionId": "phase-a-1794-2026-05-07T07-42-56-2087463",
+  "reviews": [
+    {
+      "reviewId": "cr-loop-PR-1794-bughunt",
+      "executionRunId": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T15-42-52-4159529",
+      "executionRunId": "phase-a-1794-2026-05-06T15-42-52-4159529"
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T19-30-45-454450",
+      "executionRunId": "phase-a-1794-2026-05-06T19-30-45-454450"
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T23-09-58-1010355",
+      "executionRunId": "phase-a-1794-2026-05-06T23-09-58-1010355"
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-07T07-42-56-2087463",
+      "executionRunId": "phase-a-1794-2026-05-07T07-42-56-2087463"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1794-2026-05-07T07-42-56-2087463",
+      "findingId": "40a374166e338309",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "medium",
+      "title": "startLine truthy check hides line 0",
+      "description": "FindingCardRow uses `finding.startLine ? ... : ...` which treats line number 0 as falsy, showing just the filename instead of 'file:0'. While line 0 is unusual in source files, the correct check is `finding.startLine != null` to distinguish 'absent' from 'zero'.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-07T07-42-56-2087463",
+      "findingId": "480932a2b58318af",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.css",
+      "line": null,
+      "severity": "low",
+      "title": "CSS comment references scratch HTML mock by line number",
+      "description": "The review accordion CSS block comment says 'matches scratch/code-review-detail-pages-mocks.html lines 1248-1335'. Hard-coded line numbers in scratch files will quickly go stale and mislead future developers. Same comment appears in CodeReviewPullDetailPage.tsx for the ReviewAccordion component.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-07T07-42-56-2087463",
+      "findingId": "5559baf8c98b1a82",
+      "file": "ui/src/components/Sidebar.tsx",
+      "line": null,
+      "severity": "low",
+      "title": "Multi-line JSX comments in Sidebar add noise",
+      "description": "The sidebar restructure adds several multi-line block comments (5-lens section header, 'Pull Requests' GitHub terminology note) inline in JSX. While informative, these are implementation notes that will age poorly and add visual noise. The other sections in the file do not have such comments, making the new sections inconsistent with the existing style.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-07T07-42-56-2087463",
+      "findingId": "758162a3a4273c73",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "medium",
+      "title": "compareFindings crashes on undefined file",
+      "description": "compareFindings falls through to `a.file.localeCompare(b.file)` as a tiebreaker. If either `file` field is undefined (bad API data), `undefined.localeCompare(...)` throws a TypeError. Add a null guard.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-07T07-42-56-2087463",
+      "findingId": "802afacd153794bf",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "low",
+      "title": "defaultExpanded={i===0} drifts on SSE updates",
+      "description": "ReviewCard initialises expanded state via useState(defaultExpanded). When a new review arrives via SSE, the previously-expanded card (old index 0) stays expanded because useState doesn't re-initialise, and the new card at index 0 also starts expanded. This may be intentional but could surprise users expecting single-card expansion.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-07T07-42-56-2087463",
+      "findingId": "a16d4ff84a47d29b",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "medium",
+      "title": "setState inside setState updater is fragile",
+      "description": "The SSE handler calls setReviews() inside a setFindings() updater that returns current unchanged. While React 18 batches this correctly, the pattern is unconventional and fragile — a future refactor that adds a return-value transformation to findings would accidentally start mutating findings. Prefer extracting findingsBySeverity into a useMemo or using a ref for the read.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-07T07-42-56-2087463",
+      "findingId": "b7a9113ec4cc0fe8",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.css",
+      "line": null,
+      "severity": "high",
+      "title": "Severity colour values duplicated across 2 CSS files",
+      "description": "The shared .cr-sev-chip classes were removed, and severity colour mappings (critical→rgba(239,68,68,...), high→rgba(249,115,22,...), etc.) are now defined independently in both CodeReviewPullDetailPage.css (.crpd-rc-pill--*, .crpd-fcard-sev--*, .crpd-fcard-dot--*) and CodeReviewPullsPage.css (.cr-pr-fgrid--*). If the severity palette ever changes, both files must be updated in lockstep. The old shared classes should be replaced with a new shared severity token file or CSS custom properties.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-07T07-42-56-2087463",
+      "findingId": "cfb6ca1832a00821",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.css",
+      "line": null,
+      "severity": "medium",
+      "title": "Severity background alpha changed from 0.15 to 0.12",
+      "description": "The old shared .cr-sev-chip classes used rgba(..., 0.15) for severity backgrounds. The new .crpd-rc-pill--* classes in PullDetailPage.css use rgba(..., 0.12). This is a deliberate visual change (documented in the irrelevant status comment as matching other alphas), but the change is not called out in the PR description and could cause subtle visual regressions.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-07T07-42-56-2087463",
+      "findingId": "d2308ac2f5d61912",
+      "file": "ui/src/pages/code-review/CodeReviewPullsPage.tsx",
+      "line": null,
+      "severity": "low",
+      "title": "worstSeverity CSS class unsanitised",
+      "description": "FindingsGrid receives worstSeverity (from pr.hasFindingsMin) and uses it in a template-literal CSS class. If the field is undefined, the generated class would silently have no styles rather than a clear failure. The code already handles null in FindingsGrid (sev falls back to 'info'), so the risk is low but the caller should also guard.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

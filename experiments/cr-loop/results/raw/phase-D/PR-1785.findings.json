@@ -1,0 +1,76 @@
+{
+  "prNumber": 1785,
+  "runId": "2026-05-06T23-29-50-1055062",
+  "executionId": "phase-a-1785-2026-05-06T23-29-50-1055062",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "executionRunId": "phase-a-1785-2026-05-06T15-51-53-4180341"
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "executionRunId": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T23-29-50-1055062",
+      "executionRunId": "phase-a-1785-2026-05-06T23-29-50-1055062"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1785-2026-05-06T23-29-50-1055062",
+      "findingId": "075a762e2895c883",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Hardcoded collection names duplicate manager constants",
+      "description": "The backfill hardcodes collection names ('organizations', 'pullRequests', 'reviews', 'findings') as inline strings when constructing Firestore paths. The manager uses the same string literals inside its private helpers. If either side renames a collection, the backfill silently writes to the wrong path.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T23-29-50-1055062",
+      "findingId": "4345e5fb00df9189",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "DRY-RUN mode undercounts would-be copies",
+      "description": "In DRY-RUN mode, `copyReview` returns `{copied: false, alreadyAtTarget: false}` for documents not at the target. Neither `reviewsCopied` nor `reviewsAlreadyAtTarget` increments, so the summary will show `reviewsScanned > reviewsCopied + reviewsAlreadyAtTarget` with no way to tell how many reviews would actually be copied.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T23-29-50-1055062",
+      "findingId": "999506cd1fd74b51",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Batch delete may exceed Firestore 500-op limit",
+      "description": "`deleteSourceTree()` creates a single Firestore batch for all findings plus the review doc. If a review ever has more than 499 findings, the batch will exceed the 500-operation limit and throw. The code comments claim ~10 docs per PR in prod, but this is an unguarded assumption that will fail loudly if violated.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T23-29-50-1055062",
+      "findingId": "e324246b18d5a33b",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "hasFindingsMin monotonically increases, never decreases",
+      "description": "Both `recordFinding` and `completeReview` only update `hasFindingsMin` when the new severity is worse than the current value. If findings are ever removed or their severity reduced, `hasFindingsMin` stays at the old high value. The only repair path is the backfill script's `recomputeParentPr`. Currently severity is immutable after creation, so this is a design limitation rather than an active bug.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T23-29-50-1055062",
+      "findingId": "fb4b15d45ba5888b",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "high",
+      "title": "recomputeParentPr duplicates completeReview logic",
+      "description": "The backfill script's `recomputeParentPr` duplicates the `hasFindingsMin` recomputation and `stats.reviewCount`/`latestReviewId` denormalisation logic from `PullRequestManager.completeReview`. If the severity ordering or stats calculation changes in the manager, the backfill will produce documents that diverge from runtime writes, leaving stale denormalised fields after migration.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

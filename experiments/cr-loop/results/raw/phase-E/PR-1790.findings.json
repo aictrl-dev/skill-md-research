@@ -1,0 +1,139 @@
+{
+  "prNumber": 1790,
+  "runId": "2026-05-07T07-29-26-2057023",
+  "executionId": "phase-a-1790-2026-05-07T07-29-26-2057023",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1790-2026-05-06T15-20-33-4109042",
+      "executionRunId": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T19-13-52-419180",
+      "executionRunId": "phase-a-1790-2026-05-06T19-13-52-419180"
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T21-40-52-737856",
+      "executionRunId": "phase-a-1790-2026-05-06T21-40-52-737856"
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T22-52-14-968044",
+      "executionRunId": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-07T07-29-26-2057023",
+      "executionRunId": "phase-a-1790-2026-05-07T07-29-26-2057023"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1790-2026-05-07T07-29-26-2057023",
+      "findingId": "035cbf29ca802651",
+      "file": "server/api/code-review-analytics-routes.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Bot/noisy-rules queries scoped to 30 days (was unbounded)",
+      "description": "The FINDINGS_BY_BOT_QUERY adds AND created_at >= TIMESTAMP_SUB(...) which changes semantics: previously the query returned ALL findings for a bot (no time bound), now it is capped at 30 days. Same change applies to NOISY_RULES_QUERY. This is a correct bug fix for partition filtering, but may surprise dashboard users expecting historical bot analysis.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-07T07-29-26-2057023",
+      "findingId": "1ae76223fa478165",
+      "file": "schemas/code-review/v1/finding.schema.json",
+      "line": null,
+      "severity": "medium",
+      "title": "Schema fields added without population code in this PR",
+      "description": "hasFindingsMin and latestReviewId are documented as \"Denormalised by completeReview / recordFinding\" but neither function is modified in this PR. The fields will remain null until a follow-up change populates them. If intentional schema-first work, a tracking issue should be referenced.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-07T07-29-26-2057023",
+      "findingId": "1c28621dcec2dc11",
+      "file": "schemas/code-review/v1/finding.schema.json",
+      "line": null,
+      "severity": "high",
+      "title": "hasFindingsMin enum values mismatch actual severity scale",
+      "description": "The new hasFindingsMin enum declares [\"critical\", \"high\", \"medium\", \"low\", \"info\"], but publishFinding passes finding.severity straight through — and callers emit BLOCKER / MAJOR / MINOR / NIT. The denormalised field can never match any of the declared enum values, so it will always be null.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-07T07-29-26-2057023",
+      "findingId": "21e9d7aacb9b4d4f",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Finding/review publish bypass schema validation, PR does not",
+      "description": "publishFinding and publishReviewCompleted build raw payloads and call Pub/Sub publish directly, while publishPrEvent goes through validateAndPublish which validates the domain object against the JSON schema. This means findings and reviews can publish malformed data without any schema guard.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-07T07-29-26-2057023",
+      "findingId": "39d0b247647d3ede",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "critical",
+      "title": "extraFields may inject old field names into new BQ payload",
+      "description": "The diff renames many top-level payload fields to match the BQ schema. However, if any callers of publishPrOpened/publishPrSynchronized/publishPrMerged/publishPrClosed pass extraFields containing old field names (e.g. pr_created_at, repo_full_name), those old fields will appear in the payload alongside the new ones. REQUIRED field renames (e.g. pr_created_at → created_at) mean the old name is now missing — any consumer expecting backward-compatible field names will break.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-07T07-29-26-2057023",
+      "findingId": "6d70281ef8f74c3d",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "low",
+      "title": "Out-of-scope comment references the issue this PR fixes",
+      "description": "The comment says \"Reconciliation is tracked out-of-scope to #1789\" but #1789 is the issue this PR closes. That makes the tracking reference circular: the debt would be \"tracked\" in the very issue being resolved. It should reference a separate follow-up issue number.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-07T07-29-26-2057023",
+      "findingId": "d9c51390f7b83882",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Pub/Sub attr renamed repo_full_name to repository_full_name",
+      "description": "repo_full_name was renamed to repository_full_name in the PR event Pub/Sub attributes. Any downstream subscription filter or consumer that matches on repo_full_name will silently stop receiving these messages. No comment or migration note documents the breaking change.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-07T07-29-26-2057023",
+      "findingId": "dc144a24f4551833",
+      "file": "server/api/code-review-analytics-routes.ts",
+      "line": null,
+      "severity": "high",
+      "title": "PR funnel query breaks on pre-migration BQ rows",
+      "description": "The PR funnel query changes from first_review_at IS NOT NULL to stats.time_to_first_review_ms IS NOT NULL. Old PR documents in BigQuery written before this publisher change may have first_review_at but NOT the nested stats.time_to_first_review_ms, causing those PRs to appear as 'no first review' and distorting funnel metrics.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-07T07-29-26-2057023",
+      "findingId": "e6a4c3043c777681",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "high",
+      "title": "pr.id could be null for REQUIRED BQ column",
+      "description": "The payload now includes id: pr.id as a REQUIRED column. If pr.id is undefined or null for any edge-case PR object, the message will be dead-lettered silently by BigQuery. A runtime assertion or fallback would prevent this.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-07T07-29-26-2057023",
+      "findingId": "ef36e8bb6cb7f3f2",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "high",
+      "title": "Timestamp fields passed raw without ISO normalization",
+      "description": "Fields like pr.openedAt, pr.mergedAt, pr.closedAt are nullable but passed through without normalization. If any value is non-null but not in ISO 8601 format, BigQuery will reject the row. This risk is amplified by the schema becoming stricter with use_table_schema = true + drop_unknown_fields = true.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

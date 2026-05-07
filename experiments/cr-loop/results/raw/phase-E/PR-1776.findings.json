@@ -1,0 +1,51 @@
+{
+  "prNumber": 1776,
+  "runId": "2026-05-07T06-36-37-1921327",
+  "executionId": "phase-a-1776-2026-05-07T06-36-37-1921327",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1776-2026-05-06T14-47-29-4014015",
+      "executionRunId": "phase-a-1776-2026-05-06T14-47-29-4014015"
+    },
+    {
+      "reviewId": "phase-a-1776-2026-05-06T18-45-58-357743",
+      "executionRunId": "phase-a-1776-2026-05-06T18-45-58-357743"
+    },
+    {
+      "reviewId": "phase-a-1776-2026-05-06T21-17-19-678746",
+      "executionRunId": "phase-a-1776-2026-05-06T21-17-19-678746"
+    },
+    {
+      "reviewId": "phase-a-1776-2026-05-06T22-03-56-805806",
+      "executionRunId": "phase-a-1776-2026-05-06T22-03-56-805806"
+    },
+    {
+      "reviewId": "phase-a-1776-2026-05-07T06-36-37-1921327",
+      "executionRunId": "phase-a-1776-2026-05-07T06-36-37-1921327"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1776-2026-05-07T06-36-37-1921327",
+      "findingId": "0a0df755fbed584a",
+      "file": "server/index.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "COOP same-origin-allow-popups relaxes Spectre mitigation",
+      "description": "Setting crossOriginOpenerPolicy to `same-origin-allow-popups` is the correct value for Firebase popup auth, but it is a relaxation compared to `same-origin` (the most restrictive option). Cross-origin popups opened from the page retain a reference to the opener, which could be leveraged in a Spectre-style side-channel attack if a victim visits a malicious page that opens the app in a popup. The risk is low because it requires user interaction and the attacker only gains a cross-origin window reference, not same-origin access.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1776-2026-05-07T06-36-37-1921327",
+      "findingId": "6e53ebe504e87820",
+      "file": "server/index.ts",
+      "line": null,
+      "severity": "low",
+      "title": "Multi-line comment exceeds typical inline style",
+      "description": "The 4-line comment block explaining the COOP change is thorough but heavier than the single-line comments used for other helmet directives (e.g., `// Allow cross-origin images`). This is a style nit — the content is accurate and useful.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

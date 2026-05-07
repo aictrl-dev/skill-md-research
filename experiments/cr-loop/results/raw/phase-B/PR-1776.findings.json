@@ -1,0 +1,16 @@
+{
+  "prNumber": 1776,
+  "runId": "2026-05-06T18-45-58-357743",
+  "executionId": "phase-a-1776-2026-05-06T18-45-58-357743",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1776-2026-05-06T14-47-29-4014015",
+      "executionRunId": "phase-a-1776-2026-05-06T14-47-29-4014015"
+    },
+    {
+      "reviewId": "phase-a-1776-2026-05-06T18-45-58-357743",
+      "executionRunId": "phase-a-1776-2026-05-06T18-45-58-357743"
+    }
+  ],
+  "findings": []
+}

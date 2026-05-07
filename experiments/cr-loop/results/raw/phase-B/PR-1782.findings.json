@@ -1,0 +1,28 @@
+{
+  "prNumber": 1782,
+  "runId": "2026-05-06T19-08-02-406889",
+  "executionId": "phase-a-1782-2026-05-06T19-08-02-406889",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1782-2026-05-06T15-13-54-4083549",
+      "executionRunId": "phase-a-1782-2026-05-06T15-13-54-4083549"
+    },
+    {
+      "reviewId": "phase-a-1782-2026-05-06T19-08-02-406889",
+      "executionRunId": "phase-a-1782-2026-05-06T19-08-02-406889"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1782-2026-05-06T19-08-02-406889",
+      "findingId": "d1775aa97a96d2e5",
+      "file": "server/mcp/tools/index.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Query not trimmed before routing regex",
+      "description": "The individual tool handlers (get_epic, get_task, list_tasks) now trim their ID arguments before use, but the routing regex in index.ts tests the raw `query` without trimming. A whitespace-padded task ID like \" ABC-1-1 \" would fail the regex and be incorrectly routed to get_epic, which would then trim it and fail with a not_found error instead of being correctly routed to get_task.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

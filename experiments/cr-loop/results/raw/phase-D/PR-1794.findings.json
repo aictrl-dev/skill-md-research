@@ -1,0 +1,36 @@
+{
+  "prNumber": 1794,
+  "runId": "2026-05-06T23-09-58-1010355",
+  "executionId": "phase-a-1794-2026-05-06T23-09-58-1010355",
+  "reviews": [
+    {
+      "reviewId": "cr-loop-PR-1794-bughunt",
+      "executionRunId": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T15-42-52-4159529",
+      "executionRunId": "phase-a-1794-2026-05-06T15-42-52-4159529"
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T19-30-45-454450",
+      "executionRunId": "phase-a-1794-2026-05-06T19-30-45-454450"
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T23-09-58-1010355",
+      "executionRunId": "phase-a-1794-2026-05-06T23-09-58-1010355"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1794-2026-05-06T23-09-58-1010355",
+      "findingId": "8c9744b0d6df2d0a",
+      "file": "ui/src/components/Sidebar.tsx",
+      "line": null,
+      "severity": "medium",
+      "title": "Security & Integrations moved behind orgId gate",
+      "description": "Security & Integrations moved behind orgId gate",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

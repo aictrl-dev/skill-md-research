@@ -1,0 +1,35 @@
+{
+  "prNumber": 1788,
+  "runId": "2026-05-06T14-32-13-3969789",
+  "executionId": "phase-a-1788-2026-05-06T14-32-13-3969789",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1788-2026-05-06T14-32-13-3969789",
+      "executionRunId": "phase-a-1788-2026-05-06T14-32-13-3969789"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1788-2026-05-06T14-32-13-3969789",
+      "findingId": "27450576e9b2e2bf",
+      "file": "ui/src/utils/formatDuration.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "formatDuration returns '< 1m' for negative inputs",
+      "description": "A negative `ms` value (which can arise from data inconsistency, e.g. a review started before the PR was opened) passes the `Number.isFinite` guard and then falls into the `< 60_000` branch, producing `'< 1m'` for small negatives. While the docstring acknowledges clock skew as a reason to return '< 1m', explicitly handling negatives with a dedicated guard would make the intent clearer and prevent `-2m` output for larger negatives.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T14-32-13-3969789",
+      "findingId": "9bc532beab6fdeb6",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "medium",
+      "title": "Actionable count uses subtraction, not status filter",
+      "description": "The comment explicitly defines actionable as `status ∈ {pending, applied, not-applied}`, but the code computes `actionableCount = findings.length - fpCount`. Any finding whose status falls outside the four listed values (e.g. 'dismissed', 'acknowledged') would be incorrectly counted as actionable. The computation should filter by the explicit status set instead of assuming the world is partitioned into only {actionable, irrelevant}.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

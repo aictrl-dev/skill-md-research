@@ -1,0 +1,171 @@
+{
+  "prNumber": 1785,
+  "runId": "2026-05-06T19-43-02-480871",
+  "executionId": "phase-a-1785-2026-05-06T19-43-02-480871",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "executionRunId": "phase-a-1785-2026-05-06T15-51-53-4180341"
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "executionRunId": ""
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "findingId": "05470b5413498c53",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "high",
+      "title": "hasFindingsMin never downgrades on re-review",
+      "description": "Both `recordFinding` and `completeReview` only ever upgrade `hasFindingsMin` (they check `newOrder > currentOrder`). This means if a PR's most severe finding was `critical` from review #1, and review #2 has only `low` findings, `hasFindingsMin` remains `critical` forever. There is no online path to downgrade. If findings are later marked `irrelevant`, the denormalised `hasFindingsMin` becomes stale. This matters for the `hasFindingsMin` filter on listPullRequests — PRs with all-irrelevant findings still appear as if they have severe findings.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "findingId": "1f4e8521f7e5992f",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "high",
+      "title": "stats.findingCount never written to parent PR",
+      "description": "`completeReview` updates `stats.reviewCount` on the parent PR but never updates `stats.findingCount`. Similarly, `recordFinding` does not touch the parent's stats. The `PullRequestStats.findingCount` field will always remain `null` (its default from `upsertPR`). If the dashboard or downstream consumers read `pr.stats.findingCount`, they'll get stale data.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "findingId": "23355f951c59fe0d",
+      "file": "server/api/code-review-findings-routes.ts",
+      "line": null,
+      "severity": "low",
+      "title": "Misindented comment inside if block",
+      "description": "The comment \"Path scoping makes cross-org access impossible\" is at the same indentation level as the `if (!pr) {` statement, placing it visually outside the block even though it's between the opening brace and `res.status(404)`. This is misleading — the comment should be indented one level deeper to sit inside the block, matching the pattern used in the GET route.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "findingId": "2b33737016353ffa",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "deleteSourceTree batch may exceed Firestore 500 ops",
+      "description": "`deleteSourceTree` batches all finding deletes + the parent review doc delete into a single Firestore batch without checking the 500-operation limit. The comment says ~10 docs per PR but there's no guard if a legacy review had more than 499 findings — the batch.commit() would fail with a Firestore error.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "findingId": "4220237bb93a05f1",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "dry-run recompute skips stats counter",
+      "description": "In dry-run mode, `recomputeParentPr` logs the planned update but does NOT increment `stats.parentPrsRecomputed`. The summary output reports `parent PRs recomputed: 0` even though recomputes would have happened. The log message still prints, but the counter is misleading for operators verifying dry-run output.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "findingId": "4c87cce1d97aefbc",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Findings severity read outside tx in completeReview",
+      "description": "In `completeReview`, all findings for the review are fetched via a non-transactional read, and the computed `worstSeverity` is later used inside `runTransaction` to update the PR's denormalised `hasFindingsMin` field. A finding created between the external read and the transaction would not be reflected in `hasFindingsMin`, leaving it stale until the next `recordFinding` call corrects it. The comment explains this is intentional (transactions limit reads), and `recordFinding` independently updates the field, so the race is bounded.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "findingId": "663d0d174bbd204a",
+      "file": "test/code-review-routes.test.ts",
+      "line": null,
+      "severity": "low",
+      "title": "clearOrgPRs batch can exceed Firestore 500 ops",
+      "description": "`clearOrgPRs` accumulates all deletes (PR docs + review subdocs + finding subdocs) into a single `WriteBatch`. Firestore batches are capped at 500 operations. If a test seeds many PRs with reviews and findings, the batch could silently exceed the limit and throw. Unlikely in current tests but will bite if test data grows.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "findingId": "7b7733e332424dda",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Dead code: listPRs has zero callers",
+      "description": "The `listPRs` method is an exact functional subset of `listPullRequests` (both do Firestore query + pagination on the same collection). All callers (code-review-routes.ts) use `listPullRequests`. `listPRs` has zero external callers and should be removed to avoid maintenance confusion.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "findingId": "8a6cce72bd593f4a",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Dead code: getPR/getPRByNumber duplicate getPullRequest",
+      "description": "After the refactor, `getPR(orgId, prId)` and `getPullRequest(orgId, prId)` have identical implementations. All callers (routes, findings-routes) use `getPullRequest`. `getPR` is only called by `getPRByNumber` which itself has zero external callers. Both should be removed.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "findingId": "8a99f61e3cc113d0",
+      "file": "server/api/code-review-findings-routes.ts",
+      "line": null,
+      "severity": "low",
+      "title": "Stale IDOR comment implies orgId comparison",
+      "description": "The comment says \"IDOR guard: load the PR and verify orgId matches\" but the actual check is now just `if (!pr)` — path scoping handles tenant isolation implicitly. The comment text implies an orgId comparison that no longer occurs.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "findingId": "cec228267412fe74",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "high",
+      "title": "review.id undefined for legacy docs in backfill",
+      "description": "The backfill reads `review.id` from the document body (`reviewDoc.data() as CodeReview`), but the comment in `recomputeParentPr` explicitly notes that legacy review docs may not have the `id` field populated. If `id` is absent, `reviewId` becomes `undefined`, the `!reviewId` guard fires, and the review is silently skipped with only an error log. The `latestReviewId` computation at line ~212 already uses `reviewDoc.id` for this exact reason, but the main migration loop does not.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "findingId": "d5f1761cd538b170",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "low",
+      "title": "pr.repository.fullName not guarded like other fields",
+      "description": "The component uses optional chaining for `pr.author?.username` and nullish coalescing for `pr.title`, `pr.headBranch`, `pr.baseBranch`, and `pr.stats.reviewCount` — but `pr.repository.fullName` has no such guard. If the API ever returns an incomplete or legacy-shape payload during rollout, this will throw rather than gracefully degrading.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "findingId": "e53d47ecd3e89b45",
+      "file": "test/code-review-routes.test.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Cross-org cleanup skipped on assertion failure",
+      "description": "The cross-org test seeds data under OTHER_ORG but calls `clearOrgPRs(OTHER_ORG)` at the end of the test body, not in a `finally` block. If any assertion throws, cleanup is skipped. `beforeEach` only clears `ORG_ID`, so stale OTHER_ORG data persists into subsequent runs, potentially causing flaky test failures.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "findingId": "f181bc0a4f098df5",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "copyFindings does N+1 get-then-set per finding",
+      "description": "For each finding, `copyFindings` does `await targetRef.get()` to check existence then `await targetRef.set()` to write — two sequential round-trips per finding. For a review with many findings, this is an N+1 pattern. Could be collapsed into a single batch write with existence checked via a collection get.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

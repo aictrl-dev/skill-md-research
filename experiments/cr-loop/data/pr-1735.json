@@ -1,0 +1,159 @@
+{
+  "number": 1735,
+  "category": "trivial",
+  "title": "fix(e2e): harness setup nav uses domcontentloaded, not networkidle",
+  "rationale": "tiny test fix, single file",
+  "body": "## Summary\nThe harness-api-key Gherkin scenarios were timing out on `page.waitForLoadState('networkidle')` after the backlog-provider work landed. App.tsx now mounts `useBacklogProvider` on every page; `useBacklogEvents` opens an SSE connection on epic-list/detail. Playwright's `networkidle` never settles within 30s because the SSE keeps the network 'active' indefinitely.\n\n`domcontentloaded` is the right semantic here — the harness setup page is fully interactive once its DOM lands, and the assertion steps that follow each have their own per-element waits.\n\nCloses the harness-api-key failures blocking the sandbox → main release PR #1721.\n\n## Test plan\n- [x] Lint clean\n- [ ] CI green (Gherkin job)\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)",
+  "baseRefName": "sandbox",
+  "headRefName": "fix/harness-test-loadstate",
+  "baseSha": "3827c71a985692590149ad4613f140009e375891",
+  "headSha": "5f25c9229ec78f4ab5508e85207cb12b5eb881ed",
+  "additions": 7,
+  "deletions": 1,
+  "changedFiles": 1,
+  "diff": "diff --git a/ui/e2e/step-definitions/harness-api-key.steps.ts b/ui/e2e/step-definitions/harness-api-key.steps.ts\nindex ae803fb94..d261c3598 100644\n--- a/ui/e2e/step-definitions/harness-api-key.steps.ts\n+++ b/ui/e2e/step-definitions/harness-api-key.steps.ts\n@@ -26,8 +26,14 @@ When(\n   async function (this: SessionControlWorld, harness: string) {\n     const path = HARNESS_ROUTE[harness];\n     if (!path) throw new Error(`Unknown harness \"${harness}\"`);\n+    // page.goto defaults to waitUntil: 'load' which fires AFTER\n+    // 'domcontentloaded', so an explicit waitForLoadState here would be a\n+    // no-op. The original `networkidle` wait timed out indefinitely because\n+    // App.tsx mounts useBacklogProvider on every page and useBacklogEvents\n+    // opens an SSE connection — Playwright never sees the network go quiet.\n+    // The subsequent assertion steps each gate on specific elements, so no\n+    // additional wait is needed here.\n     await this.page.goto(`${this.baseUrl}${path}`);\n-    await this.page.waitForLoadState('networkidle');\n   }\n );",
+  "botReviews": [
+    {
+      "body": "## Code Review: fix(e2e): harness setup nav uses domcontentloaded, not networkidle\n\n**Files changed:** 1 | **+6 −1** | **Subagents:** Security, Consistency, Bug-Hunter\n\n### Findings: 4\n\n| # | Severity | File | Line | Rule | Summary |\n|---|----------|------|------|------|---------|\n| 1 | MAJOR | `ui/e2e/step-definitions/skill-usage.steps.ts` | 278 | consistency | `networkidle` used after page interaction in same app |\n| 2 | MAJOR | `ui/e2e/step-definitions/chat.steps.ts` | 249 | consistency | `networkidle` in chat history page load assertion |\n| 3 | MAJOR | `ui/e2e/step-definitions/chat.steps.ts` | 438 | consistency | `networkidle` in conversation list assertion |\n| 4 | MINOR | `ui/e2e/step-definitions/backlog-import-milestone.steps.ts` | 234 | consistency | `networkidle` with `.catch(() => {})` masks SSE hang |\n\n---\n\n### #1 — MAJOR · `skill-usage.steps.ts:278`\n\nUses `waitForLoadState('networkidle')` on the same SPA that mounts `useBacklogProvider` / `useBacklogEvents` (SSE). Per this PR's rationale, SSE keeps the network perpetually active, so `networkidle` will hang until timeout. The same class of fix should apply.\n\n**Suggested fix:** Replace `await this.page.waitForLoadState('networkidle')` with `await this.page.waitForLoadState('domcontentloaded')` or a targeted element visibility assertion, consistent with the harness-api-key fix.\n\n### #2 — MAJOR · `chat.steps.ts:249`\n\nUses `networkidle` to wait for the chat history page to finish loading. The same SSE connection issue applies — `useBacklogEvents` keeps the network active. Should use `domcontentloaded` plus explicit element visibility checks (which the step already does immediately after).\n\n**Suggested fix:** Replace with `await this.page.waitForLoadState('domcontentloaded')` — the subsequent locator assertions already gate on the content being rendered.\n\n### #3 — MAJOR · `chat.steps.ts:438`\n\nSame issue as #2 in the same file. The SSE connection prevents `networkidle` from resolving in a timely manner on any app page.\n\n**Suggested fix:** Replace with `domcontentloaded` or remove entirely — the subsequent locator checks are sufficient.\n\n### #4 — MINOR · `backlog-import-milestone.steps.ts:234`\n\nUses `networkidle` with `.catch(() => {})` to swallow errors, which is effectively a workaround for the same SSE timeout issue this PR fixes properly. The pattern is inconsistent with the new approach and silently hides the underlying problem.\n\n**Suggested fix:** Replace `await this.page.waitForLoadState('networkidle').catch(() => {})` with `await this.page.waitForLoadState('domcontentloaded')` to be explicit and consistent.\n\n---\n\n**Note:** There are an additional 50+ `networkidle` calls in `*.spec.ts` files (git-export, reflections, skills, default-skills, evidence) that may also be affected by the SSE issue. Consider a follow-up PR to sweep those systematically.\n\n---\n\nReviewed SHA: 3b933103812a050ae27e030688562c56fb42c357",
+      "createdAt": "2026-05-01T15:15:22Z",
+      "id": 4359988678,
+      "user": "github-actions[bot]"
+    },
+    {
+      "body": "## Code Review: fix(e2e): harness setup nav uses domcontentloaded, not networkidle\n\n**Files reviewed:** 1 | **+7 / -1** | **SHA:** `5f25c92`\n\n---\n\n### Summary\n\nRemoves a `page.waitForLoadState('networkidle')` call that could never resolve because `useBacklogProvider` opens a persistent SSE connection on every page. Replaces it with a thorough comment explaining why no explicit wait is needed (`page.goto` already waits for `load`, and downstream assertion steps have their own element-level waits).\n\n---\n\n### Findings\n\n| # | Severity | File | Line | Rule | Summary |\n|---|----------|------|------|------|---------|\n| 1 | NIT | `harness-api-key.steps.ts` | 29–35 | style | Comment block is 6 lines for a removed one-liner |\n\n**Finding 1 — NIT (style):** The comment at lines 29–35 is thorough and well-written, but at 6 lines it's heavier than the code it replaces. Consider collapsing to 2–3 lines capturing just the key facts (SSE prevents `networkidle`; `goto` already waits for `load`; downstream steps self-wait). This is purely cosmetic — the existing comment is not wrong.\n\n---\n\n### Verdict\n\nClean, correct fix. The root cause is well-identified (SSE from `useBacklogEvents` keeps the network active), the solution is minimal (remove the impossible wait), and all downstream Gherkin steps use Playwright auto-waiting assertions (`toBeVisible`, `toContainText` with explicit `timeout`), so no flakiness is introduced.\n\n**LGTM — ship it.**\n\nReviewed SHA: 5f25c9229ec78f4ab5508e85207cb12b5eb881ed",
+      "createdAt": "2026-05-01T15:36:23Z",
+      "id": 4360093688,
+      "user": "github-actions[bot]"
+    }
+  ],
+  "verdicts": [
+    {
+      "sourcePR": 1735,
+      "analyzedAt": "2026-05-01T15:30:00Z",
+      "findings": [
+        {
+          "bot": "aictrl-dev",
+          "severity": "BUG",
+          "file": "ui/e2e/step-definitions/harness-api-key.steps.ts",
+          "line": "35",
+          "description": "waitForLoadState('domcontentloaded') after page.goto() is a no-op",
+          "reviewSha": "3b933103812a050ae27e030688562c56fb42c357",
+          "reviewCreated": "2026-05-01T15:16:05Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "removed the redundant line; page.goto already waits for load"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "ui/e2e/step-definitions/skill-usage.steps.ts",
+          "line": "278",
+          "description": "networkidle used after page interaction in same SPA — SSE hang",
+          "reviewSha": "3b933103812a050ae27e030688562c56fb42c357",
+          "reviewCreated": "2026-05-01T15:15:22Z",
+          "verdict": "TRUE",
+          "action": "DEFER",
+          "reason": "out of scope for this hotfix; broader sweep PR"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "ui/e2e/step-definitions/chat.steps.ts",
+          "line": "249",
+          "description": "networkidle in chat history page load assertion",
+          "reviewSha": "3b933103812a050ae27e030688562c56fb42c357",
+          "reviewCreated": "2026-05-01T15:15:22Z",
+          "verdict": "TRUE",
+          "action": "DEFER",
+          "reason": "out of scope; same sweep PR"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "ui/e2e/step-definitions/chat.steps.ts",
+          "line": "438",
+          "description": "networkidle in conversation list assertion",
+          "reviewSha": "3b933103812a050ae27e030688562c56fb42c357",
+          "reviewCreated": "2026-05-01T15:15:22Z",
+          "verdict": "TRUE",
+          "action": "DEFER",
+          "reason": "same sweep PR"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "ui/e2e/step-definitions/backlog-import-milestone.steps.ts",
+          "line": "234",
+          "description": "networkidle with .catch(() => {}) masks SSE hang",
+          "reviewSha": "3b933103812a050ae27e030688562c56fb42c357",
+          "reviewCreated": "2026-05-01T15:15:22Z",
+          "verdict": "TRUE",
+          "action": "DEFER",
+          "reason": "same sweep PR"
+        }
+      ]
+    }
+  ],
+  "labelled": [
+    {
+      "bot": "aictrl-dev",
+      "severity": "BUG",
+      "file": "ui/e2e/step-definitions/harness-api-key.steps.ts",
+      "line": "35",
+      "description": "waitForLoadState('domcontentloaded') after page.goto() is a no-op",
+      "reviewSha": "3b933103812a050ae27e030688562c56fb42c357",
+      "reviewCreated": "2026-05-01T15:16:05Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "removed the redundant line; page.goto already waits for load"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "ui/e2e/step-definitions/skill-usage.steps.ts",
+      "line": "278",
+      "description": "networkidle used after page interaction in same SPA — SSE hang",
+      "reviewSha": "3b933103812a050ae27e030688562c56fb42c357",
+      "reviewCreated": "2026-05-01T15:15:22Z",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "out of scope for this hotfix; broader sweep PR"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "ui/e2e/step-definitions/chat.steps.ts",
+      "line": "249",
+      "description": "networkidle in chat history page load assertion",
+      "reviewSha": "3b933103812a050ae27e030688562c56fb42c357",
+      "reviewCreated": "2026-05-01T15:15:22Z",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "out of scope; same sweep PR"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "ui/e2e/step-definitions/chat.steps.ts",
+      "line": "438",
+      "description": "networkidle in conversation list assertion",
+      "reviewSha": "3b933103812a050ae27e030688562c56fb42c357",
+      "reviewCreated": "2026-05-01T15:15:22Z",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "same sweep PR"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "ui/e2e/step-definitions/backlog-import-milestone.steps.ts",
+      "line": "234",
+      "description": "networkidle with .catch(() => {}) masks SSE hang",
+      "reviewSha": "3b933103812a050ae27e030688562c56fb42c357",
+      "reviewCreated": "2026-05-01T15:15:22Z",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "same sweep PR"
+    }
+  ]
+}

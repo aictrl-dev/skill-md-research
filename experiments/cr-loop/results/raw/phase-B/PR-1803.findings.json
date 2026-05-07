@@ -1,0 +1,94 @@
+{
+  "prNumber": 1803,
+  "runId": "2026-05-06T20-04-25-528444",
+  "executionId": "phase-a-1803-2026-05-06T20-04-25-528444",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1803-2026-05-06T16-06-44-20529",
+      "executionRunId": "phase-a-1803-2026-05-06T16-06-44-20529"
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T20-04-25-528444",
+      "executionRunId": "phase-a-1803-2026-05-06T20-04-25-528444"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1803-2026-05-06T20-04-25-528444",
+      "findingId": "6171170bb88cce34",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "high",
+      "title": "publishReviewCompleted re-throws, breaking fire-and-forget",
+      "description": "publishReviewCompleted now re-throws transient errors from getPullRequest (Firestore blip, network timeout), but the JSDoc still says \"Fire-and-forget: Pub/Sub errors are logged, not re-thrown.\" The old implementation never threw; callers that rely on the documented fire-and-forget guarantee will get unhandled rejections.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T20-04-25-528444",
+      "findingId": "7f84e645d9a73fd6",
+      "file": "test/code-review-publisher.test.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "No test for publishReviewCompleted re-throw path",
+      "description": "The test suite covers the null-PR early-return path for publishReviewCompleted but there is no test for the catch-and-re-throw path when getPullRequest throws a transient error. This is the path that introduces a behavioral breaking change (function now throws), so it should have explicit test coverage to prevent regressions.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T20-04-25-528444",
+      "findingId": "98b86d08fcc97da9",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Inconsistent PR-fetch error handling across publishers",
+      "description": "publishFinding catches getPullRequest errors at log.warn and continues with null repository/pr + placeholder sha. publishReviewCompleted catches the same class of error and re-throws. During a transient Firestore outage, finding events will publish with degraded data while review-completion events will fail entirely, producing orphaned finding_recorded events in BQ with no matching review_completed event.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T20-04-25-528444",
+      "findingId": "9ec7fcdcba1b0de5",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "high",
+      "title": "Missing-PR handling diverges between finding & review",
+      "description": "publishFinding degrades gracefully when the parent PR is missing (publishes with repository/pr=null, sha='unknown'), but publishReviewCompleted silently drops the message entirely (skips publish). Both functions face the same problem — BQ REQUIRED columns need PR data — yet they behave differently. The finding path will likely dead-letter at BQ insert (null REQUIRED columns), while the review path silently swallows the event. Pick one strategy and apply it to both.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T20-04-25-528444",
+      "findingId": "d7af3b62d2abd9cc",
+      "file": "test/code-review-publisher.test.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Review test expects no publish on null PR; finding doesn't",
+      "description": "The finding test asserts mockPublishMessage is called once when the PR is null, but the review test asserts it is NOT called. This mirrors the production inconsistency. Tests should enforce consistent error-handling contracts, not document divergence.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T20-04-25-528444",
+      "findingId": "e83013ce73422f2c",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "model_full_path duplicates model.full_path",
+      "description": "The review payload emits both a top-level model struct { provider, name, full_path } and a separate model_full_path string set to the same value. If model.full_path already carries this, the flat field is redundant and will drift if only one is updated later.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T20-04-25-528444",
+      "findingId": "fb6b0db27e54c3cc",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "low",
+      "title": "model_full_path duplicates DEFAULT_MODEL.full_path",
+      "description": "The review payload sets both model: { ...DEFAULT_MODEL } (which includes full_path: 'unknown') and a separate top-level model_full_path: DEFAULT_MODEL.full_path. The two values always agree today, but if DEFAULT_MODEL is later changed to carry a real model path, both sites must be updated in lockstep or the payload becomes inconsistent.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

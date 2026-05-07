@@ -1,0 +1,50 @@
+{
+  "prNumber": 1790,
+  "runId": "2026-05-06T19-13-52-419180",
+  "executionId": "phase-a-1790-2026-05-06T19-13-52-419180",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1790-2026-05-06T15-20-33-4109042",
+      "executionRunId": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T19-13-52-419180",
+      "executionRunId": "phase-a-1790-2026-05-06T19-13-52-419180"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1790-2026-05-06T19-13-52-419180",
+      "findingId": "791d78c0dce2d642",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "low",
+      "title": "Two event_type injection patterns in same file",
+      "description": "publishFinding/publishReviewCompleted set event_type explicitly in their attributes objects, while publishPrEvent relies on validateAndPublish to inject it. Both paths work, but a future contributor adding a new event type could follow either pattern and miss the attribute.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T19-13-52-419180",
+      "findingId": "8d7421f66218f62c",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "PR payload omits has_findings_min / latest_review_id",
+      "description": "PR payload omits has_findings_min / latest_review_id added to schema. If BQ table has these columns they will always be null.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T19-13-52-419180",
+      "findingId": "94fd45ec143cbce2",
+      "file": "test/code-review-publisher.test.ts",
+      "line": null,
+      "severity": "low",
+      "title": "Fixture includes fields never asserted in tests",
+      "description": "makePullRequest sets hasFindingsMin: 'high' and latestReviewId: 'review-1' (matching the new schema fields), but no test asserts their presence or absence in the published payload. If these fields are meant to reach BQ, there is no test coverage for it; if they are Firestore-only, the fixture is misleading.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

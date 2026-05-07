@@ -1,0 +1,35 @@
+{
+  "prNumber": 1781,
+  "runId": "2026-05-06T14-55-10-4032103",
+  "executionId": "phase-a-1781-2026-05-06T14-55-10-4032103",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1781-2026-05-06T14-55-10-4032103",
+      "executionRunId": "phase-a-1781-2026-05-06T14-55-10-4032103"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1781-2026-05-06T14-55-10-4032103",
+      "findingId": "20f2a8e6a2628718",
+      "file": "server/mcp/tools/skills.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Misleading error message when session has no org",
+      "description": "When orgId is null (no session org), the guard returns 'Task does not belong to your organization', which is misleading — the real issue is that there is no authenticated session. In code-review.ts the equivalent `requireOrgMatch` helper distinguishes this by showing `org_id must match session org (none)`. Both files should use a consistent, accurate message for the null-session fail-closed case.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1781-2026-05-06T14-55-10-4032103",
+      "findingId": "ec8e1d7413cf068a",
+      "file": "test/mcp/skills.test.ts",
+      "line": null,
+      "severity": "low",
+      "title": "Null-org test skips message content assertion",
+      "description": "The 'returns forbidden when session has no org (fail-closed)' test only asserts `payload.error === 'forbidden'` but does not check `payload.message`, unlike the code-review tests which verify the message contains 'none'. Adding a message assertion would catch the misleading message reported above and keep test thoroughness consistent across the two test files.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

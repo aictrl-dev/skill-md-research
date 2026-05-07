@@ -1,0 +1,47 @@
+{
+  "prNumber": 1782,
+  "runId": "2026-05-06T22-42-43-946452",
+  "executionId": "phase-a-1782-2026-05-06T22-42-43-946452",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1782-2026-05-06T15-13-54-4083549",
+      "executionRunId": "phase-a-1782-2026-05-06T15-13-54-4083549"
+    },
+    {
+      "reviewId": "phase-a-1782-2026-05-06T19-08-02-406889",
+      "executionRunId": "phase-a-1782-2026-05-06T19-08-02-406889"
+    },
+    {
+      "reviewId": "phase-a-1782-2026-05-06T21-36-32-728018",
+      "executionRunId": "phase-a-1782-2026-05-06T21-36-32-728018"
+    },
+    {
+      "reviewId": "phase-a-1782-2026-05-06T22-42-43-946452",
+      "executionRunId": "phase-a-1782-2026-05-06T22-42-43-946452"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1782-2026-05-06T22-42-43-946452",
+      "findingId": "54fa56ab6cd06d5b",
+      "file": "server/mcp/tools/index.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Query not trimmed before task-ID regex routing",
+      "description": "The handlers in epics.ts defensively trim their ID parameters, but the routing layer in index.ts tests the raw `query` against the task-ID regex without trimming. If query has surrounding whitespace, the regex won't match and the request is misrouted to `get_epic` instead of `get_task`. The handler then trims and performs an epic lookup that will fail with \"not_found\". Either trim `query` before the regex test so routing and handler behavior stay consistent.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1782-2026-05-06T22-42-43-946452",
+      "findingId": "af35df07e5a06bcf",
+      "file": "server/mcp/tools/skills.ts",
+      "line": null,
+      "severity": "high",
+      "title": "skills.ts misses same trim bug fixed in epics.ts",
+      "description": "The PR fixes whitespace-only task_id/epic_id validation in three epics.ts handlers (get_epic, list_tasks, get_task) by adding `.trim()` and checking falsiness. However, `skills.ts:306` has the identical pattern — `args.task_id as string` with only `!taskId` — which lets a whitespace-only `task_id` (e.g. `\"   \"`) pass validation and be sent to `stateManager.getTask(\"   \")`. This is the exact same class of bug being fixed in this PR.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}
