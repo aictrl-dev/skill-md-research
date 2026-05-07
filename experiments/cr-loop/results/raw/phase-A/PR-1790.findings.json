@@ -1,0 +1,101 @@
+{
+  "prNumber": 1790,
+  "runId": "2026-05-06T15-20-33-4109042",
+  "executionId": "phase-a-1790-2026-05-06T15-20-33-4109042",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1790-2026-05-06T15-20-33-4109042",
+      "executionRunId": ""
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1790-2026-05-06T15-20-33-4109042",
+      "findingId": "28f97161ea60c5a6",
+      "file": "server/api/code-review-analytics-routes.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "FINDINGS_BY_BOT and NOISY_RULES silently limited to 30 days",
+      "description": "FINDINGS_BY_BOT_QUERY and NOISY_RULES_QUERY now include `AND created_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 30 DAY)` which was not present before. This is required by `require_partition_filter = true` on the table, but it silently changes the dashboard from all-time to a 30-day window. Users expecting historical bot breakdown or long-tail noisy-rule data will see reduced coverage.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T15-20-33-4109042",
+      "findingId": "5e05d7f3dc1284bf",
+      "file": "test/code-review-publisher.test.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "publishReviewCompleted test omits json.event_type check",
+      "description": "The publishFinding test verifies event_type in both attributes AND json payload (line 228: `expect(call.json.event_type)`). The publishReviewCompleted test only checks attributes.event_type but never verifies that the JSON payload also contains event_type. Both publishers emit event_type in the JSON body; the test coverage is inconsistent.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T15-20-33-4109042",
+      "findingId": "791ec3a8514e4e01",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "high",
+      "title": "finding/review publishers skip validateAndPublish",
+      "description": "publishFinding and publishReviewCompleted call getPublisher() directly, bypassing validateAndPublish(). This skips Ajv schema validation entirely for finding and review payloads. While intentional per comments (the storage types diverged from $defs.Finding/$defs.Review), any future BQ schema drift will surface only as silently dead-lettered messages rather than a fast-fail publish-time error. PR events still go through validateAndPublish, creating a dual-path inconsistency.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T15-20-33-4109042",
+      "findingId": "7991b9dccfa21f44",
+      "file": "server/api/code-review-analytics-routes.ts",
+      "line": null,
+      "severity": "low",
+      "title": "Partition filter comment does not cover PR_FUNNEL_QUERY",
+      "description": "The comment block at line 96 states \"All four findings/runs queries below MUST include a predicate over their partition column\". The PR_FUNNEL_QUERY (query 5) uses `opened_at` as its partition filter for `code_review_pull_requests` but is not mentioned in the comment which only covers findings/runs tables. Minor doc inconsistency.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T15-20-33-4109042",
+      "findingId": "9a9fa0ab1cbe3b0e",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Breaking rename: repo_full_name → repository_full_name",
+      "description": "The PR event attributes rename `repo_full_name` to `repository_full_name`. This is a breaking wire-format change for any Pub/Sub subscription that filters on `attributes.repo_full_name`. If the BQ sink subscription was already expecting `repository_full_name` this is a fix, but any other subscriber (e.g. alerting, audit) still using the old name will silently stop matching messages.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T15-20-33-4109042",
+      "findingId": "9bc6f0afab3d6fcb",
+      "file": "server/api/code-review-analytics-routes.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "PR funnel undercounts historical first_review stage",
+      "description": "The PR_FUNNEL_QUERY changed from `first_review_at IS NOT NULL` to `stats.time_to_first_review_ms IS NOT NULL`. PR rows written before this fix used flat fields instead of the nested `stats` struct. Those old rows have `stats = NULL`, so the funnel's 'first_review' count will be 0 for all historical PRs. The dashboard will show a misleading drop in reviewed-PR counts until enough new data accumulates.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T15-20-33-4109042",
+      "findingId": "ef404145dd51e6c4",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Two divergent publish paths in same module",
+      "description": "publishFinding/publishReviewCompleted bypass validateAndPublish, manually constructing attributes and calling getPublisher() directly. publishPrEvent uses validateAndPublish which adds event_type to attributes and performs schema validation. Having two publish patterns in one module is a maintenance risk — if event_type handling changes in validateAndPublish, the manual path won't inherit the fix.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T15-20-33-4109042",
+      "findingId": "f811e7a3513e4028",
+      "file": "test/code-review-publisher.test.ts",
+      "line": null,
+      "severity": "low",
+      "title": "PR lifecycle test skips json.event_type assertion",
+      "description": "The second describe block ('PR payload matches BigQuery schema') checks many json fields (schema_version, id, org_id, etc.) but never asserts json.event_type. The publishFinding test (line 228) explicitly verifies `call.json.event_type`. The PR events' json payloads all include event_type from buildPrEventPayload, so a consistent test would verify it.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

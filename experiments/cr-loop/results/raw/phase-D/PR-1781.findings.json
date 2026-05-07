@@ -1,0 +1,36 @@
+{
+  "prNumber": 1781,
+  "runId": "2026-05-06T22-13-45-836233",
+  "executionId": "phase-a-1781-2026-05-06T22-13-45-836233",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1781-2026-05-06T14-55-10-4032103",
+      "executionRunId": "phase-a-1781-2026-05-06T14-55-10-4032103"
+    },
+    {
+      "reviewId": "phase-a-1781-2026-05-06T18-50-18-367721",
+      "executionRunId": "phase-a-1781-2026-05-06T18-50-18-367721"
+    },
+    {
+      "reviewId": "phase-a-1781-2026-05-06T21-24-31-697962",
+      "executionRunId": "phase-a-1781-2026-05-06T21-24-31-697962"
+    },
+    {
+      "reviewId": "phase-a-1781-2026-05-06T22-13-45-836233",
+      "executionRunId": "phase-a-1781-2026-05-06T22-13-45-836233"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1781-2026-05-06T22-13-45-836233",
+      "findingId": "fd0fc74dc02bcbf6",
+      "file": "server/mcp/tools/skills.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Org guard runs after task fetch in recommend_skills",
+      "description": "The new `!orgId || task.organizationId !== orgId` guard is placed after `stateManager.getTask(taskId)`, meaning an unauthenticated caller (no session org) still triggers a Firestore read and gets a distinguishable `not_found` vs `forbidden` error — leaking task existence. In the same PR, code-review.ts uses the stricter pattern: `requireOrgMatch` runs before any data access. Splitting the guard into `if (!orgId) return forbidden` before the fetch would close the information leak, save the wasted read, and stay consistent with the code-review.ts pattern introduced in this same PR.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

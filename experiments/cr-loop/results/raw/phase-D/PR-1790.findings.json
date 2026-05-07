@@ -1,0 +1,24 @@
+{
+  "prNumber": 1790,
+  "runId": "2026-05-06T22-52-14-968044",
+  "executionId": "phase-a-1790-2026-05-06T22-52-14-968044",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1790-2026-05-06T15-20-33-4109042",
+      "executionRunId": ""
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T19-13-52-419180",
+      "executionRunId": "phase-a-1790-2026-05-06T19-13-52-419180"
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T21-40-52-737856",
+      "executionRunId": "phase-a-1790-2026-05-06T21-40-52-737856"
+    },
+    {
+      "reviewId": "phase-a-1790-2026-05-06T22-52-14-968044",
+      "executionRunId": ""
+    }
+  ],
+  "findings": []
+}

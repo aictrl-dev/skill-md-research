@@ -1,0 +1,18 @@
+{
+  "number": 1776,
+  "category": "trivial",
+  "title": "fix(auth): set Cross-Origin-Opener-Policy for Firebase popup sign-in",
+  "rationale": "tiny fix, no linked issue — pipeline sanity check",
+  "body": "## Summary\nSet `Cross-Origin-Opener-Policy: same-origin-allow-popups` so Firebase `signInWithPopup` can complete its redirect chain (sandbox → firebaseapp.com → accounts.google.com → back) without Chromium severing the `window.opener` relationship.\n\n## Root cause\nThe prior \"fix\" in PR #720 set `crossOriginOpenerPolicy: false` (omit the header). Modern Chromium (119+) still severs the opener between context groups when the header is absent, causing:\n1. `Cross-Origin-Opener-Policy policy would block window.close()` console warning\n2. The popup's `postMessage` never reaches the parent frame\n3. Subsequent API calls fail with 401 (stale/expired token — the popup flow never delivered a fresh credential)\n\n## Fix\nOne-line change in `server/index.ts`: `crossOriginOpenerPolicy: false` → `{ policy: 'same-origin-allow-popups' }`. This is the documented value from [Firebase redirect best practices](https://firebase.google.com/docs/auth/web/redirect-best-practices).\n\n## Test plan\n- [ ] `curl -sI https://sandbox.aictrl.dev | grep -i cross-origin-opener-policy` returns `same-origin-allow-popups` after deploy\n- [ ] Manual sign-in on sandbox.aictrl.dev via Google popup completes without COOP warning\n- [ ] No 401 errors after fresh sign-in",
+  "baseRefName": "sandbox",
+  "headRefName": "fix/sandbox-coop-popup-auth",
+  "baseSha": "f94cabe83fa3679fdd2f1aa9a682220bee7b411d",
+  "headSha": "7221ad9f6bb848a23b4b3fe5e4cb3f7ec83c763d",
+  "additions": 6,
+  "deletions": 1,
+  "changedFiles": 1,
+  "diff": "diff --git a/server/index.ts b/server/index.ts\nindex b981b2e9..3d7b8c1c 100644\n--- a/server/index.ts\n+++ b/server/index.ts\n@@ -187,7 +187,12 @@ app.use(helmet({\n   noSniff: true,\n   referrerPolicy: { policy: 'strict-origin-when-cross-origin' },\n   crossOriginEmbedderPolicy: false, // Allow cross-origin images\n-  crossOriginOpenerPolicy: false, // Required for Firebase signInWithPopup (popup is on firebaseapp.com)\n+  // Firebase signInWithPopup needs the parent to keep its opener relationship\n+  // when the popup navigates to firebaseapp.com → accounts.google.com → back.\n+  // `false` (no header) leaves modern Chromium to sever the opener anyway, so\n+  // the popup's postMessage never reaches us. `same-origin-allow-popups` is the\n+  // documented value: https://firebase.google.com/docs/auth/web/redirect-best-practices\n+  crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },\n }));\n \n // Register git providers (GitHub, Bitbucket) so getProvider() works",
+  "botReviews": [],
+  "verdicts": [],
+  "labelled": []
+}

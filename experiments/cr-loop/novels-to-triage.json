@@ -1,0 +1,746 @@
+[
+  {
+    "id": "1776:server/index.ts:setting crossoriginopenerpolicy to same origin allow popups ",
+    "prNumber": 1776,
+    "file": "server/index.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "COOP same-origin-allow-popups relaxes Spectre mitigation",
+    "description": "Setting crossOriginOpenerPolicy to `same-origin-allow-popups` is the correct value for Firebase popup auth, but it is a relaxation compared to `same-origin` (the most restrictive option). Cross-origin popups opened from the page retain a reference to the opener, which could be leveraged in a Spectre-style side-channel attack if a victim visits a malicious page that opens the app in a popup. The risk is low because it requires user interaction and the attacker only gains a cross-origin window reference, not same-origin access.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1776:server/index.ts:the 4 line comment block explaining the coop change is thoro",
+    "prNumber": 1776,
+    "file": "server/index.ts",
+    "line": null,
+    "severity": "low",
+    "title": "Multi-line comment exceeds typical inline style",
+    "description": "The 4-line comment block explaining the COOP change is thorough but heavier than the single-line comments used for other helmet directives (e.g., `// Allow cross-origin images`). This is a style nit — the content is accurate and useful.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1781:server/mcp/tools/code-review.ts:requireorgmatch returns org id must match session org sessio",
+    "prNumber": 1781,
+    "file": "server/mcp/tools/code-review.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "Error message leaks session org ID to caller",
+    "description": "requireOrgMatch returns `org_id must match session org (${sessionOrg || 'none'})`, revealing the authenticated session's org ID (or the fact that no session org exists) to the tool caller. While org IDs are low-sensitivity, consolidating this message into a shared function used by three handlers increases the exposure surface. A generic message would prevent enumeration of session state.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1781:test/mcp/skills.test.ts:the returns forbidden when session has no org fail closed te",
+    "prNumber": 1781,
+    "file": "test/mcp/skills.test.ts",
+    "line": null,
+    "severity": "low",
+    "title": "Null-org test skips message content assertion",
+    "description": "The 'returns forbidden when session has no org (fail-closed)' test only asserts `payload.error === 'forbidden'` but does not check `payload.message`, unlike the code-review tests which verify the message contains 'none'. Adding a message assertion would catch the misleading message reported above and keep test thoroughness consistent across the two test files.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1782:server/mcp/tools/skills.ts:the pr fixes whitespace only task id epic id validation in t",
+    "prNumber": 1782,
+    "file": "server/mcp/tools/skills.ts",
+    "line": null,
+    "severity": "high",
+    "title": "skills.ts misses same trim bug fixed in epics.ts",
+    "description": "The PR fixes whitespace-only task_id/epic_id validation in three epics.ts handlers (get_epic, list_tasks, get_task) by adding `.trim()` and checking falsiness. However, `skills.ts:306` has the identical pattern — `args.task_id as string` with only `!taskId` — which lets a whitespace-only `task_id` (e.g. `\"   \"`) pass validation and be sent to `stateManager.getTask(\"   \")`. This is the exact same class of bug being fixed in this PR.",
+    "foundIn": [
+      "D"
+    ]
+  },
+  {
+    "id": "1785:scripts/backfill-pr-orgscoped.ts:the file level jsdoc says after pr xxxx every code path uses",
+    "prNumber": 1785,
+    "file": "scripts/backfill-pr-orgscoped.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "PR #XXXX placeholder in backfill doc comment",
+    "description": "The file-level JSDoc says 'After PR #XXXX every code path uses the org-scoped tree' — this is a stale placeholder that should reference the actual PR number (#1785). Will confuse future readers tracing the migration history.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1785:server/api/code-review-findings-routes.ts:the comment path scoping makes cross org access impossible i",
+    "prNumber": 1785,
+    "file": "server/api/code-review-findings-routes.ts",
+    "line": null,
+    "severity": "low",
+    "title": "Misindented comment inside if block",
+    "description": "The comment \"Path scoping makes cross-org access impossible\" is at the same indentation level as the `if (!pr) {` statement, placing it visually outside the block even though it's between the opening brace and `res.status(404)`. This is misleading — the comment should be indented one level deeper to sit inside the block, matching the pattern used in the GET route.",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1785:server/api/code-review-findings-routes.ts:the comment says idor guard load the pr and verify orgid mat",
+    "prNumber": 1785,
+    "file": "server/api/code-review-findings-routes.ts",
+    "line": null,
+    "severity": "low",
+    "title": "Stale IDOR comment implies orgId comparison",
+    "description": "The comment says \"IDOR guard: load the PR and verify orgId matches\" but the actual check is now just `if (!pr)` — path scoping handles tenant isolation implicitly. The comment text implies an orgId comparison that no longer occurs.",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1785:server/services/pull-request-manager.ts:listpullrequests queries prcollection orgid already scoped t",
+    "prNumber": 1785,
+    "file": "server/services/pull-request-manager.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "Redundant orgId filter could silently exclude migrated docs",
+    "description": "`listPullRequests` queries `prCollection(orgId)` (already scoped to `organizations/{orgId}/pullRequests`) and adds `.where('orgId', '==', orgId)`. If any document has a missing or mismatched `orgId` field (e.g., created during migration), it will be silently excluded from results.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1785:server/services/pull-request-manager.ts:getpullrequest and getpr have identical signatures and imple",
+    "prNumber": 1785,
+    "file": "server/services/pull-request-manager.ts",
+    "line": null,
+    "severity": "low",
+    "title": "getPullRequest duplicates getPR with identical logic",
+    "description": "`getPullRequest` and `getPR` have identical signatures and implementations. Having two names for the same operation forces future maintainers to guess which one to call.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1785:server/services/pull-request-manager.ts:in completereview latestreviewid is always set to the curren",
+    "prNumber": 1785,
+    "file": "server/services/pull-request-manager.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "completeReview sets latestReviewId without timestamp check",
+    "description": "In `completeReview`, `latestReviewId` is always set to the current `reviewId` without comparing completion timestamps. The backfill script's `recomputeParentPr` correctly compares `completedAt` to find the true latest, but the live code path does not.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1785:server/services/pull-request-manager.ts:the pr introduces getpullrequest and listpullrequests which ",
+    "prNumber": 1785,
+    "file": "server/services/pull-request-manager.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "getPR/getPRByNumber/listPRs are dead code",
+    "description": "The PR introduces `getPullRequest` and `listPullRequests` which duplicate the older `getPR`, `getPRByNumber`, and `listPRs` methods. All consumers now use the new methods exclusively, making the old ones unreachable dead code.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1785:server/services/pull-request-manager.ts:after the refactor getpr orgid prid and getpullrequest orgid",
+    "prNumber": 1785,
+    "file": "server/services/pull-request-manager.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "Dead code: getPR/getPRByNumber duplicate getPullRequest",
+    "description": "After the refactor, `getPR(orgId, prId)` and `getPullRequest(orgId, prId)` have identical implementations. All callers (routes, findings-routes) use `getPullRequest`. `getPR` is only called by `getPRByNumber` which itself has zero external callers. Both should be removed.",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1785:server/services/pull-request-manager.ts:the section header conversion helpers crread 1 read layer st",
+    "prNumber": 1785,
+    "file": "server/services/pull-request-manager.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "Stale CRREAD-1 label on conversion helpers section",
+    "description": "The section header 'Conversion helpers (CRREAD-1 read layer)' still references CRREAD-1 even though the PR systematically removed that nomenclature from all other section comments. This is the only surviving CRREAD-1 reference in the file.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1785:test/code-review-routes.test.ts:clearorgprs accumulates all deletes pr docs review subdocs f",
+    "prNumber": 1785,
+    "file": "test/code-review-routes.test.ts",
+    "line": null,
+    "severity": "low",
+    "title": "clearOrgPRs batch can exceed Firestore 500 ops",
+    "description": "`clearOrgPRs` accumulates all deletes (PR docs + review subdocs + finding subdocs) into a single `WriteBatch`. Firestore batches are capped at 500 operations. If a test seeds many PRs with reviews and findings, the batch could silently exceed the limit and throw. Unlikely in current tests but will bite if test data grows.",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1785:test/code-review-routes.test.ts:the cross org test seeds data under other org but calls clea",
+    "prNumber": 1785,
+    "file": "test/code-review-routes.test.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "Cross-org cleanup skipped on assertion failure",
+    "description": "The cross-org test seeds data under OTHER_ORG but calls `clearOrgPRs(OTHER_ORG)` at the end of the test body, not in a `finally` block. If any assertion throws, cleanup is skipped. `beforeEach` only clears `ORG_ID`, so stale OTHER_ORG data persists into subsequent runs, potentially causing flaky test failures.",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1785:ui/src/hooks/useApi.ts:codereviewpullsparams hasfindingsmin is codereviewseverity u",
+    "prNumber": 1785,
+    "file": "ui/src/hooks/useApi.ts",
+    "line": null,
+    "severity": "low",
+    "title": "hasFindingsMin: optional (params) vs nullable (PullRequest)",
+    "description": "`CodeReviewPullsParams.hasFindingsMin` is `CodeReviewSeverity | undefined` (optional). `PullRequest.hasFindingsMin` is `CodeReviewSeverity | null` (required, nullable). The mixed optional/nullable pattern could confuse contributors.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1788:ui/src/pages/code-review/__tests__/CodeReviewPullDetailPage.test.tsx:prheader was rebuilt with a 4 tile meta grid opened first re",
+    "prNumber": 1788,
+    "file": "ui/src/pages/code-review/__tests__/CodeReviewPullDetailPage.test.tsx",
+    "line": null,
+    "severity": "medium",
+    "title": "Test file not updated for rebuilt PRHeader",
+    "description": "PRHeader was rebuilt with a 4-tile meta grid (Opened, First review latency, Review runs, Findings summary), a diff-stats row, and new action buttons. The co-located test file was not updated — the existing 'renders PR header' test (line 170) only checks title and author. None of the new derived stats, formatting calls, or conditional branches are exercised by tests.",
+    "foundIn": [
+      "D"
+    ]
+  },
+  {
+    "id": "1788:ui/src/pages/code-review/CodeReviewPullDetailPage.css:crpd header title uses min width 200px as a raw pixel value ",
+    "prNumber": 1788,
+    "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.css",
+    "line": null,
+    "severity": "low",
+    "title": "Hardcoded min-width: 200px on title",
+    "description": "crpd-header-title uses min-width: 200px as a raw pixel value while all other spacing/sizing in the file uses design tokens (var(--space-*), var(--font-size-*)). This is the only hardcoded pixel value in the file.",
+    "foundIn": [
+      "D"
+    ]
+  },
+  {
+    "id": "1788:ui/src/utils/formatDuration.ts:jsdoc says migrating them is tracked as a separate refactor ",
+    "prNumber": 1788,
+    "file": "ui/src/utils/formatDuration.ts",
+    "line": null,
+    "severity": "low",
+    "title": "JSDoc migration TODO lacks issue reference",
+    "description": "JSDoc says 'migrating them is tracked as a separate refactor' but references no issue number. Per project convention (no TODOs without an issue reference), this should cite the tracking issue or be removed.",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1788:ui/src/utils/formatDuration.ts:formatduration truncates the hours remainder for multi day d",
+    "prNumber": 1788,
+    "file": "ui/src/utils/formatDuration.ts",
+    "line": null,
+    "severity": "low",
+    "title": "Multi-day durations silently truncate hour remainder",
+    "description": "formatDuration truncates the hours remainder for multi-day durations: 36 hours renders as '1d' instead of '1d 12h'. This is asymmetric with the sub-day format that preserves remainder minutes ('2h 5m').",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1788:ui/src/utils/formatDuration.ts:when a duration exceeds 24 hours the function only shows who",
+    "prNumber": 1788,
+    "file": "ui/src/utils/formatDuration.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "formatDuration drops hour remainder for day durations",
+    "description": "When a duration exceeds 24 hours, the function only shows whole days without the hour remainder (e.g. 36 hours renders as '1d' instead of '1d 12h'). This is inconsistent with the hours+minutes branch (line 37) which does include the minute remainder. The companion test file also lacks coverage for day+hour combinations, so the truncation went undetected.",
+    "foundIn": [
+      "D"
+    ]
+  },
+  {
+    "id": "1788:ui/src/utils/formatDuration.ts:the pr correctly extracts formatduration into a shared utili",
+    "prNumber": 1788,
+    "file": "ui/src/utils/formatDuration.ts",
+    "line": null,
+    "severity": "high",
+    "title": "formatDuration not adopted by 3 existing inline copies",
+    "description": "The PR correctly extracts formatDuration into a shared utility under ui/src/utils/, but three existing inline formatDuration/formatDurationMs implementations in InsightsExecutions.tsx, SkillUsageDashboard.tsx, and CodeReviewQualityDashboard.tsx remain un-migrated. This leaves the codebase with 4 implementations of the same function instead of 1 shared one.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1788:ui/src/utils/formatDuration.ts:when a duration 24h with a non zero hour remainder e g 36h t",
+    "prNumber": 1788,
+    "file": "ui/src/utils/formatDuration.ts",
+    "line": null,
+    "severity": "high",
+    "title": "formatDuration drops hour remainder for multi-day durations",
+    "description": "When a duration >= 24h with a non-zero hour remainder (e.g. 36h), the function computes days = Math.floor(hours / 24) and returns only `${days}d`, discarding remaining hours. 1d 12h renders as \"1d\". In the PR detail page's \"time to first review\" metric, 36 hours would misleadingly show \"1d\" instead of \"1d 12h\".",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1788:ui/src/utils/formatNumber.ts:formatnumber has no unit test file while the sibling formatd",
+    "prNumber": 1788,
+    "file": "ui/src/utils/formatNumber.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "Missing unit test for new formatNumber utility",
+    "description": "formatNumber has no unit test file, while the sibling formatDuration (also new in this PR) has a full test suite at ui/src/utils/__tests__/formatDuration.test.ts. Both are exported utilities under the same directory and should have consistent test coverage.",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1788:ui/src/utils/formatNumber.ts:tolocalestring without an explicit locale produces locale de",
+    "prNumber": 1788,
+    "file": "ui/src/utils/formatNumber.ts",
+    "line": null,
+    "severity": "low",
+    "title": "toLocaleString() without locale is non-deterministic",
+    "description": "toLocaleString() without an explicit locale produces locale-dependent output (e.g. '1,000' vs '1.000' vs '1 000'). Fine for user-facing display but will cause snapshot/visual-regression test flakiness across CI runners with different locales. Consider toLocaleString('en-US') or Intl.NumberFormat('en-US').format(n) for deterministic output.",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1788:ui/src/utils/formatNumber.ts:formatduration was added alongside a test file at ui src uti",
+    "prNumber": 1788,
+    "file": "ui/src/utils/formatNumber.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "formatNumber lacks a unit test file",
+    "description": "formatDuration was added alongside a test file at ui/src/utils/__tests__/formatDuration.test.ts, but formatNumber has no corresponding test. Both are new shared utilities exported from ui/src/utils/ and should have consistent test coverage.",
+    "foundIn": [
+      "D"
+    ]
+  },
+  {
+    "id": "1788:ui/src/utils/formatNumber.ts:the new formatnumber utility wrapping n tolocalestring was a",
+    "prNumber": 1788,
+    "file": "ui/src/utils/formatNumber.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "formatNumber utility added without unit tests",
+    "description": "The new formatNumber utility (wrapping n.toLocaleString()) was added without any unit test. The PR's own pattern adds tests for all new utilities (formatDuration has 52 lines of tests). Missing tests mean locale-dependent behavior (e.g. \"26,113\" vs \"26.113\") is unverified.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1790:schemas/code-review/v1/finding.schema.json:hasfindingsmin and latestreviewid are documented as denormal",
+    "prNumber": 1790,
+    "file": "schemas/code-review/v1/finding.schema.json",
+    "line": null,
+    "severity": "medium",
+    "title": "Schema fields added without population code in this PR",
+    "description": "hasFindingsMin and latestReviewId are documented as \"Denormalised by completeReview / recordFinding\" but neither function is modified in this PR. The fields will remain null until a follow-up change populates them. If intentional schema-first work, a tracking issue should be referenced.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1790:schemas/code-review/v1/finding.schema.json:the new hasfindingsmin enum declares critical high medium lo",
+    "prNumber": 1790,
+    "file": "schemas/code-review/v1/finding.schema.json",
+    "line": null,
+    "severity": "high",
+    "title": "hasFindingsMin enum values mismatch actual severity scale",
+    "description": "The new hasFindingsMin enum declares [\"critical\", \"high\", \"medium\", \"low\", \"info\"], but publishFinding passes finding.severity straight through — and callers emit BLOCKER / MAJOR / MINOR / NIT. The denormalised field can never match any of the declared enum values, so it will always be null.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1790:server/api/code-review-analytics-routes.ts:findings by bot query and noisy rules query now include and ",
+    "prNumber": 1790,
+    "file": "server/api/code-review-analytics-routes.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "FINDINGS_BY_BOT and NOISY_RULES silently limited to 30 days",
+    "description": "FINDINGS_BY_BOT_QUERY and NOISY_RULES_QUERY now include `AND created_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 30 DAY)` which was not present before. This is required by `require_partition_filter = true` on the table, but it silently changes the dashboard from all-time to a 30-day window. Users expecting historical bot breakdown or long-tail noisy-rule data will see reduced coverage.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1790:server/api/code-review-analytics-routes.ts:the comment block at line 96 states all four findings runs q",
+    "prNumber": 1790,
+    "file": "server/api/code-review-analytics-routes.ts",
+    "line": null,
+    "severity": "low",
+    "title": "Partition filter comment does not cover PR_FUNNEL_QUERY",
+    "description": "The comment block at line 96 states \"All four findings/runs queries below MUST include a predicate over their partition column\". The PR_FUNNEL_QUERY (query 5) uses `opened_at` as its partition filter for `code_review_pull_requests` but is not mentioned in the comment which only covers findings/runs tables. Minor doc inconsistency.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1790:server/api/code-review-analytics-routes.ts:the pr funnel query changed from first review at is not null",
+    "prNumber": 1790,
+    "file": "server/api/code-review-analytics-routes.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "PR funnel undercounts historical first_review stage",
+    "description": "The PR_FUNNEL_QUERY changed from `first_review_at IS NOT NULL` to `stats.time_to_first_review_ms IS NOT NULL`. PR rows written before this fix used flat fields instead of the nested `stats` struct. Those old rows have `stats = NULL`, so the funnel's 'first_review' count will be 0 for all historical PRs. The dashboard will show a misleading drop in reviewed-PR counts until enough new data accumulates.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1790:server/api/code-review-analytics-routes.ts:the findings by bot query adds and created at timestamp sub ",
+    "prNumber": 1790,
+    "file": "server/api/code-review-analytics-routes.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "Bot/noisy-rules queries scoped to 30 days (was unbounded)",
+    "description": "The FINDINGS_BY_BOT_QUERY adds AND created_at >= TIMESTAMP_SUB(...) which changes semantics: previously the query returned ALL findings for a bot (no time bound), now it is capped at 30 days. Same change applies to NOISY_RULES_QUERY. This is a correct bug fix for partition filtering, but may surprise dashboard users expecting historical bot analysis.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1790:server/api/code-review-analytics-routes.ts:the pr funnel query changes from first review at is not null",
+    "prNumber": 1790,
+    "file": "server/api/code-review-analytics-routes.ts",
+    "line": null,
+    "severity": "high",
+    "title": "PR funnel query breaks on pre-migration BQ rows",
+    "description": "The PR funnel query changes from first_review_at IS NOT NULL to stats.time_to_first_review_ms IS NOT NULL. Old PR documents in BigQuery written before this publisher change may have first_review_at but NOT the nested stats.time_to_first_review_ms, causing those PRs to appear as 'no first review' and distorting funnel metrics.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1790:server/services/code-review-publisher.ts:publishfinding and publishreviewcompleted call getpublisher ",
+    "prNumber": 1790,
+    "file": "server/services/code-review-publisher.ts",
+    "line": null,
+    "severity": "high",
+    "title": "finding/review publishers skip validateAndPublish",
+    "description": "publishFinding and publishReviewCompleted call getPublisher() directly, bypassing validateAndPublish(). This skips Ajv schema validation entirely for finding and review payloads. While intentional per comments (the storage types diverged from $defs.Finding/$defs.Review), any future BQ schema drift will surface only as silently dead-lettered messages rather than a fast-fail publish-time error. PR events still go through validateAndPublish, creating a dual-path inconsistency.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1790:server/services/code-review-publisher.ts:the pr event attributes rename repo full name to repository ",
+    "prNumber": 1790,
+    "file": "server/services/code-review-publisher.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "Breaking rename: repo_full_name → repository_full_name",
+    "description": "The PR event attributes rename `repo_full_name` to `repository_full_name`. This is a breaking wire-format change for any Pub/Sub subscription that filters on `attributes.repo_full_name`. If the BQ sink subscription was already expecting `repository_full_name` this is a fix, but any other subscriber (e.g. alerting, audit) still using the old name will silently stop matching messages.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1790:server/services/code-review-publisher.ts:publishfinding publishreviewcompleted bypass validateandpubl",
+    "prNumber": 1790,
+    "file": "server/services/code-review-publisher.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "Two divergent publish paths in same module",
+    "description": "publishFinding/publishReviewCompleted bypass validateAndPublish, manually constructing attributes and calling getPublisher() directly. publishPrEvent uses validateAndPublish which adds event_type to attributes and performs schema validation. Having two publish patterns in one module is a maintenance risk — if event_type handling changes in validateAndPublish, the manual path won't inherit the fix.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1790:server/services/code-review-publisher.ts:publishfinding publishreviewcompleted set event type explici",
+    "prNumber": 1790,
+    "file": "server/services/code-review-publisher.ts",
+    "line": null,
+    "severity": "low",
+    "title": "Two event_type injection patterns in same file",
+    "description": "publishFinding/publishReviewCompleted set event_type explicitly in their attributes objects, while publishPrEvent relies on validateAndPublish to inject it. Both paths work, but a future contributor adding a new event type could follow either pattern and miss the attribute.",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1790:server/services/code-review-publisher.ts:pr payload omits has findings min latest review id added to ",
+    "prNumber": 1790,
+    "file": "server/services/code-review-publisher.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "PR payload omits has_findings_min / latest_review_id",
+    "description": "PR payload omits has_findings_min / latest_review_id added to schema. If BQ table has these columns they will always be null.",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1790:server/services/code-review-publisher.ts:publishfinding and publishreviewcompleted build raw payloads",
+    "prNumber": 1790,
+    "file": "server/services/code-review-publisher.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "Finding/review publish bypass schema validation, PR does not",
+    "description": "publishFinding and publishReviewCompleted build raw payloads and call Pub/Sub publish directly, while publishPrEvent goes through validateAndPublish which validates the domain object against the JSON schema. This means findings and reviews can publish malformed data without any schema guard.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1790:server/services/code-review-publisher.ts:the diff renames many top level payload fields to match the ",
+    "prNumber": 1790,
+    "file": "server/services/code-review-publisher.ts",
+    "line": null,
+    "severity": "critical",
+    "title": "extraFields may inject old field names into new BQ payload",
+    "description": "The diff renames many top-level payload fields to match the BQ schema. However, if any callers of publishPrOpened/publishPrSynchronized/publishPrMerged/publishPrClosed pass extraFields containing old field names (e.g. pr_created_at, repo_full_name), those old fields will appear in the payload alongside the new ones. REQUIRED field renames (e.g. pr_created_at → created_at) mean the old name is now missing — any consumer expecting backward-compatible field names will break.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1790:server/services/code-review-publisher.ts:the comment says reconciliation is tracked out of scope to 1",
+    "prNumber": 1790,
+    "file": "server/services/code-review-publisher.ts",
+    "line": null,
+    "severity": "low",
+    "title": "Out-of-scope comment references the issue this PR fixes",
+    "description": "The comment says \"Reconciliation is tracked out-of-scope to #1789\" but #1789 is the issue this PR closes. That makes the tracking reference circular: the debt would be \"tracked\" in the very issue being resolved. It should reference a separate follow-up issue number.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1790:server/services/code-review-publisher.ts:repo full name was renamed to repository full name in the pr",
+    "prNumber": 1790,
+    "file": "server/services/code-review-publisher.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "Pub/Sub attr renamed repo_full_name to repository_full_name",
+    "description": "repo_full_name was renamed to repository_full_name in the PR event Pub/Sub attributes. Any downstream subscription filter or consumer that matches on repo_full_name will silently stop receiving these messages. No comment or migration note documents the breaking change.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1790:server/services/code-review-publisher.ts:the payload now includes id pr id as a required column if pr",
+    "prNumber": 1790,
+    "file": "server/services/code-review-publisher.ts",
+    "line": null,
+    "severity": "high",
+    "title": "pr.id could be null for REQUIRED BQ column",
+    "description": "The payload now includes id: pr.id as a REQUIRED column. If pr.id is undefined or null for any edge-case PR object, the message will be dead-lettered silently by BigQuery. A runtime assertion or fallback would prevent this.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1790:server/services/code-review-publisher.ts:fields like pr openedat pr mergedat pr closedat are nullable",
+    "prNumber": 1790,
+    "file": "server/services/code-review-publisher.ts",
+    "line": null,
+    "severity": "high",
+    "title": "Timestamp fields passed raw without ISO normalization",
+    "description": "Fields like pr.openedAt, pr.mergedAt, pr.closedAt are nullable but passed through without normalization. If any value is non-null but not in ISO 8601 format, BigQuery will reject the row. This risk is amplified by the schema becoming stricter with use_table_schema = true + drop_unknown_fields = true.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1790:test/code-review-publisher.test.ts:the publishfinding test verifies event type in both attribut",
+    "prNumber": 1790,
+    "file": "test/code-review-publisher.test.ts",
+    "line": null,
+    "severity": "medium",
+    "title": "publishReviewCompleted test omits json.event_type check",
+    "description": "The publishFinding test verifies event_type in both attributes AND json payload (line 228: `expect(call.json.event_type)`). The publishReviewCompleted test only checks attributes.event_type but never verifies that the JSON payload also contains event_type. Both publishers emit event_type in the JSON body; the test coverage is inconsistent.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1790:test/code-review-publisher.test.ts:the second describe block pr payload matches bigquery schema",
+    "prNumber": 1790,
+    "file": "test/code-review-publisher.test.ts",
+    "line": null,
+    "severity": "low",
+    "title": "PR lifecycle test skips json.event_type assertion",
+    "description": "The second describe block ('PR payload matches BigQuery schema') checks many json fields (schema_version, id, org_id, etc.) but never asserts json.event_type. The publishFinding test (line 228) explicitly verifies `call.json.event_type`. The PR events' json payloads all include event_type from buildPrEventPayload, so a consistent test would verify it.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1790:test/code-review-publisher.test.ts:makepullrequest sets hasfindingsmin high and latestreviewid ",
+    "prNumber": 1790,
+    "file": "test/code-review-publisher.test.ts",
+    "line": null,
+    "severity": "low",
+    "title": "Fixture includes fields never asserted in tests",
+    "description": "makePullRequest sets hasFindingsMin: 'high' and latestReviewId: 'review-1' (matching the new schema fields), but no test asserts their presence or absence in the published payload. If these fields are meant to reach BQ, there is no test coverage for it; if they are Firestore-only, the fixture is misleading.",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1794:ui/src/components/Sidebar.tsx:the inline comment about gitlab support says tracked separat",
+    "prNumber": 1794,
+    "file": "ui/src/components/Sidebar.tsx",
+    "line": null,
+    "severity": "medium",
+    "title": "TODO comment lacks an issue reference",
+    "description": "The inline comment about GitLab support says \"Tracked separately\" but does not reference an issue number. The consistency checklist requires no TODOs without an issue reference.",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1794:ui/src/components/Sidebar.tsx:security integrations moved behind orgid gate",
+    "prNumber": 1794,
+    "file": "ui/src/components/Sidebar.tsx",
+    "line": null,
+    "severity": "medium",
+    "title": "Security & Integrations moved behind orgId gate",
+    "description": "Security & Integrations moved behind orgId gate",
+    "foundIn": [
+      "D"
+    ]
+  },
+  {
+    "id": "1794:ui/src/pages/code-review/CodeReviewPullDetailPage.css:the review accordion css block comment says matches scratch ",
+    "prNumber": 1794,
+    "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.css",
+    "line": null,
+    "severity": "low",
+    "title": "CSS comment references scratch HTML mock by line number",
+    "description": "The review accordion CSS block comment says 'matches scratch/code-review-detail-pages-mocks.html lines 1248-1335'. Hard-coded line numbers in scratch files will quickly go stale and mislead future developers. Same comment appears in CodeReviewPullDetailPage.tsx for the ReviewAccordion component.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1794:ui/src/pages/code-review/CodeReviewPullDetailPage.tsx:reviewaccordion computes reviewsoldestfirst ascending sort a",
+    "prNumber": 1794,
+    "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+    "line": null,
+    "severity": "low",
+    "title": "Reviews sorted twice in ReviewAccordion",
+    "description": "ReviewAccordion computes `reviewsOldestFirst` (ascending sort) and `reviewsNewestFirst` (descending sort) as two separate `useMemo` calls, each iterating and sorting the full reviews array. These could be derived from a single sort operation.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1794:ui/src/pages/code-review/CodeReviewPullDetailPage.tsx:the prheader component accepts an optional onrunanotherrevie",
+    "prNumber": 1794,
+    "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+    "line": null,
+    "severity": "low",
+    "title": "onRunAnotherReview prop never passed, button always disabled",
+    "description": "The `PRHeader` component accepts an optional `onRunAnotherReview` prop that controls whether the 'Run another review' button is enabled. The main page never passes this prop, so the button is permanently disabled. The prop wiring is dead code — no call site can ever enable the button.",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1794:ui/src/pages/code-review/CodeReviewPullDetailPage.tsx:findingcardrow uses finding startline which treats line numb",
+    "prNumber": 1794,
+    "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+    "line": null,
+    "severity": "medium",
+    "title": "startLine truthy check hides line 0",
+    "description": "FindingCardRow uses `finding.startLine ? ... : ...` which treats line number 0 as falsy, showing just the filename instead of 'file:0'. While line 0 is unusual in source files, the correct check is `finding.startLine != null` to distinguish 'absent' from 'zero'.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1794:ui/src/pages/code-review/CodeReviewPullDetailPage.tsx:comparefindings falls through to a file localecompare b file",
+    "prNumber": 1794,
+    "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+    "line": null,
+    "severity": "medium",
+    "title": "compareFindings crashes on undefined file",
+    "description": "compareFindings falls through to `a.file.localeCompare(b.file)` as a tiebreaker. If either `file` field is undefined (bad API data), `undefined.localeCompare(...)` throws a TypeError. Add a null guard.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1794:ui/src/pages/code-review/CodeReviewPullDetailPage.tsx:reviewcard initialises expanded state via usestate defaultex",
+    "prNumber": 1794,
+    "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+    "line": null,
+    "severity": "low",
+    "title": "defaultExpanded={i===0} drifts on SSE updates",
+    "description": "ReviewCard initialises expanded state via useState(defaultExpanded). When a new review arrives via SSE, the previously-expanded card (old index 0) stays expanded because useState doesn't re-initialise, and the new card at index 0 also starts expanded. This may be intentional but could surprise users expecting single-card expansion.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1794:ui/src/pages/code-review/CodeReviewPullsPage.tsx:when actionablefindingcount is explicitly 0 and findingcount",
+    "prNumber": 1794,
+    "file": "ui/src/pages/code-review/CodeReviewPullsPage.tsx",
+    "line": null,
+    "severity": "low",
+    "title": "FP count edge case when actionable=0",
+    "description": "When `actionableFindingCount` is explicitly `0` and `findingCount` is non-zero, `fpCount` = `findingCount`, implying all findings are false positives. This edge case is unlikely but the `actionableFindingCount` semantics may not match the assumption that `findingCount - actionableCount` always equals false positives.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1794:ui/src/pages/code-review/CodeReviewPullsPage.tsx:the repooptions dropdown is derived from items the currently",
+    "prNumber": 1794,
+    "file": "ui/src/pages/code-review/CodeReviewPullsPage.tsx",
+    "line": null,
+    "severity": "medium",
+    "title": "Repo filter dropdown options lag behind fetch results",
+    "description": "The `repoOptions` dropdown is derived from `items` (the currently loaded PRs). When the user changes the repo filter, `items` is replaced with the filtered result. During the loading transition, `items` may be empty, causing the dropdown to momentarily show only the previously selected repo. This is a minor UX flicker.",
+    "foundIn": [
+      "B"
+    ]
+  },
+  {
+    "id": "1794:ui/src/pages/code-review/CodeReviewPullsPage.tsx:findingsgrid receives worstseverity from pr hasfindingsmin a",
+    "prNumber": 1794,
+    "file": "ui/src/pages/code-review/CodeReviewPullsPage.tsx",
+    "line": null,
+    "severity": "low",
+    "title": "worstSeverity CSS class unsanitised",
+    "description": "FindingsGrid receives worstSeverity (from pr.hasFindingsMin) and uses it in a template-literal CSS class. If the field is undefined, the generated class would silently have no styles rather than a clear failure. The code already handles null in FindingsGrid (sev falls back to 'info'), so the risk is low but the caller should also guard.",
+    "foundIn": [
+      "E"
+    ]
+  },
+  {
+    "id": "1803:server/services/code-review-publisher.ts:the payload field skill version is sourced from review skill",
+    "prNumber": 1803,
+    "file": "server/services/code-review-publisher.ts",
+    "line": null,
+    "severity": "low",
+    "title": "skill_version maps skillId which is not a semver string",
+    "description": "The payload field `skill_version` is sourced from `review.skillId` which holds values like 'code-review@5.0.0'. The BQ column name `skill_version` implies a plain semver string, but the actual value includes the skill name prefix. This semantic mismatch may confuse downstream BQ consumers expecting a version-only value.",
+    "foundIn": [
+      "A"
+    ]
+  },
+  {
+    "id": "1803:server/services/code-review-publisher.ts:model default model does a shallow spread of the as const ob",
+    "prNumber": 1803,
+    "file": "server/services/code-review-publisher.ts",
+    "line": null,
+    "severity": "low",
+    "title": "Shallow spread of as const DEFAULT_MODEL is fragile",
+    "description": "`model: { ...DEFAULT_MODEL }` does a shallow spread of the `as const` object. While safe today (all values are primitives), if DEFAULT_MODEL ever gains a nested object, the spread would share references. A factory function would be more conventional.",
+    "foundIn": [
+      "A"
+    ]
+  }
+]

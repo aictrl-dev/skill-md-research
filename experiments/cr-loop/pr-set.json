@@ -1,0 +1,72 @@
+{
+  "$comment": "10-PR sample for cr-loop experiment (#1811). Picked across size + history-of-noise. Each PR's findings + verdicts are extracted by scripts/enrich-pr-set.ts using the structured bot review format + our /reply-to-code-review JSON sidecars (already labelled as TRUE/FALSE × FIX/DEFER/IGNORE).",
+  "selectedAt": "2026-05-06",
+  "selectionCriteria": {
+    "trivial": "<= 50 LOC, baseline sanity check",
+    "medium": "100-500 LOC with linked issue + multi-round reviews — the realistic case",
+    "large": ">= 500 LOC across multiple subsystems — bundling stress test",
+    "noisy": "PRs where verdicts include >=1 FALSE/IGNORE — recurrence-check target"
+  },
+  "prs": [
+    {
+      "number": 1776,
+      "category": "trivial",
+      "title": "fix(auth): set Cross-Origin-Opener-Policy for Firebase popup sign-in",
+      "rationale": "tiny fix, no linked issue — pipeline sanity check"
+    },
+    {
+      "number": 1735,
+      "category": "trivial",
+      "title": "fix(e2e): harness setup nav uses domcontentloaded, not networkidle",
+      "rationale": "tiny test fix, single file"
+    },
+    {
+      "number": 1781,
+      "category": "medium",
+      "title": "fix(mcp): security scoping for skills and code-review",
+      "rationale": "linked to issue #1777, security topic, multi-round reviews"
+    },
+    {
+      "number": 1783,
+      "category": "medium",
+      "title": "fix(mcp): consistency in response formats and test mocks",
+      "rationale": "linked to #1779, has structured reviews"
+    },
+    {
+      "number": 1782,
+      "category": "medium",
+      "title": "fix(mcp): logic errors in epics and task routing",
+      "rationale": "same area as #1781 — tests cross-PR recurrence detection"
+    },
+    {
+      "number": 1790,
+      "category": "medium",
+      "title": "fix(#1789): unblock Code Review Quality dashboard pipeline",
+      "rationale": "linked to issue #1789, infra fix"
+    },
+    {
+      "number": 1794,
+      "category": "large",
+      "title": "feat(code-review): reviews accordion + IA polish (PR detail + list + sidebar)",
+      "rationale": "multi-domain UI change, has the formatNumber FALSE-positive (round-1 finding [3]) — pure noisy/recurrence target"
+    },
+    {
+      "number": 1785,
+      "category": "large",
+      "title": "fix(code-review): unify on PullRequest shape, converge on org-scoped storage",
+      "rationale": "foundational refactor, multi-round reviews, mix of TRUE/FALSE verdicts"
+    },
+    {
+      "number": 1788,
+      "category": "noisy",
+      "title": "feat(code-review): rebuild PR detail header to match mock",
+      "rationale": "has confirmed FP from bot ('BigQuery-powered metrics' + formatNumber identical claim) — recurrence target"
+    },
+    {
+      "number": 1803,
+      "category": "noisy",
+      "title": "fix(#1802): code review findings + reviews land in BigQuery",
+      "rationale": "linked to issue #1802, recent bot review with deferred MINOR (publishFinding re-fetches PR) — tests whether enriched skill defers correctly"
+    }
+  ]
+}

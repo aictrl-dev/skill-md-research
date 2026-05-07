@@ -1,0 +1,135 @@
+{
+  "prNumber": 1785,
+  "runId": "2026-05-07T07-57-24-2120661",
+  "executionId": "phase-a-1785-2026-05-07T07-57-24-2120661",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "executionRunId": "phase-a-1785-2026-05-06T15-51-53-4180341"
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T19-43-02-480871",
+      "executionRunId": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T23-29-50-1055062",
+      "executionRunId": "phase-a-1785-2026-05-06T23-29-50-1055062"
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-07T07-57-24-2120661",
+      "executionRunId": ""
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1785-2026-05-07T07-57-24-2120661",
+      "findingId": "087b2d660a6ec4c7",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "getPR and getPullRequest are now identical implementations",
+      "description": "After this PR, getPR(orgId, prId) and getPullRequest(orgId, prId) have identical implementations — both call this.prCollection(orgId).doc(prId).get() then toPullRequest(snap). One should delegate to the other to avoid silent divergence on future edits.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-07T07-57-24-2120661",
+      "findingId": "35f2da3e8dc3702f",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "toPullRequest returns undefined for new fields on old docs",
+      "description": "The new required fields hasFindingsMin and latestReviewId are declared on PullRequest, but toPullRequest spreads raw Firestore data without defaulting them. For PR documents created before this PR, these fields are absent from Firestore, so the returned object has undefined instead of null — violating the TypeScript contract.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-07T07-57-24-2120661",
+      "findingId": "64e0866de7b31938",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "low",
+      "title": "Backfill duplicates Firestore path construction 3x",
+      "description": "The backfill script constructs the target review path db.collection('organizations').doc(orgId).collection('pullRequests').doc(prId).collection('reviews').doc(reviewId) in copyReview, copyFindings, and recomputeParentPr. Extracting a local helper would reduce duplication.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-07T07-57-24-2120661",
+      "findingId": "831ec1998877b1e7",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Stale CRREAD-1 label on conversion helpers section",
+      "description": "The section header 'Conversion helpers (CRREAD-1 read layer)' still references CRREAD-1 even though the PR systematically removed that nomenclature from all other section comments. This is the only surviving CRREAD-1 reference in the file.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-07T07-57-24-2120661",
+      "findingId": "916317b051010e08",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "PR #XXXX placeholder in backfill doc comment",
+      "description": "The file-level JSDoc says 'After PR #XXXX every code path uses the org-scoped tree' — this is a stale placeholder that should reference the actual PR number (#1785). Will confuse future readers tracing the migration history.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-07T07-57-24-2120661",
+      "findingId": "93afaa05338c02a2",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "high",
+      "title": "Backfill uses review.id body field instead of reviewDoc.id",
+      "description": "The main copy loop reads `reviewId` from `review.id` (the document body field), while `recomputeParentPr` correctly uses `reviewDoc.id` (the Firestore document key). The author's own comment acknowledges that 'legacy review docs may have been written by an older code path that didn't populate the `id` field inside the document body'. Reviews missing the body `id` field are silently skipped as errors, causing data loss during migration.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-07T07-57-24-2120661",
+      "findingId": "9e1c970731fa618b",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "listPRs uses doc.data() without merging Firestore doc ID",
+      "description": "listPRs maps results via snap.docs.map(doc => doc.data() as PullRequest), which does NOT merge the Firestore document ID. Unlike listPullRequests which uses toPullRequest(doc), this method relies on the stored id field. If stored id is stale or missing, returned PRs have incorrect id values.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-07T07-57-24-2120661",
+      "findingId": "bb920a26e90fa281",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Dry-run logs wrong recompute values for uncopied reviews",
+      "description": "In dry-run mode (no --apply), copyReview does not write but touchedPrs.add(...) still executes. The subsequent recomputeParentPr runs against the org-scoped tree which does NOT contain the (uncopied) legacy reviews, producing and logging incorrect reviewCount/latestReviewId/hasFindingsMin values.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-07T07-57-24-2120661",
+      "findingId": "c89f00dca2e27f1f",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "completeReview reviewCount under-counts on concurrent runs",
+      "description": "stats.reviewCount reads currentReviewCount inside the transaction and writes currentReviewCount + 1. While Firestore transactions retry on conflict, the pre-computed findingsBySeverity outside the transaction could be stale. On retry the findingCount on the review doc may diverge from the sum of findingsBySeverity.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-07T07-57-24-2120661",
+      "findingId": "e033c5c3cf98bbf5",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "copyFindings does per-doc existence check (N+1 reads)",
+      "description": "For each finding, copyFindings issues a separate targetRef.get() to check existence, then targetRef.set(). For a review with N findings this is 2N reads + N writes. A batched approach would cut round-trips by ~50%. Fine at current scale but a footgun for larger datasets.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

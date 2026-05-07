@@ -1,0 +1,68 @@
+{
+  "prNumber": 1794,
+  "runId": "2026-05-06T15-42-52-4159529",
+  "executionId": "phase-a-1794-2026-05-06T15-42-52-4159529",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1794-2026-05-06T15-42-52-4159529",
+      "executionRunId": "phase-a-1794-2026-05-06T15-42-52-4159529"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1794-2026-05-06T15-42-52-4159529",
+      "findingId": "5115f05ebeaf3295",
+      "file": "ui/src/pages/code-review/CodeReviewPullsPage.tsx",
+      "line": null,
+      "severity": "medium",
+      "title": "Default state filter silently hides closed PRs",
+      "description": "The default `stateFilter` changed from `''` (all states) to `'open'`. Existing users who bookmarked the page or relied on the default view will suddenly see fewer PRs. This is a UX-breaking behavior change — merged/closed PRs are hidden by default, and the empty-state message changes accordingly.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T15-42-52-4159529",
+      "findingId": "7e92e2eb1c537989",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "high",
+      "title": "setState called inside another setState updater",
+      "description": "The SSE `review-completed` handler calls `setReviews()` inside a `setFindings()` functional updater. React state updaters must be pure functions — dispatching a sibling setState as a side-effect violates React's contract and can produce stale closures or double-renders under concurrent mode. In Strict Mode, React may double-invoke updater functions, causing `setReviews` to be dispatched twice. The previous `findingsRef` pattern was correct for reading synchronous snapshot values; this refactor introduces a regression.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T15-42-52-4159529",
+      "findingId": "8cfd5469881dee86",
+      "file": "ui/src/pages/code-review/CodeReviewPullsPage.tsx",
+      "line": null,
+      "severity": "low",
+      "title": "FP count edge case when actionable=0",
+      "description": "When `actionableFindingCount` is explicitly `0` and `findingCount` is non-zero, `fpCount` = `findingCount`, implying all findings are false positives. This edge case is unlikely but the `actionableFindingCount` semantics may not match the assumption that `findingCount - actionableCount` always equals false positives.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T15-42-52-4159529",
+      "findingId": "a5f701c848aab0c5",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "low",
+      "title": "Reviews sorted twice in ReviewAccordion",
+      "description": "ReviewAccordion computes `reviewsOldestFirst` (ascending sort) and `reviewsNewestFirst` (descending sort) as two separate `useMemo` calls, each iterating and sorting the full reviews array. These could be derived from a single sort operation.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T15-42-52-4159529",
+      "findingId": "df180b2894f8dc76",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "medium",
+      "title": "ReviewCard ignores defaultExpanded after mount",
+      "description": "`ReviewCard` uses `useState(defaultExpanded)` — the prop only initializes state on mount. When a new review arrives via SSE and `reviewsNewestFirst` re-sorts, the previously-expanded card stays expanded while the new card gets `defaultExpanded=false`. The newest review should auto-expand but won't after the initial render.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

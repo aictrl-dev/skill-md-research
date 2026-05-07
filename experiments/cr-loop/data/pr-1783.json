@@ -1,0 +1,135 @@
+{
+  "number": 1783,
+  "category": "medium",
+  "title": "fix(mcp): consistency in response formats and test mocks",
+  "rationale": "linked to #1779, has structured reviews",
+  "body": "Closes #1779\n\nFollow-up from PR #1775 findings:\n- [x] server/mcp/tools/skills.ts: Replaced `jsonResponse` with `errorResponse` for all error cases\n- [x] test/mcp-server-cleanup.test.ts: Removed stale mock for deleted `prompts.js`\n- [x] test/mcp-executor-auth.test.ts: Removed stale mock for deleted `prompts.js`\n- [x] Added/updated tests in `test/mcp/skills.test.ts` to verify `isError: true` on failures.",
+  "baseRefName": "sandbox",
+  "headRefName": "fix/1779-mcp-consistency",
+  "baseSha": "6508338e0a882d37fd6b27055876c8b147cc1ace",
+  "headSha": "71ce14275e9924882619e9f67fcece2f4a45f15e",
+  "additions": 18,
+  "deletions": 26,
+  "changedFiles": 4,
+  "diff": "diff --git a/server/mcp/tools/skills.ts b/server/mcp/tools/skills.ts\nindex 7608dd3c..5a13dc26 100644\n--- a/server/mcp/tools/skills.ts\n+++ b/server/mcp/tools/skills.ts\n@@ -8,7 +8,7 @@\n  */\n \n import type { ToolDefinition, ToolResponse, ToolDependencies } from '../helpers/types.js';\n-import { jsonResponse } from '../helpers/types.js';\n+import { jsonResponse, errorResponse } from '../helpers/types.js';\n import { getSkillsManager } from '../../state/skills-manager.js';\n import { getStackConfigManager } from '../../state/stack-config-manager.js';\n import { getCurrentUserId, getCurrentOrgId } from '../helpers/session-context.js';\n@@ -183,7 +183,7 @@ export async function handle(\n       const filePath = args.file_path as string | undefined;\n \n       if (!skillId && !skillName) {\n-        return jsonResponse({ error: 'missing_params', message: 'Either skill_id or name is required' });\n+        return errorResponse('missing_param', 'Either skill_id or name is required');\n       }\n \n       let skill = null;\n@@ -201,16 +201,14 @@ export async function handle(\n       }\n \n       if (!skill) {\n-        return jsonResponse({ error: 'not_found', message: `Skill not found: ${skillId || skillName}` });\n+        return errorResponse('not_found', `Skill not found: ${skillId || skillName}`);\n       }\n \n       if (filePath) {\n         const fileContent = await skillsManager.loadSkillContentFile(skill.id, filePath);\n \n         if (fileContent === null) {\n-          return jsonResponse({\n-            error: 'file_not_found',\n-            message: `File not found: ${filePath}`,\n+          return errorResponse('file_not_found', `File not found: ${filePath}`, {\n             skill_id: skill.id,\n             hint: 'Use list_skill_files to see available files',\n           });\n@@ -257,12 +255,12 @@ export async function handle(\n       const skillId = args.skill_id as string;\n \n       if (!skillId) {\n-        return jsonResponse({ error: 'missing_params', message: 'skill_id is required' });\n+        return errorResponse('missing_param', 'skill_id is required');\n       }\n \n       const skill = await skillsManager.getSkill(skillId);\n       if (!skill) {\n-        return jsonResponse({ error: 'not_found', message: `Skill not found: ${skillId}` });\n+        return errorResponse('not_found', `Skill not found: ${skillId}`);\n       }\n \n       const fileStructure = skill.fileStructure;\n@@ -307,12 +305,12 @@ export async function handle(\n     case 'recommend_skills': {\n       const taskId = args.task_id as string;\n       if (!taskId) {\n-        return jsonResponse({ error: 'missing_params', message: 'task_id is required' });\n+        return errorResponse('missing_param', 'task_id is required');\n       }\n \n       const task = await stateManager.getTask(taskId);\n       if (!task) {\n-        return jsonResponse({ error: 'not_found', message: `Task not found: ${taskId}` });\n+        return errorResponse('not_found', `Task not found: ${taskId}`);\n       }\n \n       const mappedPhases = TASK_STATUS_TO_PHASES[task.status as TaskStatus] || [];\n@@ -363,6 +361,6 @@ export async function handle(\n     }\n \n     default:\n-      return jsonResponse({ error: 'unknown_tool', message: `Unknown skill tool: ${name}` });\n+      return errorResponse('unknown_tool', `Unknown skill tool: ${name}`);\n   }\n }\ndiff --git a/test/mcp-executor-auth.test.ts b/test/mcp-executor-auth.test.ts\nindex 1097a1c7..3d638945 100644\n--- a/test/mcp-executor-auth.test.ts\n+++ b/test/mcp-executor-auth.test.ts\n@@ -41,10 +41,6 @@ vi.mock('@modelcontextprotocol/sdk/types.js', () => ({\n   GetPromptRequestSchema: { method: 'prompts/get' },\n }));\n \n-vi.mock('../server/mcp/prompts.js', () => ({\n-  promptDefinitions: [],\n-  getPrompt: vi.fn(),\n-}));\n \n vi.mock('../server/mcp/tools.js', () => ({\n   toolDefinitions: [],\ndiff --git a/test/mcp-server-cleanup.test.ts b/test/mcp-server-cleanup.test.ts\nindex c08045eb..7247223c 100644\n--- a/test/mcp-server-cleanup.test.ts\n+++ b/test/mcp-server-cleanup.test.ts\n@@ -69,10 +69,6 @@ vi.mock('@modelcontextprotocol/sdk/types.js', () => ({\n   GetPromptRequestSchema: { method: 'prompts/get' },\n }));\n \n-vi.mock('../server/mcp/prompts.js', () => ({\n-  promptDefinitions: [],\n-  getPrompt: vi.fn(),\n-}));\n \n vi.mock('../server/mcp/tools.js', () => ({\n   toolDefinitions: [],\ndiff --git a/test/mcp/skills.test.ts b/test/mcp/skills.test.ts\nindex 8ea5624d..a59204bb 100644\n--- a/test/mcp/skills.test.ts\n+++ b/test/mcp/skills.test.ts\n@@ -58,25 +58,27 @@ describe('skills MCP tools consistency', () => {\n     vi.clearAllMocks();\n   });\n \n-  describe('recommend_skills', () => {\n-    it('returns forbidden error response for unknown tool', async () => {\n+  describe('default case', () => {\n+    it('returns unknown_tool error response for unknown tool name', async () => {\n       const result = await handle('unknown_tool_name', {}, makeDeps());\n-      expect(result.isError).toBeUndefined();\n+      expect(result.isError).toBe(true);\n       const payload = parseResponse(result);\n       expect(payload.error).toBe('unknown_tool');\n     });\n+  });\n \n-    it('returns missing_params error response when task_id is missing', async () => {\n+  describe('recommend_skills', () => {\n+    it('returns missing_param error response when task_id is missing', async () => {\n       const result = await handle('recommend_skills', {}, makeDeps());\n-      expect(result.isError).toBeUndefined();\n+      expect(result.isError).toBe(true);\n       const payload = parseResponse(result);\n-      expect(payload.error).toBe('missing_params');\n+      expect(payload.error).toBe('missing_param');\n     });\n \n     it('returns not_found error response when task does not exist', async () => {\n       vi.mocked(mockStateManager.getTask).mockResolvedValue(null);\n       const result = await handle('recommend_skills', { task_id: 'nonexistent' }, makeDeps());\n-      expect(result.isError).toBeUndefined();\n+      expect(result.isError).toBe(true);\n       const payload = parseResponse(result);\n       expect(payload.error).toBe('not_found');\n     });",
+  "botReviews": [
+    {
+      "body": "## Code Review — aictrl-dev\n\n**PR:** fix(mcp): consistency in response formats and test mocks (#1783)\n**Files changed:** 4 | **Additions:** 93 | **Deletions:** 19\n\n---\n\n### Findings (4)\n\n| # | Severity | File | Line | Rule | Summary |\n|---|----------|------|------|------|---------|\n| 1 | **MAJOR** | `server/mcp/tools/skills.ts` | 187 | consistency | error code `missing_params` (plural) diverges from sibling tools |\n| 2 | **MINOR** | `test/mcp/skills.test.ts` | 5 | consistency | unused imports `getCurrentOrgId` and `getCurrentUserId` |\n| 3 | **MINOR** | `test/mcp/skills.test.ts` | 62 | docs | test description says \"forbidden\" but error code is `unknown_tool` |\n| 4 | **NIT** | `test/mcp/skills.test.ts` | 61 | style | `unknown_tool` test nested under `recommend_skills` describe |\n\n---\n\n#### 1. MAJOR — `server/mcp/tools/skills.ts:187`\n\n**error code `missing_params` (plural) diverges from sibling tools**\n\n`skills.ts` uses `missing_params` (plural) at lines 187, 259, and 309, while sibling tool modules (`index.ts`, `stack.ts`) consistently use `missing_param` (singular). The PR title says \"consistency in response formats\" but preserves this naming split.\n\n> ```ts\n> return errorResponse('missing_params', 'Either skill_id or name is required');\n> return errorResponse('missing_params', 'skill_id is required');\n> return errorResponse('missing_params', 'task_id is required');\n> ```\n\n**Fix:** Change all three occurrences of `'missing_params'` to `'missing_param'` to match `index.ts` and `stack.ts`.\n\n---\n\n#### 2. MINOR — `test/mcp/skills.test.ts:5`\n\n**unused imports `getCurrentOrgId` and `getCurrentUserId`**\n\nThe named imports from `session-context.js` are never referenced in the test body — the `vi.mock()` call on line 11 handles module interception by string path. Neighboring test files omit these imports when the mock is self-contained.\n\n> ```ts\n> import { getCurrentOrgId, getCurrentUserId } from '../../server/mcp/helpers/session-context.js';\n> ```\n\n**Fix:** Remove line 5; the `vi.mock()` on line 11 is sufficient.\n\n---\n\n#### 3. MINOR — `test/mcp/skills.test.ts:62`\n\n**test description says \"forbidden\" but asserts `unknown_tool`**\n\nThe `it()` description reads \"returns forbidden error response for unknown tool\" but the actual assertion checks `payload.error === 'unknown_tool'`. The word \"forbidden\" is misleading.\n\n> ```ts\n> it('returns forbidden error response for unknown tool', async () => {\n>   const result = await handle('unknown_tool_name', {}, makeDeps());\n>   expect(result.isError).toBe(true);\n>   const payload = parseResponse(result);\n>   expect(payload.error).toBe('unknown_tool');\n> });\n> ```\n\n**Fix:** Change description to: `'returns unknown_tool error response for unknown tool name'`\n\n---\n\n#### 4. NIT — `test/mcp/skills.test.ts:61`\n\n**`unknown_tool` test nested under `recommend_skills` describe**\n\nThe test for `'unknown_tool_name'` is placed inside `describe('recommend_skills')` but exercises the `default` case of the `handle()` switch, which is unrelated to `recommend_skills`. It should be a sibling `describe` or at the top level of the suite.\n\n**Fix:** Move the `unknown_tool` test into a separate `describe('default case', ...)` block at the same level as `describe('recommend_skills')`.\n\n---\n\n*Subagents: Security (0 findings), Consistency (4 findings), Bug-Hunter-1/1 (3 findings). Deduplicated to 4 unique findings.*\n\nReviewed SHA: 4411770c94c8c52607a9b6bf7bf7eab722b8bfe1",
+      "createdAt": "2026-05-05T10:35:55Z",
+      "id": 4378465889,
+      "user": "github-actions[bot]"
+    },
+    {
+      "body": "## Code Review: fix(mcp): consistency in response formats and test mocks\n\n**Subagents:** Security, Consistency, Bug Hunter\n**Files reviewed:** 4 | **Findings:** 4 (1 MAJOR, 3 MINOR)\n\n---\n\n### MAJOR\n\n| # | File | Line | Summary |\n|---|------|------|---------|\n| 1 | `server/mcp/tools/skills.ts` | 187 | `missing_params` (plural) vs `missing_param` (singular) across sibling tool files |\n\n**1. `missing_params` / `missing_param` naming split across tool files**\n`skills.ts` uses `'missing_params'` (plural) in three places (lines 187, 259, 309), but sibling tool files (`index.ts`, `stack.ts`) use `'missing_param'` (singular). The PR title scopes to \"consistency in response formats\" but leaves this naming split un-normalised. Downstream MCP clients and test matchers may need to handle both spellings.\n\n```typescript\n// current (skills.ts)\nreturn errorResponse('missing_params', 'Either skill_id or name is required');\n// should align with sibling tools:\nreturn errorResponse('missing_param', 'Either skill_id or name is required');\n```\n\n**Suggested fix:** Align `skills.ts` to the existing singular convention and update matching test assertions.\n\n---\n\n### MINOR\n\n| # | File | Line | Summary |\n|---|------|------|---------|\n| 2 | `test/mcp/skills.test.ts` | 5 | Unused type import `EpicTask` |\n| 3 | `test/mcp/skills.test.ts` | 63 | Test says 'forbidden' but asserts 'unknown_tool' |\n| 4 | `test/mcp/skills.test.ts` | 62 | `unknown_tool` test wrongly nested under `recommend_skills` describe |\n\n**2. Unused type import `EpicTask`**\n`EpicTask` is imported but never referenced in the test file. Dead import adds noise and may trigger lint failures.\n\n```typescript\nimport type { EpicTask } from '../../server/state/types.js'; // unused\n```\n\n**Suggested fix:** Remove the import.\n\n---\n\n**3. Test description says 'forbidden' but handler returns `'unknown_tool'`**\nThe word \"forbidden\" suggests a 403/auth error when the test actually covers the default/unknown-tool branch.\n\n```typescript\nit('returns forbidden error response for unknown tool', async () => {\n```\n\n**Suggested fix:** `it('returns unknown_tool error response for unknown tool name', ...)`\n\n---\n\n**4. `unknown_tool` test is grouped under `describe('recommend_skills')`**\nThe first test exercises the switch `default` branch, which is unrelated to `recommend_skills`, yet is nested inside its `describe` block.\n\n**Suggested fix:** Move it into a separate `describe('default / unknown tool', ...)` at the same level.\n\n---\n\nReviewed SHA: d39bd044039ddb8cb491e4f265177c7dd05bba37",
+      "createdAt": "2026-05-05T11:11:14Z",
+      "id": 4378682073,
+      "user": "github-actions[bot]"
+    }
+  ],
+  "verdicts": [
+    {
+      "sourcePR": 1783,
+      "analyzedAt": "2026-05-05T15:06:00Z",
+      "findings": [
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "server/mcp/tools/skills.ts",
+          "line": "187,259,309",
+          "description": "error code 'missing_params' (plural) diverges from sibling tools — index.ts and stack.ts use singular 'missing_param'",
+          "reviewSha": "d39bd044039ddb8cb491e4f265177c7dd05bba37",
+          "reviewCreated": "2026-05-05T11:11:14Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "normalized to singular across all three sites; updated matching test assertion + description"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "test/mcp/skills.test.ts",
+          "line": "5",
+          "description": "unused type/value imports — round-1 flagged getCurrentOrgId/getCurrentUserId, round-2 flagged EpicTask",
+          "reviewSha": "d39bd044039ddb8cb491e4f265177c7dd05bba37",
+          "reviewCreated": "2026-05-05T11:11:14Z",
+          "verdict": "TRUE",
+          "action": "IGNORE",
+          "reason": "already fixed at HEAD by commit 91def016 (resolve lint error in skills.test.ts) before this triage; current HEAD has no unused imports"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "test/mcp/skills.test.ts",
+          "line": "62",
+          "description": "test description says 'forbidden error response for unknown tool' but assertion checks 'unknown_tool' — misleading",
+          "reviewSha": "d39bd044039ddb8cb491e4f265177c7dd05bba37",
+          "reviewCreated": "2026-05-05T11:11:14Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "renamed description to match the actual assertion"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "test/mcp/skills.test.ts",
+          "line": "61",
+          "description": "unknown_tool test nested under describe('recommend_skills') but tests the switch default branch — unrelated",
+          "reviewSha": "d39bd044039ddb8cb491e4f265177c7dd05bba37",
+          "reviewCreated": "2026-05-05T11:11:14Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "moved into a sibling describe('default case') block"
+        }
+      ]
+    }
+  ],
+  "labelled": [
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "server/mcp/tools/skills.ts",
+      "line": "187,259,309",
+      "description": "error code 'missing_params' (plural) diverges from sibling tools — index.ts and stack.ts use singular 'missing_param'",
+      "reviewSha": "d39bd044039ddb8cb491e4f265177c7dd05bba37",
+      "reviewCreated": "2026-05-05T11:11:14Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "normalized to singular across all three sites; updated matching test assertion + description"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "test/mcp/skills.test.ts",
+      "line": "5",
+      "description": "unused type/value imports — round-1 flagged getCurrentOrgId/getCurrentUserId, round-2 flagged EpicTask",
+      "reviewSha": "d39bd044039ddb8cb491e4f265177c7dd05bba37",
+      "reviewCreated": "2026-05-05T11:11:14Z",
+      "verdict": "TRUE",
+      "action": "IGNORE",
+      "reason": "already fixed at HEAD by commit 91def016 (resolve lint error in skills.test.ts) before this triage; current HEAD has no unused imports"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "test/mcp/skills.test.ts",
+      "line": "62",
+      "description": "test description says 'forbidden error response for unknown tool' but assertion checks 'unknown_tool' — misleading",
+      "reviewSha": "d39bd044039ddb8cb491e4f265177c7dd05bba37",
+      "reviewCreated": "2026-05-05T11:11:14Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "renamed description to match the actual assertion"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "test/mcp/skills.test.ts",
+      "line": "61",
+      "description": "unknown_tool test nested under describe('recommend_skills') but tests the switch default branch — unrelated",
+      "reviewSha": "d39bd044039ddb8cb491e4f265177c7dd05bba37",
+      "reviewCreated": "2026-05-05T11:11:14Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "moved into a sibling describe('default case') block"
+    }
+  ]
+}

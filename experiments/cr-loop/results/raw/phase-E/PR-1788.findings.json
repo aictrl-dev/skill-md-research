@@ -1,0 +1,73 @@
+{
+  "prNumber": 1788,
+  "runId": "2026-05-07T08-23-41-2185043",
+  "executionId": "phase-a-1788-2026-05-07T08-23-41-2185043",
+  "reviews": [
+    {
+      "reviewId": "bug-hunter-pr-1788",
+      "executionRunId": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T14-32-13-3969789",
+      "executionRunId": "phase-a-1788-2026-05-06T14-32-13-3969789"
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T19-56-15-510804",
+      "executionRunId": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T23-43-48-1085987",
+      "executionRunId": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-07T08-23-41-2185043",
+      "executionRunId": ""
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1788-2026-05-07T08-23-41-2185043",
+      "findingId": "1db7eb915829f3f9",
+      "file": "ui/src/utils/formatDuration.ts",
+      "line": null,
+      "severity": "high",
+      "title": "formatDuration not adopted by 3 existing inline copies",
+      "description": "The PR correctly extracts formatDuration into a shared utility under ui/src/utils/, but three existing inline formatDuration/formatDurationMs implementations in InsightsExecutions.tsx, SkillUsageDashboard.tsx, and CodeReviewQualityDashboard.tsx remain un-migrated. This leaves the codebase with 4 implementations of the same function instead of 1 shared one.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-07T08-23-41-2185043",
+      "findingId": "1e485d5bd791756c",
+      "file": "ui/src/utils/formatDuration.ts",
+      "line": null,
+      "severity": "low",
+      "title": "formatDuration(0) returns misleading \"< 1m\"",
+      "description": "formatDuration(0) returns \"< 1m\" because 0 < 60_000. A zero-duration \"time to first review\" is possible (review started at same millisecond as PR opened) and showing \"< 1m\" is misleading — it could mask a data bug where startedAt equals openedAt.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-07T08-23-41-2185043",
+      "findingId": "50f215799be06436",
+      "file": "ui/src/utils/formatDuration.ts",
+      "line": null,
+      "severity": "high",
+      "title": "formatDuration drops hour remainder for multi-day durations",
+      "description": "When a duration >= 24h with a non-zero hour remainder (e.g. 36h), the function computes days = Math.floor(hours / 24) and returns only `${days}d`, discarding remaining hours. 1d 12h renders as \"1d\". In the PR detail page's \"time to first review\" metric, 36 hours would misleadingly show \"1d\" instead of \"1d 12h\".",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-07T08-23-41-2185043",
+      "findingId": "9b9ecc7be3b5d7e0",
+      "file": "ui/src/utils/formatNumber.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "formatNumber utility added without unit tests",
+      "description": "The new formatNumber utility (wrapping n.toLocaleString()) was added without any unit test. The PR's own pattern adds tests for all new utilities (formatDuration has 52 lines of tests). Missing tests mean locale-dependent behavior (e.g. \"26,113\" vs \"26.113\") is unverified.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

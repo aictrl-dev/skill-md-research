@@ -1,0 +1,112 @@
+{
+  "prNumber": 1803,
+  "runId": "2026-05-06T16-06-44-20529",
+  "executionId": "phase-a-1803-2026-05-06T16-06-44-20529",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1803-2026-05-06T16-06-44-20529",
+      "executionRunId": "phase-a-1803-2026-05-06T16-06-44-20529"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1803-2026-05-06T16-06-44-20529",
+      "findingId": "3348a46bb613e85a",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "buildRepositoryStruct defensive null pattern is uniform",
+      "description": "buildRepositoryStruct applies `?? null` uniformly to all fields. The comment block explains the defensive reasoning against future schema drift on Repository. The new code is internally consistent. Note this was raised as a concern but the patch shows the null handling is already applied to all five fields.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T16-06-44-20529",
+      "findingId": "38b02d34810f0e0e",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "low",
+      "title": "skill_version maps skillId which is not a semver string",
+      "description": "The payload field `skill_version` is sourced from `review.skillId` which holds values like 'code-review@5.0.0'. The BQ column name `skill_version` implies a plain semver string, but the actual value includes the skill name prefix. This semantic mismatch may confuse downstream BQ consumers expecting a version-only value.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T16-06-44-20529",
+      "findingId": "68818360b7090fd0",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "low",
+      "title": "publishReviewCompleted JSDoc misleads about throws",
+      "description": "publishReviewCompleted's JSDoc states 'Fire-and-forget: Pub/Sub errors are logged, not re-thrown' but it actually DOES re-throw on PR-fetch errors. Meanwhile publishFinding truly never re-throws. The docstrings are slightly misleading about the actual error contract.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T16-06-44-20529",
+      "findingId": "6cb04978fb9aae6e",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "low",
+      "title": "Module docstring says never re-thrown but now it is",
+      "description": "The module-level JSDoc (lines 9-11) states: 'Pub/Sub errors are caught and logged — never re-thrown — so a publish failure never breaks the main request path.' After this PR, publishReviewCompleted re-throws on getPullRequest() failures, violating the stated contract.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T16-06-44-20529",
+      "findingId": "72f3e8dbf848da48",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "N+1 Firestore reads: each finding re-fetches same PR",
+      "description": "publishFinding() calls getPullRequestManager().getPullRequest() on every invocation. In a review with N findings, the same PR document is fetched N times from Firestore. The PR document is immutable during the review window, so a single fetch (either cached or passed as a parameter) would eliminate N-1 redundant reads.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T16-06-44-20529",
+      "findingId": "7739375c2fd7fad1",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "high",
+      "title": "Inline repository struct diverges from buildRepositoryStruct",
+      "description": "buildPrEventPayload() inlines its own repository shape that differs from the shared buildRepositoryStruct() helper: it omits defensive `?? null` on `full_name` and `platform`. A null/undefined repository.fullName or platform will produce undefined (dropped by JSON.stringify) in PR lifecycle events but null in finding/review events — inconsistent BQ inserts across event types.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T16-06-44-20529",
+      "findingId": "9b536f2a37db029e",
+      "file": "test/code-review-publisher.test.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Missing test: getPullRequest throws for review",
+      "description": "The test suite covers the case where getPullRequest returns null (skips publish), but does not cover the case where getPullRequest throws. Since publishReviewCompleted re-throws on error (unlike publishFinding which catches), this path should be tested to verify the throw propagates correctly.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T16-06-44-20529",
+      "findingId": "9fb9c562fcc46198",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "low",
+      "title": "Shallow spread of as const DEFAULT_MODEL is fragile",
+      "description": "`model: { ...DEFAULT_MODEL }` does a shallow spread of the `as const` object. While safe today (all values are primitives), if DEFAULT_MODEL ever gains a nested object, the spread would share references. A factory function would be more conventional.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T16-06-44-20529",
+      "findingId": "b6b385f35211c1d1",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "high",
+      "title": "publishReviewCompleted throws on transient PR fetch",
+      "description": "publishReviewCompleted re-throws getPullRequest() errors (line 384: `throw err`), permanently losing the review completion event. During a transient Firestore blip, all findings still publish (publishFinding catches and degrades to null structs), but the parent review is dropped — creating orphaned findings in BQ with no review row. publishFinding's graceful-degradation pattern should be mirrored here.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

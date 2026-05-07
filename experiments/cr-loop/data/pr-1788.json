@@ -1,0 +1,483 @@
+{
+  "number": 1788,
+  "category": "noisy",
+  "title": "feat(code-review): rebuild PR detail header to match mock",
+  "rationale": "has confirmed FP from bot ('BigQuery-powered metrics' + formatNumber identical claim) — recurrence target",
+  "body": "## Summary\n\nAligns the per-PR detail page header (`/code-review/pulls/:prId`) with the design spec at `scratch/code-review-detail-pages-mocks.html` lines 1205–1224. Item (1) of a 6-item punch list — header card + 4-stat grid + action buttons. Subsequent items (timeline, reviews accordion, nested findings tables, per-finding action menu, diff stats wiring beyond raw display, etc.) tracked separately.\n\n## What changed\n\n- Header is now a card (border, radius, padding) instead of a plain text block\n- Title row: PR # + title + state badge + `↗ View on GitHub` (links to `pr.url`) + `↻ Run another review` (placeholder, disabled — wiring is item 4)\n- Sub-row: avatar + author · `head → base` (mono) · diff stats (`+X / −Y · N files`) when the webhook captured `additions`/`deletions`/`changedFiles`\n- Replaced the single `2 Reviews` stat tile with a 4-column meta grid:\n  - **Opened** — relative time of `pr.openedAt`\n  - **First review** — latency from PR open to earliest review's `startedAt` (or `—`)\n  - **Review runs** — count + relative time of latest review (or `—`)\n  - **Findings** — `N total · M actionable · K FP` derived from existing finding statuses (`actionable` = status ∈ {pending, applied, not-applied}, `FP` = status === 'irrelevant')\n- Merged/closed timestamp moved to a small line below the grid\n\n## Out of scope (tracked for follow-ups)\n\n2. Reviews accordion cards (currently a flat list)\n3. Findings nested under each review (currently a global flat list)\n4. Per-finding `···` action menu (mark TP / mark FP / dismiss)\n5. Timeline strip (PR opened → reviews → merged)\n6. Wiring \"Run another review\" to a real endpoint\n\n## Test plan\n\n- [x] `npx tsc --noEmit -p tsconfig.app.json` — clean\n- [x] `npm run lint` — 0 errors (only pre-existing fast-refresh warnings)\n- [x] `vitest run src/pages/code-review/__tests__/` — 28/28 pass (8 detail page, 8 list page, 12 modal), all with a11y assertions\n- [ ] Visual eyeball against the mock at `scratch/code-review-detail-pages-mocks.html#pr-detail`\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)",
+  "baseRefName": "sandbox",
+  "headRefName": "fix/pr-detail-header-card",
+  "baseSha": "b2814bd40865f8fd194842279d963e21b04bc88b",
+  "headSha": "e5672ae11568856b960a66bdb352cce1c4dda590",
+  "additions": 336,
+  "deletions": 75,
+  "changedFiles": 5,
+  "diff": "diff --git a/ui/src/pages/code-review/CodeReviewPullDetailPage.css b/ui/src/pages/code-review/CodeReviewPullDetailPage.css\nindex 60c281a68..d27ff2f00 100644\n--- a/ui/src/pages/code-review/CodeReviewPullDetailPage.css\n+++ b/ui/src/pages/code-review/CodeReviewPullDetailPage.css\n@@ -3,101 +3,163 @@\n   max-width: 1024px;\n }\n \n-/* Header */\n-.crpd-header {\n-  margin-bottom: var(--space-6);\n-  padding-bottom: var(--space-5);\n-  border-bottom: 1px solid var(--border-muted);\n+/* Header card — matches scratch/code-review-detail-pages-mocks.html .pr-header-card */\n+.crpd-header-card {\n+  background: var(--bg-secondary);\n+  border: 1px solid var(--border-default);\n+  border-radius: var(--radius-xl);\n+  padding: var(--space-4);\n+  margin-bottom: var(--space-4);\n }\n \n-.crpd-header-title-row {\n+.crpd-header-row1 {\n   display: flex;\n-  align-items: flex-start;\n-  gap: var(--space-3);\n-  margin-bottom: var(--space-3);\n+  align-items: center;\n+  gap: var(--space-2);\n+  margin-bottom: var(--space-2);\n+  flex-wrap: wrap;\n }\n \n-.crpd-title {\n-  font-size: var(--font-size-xl);\n-  font-weight: var(--font-weight-bold);\n+.crpd-header-title {\n   margin: 0;\n+  font-size: var(--font-size-lg);\n+  font-weight: var(--font-weight-semibold);\n   color: var(--text-primary);\n   flex: 1;\n+  min-width: 200px;\n   line-height: 1.3;\n }\n \n .crpd-pr-num {\n   font-family: var(--font-mono);\n   color: var(--text-muted);\n+  font-size: var(--font-size-sm);\n   font-weight: 400;\n-  margin-right: var(--space-1_5);\n }\n \n .crpd-state-badge {\n   flex-shrink: 0;\n-  margin-top: 3px;\n }\n \n-.crpd-header-meta {\n+/* Action buttons in title row — sit at the right of row 1 */\n+.crpd-action-btn {\n+  display: inline-flex;\n+  align-items: center;\n+  gap: var(--space-1);\n+  padding: var(--space-1_5) var(--space-3);\n+  font-size: var(--font-size-xs);\n+  font-weight: var(--font-weight-semibold);\n+  font-family: inherit;\n+  border: none;\n+  border-radius: var(--radius-md);\n+  cursor: pointer;\n+  text-decoration: none;\n+  white-space: nowrap;\n+}\n+\n+.crpd-action-btn--primary {\n+  background: var(--btn-primary-bg);\n+  color: var(--btn-primary-text);\n+}\n+.crpd-action-btn--primary:hover:not(:disabled) {\n+  background: var(--btn-primary-bg-hover);\n+}\n+.crpd-action-btn--primary:disabled {\n+  opacity: 0.55;\n+  cursor: not-allowed;\n+}\n+\n+.crpd-action-btn--secondary {\n+  background: var(--btn-secondary-bg);\n+  color: var(--btn-secondary-text);\n+}\n+.crpd-action-btn--secondary:hover {\n+  background: var(--btn-secondary-bg-hover);\n+}\n+\n+/* Row 2 — author · branches · diff stats */\n+.crpd-header-row2 {\n   display: flex;\n   align-items: center;\n-  gap: var(--space-2);\n+  gap: var(--space-4);\n   flex-wrap: wrap;\n-  font-size: var(--font-size-sm);\n+  font-size: var(--font-size-xs);\n   color: var(--text-secondary);\n-  margin-bottom: var(--space-4);\n }\n \n-.crpd-author {\n-  font-weight: var(--font-weight-medium);\n+.crpd-author-cell {\n+  display: inline-flex;\n+  align-items: center;\n+  gap: var(--space-1_5);\n+  font-size: var(--font-size-sm);\n   color: var(--text-primary);\n }\n \n-.crpd-divider {\n-  color: var(--text-muted);\n-}\n-\n-.crpd-repo {\n-  color: var(--text-secondary);\n+.crpd-author {\n+  font-weight: var(--font-weight-medium);\n+  color: var(--text-primary);\n }\n \n .crpd-branch {\n   font-family: var(--font-mono);\n-  font-size: var(--font-size-xs);\n-  background: var(--bg-primary);\n-  padding: 1px var(--space-1_5);\n-  border-radius: var(--radius-sm);\n }\n \n-.crpd-date {\n-  color: var(--text-muted);\n+.crpd-diff-stat {\n+  font-family: var(--font-mono);\n+}\n+.crpd-diff-add {\n+  color: var(--status-success);\n+}\n+.crpd-diff-del {\n+  color: var(--status-error);\n }\n \n-/* Stats */\n-.crpd-stats {\n-  display: flex;\n-  gap: var(--space-5);\n-  flex-wrap: wrap;\n+/* 4-tile meta grid */\n+.crpd-meta-grid {\n+  display: grid;\n+  grid-template-columns: repeat(4, 1fr);\n+  gap: var(--space-4);\n+  margin-top: var(--space-3);\n+  padding-top: var(--space-3);\n+  border-top: 1px solid var(--border-muted);\n }\n \n-.crpd-stat {\n+.crpd-meta-stat {\n+  font-size: var(--font-size-xs);\n   display: flex;\n   flex-direction: column;\n-  gap: 2px;\n }\n \n-.crpd-stat-value {\n-  font-size: var(--font-size-xl);\n-  font-weight: var(--font-weight-bold);\n+.crpd-meta-label {\n+  color: var(--text-muted);\n+  font-size: var(--font-size-2xs);\n+  text-transform: uppercase;\n+  letter-spacing: 0.05em;\n+  margin-bottom: 2px;\n+  font-weight: var(--font-weight-semibold);\n+}\n+\n+.crpd-meta-value {\n+  font-weight: var(--font-weight-semibold);\n   color: var(--text-primary);\n-  line-height: 1;\n+  font-size: var(--font-size-sm);\n }\n \n-.crpd-stat-label {\n+/* Optional close-out line below the grid (e.g., \"Merged 5 May 2026, 14:30\") */\n+.crpd-merge-line {\n+  margin-top: var(--space-3);\n+  padding-top: var(--space-3);\n+  border-top: 1px solid var(--border-muted);\n   font-size: var(--font-size-xs);\n   color: var(--text-muted);\n }\n \n+@media (max-width: 720px) {\n+  .crpd-meta-grid {\n+    grid-template-columns: repeat(2, 1fr);\n+  }\n+}\n+\n /* Sections */\n .crpd-section {\n   margin-bottom: var(--space-6);\ndiff --git a/ui/src/pages/code-review/CodeReviewPullDetailPage.tsx b/ui/src/pages/code-review/CodeReviewPullDetailPage.tsx\nindex 186d7ae39..0cd542064 100644\n--- a/ui/src/pages/code-review/CodeReviewPullDetailPage.tsx\n+++ b/ui/src/pages/code-review/CodeReviewPullDetailPage.tsx\n@@ -7,7 +7,7 @@\n \n import { useState, useEffect, useCallback, useMemo, useRef } from 'react';\n import { useParams } from 'react-router-dom';\n-import { GitPullRequest, Clock } from 'lucide-react';\n+import { GitPullRequest, Clock, ExternalLink, RefreshCw } from 'lucide-react';\n import { api } from '../../hooks/useApi';\n import type {\n   PullRequest,\n@@ -22,6 +22,9 @@ import type {\n import { useOrganization } from '../../contexts/OrganizationContext';\n import { useEventStream } from '../../hooks/useEventStream';\n import { formatDateWithTime } from '../../utils/formatDate';\n+import { formatRelativeTime } from '../../utils/formatRelativeTime';\n+import { formatDuration } from '../../utils/formatDuration';\n+import { formatNumber } from '../../utils/formatNumber';\n import {\n   Breadcrumbs,\n   InlineError,\n@@ -61,51 +64,147 @@ function prStateBadgeVariant(state: PullRequest['state']) {\n // Sub-components\n // ---------------------------------------------------------------------------\n \n-function PRHeader({ pr }: { pr: PullRequest }) {\n+function PRHeader({\n+  pr,\n+  reviews,\n+  findings,\n+  onRunAnotherReview,\n+}: {\n+  pr: PullRequest;\n+  reviews: CodeReview[];\n+  findings: CodeReviewFinding[];\n+  onRunAnotherReview?: () => void;\n+}) {\n   const authorName = pr.author?.username ?? 'unknown';\n-  const reviewCount = pr.stats.reviewCount ?? 0;\n+\n+  // Derived stats for the 4-tile meta grid.\n+  // Filter NaN before min/max — an invalid `startedAt` string yields NaN from\n+  // getTime() which would otherwise propagate through and produce a RangeError\n+  // when later passed to `new Date(NaN).toISOString()`.\n+  const completedReviewTimes = reviews\n+    .filter((r) => r.status === 'completed' && r.startedAt)\n+    .map((r) => new Date(r.startedAt).getTime())\n+    .filter((t) => Number.isFinite(t));\n+\n+  const earliestReviewStart =\n+    completedReviewTimes.length > 0 ? Math.min(...completedReviewTimes) : null;\n+  const latestReviewStart =\n+    completedReviewTimes.length > 0 ? Math.max(...completedReviewTimes) : null;\n+\n+  const firstReviewLatencyMs =\n+    earliestReviewStart !== null ? earliestReviewStart - new Date(pr.openedAt).getTime() : null;\n+\n+  const reviewRunsValue =\n+    reviews.length === 0\n+      ? '—'\n+      : latestReviewStart !== null\n+        ? `${reviews.length} (latest ${formatRelativeTime(new Date(latestReviewStart).toISOString())})`\n+        : String(reviews.length);\n+\n+  // Findings: total · actionable (status ∈ {pending, applied, not-applied}) · FP (status === 'irrelevant')\n+  const fpCount = findings.filter((f) => f.status === 'irrelevant').length;\n+  const actionableCount = findings.length - fpCount;\n+  const findingsValue =\n+    findings.length === 0\n+      ? '0'\n+      : `${findings.length} total · ${actionableCount} actionable · ${fpCount} FP`;\n+\n+  // Diff stats — only render when we have at least one of the three numbers.\n+  const hasDiffStats =\n+    pr.additions != null || pr.deletions != null || pr.changedFiles != null;\n+\n   return (\n-    <header className=\"crpd-header\">\n-      <div className=\"crpd-header-title-row\">\n-        <h1 className=\"crpd-title\">\n+    <header className=\"crpd-header-card\">\n+      <div className=\"crpd-header-row1\">\n+        <h1 className=\"crpd-header-title\">\n           <span className=\"crpd-pr-num\">#{pr.number}</span>\n+          {' '}\n           {pr.title ?? `Pull request #${pr.number}`}\n         </h1>\n         <Badge variant={prStateBadgeVariant(pr.state)} className=\"crpd-state-badge\">\n           {pr.state}\n         </Badge>\n+        <a\n+          href={pr.url}\n+          target=\"_blank\"\n+          rel=\"noopener noreferrer\"\n+          className=\"crpd-action-btn crpd-action-btn--secondary\"\n+        >\n+          <ExternalLink size={12} aria-hidden=\"true\" />\n+          View on GitHub\n+        </a>\n+        {/*\n+          Disabled stub: wiring \"Run another review\" to a real endpoint is item 4\n+          on the punch list in the PR description (#1788). Kept visible because it\n+          is part of the mock contract; the disabled state communicates that the\n+          feature is intentional, not missing.\n+        */}\n+        <button\n+          type=\"button\"\n+          className=\"crpd-action-btn crpd-action-btn--primary\"\n+          onClick={onRunAnotherReview}\n+          disabled={!onRunAnotherReview}\n+          title={onRunAnotherReview ? undefined : 'Coming soon'}\n+        >\n+          <RefreshCw size={12} aria-hidden=\"true\" />\n+          Run another review\n+        </button>\n       </div>\n \n-      <div className=\"crpd-header-meta\">\n-        <Avatar name={authorName} size=\"sm\" />\n-        <span className=\"crpd-author\">{authorName}</span>\n-        <span className=\"crpd-divider\" aria-hidden=\"true\">·</span>\n-        <span className=\"crpd-repo\">\n-          <strong>{pr.repository.fullName}</strong>\n-          &nbsp;\n-          <span className=\"crpd-branch\">{pr.headBranch ?? '—'} → {pr.baseBranch ?? '—'}</span>\n+      <div className=\"crpd-header-row2\">\n+        <span className=\"crpd-author-cell\">\n+          <Avatar name={authorName} size=\"sm\" />\n+          <span className=\"crpd-author\">{authorName}</span>\n         </span>\n-        <span className=\"crpd-divider\" aria-hidden=\"true\">·</span>\n-        <span className=\"crpd-date\">\n-          Opened {formatDateWithTime(pr.openedAt)}\n-          {pr.mergedAt && ` · Merged ${formatDateWithTime(pr.mergedAt)}`}\n-          {pr.closedAt && !pr.mergedAt && ` · Closed ${formatDateWithTime(pr.closedAt)}`}\n+        <span className=\"crpd-branch\">\n+          {pr.headBranch ?? '—'} → {pr.baseBranch ?? '—'}\n         </span>\n+        {hasDiffStats && (\n+          <span className=\"crpd-diff-stat\">\n+            {pr.additions != null && (\n+              <span className=\"crpd-diff-add\">+{formatNumber(pr.additions)}</span>\n+            )}\n+            {pr.additions != null && pr.deletions != null && ' '}\n+            {pr.deletions != null && (\n+              <span className=\"crpd-diff-del\">−{formatNumber(pr.deletions)}</span>\n+            )}\n+            {pr.changedFiles != null && ` · ${pr.changedFiles} files`}\n+          </span>\n+        )}\n       </div>\n \n-      <div className=\"crpd-stats\" role=\"list\" aria-label=\"PR statistics\">\n-        <StatItem label=\"Reviews\" value={String(reviewCount)} />\n+      <div className=\"crpd-meta-grid\" role=\"list\" aria-label=\"PR statistics\">\n+        <div className=\"crpd-meta-stat\" role=\"listitem\">\n+          <div className=\"crpd-meta-label\">Opened</div>\n+          <div className=\"crpd-meta-value\">{formatRelativeTime(pr.openedAt)}</div>\n+        </div>\n+        <div className=\"crpd-meta-stat\" role=\"listitem\">\n+          <div className=\"crpd-meta-label\">First review</div>\n+          <div className=\"crpd-meta-value\">\n+            {firstReviewLatencyMs !== null ? formatDuration(firstReviewLatencyMs) : '—'}\n+          </div>\n+        </div>\n+        <div className=\"crpd-meta-stat\" role=\"listitem\">\n+          <div className=\"crpd-meta-label\">Review runs</div>\n+          <div className=\"crpd-meta-value\">{reviewRunsValue}</div>\n+        </div>\n+        <div className=\"crpd-meta-stat\" role=\"listitem\">\n+          <div className=\"crpd-meta-label\">Findings</div>\n+          <div className=\"crpd-meta-value\">{findingsValue}</div>\n+        </div>\n       </div>\n-    </header>\n-  );\n-}\n \n-function StatItem({ label, value }: { label: string; value: string }) {\n-  return (\n-    <div className=\"crpd-stat\" role=\"listitem\">\n-      <span className=\"crpd-stat-value\">{value}</span>\n-      <span className=\"crpd-stat-label\">{label}</span>\n-    </div>\n+      {pr.mergedAt && (\n+        <div className=\"crpd-merge-line\">\n+          Merged {formatDateWithTime(pr.mergedAt)}\n+        </div>\n+      )}\n+      {pr.closedAt && !pr.mergedAt && (\n+        <div className=\"crpd-merge-line\">\n+          Closed {formatDateWithTime(pr.closedAt)}\n+        </div>\n+      )}\n+    </header>\n   );\n }\n \n@@ -435,7 +534,7 @@ export function CodeReviewPullDetailPage({ addToast }: CodeReviewPullDetailPageP\n         ]}\n       />\n \n-      <PRHeader pr={pr} />\n+      <PRHeader pr={pr} reviews={reviews} findings={findings} />\n \n       <ReviewTimeline reviews={reviews} inProgressIds={inProgressReviewIds} />\n \ndiff --git a/ui/src/utils/__tests__/formatDuration.test.ts b/ui/src/utils/__tests__/formatDuration.test.ts\nnew file mode 100644\nindex 000000000..9183f6756\n--- /dev/null\n+++ b/ui/src/utils/__tests__/formatDuration.test.ts\n@@ -0,0 +1,52 @@\n+import { describe, it, expect } from 'vitest';\n+import { formatDuration } from '../formatDuration';\n+\n+describe('formatDuration', () => {\n+  describe('finite-positive durations', () => {\n+    it('formats 2 minutes', () => {\n+      expect(formatDuration(120_000)).toBe('2m');\n+    });\n+\n+    it('formats 59 minutes (just under 1 hour)', () => {\n+      expect(formatDuration(59 * 60_000)).toBe('59m');\n+    });\n+\n+    it('formats whole hours without minute remainder', () => {\n+      expect(formatDuration(2 * 3_600_000)).toBe('2h');\n+    });\n+\n+    it('formats hours + minutes when there is a remainder', () => {\n+      expect(formatDuration(2 * 3_600_000 + 5 * 60_000)).toBe('2h 5m');\n+    });\n+\n+    it('formats whole days', () => {\n+      expect(formatDuration(86_400_000)).toBe('1d');\n+    });\n+  });\n+\n+  describe('degenerate durations', () => {\n+    it('returns \"< 1m\" for sub-minute positive durations', () => {\n+      expect(formatDuration(45_000)).toBe('< 1m');\n+    });\n+\n+    it('returns \"< 1m\" for zero', () => {\n+      expect(formatDuration(0)).toBe('< 1m');\n+    });\n+\n+    it('returns \"< 1m\" for negative durations (clock skew)', () => {\n+      expect(formatDuration(-1_000)).toBe('< 1m');\n+      expect(formatDuration(-3_600_000)).toBe('< 1m');\n+    });\n+  });\n+\n+  describe('non-finite inputs', () => {\n+    it('returns \"—\" for NaN', () => {\n+      expect(formatDuration(NaN)).toBe('—');\n+    });\n+\n+    it('returns \"—\" for Infinity', () => {\n+      expect(formatDuration(Infinity)).toBe('—');\n+      expect(formatDuration(-Infinity)).toBe('—');\n+    });\n+  });\n+});\ndiff --git a/ui/src/utils/formatDuration.ts b/ui/src/utils/formatDuration.ts\nnew file mode 100644\nindex 000000000..4784e3e8d\n--- /dev/null\n+++ b/ui/src/utils/formatDuration.ts\n@@ -0,0 +1,40 @@\n+/**\n+ * Format a duration in milliseconds as a human-readable short string.\n+ *\n+ *   formatDuration(45_000)    → \"< 1m\"\n+ *   formatDuration(120_000)   → \"2m\"\n+ *   formatDuration(7_200_000) → \"2h\"\n+ *   formatDuration(7_500_000) → \"2h 5m\"\n+ *   formatDuration(86_400_000) → \"1d\"\n+ *   formatDuration(0)         → \"< 1m\"\n+ *   formatDuration(-1000)     → \"< 1m\"   (clock skew on cross-system timestamps)\n+ *   formatDuration(NaN)       → \"—\"\n+ *\n+ * The single `ms < 60_000` guard covers three cases that should not be\n+ * rendered as a literal duration:\n+ *   (a) sub-minute durations (which would otherwise round to \"0m\"),\n+ *   (b) zero durations,\n+ *   (c) negative values from mild cross-system clock skew (e.g. PR\n+ *       openedAt vs. first review's startedAt on a different host).\n+ *\n+ * The `Number.isFinite` guard prevents `NaN` (e.g. from an invalid\n+ * timestamp string) from rendering as `\"NaNd\"` after falling through\n+ * every comparison. Falsy values like `null`/`undefined` also fail the\n+ * isFinite check and degrade to `'—'`.\n+ *\n+ * Replaces the per-page copies that had drifted across the codebase.\n+ * Other files still maintain their own local copies; migrating them\n+ * is tracked as a separate refactor since signatures vary between\n+ * call sites.\n+ */\n+export function formatDuration(ms: number): string {\n+  if (!Number.isFinite(ms)) return '—';\n+  if (ms < 60_000) return '< 1m';\n+  const minutes = Math.floor(ms / 60_000);\n+  if (minutes < 60) return `${minutes}m`;\n+  const hours = Math.floor(minutes / 60);\n+  const remMin = minutes % 60;\n+  if (hours < 24) return remMin === 0 ? `${hours}h` : `${hours}h ${remMin}m`;\n+  const days = Math.floor(hours / 24);\n+  return `${days}d`;\n+}\ndiff --git a/ui/src/utils/formatNumber.ts b/ui/src/utils/formatNumber.ts\nnew file mode 100644\nindex 000000000..ca5a8dfa2\n--- /dev/null\n+++ b/ui/src/utils/formatNumber.ts\n@@ -0,0 +1,8 @@\n+/**\n+ * Format a number using the user's locale (e.g. `26113` → `\"26,113\"`).\n+ *\n+ * Replaces the per-page copies in CodeReviewPullDetailPage and UsageDashboard.\n+ */\n+export function formatNumber(n: number): string {\n+  return n.toLocaleString();\n+}",
+  "botReviews": [
+    {
+      "body": "## Code Review — PR #1788\n\n**2 files changed** · +237 −45 · 3 subagents (Security, Consistency, Bug-Hunter)\n\n| # | Sev | File | Line | Rule | Summary |\n|---|-----|------|------|------|---------|\n| 1 | **MAJOR** | `CodeReviewPullDetailPage.tsx` | 69 | bug/negative-duration | `formatDuration` produces garbled output for negative `ms` values. When clock skew causes `firstReviewLatencyMs` to be negative, the function returns strings like `\"-1m\"` or `\"-1h 30m\"`, which will confuse users in the \"First review\" tile. Add a guard: `if (ms <= 0) return '< 1m';` or `ms = Math.max(ms, 0);` |\n| 2 | **MAJOR** | `CodeReviewPullDetailPage.tsx` | 69 | consistency/duplicate-utility | `formatDuration` is copy-pasted from 10+ other files (SkillUsageDashboard, KnowledgeActivity, InsightsExecutions, WorkflowRunDetailPage, WorkflowRunsListPage, TaskExecutionHistoryPage, TaskExecutionViewerPage, RepoSkillsPage, etc.). Extract to `ui/src/utils/formatDuration.ts` and import — matching the pattern used for `formatRelativeTime`. |\n| 3 | **MINOR** | `CodeReviewPullDetailPage.tsx` | 65 | consistency/duplicate-utility | `formatNumber` is a local copy of an identical function in `UsageDashboard.tsx`. Extract to `ui/src/utils/formatNumber.ts` and import from both sites. |\n| 4 | **MINOR** | `CodeReviewPullDetailPage.tsx` | 112 | bug/undefined-status | `actionableCount = findings.length - fpCount` treats findings with `status === undefined` as actionable. Define actionable explicitly: `findings.filter(f => ['pending','applied','not-applied'].includes(f.status)).length`. |\n| 5 | **MINOR** | `CodeReviewPullDetailPage.tsx` | 164 | bug/unwanted-space | The `{' '}` between additions and deletions spans renders unconditionally. When `pr.additions` is null but `pr.deletions` is present, you get a stray leading space (`\" −5\"` instead of `\"−5\"`). Move the separator inside a conditional. |\n| 6 | **MINOR** | `CodeReviewPullDetailPage.tsx` | 69 | bug/zero-duration | `formatDuration(0)` returns `\"0m\"`. A user-facing display of `\"< 1m\"` would be clearer. |\n| 7 | **MINOR** | `CodeReviewPullDetailPage.tsx` | 536 | consistency/dead-code | `onRunAnotherReview` prop is never wired at the call site — the \"Run another review\" button is a permanently disabled stub with no tracking issue. Either wire it up, add a TODO with an issue number, or remove the button. |\n| 8 | **NIT** | `CodeReviewPullDetailPage.tsx` | 94 | perf/double-map-reduce | `earliestReviewStart` and `latestReviewStart` each do `.map().reduce()` over the same array. A single reduce or `Math.min(...times)` / `Math.max(...times)` avoids the intermediate allocation. |\n\n**Security**: No findings. The `pr.url` is rendered as `<a href>` with `rel=\"noopener noreferrer\"` — correct. No XSS vectors, no secrets, no auth changes.\n\n---\n\nReviewed SHA: d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+      "createdAt": "2026-05-05T17:17:27Z",
+      "id": 4381474268,
+      "user": "github-actions[bot]"
+    },
+    {
+      "body": "## Code Review — PR #1788\n\n**5 findings** (2 MAJOR · 2 MINOR · 1 NIT)\n\n---\n\n### MAJOR — `formatDuration` sub-minute durations show \"0m\"\n\n**File:** `ui/src/utils/formatDuration.ts:22–24`\n\nAny duration in `(0, 60_000)` ms is positive so it bypasses the `≤ 0` guard, but `Math.floor(ms / 60_000)` yields 0, producing the confusing string `\"0m\"`. The doc comment acknowledges the intent to show `\"< 1m\"` for these cases. Will surface whenever first-review latency is under a minute.\n\n```ts\n// current\nif (ms <= 0) return '< 1m';\nconst minutes = Math.floor(ms / 60_000);\nif (minutes < 60) return `${minutes}m`;\n\n// suggested\nif (ms < 60_000) return '< 1m';\n```\n\n---\n\n### MAJOR — `new Date(NaN).toISOString()` can throw RangeError\n\n**File:** `ui/src/pages/code-review/CodeReviewPullDetailPage.tsx:83–85`\n\nIf any review's `startedAt` is a present-but-invalid date string, `getTime()` returns `NaN`, which propagates through the `reduce` into `latestReviewStart`. Because `NaN !== null` is true, the ternary enters the branch that calls `new Date(NaN).toISOString()`, which throws an unhandled `RangeError`, crashing the component.\n\n```ts\n// current\nlatestReviewStart !== null\n  ? `${reviews.length} (latest ${formatRelativeTime(new Date(latestReviewStart).toISOString())})`\n  : String(reviews.length);\n\n// suggested: guard with Number.isFinite\nNumber.isFinite(latestReviewStart)\n  ? `${reviews.length} (latest ${formatRelativeTime(new Date(latestReviewStart).toISOString())})`\n  : String(reviews.length);\n```\n\n---\n\n### MINOR — `formatDuration` produces `\"NaNd\"` on NaN input\n\n**File:** `ui/src/utils/formatDuration.ts:21–29`\n\nIf `formatDuration` receives `NaN` (e.g. from an invalid timestamp subtraction), none of the numeric comparisons match (`NaN < 60` is false), and the function falls through to return `\"NaNd\"`. Add a `Number.isFinite` guard at the top to prevent display corruption.\n\n```ts\n// suggested\nif (!Number.isFinite(ms)) return '—';\n```\n\n---\n\n### MINOR — Doc comment claims 9 copies but count is inaccurate\n\n**File:** `ui/src/utils/formatDuration.ts:18–19`\n\nThe comment states *\"9 other files still have local copies — those will be migrated in a follow-up PR\"*, but this count was not verified in this PR and may be stale or inaccurate, misleading future maintainers about the scope of the migration.\n\n---\n\n### NIT — Doc example contradicts implementation\n\n**File:** `ui/src/utils/formatDuration.ts:4`\n\nThe example `formatDuration(45_000) → \"0m\" ← clamped via the zero-guard below ⇒ \"< 1m\"` is self-contradictory — it shows both `\"0m\"` and `\"< 1m\"` as the output. Update to reflect whichever behaviour is intended (likely `\"< 1m\"` once the MAJOR fix above is applied).\n\n---\n\nReviewed SHA: 2778a4387b346e88f7e75b775515e0b9b9085f8d",
+      "createdAt": "2026-05-05T17:35:17Z",
+      "id": 4381586993,
+      "user": "github-actions[bot]"
+    }
+  ],
+  "verdicts": [
+    {
+      "sourcePR": 1788,
+      "analyzedAt": "2026-05-05T18:23:00Z",
+      "findings": [
+        {
+          "bot": "github-actions",
+          "severity": "BUG",
+          "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+          "line": "69",
+          "description": "formatDuration produces '-1m' for negative ms (clock skew on firstReviewLatencyMs)",
+          "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+          "reviewCreated": "2026-05-05T17:17:27Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "extracted to ui/src/utils/formatDuration.ts with ms<=0 guard returning '< 1m'"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+          "line": "69",
+          "description": "formatDuration duplicated across 9 files",
+          "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+          "reviewCreated": "2026-05-05T17:17:27Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "partial — extracted to shared util and consumed here. Other 8 files defer to a follow-up because signatures vary"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+          "line": "65",
+          "description": "formatNumber identical to UsageDashboard.tsx version",
+          "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+          "reviewCreated": "2026-05-05T17:17:27Z",
+          "verdict": "FALSE",
+          "action": "FIX",
+          "reason": "identical claim is wrong — UsageDashboard's has K/M compact abbreviations, ours is plain toLocaleString. Created shared util for this page; UsageDashboard kept as-is because semantics differ"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "BUG",
+          "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+          "line": "112",
+          "description": "actionableCount treats findings with status===undefined as actionable",
+          "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+          "reviewCreated": "2026-05-05T17:17:27Z",
+          "verdict": "FALSE",
+          "action": "IGNORE",
+          "reason": "current code is correct — the existing dashboard treats undefined as 'pending' (line 366: f.status??'pending'); changing would create mismatch with status-filter pill counts"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "BUG",
+          "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+          "line": "164",
+          "description": "stray leading space in diff stats when additions is null and deletions is present",
+          "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+          "reviewCreated": "2026-05-05T17:17:27Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "moved separator inside additions+deletions conjunction conditional"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "BUG",
+          "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+          "line": "69",
+          "description": "formatDuration(0) returns '0m' — '< 1m' clearer",
+          "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+          "reviewCreated": "2026-05-05T17:17:27Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "subsumed by [1] ms<=0 guard"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+          "line": "536",
+          "description": "onRunAnotherReview is permanently disabled stub with no tracking issue",
+          "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+          "reviewCreated": "2026-05-05T17:17:27Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "added inline comment referencing punch-list item 4 in PR description"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+          "line": "94",
+          "description": "earliestReviewStart and latestReviewStart each do .map().reduce() over the same array",
+          "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+          "reviewCreated": "2026-05-05T17:17:27Z",
+          "verdict": "TRUE",
+          "action": "DEFER",
+          "reason": "real on tiny array (<=30 reviews per cap); two-pass code is more readable than Math.min/max spread which needs empty-array fallback"
+        }
+      ]
+    },
+    {
+      "sourcePR": 1788,
+      "analyzedAt": "2026-05-05T18:46:00Z",
+      "findings": [
+        {
+          "bot": "github-actions",
+          "severity": "BUG",
+          "file": "ui/src/utils/formatDuration.ts",
+          "line": "22-24",
+          "description": "Sub-minute durations (0 < ms < 60_000) bypass <= 0 guard and return '0m'",
+          "reviewSha": "2778a4387b346e88f7e75b775515e0b9b9085f8d",
+          "reviewCreated": "2026-05-05T17:35:17Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "replaced <= 0 guard with < 60_000 to cover all three degenerate cases"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "BUG",
+          "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+          "line": "83-85",
+          "description": "Invalid startedAt → getTime() returns NaN → reduce propagates → new Date(NaN).toISOString() throws RangeError",
+          "reviewSha": "2778a4387b346e88f7e75b775515e0b9b9085f8d",
+          "reviewCreated": "2026-05-05T17:35:17Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "filter Number.isFinite before Math.min/max — NaN can't reach toISOString()"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "BUG",
+          "file": "ui/src/utils/formatDuration.ts",
+          "line": "21-29",
+          "description": "NaN input falls through every comparison and returns 'NaNd'",
+          "reviewSha": "2778a4387b346e88f7e75b775515e0b9b9085f8d",
+          "reviewCreated": "2026-05-05T17:35:17Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "added Number.isFinite guard at top returning '—'"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "ui/src/utils/formatDuration.ts",
+          "line": "18-19",
+          "description": "Doc comment claims 9 other files have local copies but count is unverified/drifted",
+          "reviewSha": "2778a4387b346e88f7e75b775515e0b9b9085f8d",
+          "reviewCreated": "2026-05-05T17:35:17Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "removed specific count from docstring — now says 'other files' without naming a number"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "ui/src/utils/formatDuration.ts",
+          "line": "4",
+          "description": "Doc example formatDuration(45_000) → '0m' ⇐ '< 1m' is self-contradictory",
+          "reviewSha": "2778a4387b346e88f7e75b775515e0b9b9085f8d",
+          "reviewCreated": "2026-05-05T17:35:17Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "rewrote example to → '< 1m' only; added explicit examples for 0, negative, and NaN"
+        }
+      ]
+    },
+    {
+      "sourcePR": 1788,
+      "analyzedAt": "2026-05-05T19:34:00Z",
+      "findings": [
+        {
+          "bot": "aictrl-dev",
+          "severity": "BUG",
+          "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+          "line": "",
+          "description": "<h1> replaced with <span> — page loses its only heading, breaking a11y",
+          "reviewSha": "b3a8c03f",
+          "reviewCreated": "2026-05-05T17:40:47Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "restored <h1 class=crpd-header-title> wrapping PR # and title; added margin:0 to keep layout identical"
+        },
+        {
+          "bot": "aictrl-dev",
+          "severity": "BUG",
+          "file": "ui/src/utils/formatDuration.ts",
+          "line": "",
+          "description": "formatDuration returns 0m for sub-minute positive values",
+          "reviewSha": "b3a8c03f",
+          "reviewCreated": "2026-05-05T17:40:47Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "already fixed in round-2 commit b3a8c03f via < 60_000 guard"
+        },
+        {
+          "bot": "aictrl-dev",
+          "severity": "CONSISTENCY",
+          "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+          "line": "",
+          "description": "actionableCount uses subtraction instead of explicit status filter",
+          "reviewSha": "b3a8c03f",
+          "reviewCreated": "2026-05-05T17:40:47Z",
+          "verdict": "FALSE",
+          "action": "IGNORE",
+          "reason": "intentional — undefined-status findings are pending (line 366 f.status ?? pending), bot's filter would exclude them and break meta/pill count agreement"
+        },
+        {
+          "bot": "aictrl-dev",
+          "severity": "CONSISTENCY",
+          "file": "ui/src/utils/formatDuration.ts",
+          "line": "",
+          "description": "Docstring example contradicts actual output",
+          "reviewSha": "b3a8c03f",
+          "reviewCreated": "2026-05-05T17:40:47Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "already fixed in round-2 commit b3a8c03f via rewritten example block"
+        },
+        {
+          "bot": "aictrl-dev",
+          "severity": "CONSISTENCY",
+          "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+          "line": "",
+          "description": "Run another review button always disabled, shipped as dead UI",
+          "reviewSha": "b3a8c03f",
+          "reviewCreated": "2026-05-05T17:40:47Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "already addressed in round-1 commit 2778a438 via inline TODO comment referencing punch-list item 4"
+        }
+      ]
+    }
+  ],
+  "labelled": [
+    {
+      "bot": "github-actions",
+      "severity": "BUG",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": "69",
+      "description": "formatDuration produces '-1m' for negative ms (clock skew on firstReviewLatencyMs)",
+      "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+      "reviewCreated": "2026-05-05T17:17:27Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "extracted to ui/src/utils/formatDuration.ts with ms<=0 guard returning '< 1m'"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": "69",
+      "description": "formatDuration duplicated across 9 files",
+      "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+      "reviewCreated": "2026-05-05T17:17:27Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "partial — extracted to shared util and consumed here. Other 8 files defer to a follow-up because signatures vary"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": "65",
+      "description": "formatNumber identical to UsageDashboard.tsx version",
+      "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+      "reviewCreated": "2026-05-05T17:17:27Z",
+      "verdict": "FALSE",
+      "action": "FIX",
+      "reason": "identical claim is wrong — UsageDashboard's has K/M compact abbreviations, ours is plain toLocaleString. Created shared util for this page; UsageDashboard kept as-is because semantics differ"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "BUG",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": "112",
+      "description": "actionableCount treats findings with status===undefined as actionable",
+      "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+      "reviewCreated": "2026-05-05T17:17:27Z",
+      "verdict": "FALSE",
+      "action": "IGNORE",
+      "reason": "current code is correct — the existing dashboard treats undefined as 'pending' (line 366: f.status??'pending'); changing would create mismatch with status-filter pill counts"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "BUG",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": "164",
+      "description": "stray leading space in diff stats when additions is null and deletions is present",
+      "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+      "reviewCreated": "2026-05-05T17:17:27Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "moved separator inside additions+deletions conjunction conditional"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "BUG",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": "69",
+      "description": "formatDuration(0) returns '0m' — '< 1m' clearer",
+      "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+      "reviewCreated": "2026-05-05T17:17:27Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "subsumed by [1] ms<=0 guard"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": "536",
+      "description": "onRunAnotherReview is permanently disabled stub with no tracking issue",
+      "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+      "reviewCreated": "2026-05-05T17:17:27Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "added inline comment referencing punch-list item 4 in PR description"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": "94",
+      "description": "earliestReviewStart and latestReviewStart each do .map().reduce() over the same array",
+      "reviewSha": "d2c04e1cb98b8b20b9007eab7ff3f07f0034d953",
+      "reviewCreated": "2026-05-05T17:17:27Z",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "real on tiny array (<=30 reviews per cap); two-pass code is more readable than Math.min/max spread which needs empty-array fallback"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "BUG",
+      "file": "ui/src/utils/formatDuration.ts",
+      "line": "22-24",
+      "description": "Sub-minute durations (0 < ms < 60_000) bypass <= 0 guard and return '0m'",
+      "reviewSha": "2778a4387b346e88f7e75b775515e0b9b9085f8d",
+      "reviewCreated": "2026-05-05T17:35:17Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "replaced <= 0 guard with < 60_000 to cover all three degenerate cases"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "BUG",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": "83-85",
+      "description": "Invalid startedAt → getTime() returns NaN → reduce propagates → new Date(NaN).toISOString() throws RangeError",
+      "reviewSha": "2778a4387b346e88f7e75b775515e0b9b9085f8d",
+      "reviewCreated": "2026-05-05T17:35:17Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "filter Number.isFinite before Math.min/max — NaN can't reach toISOString()"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "BUG",
+      "file": "ui/src/utils/formatDuration.ts",
+      "line": "21-29",
+      "description": "NaN input falls through every comparison and returns 'NaNd'",
+      "reviewSha": "2778a4387b346e88f7e75b775515e0b9b9085f8d",
+      "reviewCreated": "2026-05-05T17:35:17Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "added Number.isFinite guard at top returning '—'"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "ui/src/utils/formatDuration.ts",
+      "line": "18-19",
+      "description": "Doc comment claims 9 other files have local copies but count is unverified/drifted",
+      "reviewSha": "2778a4387b346e88f7e75b775515e0b9b9085f8d",
+      "reviewCreated": "2026-05-05T17:35:17Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "removed specific count from docstring — now says 'other files' without naming a number"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "ui/src/utils/formatDuration.ts",
+      "line": "4",
+      "description": "Doc example formatDuration(45_000) → '0m' ⇐ '< 1m' is self-contradictory",
+      "reviewSha": "2778a4387b346e88f7e75b775515e0b9b9085f8d",
+      "reviewCreated": "2026-05-05T17:35:17Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "rewrote example to → '< 1m' only; added explicit examples for 0, negative, and NaN"
+    },
+    {
+      "bot": "aictrl-dev",
+      "severity": "BUG",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": "",
+      "description": "<h1> replaced with <span> — page loses its only heading, breaking a11y",
+      "reviewSha": "b3a8c03f",
+      "reviewCreated": "2026-05-05T17:40:47Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "restored <h1 class=crpd-header-title> wrapping PR # and title; added margin:0 to keep layout identical"
+    },
+    {
+      "bot": "aictrl-dev",
+      "severity": "BUG",
+      "file": "ui/src/utils/formatDuration.ts",
+      "line": "",
+      "description": "formatDuration returns 0m for sub-minute positive values",
+      "reviewSha": "b3a8c03f",
+      "reviewCreated": "2026-05-05T17:40:47Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "already fixed in round-2 commit b3a8c03f via < 60_000 guard"
+    },
+    {
+      "bot": "aictrl-dev",
+      "severity": "CONSISTENCY",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": "",
+      "description": "actionableCount uses subtraction instead of explicit status filter",
+      "reviewSha": "b3a8c03f",
+      "reviewCreated": "2026-05-05T17:40:47Z",
+      "verdict": "FALSE",
+      "action": "IGNORE",
+      "reason": "intentional — undefined-status findings are pending (line 366 f.status ?? pending), bot's filter would exclude them and break meta/pill count agreement"
+    },
+    {
+      "bot": "aictrl-dev",
+      "severity": "CONSISTENCY",
+      "file": "ui/src/utils/formatDuration.ts",
+      "line": "",
+      "description": "Docstring example contradicts actual output",
+      "reviewSha": "b3a8c03f",
+      "reviewCreated": "2026-05-05T17:40:47Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "already fixed in round-2 commit b3a8c03f via rewritten example block"
+    },
+    {
+      "bot": "aictrl-dev",
+      "severity": "CONSISTENCY",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": "",
+      "description": "Run another review button always disabled, shipped as dead UI",
+      "reviewSha": "b3a8c03f",
+      "reviewCreated": "2026-05-05T17:40:47Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "already addressed in round-1 commit 2778a438 via inline TODO comment referencing punch-list item 4"
+    }
+  ]
+}

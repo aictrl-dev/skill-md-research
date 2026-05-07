@@ -1,0 +1,207 @@
+{
+  "number": 1781,
+  "category": "medium",
+  "title": "fix(mcp): security scoping for skills and code-review",
+  "rationale": "linked to issue #1777, security topic, multi-round reviews",
+  "body": "Closes #1777\n\nFollow-up from PR #1775 findings:\n- [x] server/mcp/tools/skills.ts: Added org-scoped task access check in `recommend_skills`\n- [x] server/mcp/tools/code-review.ts: Fixed `org_id` vs null `sessionOrg` collision risk\n- [x] Added tests for both fixes in `test/mcp/skills.test.ts` and `test/mcp/code-review.test.ts`",
+  "baseRefName": "sandbox",
+  "headRefName": "fix/1777-mcp-security-scoping",
+  "baseSha": "1567e8f2a5aecf90e04a10ffcd2be0d763ca39a1",
+  "headSha": "8b83e25b356f4d07dc4695af2b298991ccb797d7",
+  "additions": 111,
+  "deletions": 15,
+  "changedFiles": 4,
+  "diff": "diff --git a/server/mcp/tools/code-review.ts b/server/mcp/tools/code-review.ts\nindex 3a93bdfe..2552460b 100644\n--- a/server/mcp/tools/code-review.ts\n+++ b/server/mcp/tools/code-review.ts\n@@ -377,6 +377,21 @@ function prIdMatchesExpected(\n   return prId === buildPrId(orgId, repoFullName, prNumber);\n }\n \n+/**\n+ * Cross-tenant guard. Reject when there is no session org, OR when the claimed\n+ * org_id from the args doesn't match the session org. Returns a forbidden\n+ * ToolResponse on failure, `null` when the caller may proceed. Centralised so\n+ * the three handlers (record_review_started, record_finding,\n+ * record_review_completed) share one implementation and stay in sync.\n+ */\n+function requireOrgMatch(claimedOrg: string): ToolResponse | null {\n+  const sessionOrg = getCurrentOrgId();\n+  if (!sessionOrg || claimedOrg !== sessionOrg) {\n+    return errorResponse('forbidden', `org_id must match session org (${sessionOrg || 'none'})`);\n+  }\n+  return null;\n+}\n+\n // ---------------------------------------------------------------------------\n // Handler\n // ---------------------------------------------------------------------------\n@@ -407,11 +422,8 @@ export async function handle(\n       }\n       const a = parsed.data;\n \n-      // Cross-tenant guard: org_id in args must match the session's org.\n-      const sessionOrg = getCurrentOrgId();\n-      if (a.org_id !== sessionOrg) {\n-        return errorResponse('forbidden', `org_id must match session org (${sessionOrg})`);\n-      }\n+      const orgGuard = requireOrgMatch(a.org_id);\n+      if (orgGuard) return orgGuard;\n \n       // Always reconstruct the canonical prId from declared inputs; if the\n       // caller supplied pr_id, require strict equality with the canonical form.\n@@ -470,11 +482,8 @@ export async function handle(\n       }\n       const a = parsed.data;\n \n-      // Cross-tenant guard.\n-      const sessionOrg = getCurrentOrgId();\n-      if (a.org_id !== sessionOrg) {\n-        return errorResponse('forbidden', `org_id must match session org (${sessionOrg})`);\n-      }\n+      const orgGuard = requireOrgMatch(a.org_id);\n+      if (orgGuard) return orgGuard;\n       if (!prIdMatchesExpected(a.pr_id, a.org_id, a.repository.full_name, a.pr.number)) {\n         return errorResponse('forbidden', 'pr_id does not match the supplied repository + pr.number for this org');\n       }\n@@ -547,11 +556,8 @@ export async function handle(\n       }\n       const a = parsed.data;\n \n-      // Cross-tenant guard.\n-      const sessionOrg = getCurrentOrgId();\n-      if (a.org_id !== sessionOrg) {\n-        return errorResponse('forbidden', `org_id must match session org (${sessionOrg})`);\n-      }\n+      const orgGuard = requireOrgMatch(a.org_id);\n+      if (orgGuard) return orgGuard;\n       if (!prIdMatchesExpected(a.pr_id, a.org_id, a.repository.full_name, a.pr.number)) {\n         return errorResponse('forbidden', 'pr_id does not match the supplied repository + pr.number for this org');\n       }\ndiff --git a/server/mcp/tools/skills.ts b/server/mcp/tools/skills.ts\nindex 5a13dc26..577d413d 100644\n--- a/server/mcp/tools/skills.ts\n+++ b/server/mcp/tools/skills.ts\n@@ -312,6 +312,9 @@ export async function handle(\n       if (!task) {\n         return errorResponse('not_found', `Task not found: ${taskId}`);\n       }\n+      if (!orgId || task.organizationId !== orgId) {\n+        return errorResponse('forbidden', 'Task does not belong to your organization');\n+      }\n \n       const mappedPhases = TASK_STATUS_TO_PHASES[task.status as TaskStatus] || [];\n       const taskStackLayers = task.stackLayerIds || [];\ndiff --git a/test/mcp/code-review.test.ts b/test/mcp/code-review.test.ts\nindex e520f4ed..3385ab32 100644\n--- a/test/mcp/code-review.test.ts\n+++ b/test/mcp/code-review.test.ts\n@@ -740,3 +740,45 @@ describe('unknown tool', () => {\n     expect(body.error).toBe('unknown_tool');\n   });\n });\n+\n+describe('null sessionOrg guard', () => {\n+  beforeEach(() => {\n+    vi.clearAllMocks();\n+    (getCurrentOrgId as ReturnType<typeof vi.fn>).mockReturnValue(null);\n+  });\n+\n+  afterEach(() => {\n+    (getCurrentOrgId as ReturnType<typeof vi.fn>).mockReturnValue('test-org');\n+  });\n+\n+  it('record_review_started — forbidden when sessionOrg is null', async () => {\n+    const response = await handle(\n+      'record_review_started',\n+      baseReviewArgs,\n+      deps,\n+    );\n+    expect(response.isError).toBe(true);\n+    const body = parseResponse(response);\n+    expect(body.error).toBe('forbidden');\n+    expect(body.message).toContain('none');\n+    expect(mockCreateReview).not.toHaveBeenCalled();\n+  });\n+\n+  it('record_finding — forbidden when sessionOrg is null', async () => {\n+    const response = await handle('record_finding', baseFindingArgs, deps);\n+    expect(response.isError).toBe(true);\n+    const body = parseResponse(response);\n+    expect(body.error).toBe('forbidden');\n+    expect(body.message).toContain('none');\n+    expect(mockRecordFinding).not.toHaveBeenCalled();\n+  });\n+\n+  it('record_review_completed — forbidden when sessionOrg is null', async () => {\n+    const response = await handle('record_review_completed', baseCompletedArgs, deps);\n+    expect(response.isError).toBe(true);\n+    const body = parseResponse(response);\n+    expect(body.error).toBe('forbidden');\n+    expect(body.message).toContain('none');\n+    expect(mockCompleteReview).not.toHaveBeenCalled();\n+  });\n+});\ndiff --git a/test/mcp/skills.test.ts b/test/mcp/skills.test.ts\nindex a59204bb..dfb1d39b 100644\n--- a/test/mcp/skills.test.ts\n+++ b/test/mcp/skills.test.ts\n@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';\n import { handle } from '../../server/mcp/tools/skills.js';\n import type { ToolDependencies, ToolResponse } from '../../server/mcp/helpers/types.js';\n import type { IStateManager } from '../../server/state/interface.js';\n+import type { EpicTask } from '../../server/state/types.js';\n \n // ---------------------------------------------------------------------------\n // Mocks\n@@ -11,6 +12,7 @@ vi.mock('../../server/mcp/helpers/session-context.js', () => ({\n   getCurrentUserId: vi.fn(() => 'test-user'),\n   getCurrentOrgId: vi.fn(() => 'test-org'),\n }));\n+import { getCurrentOrgId } from '../../server/mcp/helpers/session-context.js';\n \n const mockSkillsManager = {\n   listAvailableSkills: vi.fn().mockResolvedValue([]),\n@@ -68,6 +70,13 @@ describe('skills MCP tools consistency', () => {\n   });\n \n   describe('recommend_skills', () => {\n+    const baseTask = {\n+      id: 'task-123',\n+      organizationId: 'test-org',\n+      status: 'active',\n+      stackLayerIds: ['api'],\n+    };\n+\n     it('returns missing_param error response when task_id is missing', async () => {\n       const result = await handle('recommend_skills', {}, makeDeps());\n       expect(result.isError).toBe(true);\n@@ -75,6 +84,42 @@ describe('skills MCP tools consistency', () => {\n       expect(payload.error).toBe('missing_param');\n     });\n \n+    it('returns recommendations when task belongs to org', async () => {\n+      vi.mocked(mockStateManager.getTask).mockResolvedValue(baseTask as unknown as EpicTask);\n+      vi.mocked(mockSkillsManager.listAvailableSkills).mockResolvedValue([]);\n+\n+      const result = await handle('recommend_skills', { task_id: 'task-123' }, makeDeps());\n+\n+      expect(result.isError).toBeUndefined();\n+      const payload = parseResponse(result);\n+      expect(payload.recommendations).toBeDefined();\n+    });\n+\n+    it('returns forbidden when task belongs to different org', async () => {\n+      vi.mocked(mockStateManager.getTask).mockResolvedValue({\n+        ...baseTask,\n+        organizationId: 'other-org',\n+      } as unknown as EpicTask);\n+\n+      const result = await handle('recommend_skills', { task_id: 'task-123' }, makeDeps());\n+\n+      expect(result.isError).toBe(true);\n+      const payload = parseResponse(result);\n+      expect(payload.error).toBe('forbidden');\n+      expect(payload.message).toContain('not belong to your organization');\n+    });\n+\n+    it('returns forbidden when session has no org (fail-closed)', async () => {\n+      vi.mocked(getCurrentOrgId).mockReturnValueOnce(null);\n+      vi.mocked(mockStateManager.getTask).mockResolvedValue(baseTask as unknown as EpicTask);\n+\n+      const result = await handle('recommend_skills', { task_id: 'task-123' }, makeDeps());\n+\n+      expect(result.isError).toBe(true);\n+      const payload = parseResponse(result);\n+      expect(payload.error).toBe('forbidden');\n+    });\n+\n     it('returns not_found error response when task does not exist', async () => {\n       vi.mocked(mockStateManager.getTask).mockResolvedValue(null);\n       const result = await handle('recommend_skills', { task_id: 'nonexistent' }, makeDeps());",
+  "botReviews": [
+    {
+      "body": "## Code Review — PR #1781\n\n**fix(mcp): security scoping for skills and code-review**\n\n4 files changed · 139 additions · 6 deletions · 5 findings (1 blocker, 3 major, 1 minor)\n\n---\n\n### BLOCKER\n\n**`server/mcp/tools/skills.ts:320` — Null orgId bypasses org-scoping check (fail-open)**\n\nThe guard `if (orgId && task.organizationId !== orgId)` short-circuits when `orgId` is null, allowing a session with no org context to read skill recommendations for **any** task regardless of ownership. Every other tool file (code-review.ts, epics.ts, kg.ts, stack.ts) blocks when the session org is null. The code-review.ts handlers in this same PR use `!sessionOrg ||` (fail-closed), making this permissive path inconsistent and dangerous.\n\n```ts\n// Current — fail-open\nif (orgId && task.organizationId !== orgId) {\n\n// Should be — fail-closed, matching code-review.ts\nif (!orgId || task.organizationId !== orgId) {\n```\n\n---\n\n### MAJOR\n\n**`server/mcp/tools/skills.ts:321` — Forbidden response missing `isError: true`**\n\nUses `jsonResponse({ error: \"forbidden\", message: \"...\" })` which does **not** set `isError: true` on the MCP ToolResponse. Every other tool file uses `errorResponse()` for authorization errors (39 call sites across code-review.ts, epics.ts, kg.ts, stack.ts). An MCP client checking `response.isError` will silently treat this forbidden response as a successful call.\n\n```ts\n// Current — no isError flag\nreturn jsonResponse({ error: \"forbidden\", message: \"Task does not belong to your organization\" });\n\n// Should be\nreturn errorResponse('forbidden', 'Task does not belong to your organization');\n```\n\n**`test/mcp/skills.test.ts` — No test for null-orgId permissive path**\n\nThe three existing tests cover same-org success, different-org forbidden, and not-found. The most security-critical case — `getCurrentOrgId()` returning `null` (the condition that bypasses the guard) — has zero test coverage. A fourth test should mock null orgId and verify access is denied.\n\n**`test/mcp/code-review.test.ts:732` — Only 1 of 3 handlers tested for null sessionOrg**\n\nThe null-sessionOrg guard was applied to three handlers (`record_review_started`, `record_finding`, `record_review_completed`) but the new test block only covers `record_review_started`. Add test cases for the other two handlers to prevent inconsistent regressions.\n\n---\n\n### MINOR\n\n**`server/mcp/tools/skills.ts:309` — Unused `userId` variable shadows outer scope**\n\n`const userId = getCurrentUserId() || \"anonymous\"` is declared but never used in the `recommend_skills` case block. The outer `handle()` function already resolves these at lines 124-125. Remove the redundant declarations.\n\n---\n\nReviewed SHA: 25bb2373202f4a0583cc9ef76023ea7e879d7a17",
+      "createdAt": "2026-05-05T10:14:35Z",
+      "id": 4378340175,
+      "user": "github-actions[bot]"
+    },
+    {
+      "body": "## Code Review — aictrl-dev/aictrl#1781\n\n**PR:** fix(mcp): security scoping for skills and code-review\n**Files changed:** 4 | **+140 / -6**\n\n---\n\n### BLOCKER\n\n| # | File | Line | Summary |\n|---|------|------|---------|\n| 1 | `server/mcp/tools/skills.ts` | 320 | Org tenant guard skipped when session has no orgId |\n\n**#1 — Org tenant guard skipped when session has no orgId**\nThe condition `if (orgId && task.organizationId !== orgId)` only enforces the org boundary when `orgId` is truthy. If the session has no org (unauthenticated or personal workspace), the guard is skipped entirely, allowing a session-less caller to access tasks belonging to any organization. This is inconsistent with the fix in `code-review.ts` which correctly uses `if (!sessionOrg || a.org_id !== sessionOrg)` to reject all unscoped sessions.\n\n```typescript\n// Current (vulnerable):\nif (orgId && task.organizationId !== orgId) {\n  return jsonResponse({ error: \"forbidden\", message: \"...\" });\n}\n\n// Should be (consistent with code-review.ts):\nif (!orgId || task.organizationId !== orgId) {\n  return errorResponse('forbidden', 'No organization context or task does not belong to your organization');\n}\n```\n\n---\n\n### MAJOR\n\n| # | File | Line | Summary |\n|---|------|------|---------|\n| 2 | `server/mcp/tools/skills.ts` | 321 | Security error uses `jsonResponse` instead of `errorResponse` |\n\n**#2 — Security error uses `jsonResponse` instead of `errorResponse`**\nThe new forbidden guard in `recommend_skills` returns `jsonResponse({ error: 'forbidden' })`, which does NOT set `isError: true` on the ToolResponse. Every other MCP tool (`code-review.ts`, `epics.ts`, `kg.ts`, `stack.ts`) uses `errorResponse()` for security violations, which sets `isError: true`. Clients that check `isError` to detect auth failures will silently miss this forbidden case. The test at `skills.test.ts:79` even asserts `expect(result.isError).toBeUndefined()`, codifying the inconsistency.\n\n```typescript\n// Current:\nreturn jsonResponse({ error: \"forbidden\", message: \"Task does not belong to your organization\" });\n\n// Should be:\nreturn errorResponse('forbidden', 'Task does not belong to your organization');\n```\n\n---\n\n### MINOR\n\n| # | File | Line | Summary |\n|---|------|------|---------|\n| 3 | `server/mcp/tools/skills.ts` | 309 | Redundant variable declarations shadow outer scope |\n| 4 | `server/mcp/tools/code-review.ts` | 408–552 | Identical null-org guard duplicated 3 times |\n| 5 | `test/mcp/code-review.test.ts` | 731 | Only 1 of 3 null-org guards is tested |\n| 6 | `test/mcp/skills.test.ts` | 76 | No test for null/undefined orgId in recommend_skills |\n\n**#3 — Redundant variable declarations shadow outer scope**\n`userId` and `orgId` at lines 309–310 are already declared at lines 124–125 in the enclosing function scope. The re-declarations shadow them with slightly different null-coalescing logic (`|| 'anonymous'` vs `?? undefined` for the outer `orgId`). This could cause subtle differences if the outer declarations change.\n\n**#4 — Identical null-org guard duplicated 3 times in one file**\nThe pattern `const sessionOrg = getCurrentOrgId(); if (!sessionOrg || a.org_id !== sessionOrg) { return errorResponse(...) }` is copy-pasted at lines ~408, ~471, and ~549. Consider extracting a shared helper (e.g., `requireOrgMatch(claimedOrg)`) to avoid future drift.\n\n**#5 — Only 1 of 3 null-org guards is tested**\nThe PR adds identical null-sessionOrg guards to three sub-commands (`record_review_started`, `record_finding`, `complete_review`) but only tests `record_review_started`. The other two have the same guard but no test. Add analogous test cases or parameterise with `describe.each`.\n\n**#6 — No test for null/undefined orgId in recommend_skills**\nThe code-review test file covers the null-sessionOrg case explicitly, but the new skills test file has no analogous test for when `getCurrentOrgId()` returns null. Given the guard uses `if (orgId && ...)` (short-circuits on null), this is an important edge case that should be verified.\n\n---\n\n### NIT\n\n| # | File | Line | Summary |\n|---|------|------|---------|\n| 7 | `server/mcp/tools/skills.ts` | 309 | Double-quote string breaks single-quote convention |\n\n**#7 — Double-quote string breaks single-quote convention**\nLine 309 uses `\"anonymous\"` (double quotes) while the broader codebase consistently uses single quotes. Change `|| \"anonymous\"` to `|| 'anonymous'`.\n\n---\n\nReviewed SHA: 9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+      "createdAt": "2026-05-05T11:06:25Z",
+      "id": 4378649465,
+      "user": "github-actions[bot]"
+    }
+  ],
+  "verdicts": [
+    {
+      "sourcePR": 1781,
+      "analyzedAt": "2026-05-05T14:44:00Z",
+      "findings": [
+        {
+          "bot": "github-actions",
+          "severity": "SECURITY",
+          "file": "server/mcp/tools/skills.ts",
+          "line": "320",
+          "description": "Null orgId bypasses org-scoping check (fail-open) — if (orgId && task.organizationId !== orgId) skips guard when orgId is undefined",
+          "reviewSha": "9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+          "reviewCreated": "2026-05-05T11:06:25Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "verified — guard tightened to !orgId || ... matching fail-closed pattern in code-review.ts/epics.ts/kg.ts/stack.ts"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "BUG",
+          "file": "server/mcp/tools/skills.ts",
+          "line": "321",
+          "description": "Forbidden response uses jsonResponse instead of errorResponse — missing isError: true flag",
+          "reviewSha": "9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+          "reviewCreated": "2026-05-05T11:06:25Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "verified — switched to errorResponse() and updated test assertion that codified the bug"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "server/mcp/tools/skills.ts",
+          "line": "309-310",
+          "description": "Redundant inner userId/orgId declarations shadow identical outer-scope declarations at lines 124-125",
+          "reviewSha": "9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+          "reviewCreated": "2026-05-05T11:06:25Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "verified — outer and inner are identical except quoting; inner removed"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "server/mcp/tools/code-review.ts",
+          "line": "408-552",
+          "description": "Identical null-org guard duplicated 3x across record_review_started, record_finding, record_review_completed",
+          "reviewSha": "9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+          "reviewCreated": "2026-05-05T11:06:25Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "extracted requireOrgMatch() helper; all 3 handlers now share one implementation"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "test/mcp/code-review.test.ts",
+          "line": "732",
+          "description": "Only record_review_started has null-sessionOrg test; record_finding and record_review_completed not exercised",
+          "reviewSha": "9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+          "reviewCreated": "2026-05-05T11:06:25Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "added two parallel test cases for the missing handlers; each asserts isError, forbidden code, none-substring message, and that the manager mock was not called"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "test/mcp/skills.test.ts",
+          "line": "76",
+          "description": "No test for null/undefined orgId edge case in recommend_skills",
+          "reviewSha": "9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+          "reviewCreated": "2026-05-05T11:06:25Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "added returns forbidden when session has no org (fail-closed) test that mocks getCurrentOrgId to null and asserts the rejection"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "server/mcp/tools/skills.ts",
+          "line": "309",
+          "description": "Double-quote string \"anonymous\" breaks codebase single-quote convention",
+          "reviewSha": "9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+          "reviewCreated": "2026-05-05T11:06:25Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "resolved as side-effect of [3] — the offending line was deleted"
+        }
+      ]
+    }
+  ],
+  "labelled": [
+    {
+      "bot": "github-actions",
+      "severity": "SECURITY",
+      "file": "server/mcp/tools/skills.ts",
+      "line": "320",
+      "description": "Null orgId bypasses org-scoping check (fail-open) — if (orgId && task.organizationId !== orgId) skips guard when orgId is undefined",
+      "reviewSha": "9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+      "reviewCreated": "2026-05-05T11:06:25Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "verified — guard tightened to !orgId || ... matching fail-closed pattern in code-review.ts/epics.ts/kg.ts/stack.ts"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "BUG",
+      "file": "server/mcp/tools/skills.ts",
+      "line": "321",
+      "description": "Forbidden response uses jsonResponse instead of errorResponse — missing isError: true flag",
+      "reviewSha": "9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+      "reviewCreated": "2026-05-05T11:06:25Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "verified — switched to errorResponse() and updated test assertion that codified the bug"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "server/mcp/tools/skills.ts",
+      "line": "309-310",
+      "description": "Redundant inner userId/orgId declarations shadow identical outer-scope declarations at lines 124-125",
+      "reviewSha": "9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+      "reviewCreated": "2026-05-05T11:06:25Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "verified — outer and inner are identical except quoting; inner removed"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "server/mcp/tools/code-review.ts",
+      "line": "408-552",
+      "description": "Identical null-org guard duplicated 3x across record_review_started, record_finding, record_review_completed",
+      "reviewSha": "9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+      "reviewCreated": "2026-05-05T11:06:25Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "extracted requireOrgMatch() helper; all 3 handlers now share one implementation"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "test/mcp/code-review.test.ts",
+      "line": "732",
+      "description": "Only record_review_started has null-sessionOrg test; record_finding and record_review_completed not exercised",
+      "reviewSha": "9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+      "reviewCreated": "2026-05-05T11:06:25Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "added two parallel test cases for the missing handlers; each asserts isError, forbidden code, none-substring message, and that the manager mock was not called"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "test/mcp/skills.test.ts",
+      "line": "76",
+      "description": "No test for null/undefined orgId edge case in recommend_skills",
+      "reviewSha": "9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+      "reviewCreated": "2026-05-05T11:06:25Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "added returns forbidden when session has no org (fail-closed) test that mocks getCurrentOrgId to null and asserts the rejection"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "server/mcp/tools/skills.ts",
+      "line": "309",
+      "description": "Double-quote string \"anonymous\" breaks codebase single-quote convention",
+      "reviewSha": "9dfeacd19e24abbdb2b5295c5f9f58f816adbf6e",
+      "reviewCreated": "2026-05-05T11:06:25Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "resolved as side-effect of [3] — the offending line was deleted"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "prNumber": 1783,
+  "runId": "2026-05-06T18-55-26-378654",
+  "executionId": "phase-a-1783-2026-05-06T18-55-26-378654",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1783-2026-05-06T15-04-37-4060021",
+      "executionRunId": "phase-a-1783-2026-05-06T15-04-37-4060021"
+    },
+    {
+      "reviewId": "phase-a-1783-2026-05-06T18-55-26-378654",
+      "executionRunId": ""
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1783-2026-05-06T18-55-26-378654",
+      "findingId": "bb18d6b81e8e3310",
+      "file": "server/mcp/tools/skills.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Error code renamed missing_params to missing_param",
+      "description": "The error code string changed from 'missing_params' (plural) to 'missing_param' (singular) across 3 call sites. While other MCP tools (stack.ts, index.ts) already use the singular form and no internal code references the old plural form, this is a breaking change in the error response wire format for any external consumer matching on the literal string. The PR description does not explicitly flag this as a breaking change.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

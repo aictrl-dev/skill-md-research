@@ -1,0 +1,87 @@
+{
+  "prNumber": 1788,
+  "runId": "2026-05-06T23-43-48-1085987",
+  "executionId": "phase-a-1788-2026-05-06T23-43-48-1085987",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1788-2026-05-06T14-32-13-3969789",
+      "executionRunId": "phase-a-1788-2026-05-06T14-32-13-3969789"
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T19-56-15-510804",
+      "executionRunId": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T23-43-48-1085987",
+      "executionRunId": ""
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1788-2026-05-06T23-43-48-1085987",
+      "findingId": "1f350307c246f053",
+      "file": "ui/src/utils/formatDuration.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "formatDuration duplicated in 3 other files",
+      "description": "The new shared formatDuration util co-exists with local copies in InsightsExecutions.tsx:13, SkillUsageDashboard.tsx:72, and CodeReviewQualityDashboard.tsx:67 (formatDurationMs). The doc comment acknowledges drift but says migration is tracked as 'a separate refactor' without linking an issue, violating the project rule that TODOs must have an issue reference.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T23-43-48-1085987",
+      "findingId": "68d1533a4f957422",
+      "file": "ui/src/utils/formatNumber.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "formatNumber lacks a unit test file",
+      "description": "formatDuration was added alongside a test file at ui/src/utils/__tests__/formatDuration.test.ts, but formatNumber has no corresponding test. Both are new shared utilities exported from ui/src/utils/ and should have consistent test coverage.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T23-43-48-1085987",
+      "findingId": "750dacaf5b3c7a78",
+      "file": "ui/src/pages/code-review/__tests__/CodeReviewPullDetailPage.test.tsx",
+      "line": null,
+      "severity": "medium",
+      "title": "Test file not updated for rebuilt PRHeader",
+      "description": "PRHeader was rebuilt with a 4-tile meta grid (Opened, First review latency, Review runs, Findings summary), a diff-stats row, and new action buttons. The co-located test file was not updated — the existing 'renders PR header' test (line 170) only checks title and author. None of the new derived stats, formatting calls, or conditional branches are exercised by tests.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T23-43-48-1085987",
+      "findingId": "87665c96c4d4e97f",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "medium",
+      "title": "TODO comment references the PR itself, not an issue",
+      "description": "The JSX comment says 'wiring ... to a real endpoint is item 4 on the punch list in the PR description (#1788)'. Referencing the PR itself as the tracking mechanism is not a durable issue reference — once the PR merges, the TODO becomes untrackable. Per project conventions, TODOs should reference a GitHub issue number.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T23-43-48-1085987",
+      "findingId": "8b7ee46556addee5",
+      "file": "ui/src/utils/formatDuration.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "formatDuration drops hour remainder for day durations",
+      "description": "When a duration exceeds 24 hours, the function only shows whole days without the hour remainder (e.g. 36 hours renders as '1d' instead of '1d 12h'). This is inconsistent with the hours+minutes branch (line 37) which does include the minute remainder. The companion test file also lacks coverage for day+hour combinations, so the truncation went undetected.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1788-2026-05-06T23-43-48-1085987",
+      "findingId": "f07f9b4b5bb514d5",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.css",
+      "line": null,
+      "severity": "low",
+      "title": "Hardcoded min-width: 200px on title",
+      "description": "crpd-header-title uses min-width: 200px as a raw pixel value while all other spacing/sizing in the file uses design tokens (var(--space-*), var(--font-size-*)). This is the only hardcoded pixel value in the file.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

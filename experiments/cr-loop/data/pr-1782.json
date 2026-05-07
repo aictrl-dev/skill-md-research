@@ -1,0 +1,231 @@
+{
+  "number": 1782,
+  "category": "medium",
+  "title": "fix(mcp): logic errors in epics and task routing",
+  "rationale": "same area as #1781 — tests cross-PR recurrence detection",
+  "body": "Closes #1778\n\nFollow-up from PR #1775 findings:\n- [x] server/mcp/tools/epics.ts: Added `epic_id` guard in `get_epic`\n- [x] server/mcp/tools/epics.ts: Fixed `list_epics` to return actual total from pagination\n- [x] server/mcp/tools/index.ts: Broadened Task ID regex to support alphanumeric prefixes (e.g., EPIC1-1-1)\n- [x] Added tests in `test/mcp/epics-list.test.ts` and updated existing routing/epic tests.",
+  "baseRefName": "sandbox",
+  "headRefName": "fix/1778-mcp-logic-errors",
+  "baseSha": "3a7d76cd921fcb6d1ead309d71f501c9fd408488",
+  "headSha": "1c1d26470c67902fefe875739ab9422a39a33f04",
+  "additions": 140,
+  "deletions": 7,
+  "changedFiles": 5,
+  "diff": "diff --git a/server/mcp/tools/epics.ts b/server/mcp/tools/epics.ts\nindex 4a549330b..7a845437a 100644\n--- a/server/mcp/tools/epics.ts\n+++ b/server/mcp/tools/epics.ts\n@@ -115,7 +115,7 @@ export async function handle(\n             },\n             created_at: e.createdAt,\n           })),\n-          total: result.items.length,\n+          total: result.pagination.total ?? result.items.length,\n           pagination: {\n             has_more: result.pagination.hasMore,\n             next_cursor: result.pagination.nextCursor,\n@@ -134,7 +134,10 @@ export async function handle(\n     }\n \n     case 'get_epic': {\n-      const epicId = args.epic_id as string;\n+      const epicId = (args.epic_id as string | undefined)?.trim();\n+      if (!epicId) {\n+        return errorResponse('missing_epic_id', 'epic_id is required for get_epic');\n+      }\n \n       try {\n         const epic = await stateManager.getEpic(epicId);\n@@ -188,9 +191,9 @@ export async function handle(\n     }\n \n     case 'list_tasks': {\n-      const epicId = args.epic_id as string | undefined;\n+      const epicId = (args.epic_id as string | undefined)?.trim();\n \n-      if (!epicId || epicId.trim() === '') {\n+      if (!epicId) {\n         return errorResponse('missing_epic_id', 'epic_id is required for list_tasks');\n       }\n \n@@ -229,9 +232,9 @@ export async function handle(\n     }\n \n     case 'get_task': {\n-      const taskId = args.task_id as string | undefined;\n+      const taskId = (args.task_id as string | undefined)?.trim();\n \n-      if (!taskId || taskId.trim() === '') {\n+      if (!taskId) {\n         return errorResponse('missing_task_id', 'task_id is required for get_task');\n       }\n \ndiff --git a/server/mcp/tools/index.ts b/server/mcp/tools/index.ts\nindex 3a410abde..6d8c21069 100644\n--- a/server/mcp/tools/index.ts\n+++ b/server/mcp/tools/index.ts\n@@ -129,7 +129,7 @@ export async function handle(\n           return errorResponse('missing_param', 'Get requires a query (epic ID like \"AUTH-1\" or task ID like \"AUTH-1-3\")');\n         }\n         // Task IDs have two hyphens (e.g., AUTH-1-3), epic IDs have one (e.g., AUTH-1)\n-        const isTaskId = /^[A-Z]+-\\d+-\\d+/.test(query);\n+        const isTaskId = /^[A-Za-z0-9]+-\\d+-\\d+$/.test(query);\n         if (isTaskId) {\n           return epics.handle('get_task', { task_id: query, ...params }, deps);\n         }\ndiff --git a/test/mcp/epics-list.test.ts b/test/mcp/epics-list.test.ts\nnew file mode 100644\nindex 000000000..a687c7038\n--- /dev/null\n+++ b/test/mcp/epics-list.test.ts\n@@ -0,0 +1,73 @@\n+import { describe, it, expect, vi, beforeEach } from 'vitest';\n+import { handle } from '../../server/mcp/tools/epics.js';\n+import type { ToolDependencies, ToolResponse } from '../../server/mcp/helpers/types.js';\n+import type { IStateManager } from '../../server/state/interface.js';\n+\n+// ---------------------------------------------------------------------------\n+// Mocks\n+// ---------------------------------------------------------------------------\n+\n+vi.mock('../../server/mcp/helpers/session-context.js', () => ({\n+  getCurrentUserId: vi.fn(() => 'test-user'),\n+  getCurrentOrgId: vi.fn(() => 'test-org'),\n+}));\n+\n+const mockStateManager = {\n+  listEpicSummariesPaginated: vi.fn(),\n+} as unknown as IStateManager;\n+\n+function makeDeps(sessionId = ''): ToolDependencies {\n+  return {\n+    stateManager: mockStateManager,\n+    wsHandler: { broadcast: vi.fn() } as unknown as ToolDependencies['wsHandler'],\n+    sessionId,\n+  };\n+}\n+\n+function parseResponse(response: ToolResponse) {\n+  const text = response.content[0].type === 'text' ? (response.content[0] as { text: string }).text : '';\n+  return JSON.parse(text);\n+}\n+\n+// ---------------------------------------------------------------------------\n+// Tests\n+// ---------------------------------------------------------------------------\n+\n+describe('list_epics MCP tool', () => {\n+  beforeEach(() => {\n+    vi.clearAllMocks();\n+  });\n+\n+  it('returns total count from pagination metadata if available', async () => {\n+    vi.mocked(mockStateManager.listEpicSummariesPaginated).mockResolvedValue({\n+      items: [{ id: 'E1', title: 'Epic 1', status: 'active', source: 'mcp', createdAt: '...', tasksTotal: 0, tasksAvailable: 0, tasksInProgress: 0, tasksCompleted: 0 }],\n+      pagination: {\n+        total: 150,\n+        hasMore: true,\n+        nextCursor: 'cursor-123'\n+      }\n+    });\n+\n+    const result = await handle('list_epics', {}, makeDeps());\n+\n+    expect(result.isError).toBeUndefined();\n+    const payload = parseResponse(result);\n+    expect(payload.total).toBe(150);\n+    expect(payload.epics).toHaveLength(1);\n+  });\n+\n+  it('falls back to items.length if total is missing from pagination', async () => {\n+    vi.mocked(mockStateManager.listEpicSummariesPaginated).mockResolvedValue({\n+      items: [{ id: 'E1', title: 'Epic 1', status: 'active', source: 'mcp', createdAt: '...', tasksTotal: 0, tasksAvailable: 0, tasksInProgress: 0, tasksCompleted: 0 }],\n+      pagination: {\n+        hasMore: false\n+      }\n+    });\n+\n+    const result = await handle('list_epics', {}, makeDeps());\n+\n+    expect(result.isError).toBeUndefined();\n+    const payload = parseResponse(result);\n+    expect(payload.total).toBe(1);\n+  });\n+});\ndiff --git a/test/mcp/epics-tool.test.ts b/test/mcp/epics-tool.test.ts\nindex 99e29fd1d..7b9c692d6 100644\n--- a/test/mcp/epics-tool.test.ts\n+++ b/test/mcp/epics-tool.test.ts\n@@ -145,3 +145,29 @@ describe('get_epic MCP tool — externalRef fields', () => {\n     expect(payload.error).toBe('not_found');\n   });\n });\n+\n+describe('get_epic MCP tool — validation', () => {\n+  it('returns an error when epic_id is missing', async () => {\n+    const result = await handle('get_epic', {}, makeDeps());\n+    expect(result.isError).toBe(true);\n+    const payload = JSON.parse(result.content[0].text);\n+    expect(payload.error).toBe('missing_epic_id');\n+    expect(payload.message).toContain('epic_id is required');\n+  });\n+\n+  it('returns an error when epic_id is whitespace-only', async () => {\n+    const result = await handle('get_epic', { epic_id: '   ' }, makeDeps());\n+    expect(result.isError).toBe(true);\n+    const payload = JSON.parse(result.content[0].text);\n+    expect(payload.error).toBe('missing_epic_id');\n+    expect(payload.message).toContain('epic_id is required');\n+  });\n+\n+  it('trims surrounding whitespace from epic_id before lookup', async () => {\n+    vi.mocked(mockStateManager.getEpic).mockResolvedValue(null);\n+    vi.mocked(mockStateManager.listTasks).mockResolvedValue([]);\n+    vi.mocked(mockStateManager.listFeaturesForTasks).mockResolvedValue(new Map());\n+    await handle('get_epic', { epic_id: '  AUTH-1  ' }, makeDeps());\n+    expect(mockStateManager.getEpic).toHaveBeenCalledWith('AUTH-1');\n+  });\n+});\ndiff --git a/test/mcp/query-context-routing.test.ts b/test/mcp/query-context-routing.test.ts\nindex c77eb294f..1053eec7f 100644\n--- a/test/mcp/query-context-routing.test.ts\n+++ b/test/mcp/query-context-routing.test.ts\n@@ -416,3 +416,34 @@ describe('queryContextDefinition — description quality', () => {\n     expect(desc).toContain('get');\n   });\n });\n+\n+describe('Task ID detection regex', () => {\n+  beforeEach(() => {\n+    vi.clearAllMocks();\n+  });\n+\n+  it('routes uppercase Task IDs (ABC-1-1) to get_task', async () => {\n+    await queryContext('backlog', 'get', 'ABC-1-1');\n+    expect(mockEpicsHandle).toHaveBeenCalledWith('get_task', expect.objectContaining({ task_id: 'ABC-1-1' }), expect.anything());\n+  });\n+\n+  it('routes alphanumeric Task IDs (EPIC123-1-1) to get_task', async () => {\n+    await queryContext('backlog', 'get', 'EPIC123-1-1');\n+    expect(mockEpicsHandle).toHaveBeenCalledWith('get_task', expect.objectContaining({ task_id: 'EPIC123-1-1' }), expect.anything());\n+  });\n+\n+  it('routes lowercase Task IDs (abc-1-1) to get_task', async () => {\n+    await queryContext('backlog', 'get', 'abc-1-1');\n+    expect(mockEpicsHandle).toHaveBeenCalledWith('get_task', expect.objectContaining({ task_id: 'abc-1-1' }), expect.anything());\n+  });\n+\n+  it('routes Epic IDs (ABC-1) to get_epic', async () => {\n+    await queryContext('backlog', 'get', 'ABC-1');\n+    expect(mockEpicsHandle).toHaveBeenCalledWith('get_epic', expect.objectContaining({ epic_id: 'ABC-1' }), expect.anything());\n+  });\n+\n+  it('does not route IDs with trailing characters as task IDs', async () => {\n+    await queryContext('backlog', 'get', 'ABC-1-3-extra');\n+    expect(mockEpicsHandle).toHaveBeenCalledWith('get_epic', expect.objectContaining({ epic_id: 'ABC-1-3-extra' }), expect.anything());\n+  });\n+});",
+  "botReviews": [
+    {
+      "body": "## Code Review: fix(mcp): logic errors in epics and task routing\n\n**PR #1782** | 5 files | +114 / -2\n\n---\n\n### MAJOR\n\n| # | File | Line | Summary |\n|---|------|------|---------|\n| 1 | `server/mcp/tools/epics.ts` | 139 | Error code mismatch with sibling handlers |\n\n**1. Error code mismatch** — The new `get_epic` guard returns `errorResponse('missing_param', …)`, but `list_tasks` (line 197) uses `'missing_epic_id'` and `get_task` (line 238) uses `'missing_task_id'` for the same class of error. Clients that switch on the `error` code will not handle the new code path consistently.\n\n**Suggestion:** Pick one convention — either use domain-specific codes (`'missing_epic_id'`) everywhere, or the generic `'missing_param'`. If switching to the generic code, update `list_tasks` and `get_task` in the same PR.\n\n---\n\n### MINOR\n\n| # | File | Line | Summary |\n|---|------|------|---------|\n| 2 | `server/mcp/tools/epics.ts` | 137-140 | Whitespace-only `epic_id` not rejected |\n\n**2. Incomplete input validation** — The new guard checks only `!epicId`, but `list_tasks` (line 196) and `get_task` (line 237) also reject whitespace-only strings via `.trim()`. A query like `{ epic_id: '   ' }` will pass the guard and hit Firestore with a blank ID, returning a misleading `'not_found'` error instead of `'missing_param'`.\n\n**Suggestion:** Align with the existing pattern:\n```typescript\nif (!epicId || epicId.trim() === '') {\n  return errorResponse('missing_param', 'epic_id is required');\n}\n```\n\n---\n\n### NIT\n\n| # | File | Line | Summary |\n|---|------|------|---------|\n| 3 | `server/mcp/tools/epics.ts` | 137 | Type cast `as string` vs `as string \\| undefined` |\n| 4 | `server/mcp/tools/index.ts` | 132 | Regex lacks `$` end-anchor |\n\n**3. Inconsistent type cast** — `get_epic` casts `args.epic_id as string`, but `list_tasks` (line 194) and `get_task` (line 235) both cast as `string | undefined`. Using `string | undefined` is more precise and self-documenting.\n\n**4. Unanchored regex** — `/^[A-Za-z0-9]+-\\d+-\\d+/` matches strings with arbitrary trailing characters (e.g., `AUTH-1-3<anything>`). While the downstream handler will likely fail gracefully, adding a `$` anchor would prevent routing ambiguity:\n```typescript\nconst isTaskId = /^[A-Za-z0-9]+-\\d+-\\d+$/.test(query);\n```\n\n---\n\n**Findings:** 1 major, 1 minor, 2 nits | **Bot:** aictrl-dev | **Subagents:** Security, Consistency, Bug-Hunter\n\nReviewed SHA: fc7cec516a7a30ad82f7daa47f1ec5b3ce4e93d0",
+      "createdAt": "2026-05-05T11:09:18Z",
+      "id": 4378668402,
+      "user": "github-actions[bot]"
+    }
+  ],
+  "verdicts": [
+    {
+      "sourcePR": 1782,
+      "analyzedAt": "2026-05-05T17:50:00Z",
+      "findings": [
+        {
+          "bot": "github-actions+aictrl-dev",
+          "severity": "BUG",
+          "file": "server/mcp/tools/epics.ts",
+          "line": "137-139",
+          "description": "get_epic uses `!epicId` + `'missing_param'` with cast `as string`, while list_tasks/get_task use `!id || id.trim() === ''` + domain-specific error codes and `as string | undefined`. Whitespace-only epic_id bypasses validation and produces a misleading not_found error",
+          "reviewSha": "fc7cec516a7a30ad82f7daa47f1ec5b3ce4e93d0",
+          "reviewCreated": "2026-05-05T11:09:18Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "Fixed in 6189e0e7 — cast/guard/error-code aligned with siblings"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "server/mcp/tools/epics.ts",
+          "line": "137",
+          "description": "Type cast `as string` differs from sibling handlers' `as string | undefined`",
+          "reviewSha": "fc7cec516a7a30ad82f7daa47f1ec5b3ce4e93d0",
+          "reviewCreated": "2026-05-05T11:09:18Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "Folded into the MAJOR fix in 6189e0e7"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "BUG",
+          "file": "server/mcp/tools/index.ts",
+          "line": "132",
+          "description": "Task-ID detection regex `/^[A-Za-z0-9]+-\\d+-\\d+/` lacks `$` end-anchor — strings like AUTH-1-3-extra match and are mis-routed to get_task",
+          "reviewSha": "fc7cec516a7a30ad82f7daa47f1ec5b3ce4e93d0",
+          "reviewCreated": "2026-05-05T11:09:18Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "Fixed in 6189e0e7 — added `$` anchor, plus regression test for trailing-character routing"
+        },
+        {
+          "bot": "aictrl-dev",
+          "severity": "CONSISTENCY",
+          "file": "server/mcp/tools/index.ts",
+          "line": "132",
+          "description": "Regex prefix `[A-Za-z0-9]+` allows numeric-only prefixes (e.g. 123-1-1) which would be routed as task IDs",
+          "reviewSha": "fc7cec516a7a30ad82f7daa47f1ec5b3ce4e93d0",
+          "reviewCreated": "2026-05-05T11:16:38Z",
+          "verdict": "TRUE",
+          "action": "DEFER",
+          "reason": "Pre-existing pattern, tightening risks behavior change for callers with numeric-prefixed keys; tracked separately"
+        },
+        {
+          "bot": "aictrl-dev",
+          "severity": "CONSISTENCY",
+          "file": "test/mcp/epics-tool.test.ts",
+          "line": "154",
+          "description": "Test asserts `payload.error === 'missing_param'` mirroring the divergent impl error code; must be updated in lockstep with the impl fix",
+          "reviewSha": "fc7cec516a7a30ad82f7daa47f1ec5b3ce4e93d0",
+          "reviewCreated": "2026-05-05T11:16:38Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "Fixed in 6189e0e7 — assertion updated to 'missing_epic_id', plus a new whitespace-only test case"
+        }
+      ]
+    },
+    {
+      "sourcePR": 1782,
+      "analyzedAt": "2026-05-05T18:20:00Z",
+      "findings": [
+        {
+          "bot": "github-actions",
+          "severity": "BUG",
+          "file": "server/mcp/tools/epics.ts",
+          "line": "137",
+          "description": "Validation trims epic_id to detect whitespace-only strings, but the untrimmed value is then passed to stateManager.getEpic — `  AUTH-1  ` clears the guard but fails the lookup",
+          "reviewSha": "6189e0e742b789e37ee70785a8ecf248604276e0",
+          "reviewCreated": "2026-05-05T17:56:28Z",
+          "verdict": "TRUE",
+          "action": "FIX",
+          "reason": "Fixed in 1c1d2647 — switched to `(args.X as string|undefined)?.trim()` across get_epic/list_tasks/get_task; pre-existing bug shared by all three"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "CONSISTENCY",
+          "file": "test/mcp/epics-list.test.ts",
+          "line": "20",
+          "description": "mockStateManager, makeDeps(), and session-context mock are copy-pasted between epics-list.test.ts and epics-tool.test.ts",
+          "reviewSha": "6189e0e742b789e37ee70785a8ecf248604276e0",
+          "reviewCreated": "2026-05-05T17:56:28Z",
+          "verdict": "TRUE",
+          "action": "DEFER",
+          "reason": "Test-infrastructure refactor outside the 'logic errors' scope of this PR; tracking separately"
+        },
+        {
+          "bot": "github-actions",
+          "severity": "NIT",
+          "file": "test/mcp/epics-list.test.ts",
+          "line": "42",
+          "description": "Typed parseResponse() helper in epics-list.test.ts vs inline JSON.parse(result.content[0].text) in epics-tool.test.ts",
+          "reviewSha": "6189e0e742b789e37ee70785a8ecf248604276e0",
+          "reviewCreated": "2026-05-05T17:56:28Z",
+          "verdict": "TRUE",
+          "action": "DEFER",
+          "reason": "Same scope as the duplicate-fixtures refactor — defer to a shared-helper extraction"
+        }
+      ]
+    }
+  ],
+  "labelled": [
+    {
+      "bot": "github-actions+aictrl-dev",
+      "severity": "BUG",
+      "file": "server/mcp/tools/epics.ts",
+      "line": "137-139",
+      "description": "get_epic uses `!epicId` + `'missing_param'` with cast `as string`, while list_tasks/get_task use `!id || id.trim() === ''` + domain-specific error codes and `as string | undefined`. Whitespace-only epic_id bypasses validation and produces a misleading not_found error",
+      "reviewSha": "fc7cec516a7a30ad82f7daa47f1ec5b3ce4e93d0",
+      "reviewCreated": "2026-05-05T11:09:18Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Fixed in 6189e0e7 — cast/guard/error-code aligned with siblings"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "server/mcp/tools/epics.ts",
+      "line": "137",
+      "description": "Type cast `as string` differs from sibling handlers' `as string | undefined`",
+      "reviewSha": "fc7cec516a7a30ad82f7daa47f1ec5b3ce4e93d0",
+      "reviewCreated": "2026-05-05T11:09:18Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Folded into the MAJOR fix in 6189e0e7"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "BUG",
+      "file": "server/mcp/tools/index.ts",
+      "line": "132",
+      "description": "Task-ID detection regex `/^[A-Za-z0-9]+-\\d+-\\d+/` lacks `$` end-anchor — strings like AUTH-1-3-extra match and are mis-routed to get_task",
+      "reviewSha": "fc7cec516a7a30ad82f7daa47f1ec5b3ce4e93d0",
+      "reviewCreated": "2026-05-05T11:09:18Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Fixed in 6189e0e7 — added `$` anchor, plus regression test for trailing-character routing"
+    },
+    {
+      "bot": "aictrl-dev",
+      "severity": "CONSISTENCY",
+      "file": "server/mcp/tools/index.ts",
+      "line": "132",
+      "description": "Regex prefix `[A-Za-z0-9]+` allows numeric-only prefixes (e.g. 123-1-1) which would be routed as task IDs",
+      "reviewSha": "fc7cec516a7a30ad82f7daa47f1ec5b3ce4e93d0",
+      "reviewCreated": "2026-05-05T11:16:38Z",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Pre-existing pattern, tightening risks behavior change for callers with numeric-prefixed keys; tracked separately"
+    },
+    {
+      "bot": "aictrl-dev",
+      "severity": "CONSISTENCY",
+      "file": "test/mcp/epics-tool.test.ts",
+      "line": "154",
+      "description": "Test asserts `payload.error === 'missing_param'` mirroring the divergent impl error code; must be updated in lockstep with the impl fix",
+      "reviewSha": "fc7cec516a7a30ad82f7daa47f1ec5b3ce4e93d0",
+      "reviewCreated": "2026-05-05T11:16:38Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Fixed in 6189e0e7 — assertion updated to 'missing_epic_id', plus a new whitespace-only test case"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "BUG",
+      "file": "server/mcp/tools/epics.ts",
+      "line": "137",
+      "description": "Validation trims epic_id to detect whitespace-only strings, but the untrimmed value is then passed to stateManager.getEpic — `  AUTH-1  ` clears the guard but fails the lookup",
+      "reviewSha": "6189e0e742b789e37ee70785a8ecf248604276e0",
+      "reviewCreated": "2026-05-05T17:56:28Z",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Fixed in 1c1d2647 — switched to `(args.X as string|undefined)?.trim()` across get_epic/list_tasks/get_task; pre-existing bug shared by all three"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "CONSISTENCY",
+      "file": "test/mcp/epics-list.test.ts",
+      "line": "20",
+      "description": "mockStateManager, makeDeps(), and session-context mock are copy-pasted between epics-list.test.ts and epics-tool.test.ts",
+      "reviewSha": "6189e0e742b789e37ee70785a8ecf248604276e0",
+      "reviewCreated": "2026-05-05T17:56:28Z",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Test-infrastructure refactor outside the 'logic errors' scope of this PR; tracking separately"
+    },
+    {
+      "bot": "github-actions",
+      "severity": "NIT",
+      "file": "test/mcp/epics-list.test.ts",
+      "line": "42",
+      "description": "Typed parseResponse() helper in epics-list.test.ts vs inline JSON.parse(result.content[0].text) in epics-tool.test.ts",
+      "reviewSha": "6189e0e742b789e37ee70785a8ecf248604276e0",
+      "reviewCreated": "2026-05-05T17:56:28Z",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Same scope as the duplicate-fixtures refactor — defer to a shared-helper extraction"
+    }
+  ]
+}

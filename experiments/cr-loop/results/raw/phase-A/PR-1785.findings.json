@@ -1,0 +1,134 @@
+{
+  "prNumber": 1785,
+  "runId": "2026-05-06T15-51-53-4180341",
+  "executionId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "executionRunId": "phase-a-1785-2026-05-06T15-51-53-4180341"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "findingId": "05c2d9e1e87be862",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "low",
+      "title": "Transaction reads PR doc even for duplicate findings",
+      "description": "In `recordFinding`, the PR doc is read via `tx.get(prRef)` inside the transaction even when the finding already exists (`findingSnap.exists` → early return). This is a wasted read for idempotent retries.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "findingId": "11d77ff68bca8cc9",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "high",
+      "title": "Backfill uses review.id (body) not reviewDoc.id (key)",
+      "description": "The main loop extracts `reviewId` from `review.id` (the document body field), but `recomputeParentPr` correctly uses `reviewDoc.id` (the Firestore document key). Legacy review docs written by older code paths may not populate the `id` field in the body, causing the script to skip valid reviews with `[skip] ... missing orgId/prId/id field`. Using `reviewDoc.id` would match the pattern used later in the same script.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "findingId": "43b47eb50a112137",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Backfill hardcodes collection paths, not shared helpers",
+      "description": "The backfill script duplicates Firestore collection names ('organizations', 'pullRequests', 'reviews', 'findings') as inline strings instead of importing from the shared path helpers in pull-request-manager.ts. If a collection name ever changes, the backfill would silently diverge from canonical storage paths.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "findingId": "4de1b3a7efd771d7",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "listPRs lacks where('orgId') unlike listPullRequests",
+      "description": "`listPullRequests` adds a defense-in-depth `.where('orgId', '==', orgId)` to match orgId-leading indexes. `listPRs` relies solely on path scoping without the explicit clause. If `listPRs` were called with a state filter, the query would need an index that doesn't exist in `firestore.indexes.json`.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "findingId": "585d8c1b4dbf9015",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Redundant orgId filter could silently exclude migrated docs",
+      "description": "`listPullRequests` queries `prCollection(orgId)` (already scoped to `organizations/{orgId}/pullRequests`) and adds `.where('orgId', '==', orgId)`. If any document has a missing or mismatched `orgId` field (e.g., created during migration), it will be silently excluded from results.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "findingId": "77a4ae676ce57e7d",
+      "file": "scripts/backfill-pr-orgscoped.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Dry-run adds to touchedPrs for already-copied reviews",
+      "description": "When `alreadyAtTarget` is true (review already copied in a prior run), the code still adds the key to `touchedPrs`, triggering `recomputeParentPr` even in dry-run mode. This produces misleading output suggesting work would be done when it wouldn't.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "findingId": "7d16c1ebce34882c",
+      "file": "ui/src/hooks/useApi.ts",
+      "line": null,
+      "severity": "low",
+      "title": "hasFindingsMin: optional (params) vs nullable (PullRequest)",
+      "description": "`CodeReviewPullsParams.hasFindingsMin` is `CodeReviewSeverity | undefined` (optional). `PullRequest.hasFindingsMin` is `CodeReviewSeverity | null` (required, nullable). The mixed optional/nullable pattern could confuse contributors.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "findingId": "8e7fcfef269352fa",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "low",
+      "title": "getPullRequest duplicates getPR with identical logic",
+      "description": "`getPullRequest` and `getPR` have identical signatures and implementations. Having two names for the same operation forces future maintainers to guess which one to call.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "findingId": "b361a0ae8ab11b18",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "updatePRStats appears unused after refactor",
+      "description": "`updatePRStats` overwrites the entire stats sub-document. After this PR, stats fields are managed incrementally inside `completeReview` (which uses dot-notation like `'stats.reviewCount'`). No current consumer calls `updatePRStats` — the incremental approach supersedes it.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "findingId": "c6b5c6a5f53aabdd",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "completeReview sets latestReviewId without timestamp check",
+      "description": "In `completeReview`, `latestReviewId` is always set to the current `reviewId` without comparing completion timestamps. The backfill script's `recomputeParentPr` correctly compares `completedAt` to find the true latest, but the live code path does not.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1785-2026-05-06T15-51-53-4180341",
+      "findingId": "d2f793c7a7690eb6",
+      "file": "server/services/pull-request-manager.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "getPR/getPRByNumber/listPRs are dead code",
+      "description": "The PR introduces `getPullRequest` and `listPullRequests` which duplicate the older `getPR`, `getPRByNumber`, and `listPRs` methods. All consumers now use the new methods exclusively, making the old ones unreachable dead code.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

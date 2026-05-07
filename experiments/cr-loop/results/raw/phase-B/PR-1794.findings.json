@@ -1,0 +1,116 @@
+{
+  "prNumber": 1794,
+  "runId": "2026-05-06T19-30-45-454450",
+  "executionId": "phase-a-1794-2026-05-06T19-30-45-454450",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1794-2026-05-06T15-42-52-4159529",
+      "executionRunId": "phase-a-1794-2026-05-06T15-42-52-4159529"
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T19-30-45-454450",
+      "executionRunId": "phase-a-1794-2026-05-06T19-30-45-454450"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1794-2026-05-06T19-30-45-454450",
+      "findingId": "034474826c63a386",
+      "file": "ui/src/components/Sidebar.tsx",
+      "line": null,
+      "severity": "low",
+      "title": "ADMIN section unlabeled unlike the other 4 sections",
+      "description": "The top-level IA comment lists 5 sections with labeled comment markers. The first four have labeled {/* SECTION */} comment markers, but the Organization section (corresponding to ADMIN) has no such marker, making the comment-to-code mapping inconsistent.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T19-30-45-454450",
+      "findingId": "05d3466ef47868d6",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "high",
+      "title": "review.failed SSE error field is object, not string",
+      "description": "The `review.failed` handler casts `event.payload` to `{ error?: string }`, but the `ReviewFailedPayload` type likely declares `error` as an object (e.g. `{ message: string; code?: string }`). When the handler runs `payload.error ?? 'Review failed'`, the truthy object passes through, and the CodeReview's `error` field is set to the object. When ReviewCard renders `{review.error}` inside a `<p>` tag, React shows `[object Object]` instead of the actual error message.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T19-30-45-454450",
+      "findingId": "0b8f8f6b2050dd4e",
+      "file": "ui/src/components/Sidebar.tsx",
+      "line": null,
+      "severity": "low",
+      "title": "Comment says 5 sections but sidebar has more",
+      "description": "The block comment says '5 lens-based sections' listing WORK, EXECUTION, KNOWLEDGE, INSIGHTS, ADMIN. But the actual code renders more sections (Work, Execution, Knowledge, Insights, Resources, Admin, Platform). The comment is misleading about the actual IA structure.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T19-30-45-454450",
+      "findingId": "7a33cd556c9f96ce",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "medium",
+      "title": "setReviews called inside setFindings updater (side effect)",
+      "description": "The `review.completed` handler calls `setReviews(...)` from within the `setFindings` updater callback. React's documentation states updater functions must be pure — no side effects. In development StrictMode, React calls updater functions twice, causing `setReviews` to fire twice. While the call is idempotent (`prev.map(...)`), this is a contract violation that could break if React's batching semantics change.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T19-30-45-454450",
+      "findingId": "e7f522057c887e89",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "low",
+      "title": "onRunAnotherReview prop never passed, button always disabled",
+      "description": "The `PRHeader` component accepts an optional `onRunAnotherReview` prop that controls whether the 'Run another review' button is enabled. The main page never passes this prop, so the button is permanently disabled. The prop wiring is dead code — no call site can ever enable the button.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T19-30-45-454450",
+      "findingId": "e8378770cc605574",
+      "file": "ui/src/components/Sidebar.tsx",
+      "line": null,
+      "severity": "high",
+      "title": "Security/Integrations newly gated by isAdmin",
+      "description": "The IA comment states \"Item-level access gates (orgId / isAdmin) are preserved exactly as they were in the previous layout — nothing newly hidden or exposed.\" However, /security and /integrations were moved from ungated sections (Skills, Execution) into the {orgId && isAdmin && ...} gated Organization section. Non-admin users who previously could reach Security and Integrations will no longer see these nav items. Either the move is intentional (update the comment) or unintentional (restore the items to an ungated section).",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T19-30-45-454450",
+      "findingId": "e973e66d96b89635",
+      "file": "ui/src/pages/code-review/CodeReviewPullsPage.tsx",
+      "line": null,
+      "severity": "medium",
+      "title": "Repo filter dropdown options lag behind fetch results",
+      "description": "The `repoOptions` dropdown is derived from `items` (the currently loaded PRs). When the user changes the repo filter, `items` is replaced with the filtered result. During the loading transition, `items` may be empty, causing the dropdown to momentarily show only the previously selected repo. This is a minor UX flicker.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T19-30-45-454450",
+      "findingId": "ecc79c8d854d74de",
+      "file": "ui/src/components/Sidebar.tsx",
+      "line": null,
+      "severity": "medium",
+      "title": "TODO comment lacks an issue reference",
+      "description": "The inline comment about GitLab support says \"Tracked separately\" but does not reference an issue number. The consistency checklist requires no TODOs without an issue reference.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1794-2026-05-06T19-30-45-454450",
+      "findingId": "f2a654170c157d66",
+      "file": "ui/src/pages/code-review/CodeReviewPullDetailPage.tsx",
+      "line": null,
+      "severity": "high",
+      "title": "findingsBySeverity can diverge from findingCount",
+      "description": "The `review.completed` handler sets `findingCount` from `payload.totalCount` (server truth) but computes `findingsBySeverity` from local findings state. If any `finding-recorded` SSE events were lost or arrive after `review.completed` (SSE is unreliable, events can be out-of-order), the local findings will be incomplete. This creates a visible inconsistency: the review card severity pills may sum to e.g. 3 while `findingCount` shows 5.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}

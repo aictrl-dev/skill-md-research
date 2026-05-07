@@ -1,0 +1,91 @@
+{
+  "prNumber": 1803,
+  "runId": "2026-05-07T08-46-56-2233749",
+  "executionId": "phase-a-1803-2026-05-07T08-46-56-2233749",
+  "reviews": [
+    {
+      "reviewId": "phase-a-1803-2026-05-06T16-06-44-20529",
+      "executionRunId": "phase-a-1803-2026-05-06T16-06-44-20529"
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-06T20-04-25-528444",
+      "executionRunId": "phase-a-1803-2026-05-06T20-04-25-528444"
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-07T00-08-21-1138775",
+      "executionRunId": "phase-a-1803-2026-05-07T00-08-21-1138775"
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-07T08-46-56-2233749",
+      "executionRunId": "phase-a-1803-2026-05-07T08-46-56-2233749"
+    }
+  ],
+  "findings": [
+    {
+      "reviewId": "phase-a-1803-2026-05-07T08-46-56-2233749",
+      "findingId": "0a302ff1cafbf0d8",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "high",
+      "title": "JSDoc says fire-and-forget but function re-throws",
+      "description": "publishReviewCompleted's JSDoc says \"Fire-and-forget: Pub/Sub errors are logged, never re-thrown\" but the function re-throws on getPullRequest errors. This contradicts the documented contract and is inconsistent with publishFinding, which truly swallows all errors. Either update the JSDoc to reflect the new throw-on-fetch-error behaviour or align both functions on the same pattern.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-07T08-46-56-2233749",
+      "findingId": "1aef1c726dbb33d6",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "high",
+      "title": "Module-level docstring claims never re-thrown",
+      "description": "The module-level docstring (lines 9-11) states the fire-and-forget contract for ALL functions in this module: \"Pub/Sub errors are caught and logged — never re-thrown — so a publish failure never breaks the main request path.\" This is now false: publishReviewCompleted re-throws on PR-fetch failure. A developer reading only the module docstring would assume all exported functions are safe to call without a .catch(), which is no longer true.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-07T08-46-56-2233749",
+      "findingId": "5892709d31fdc056",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "low",
+      "title": "Defensive ?? null on typed non-nullable fields",
+      "description": "buildRepositoryStruct applies `?? null` on every field even though the TypeScript types declare them non-nullable (e.g. `id: string`, `fullName: string`). The comment says \"defensive against future schema drift\". No other function in this module applies this pattern, making it stylistically inconsistent. If this convention is adopted, it should be applied uniformly.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-07T08-46-56-2233749",
+      "findingId": "5f1d4efa804fd36f",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "low",
+      "title": "buildRepositoryStruct duplicates buildPrEventPayload",
+      "description": "The existing buildPrEventPayload (lines 356-449) already constructs repository and PR BQ structs from the same PullRequest type. The new buildRepositoryStruct and buildPrStruct build overlapping snake_case structs. If Repository field names change (e.g. fullName -> full_name), two places need updating. Consider extracting the shared repository snake_case mapping into a single helper used by both paths.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-07T08-46-56-2233749",
+      "findingId": "916aea749e5c4699",
+      "file": "test/code-review-publisher.test.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "Missing test for getPullRequest rejection in review",
+      "description": "The review-payload test block covers the null-return case (mockGetPullRequest.mockResolvedValue(null), line 492) but has no test for when getPullRequest rejects. This is a key behavioral difference from publishFinding (which swallows PR errors) — publishReviewCompleted re-throws, which is the only throw path in an otherwise fire-and-forget module. The throw path should be explicitly tested to prevent regressions.",
+      "rule": "",
+      "concern": ""
+    },
+    {
+      "reviewId": "phase-a-1803-2026-05-07T08-46-56-2233749",
+      "findingId": "ae0d4c669fe6c65d",
+      "file": "server/services/code-review-publisher.ts",
+      "line": null,
+      "severity": "medium",
+      "title": "PR-fetch error handling differs across publishers",
+      "description": "publishFinding catches getPullRequest errors and continues with null structs (fire-and-forget). publishReviewCompleted re-throws getPullRequest errors. The asymmetry is intentional (nullable vs required BQ columns) and documented inline, but it diverges from the module's established fire-and-forget convention. A transient Firestore blip will cause publishReviewCompleted to surface as a publish failure while publishFinding silently degrades — this behavioural split should be called out in the module-level docs or the JSDoc.",
+      "rule": "",
+      "concern": ""
+    }
+  ]
+}
