@@ -635,15 +635,15 @@ P(FR~$<$~10\%) per model. HDI narrowing indicates tighter distributions
 under pseudocode.}
 \label{tab:rq5_hdi}
 \centering\small
-\begin{tabular}{lcccc}
+\begin{tabular}{@{}lcccc@{}}
 \toprule
-\textbf{Model} & \textbf{HDI$_\text{MD}$} & \textbf{HDI$_\text{PC}$} & \textbf{Narrowing} & \textbf{$\Delta$P(FR $<$ 10\%)} \\
+\textbf{Model} & \textbf{HDI\textsubscript{MD}} & \textbf{HDI\textsubscript{PC}} & \textbf{Narrow.} & \textbf{$\Delta$P(\textless10\%)} \\
 \midrule
-Haiku 4.5 & 38.5\% & 31.2\% & $+7.3$pp (19\%) & $+22.2$pp \\
-Opus 4.6 & 17.3\% & 10.7\% & $+6.6$pp (38\%) & $+20.9$pp \\
-GLM-4.7 & 30.8\% & 29.3\% & $+1.4$pp (5\%) & $+8.9$pp \\
-GLM-5 & 15.4\% & 15.4\% & $+0.0$pp (0\%) & $-1.8$pp \\
-Gemini 3.1 Pro & 8.5\% & 9.8\% & $-1.2$pp ($-14\%$) & $+2.8$pp \\
+Haiku 4.5 & 38.5\% & 31.2\% & $+$7.3pp & $+$22.2pp \\
+Opus 4.6 & 17.3\% & 10.7\% & $+$6.6pp & $+$20.9pp \\
+GLM-4.7 & 30.8\% & 29.3\% & $+$1.4pp & $+$8.9pp \\
+GLM-5 & 15.4\% & 15.4\% & 0.0pp & $-$1.8pp \\
+Gemini 3.1 & 8.5\% & 9.8\% & $-$1.2pp & $+$2.8pp \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1121,20 +1121,21 @@ A dataset card and Gebru et~al.\ (2021) datasheet are included.
 The dataset is released under CC-BY-4.0.
 
 \paragraph{Repository layout.}
-All paths below are relative to \texttt{papers/1-pseudocode-format/}:
-\begin{itemize}
-  \item \texttt{benchmarks/run\_all\_evals.sh} --- One-command reproduction pipeline
-  \item \texttt{benchmarks/skill-md-dataset/} --- Standalone Skill-MD benchmark
-  \item \texttt{domains/\{domain\}/skills/} --- Matched skill file pairs
-  \item \texttt{domains/\{domain\}/test-data/} --- Task JSON files
-  \item \texttt{domains/\{domain\}/evaluate\_*.py} --- Automated evaluators
-  \item \texttt{domains/\{domain\}/results/raw\_outputs.zip} --- Raw LLM outputs
-  \item \texttt{paper/compute\_stats.py} --- Cross-domain statistics
-  \item \texttt{scripts/generate\_figures.py} --- Figure generation
-  \item \texttt{scripts/variability\_analysis.py} --- Variability analysis
-\end{itemize}
+All paths below are relative to the paper's root directory.
 
-\noindent All paths are relative to \texttt{papers/1-pseudocode-format/}.
+{\small
+\begin{itemize}\setlength{\itemsep}{1pt}
+  \item \texttt{benchmarks/run\_all\_evals.sh} --- Reproduction
+  \item \texttt{benchmarks/skill-md-dataset/} --- Benchmark
+  \item \texttt{domains/\{d\}/skills/} --- Skill file pairs
+  \item \texttt{domains/\{d\}/test-data/} --- Task JSONs
+  \item \texttt{domains/\{d\}/evaluate\_*.py} --- Evaluators
+  \item \texttt{domains/\{d\}/results/raw\_outputs.zip} --- Raw outputs
+  \item \texttt{paper/compute\_stats.py} --- Statistics
+  \item \texttt{scripts/generate\_figures.py} --- Figures
+  \item \texttt{scripts/variability\_analysis.py} --- RQ5 analysis
+\end{itemize}
+}
 
 
 \end{document}

@@ -1,0 +1,40 @@
+{
+  "task_id": "2",
+  "complexity": "complex",
+  "domain": "terraform",
+  "description": "Write Terraform configuration for a private API Gateway with Lambda backend and WAF protection:\n\n- REST API Gateway (private, accessible only via VPC endpoint)\n- API Gateway resource, method (GET), Lambda integration, deployment, and stage\n- VPC endpoint for execute-api service, with security group allowing HTTPS (443) from VPC CIDR only (not 0.0.0.0/0)\n- Lambda function with runtime and handler passed as variables\n- Lambda permission for API Gateway invocation\n- IAM role for Lambda with policy scoped to logs:CreateLogGroup, logs:CreateLogStream, logs:PutLogEvents — Resource must reference a specific log group ARN, not \"*\"\n- WAFv2 web ACL with rate-limiting rule (e.g., 2000 requests per 5 minutes)\n- WAFv2 web ACL association with the API Gateway stage\n- CloudWatch log group for Lambda logs\n- DynamoDB table for Terraform state locking\n- S3 backend configured with dynamodb_table for state locking\n- All stateful resources must have lifecycle { prevent_destroy = true }\n- Use locals block for common tags, with >=50% of taggable resources referencing local.* for tags\n- At least one data source (e.g., aws_caller_identity, aws_region)\n- Variables with sensitive names must have sensitive = true\n- Provider version pinned in required_providers\n- No hardcoded AMI IDs, 12-digit account numbers, or region strings outside provider block\n\nInclude variables for region, project name, environment, VPC ID, VPC CIDR, subnet IDs, Lambda runtime, and Lambda handler. Output the API Gateway invoke URL, Lambda function ARN, and WAF web ACL ARN.",
+  "provider": "aws",
+  "resources": [
+    "aws_api_gateway_rest_api",
+    "aws_api_gateway_resource",
+    "aws_api_gateway_method",
+    "aws_api_gateway_integration",
+    "aws_api_gateway_deployment",
+    "aws_api_gateway_stage",
+    "aws_vpc_endpoint",
+    "aws_security_group",
+    "aws_lambda_function",
+    "aws_lambda_permission",
+    "aws_iam_role",
+    "aws_iam_role_policy",
+    "aws_wafv2_web_acl",
+    "aws_wafv2_web_acl_association",
+    "aws_cloudwatch_log_group"
+  ],
+  "min_outputs": 3,
+  "requirements": {
+    "provider_pinned": true,
+    "variables_with_description": true,
+    "variables_with_type": true,
+    "outputs": true,
+    "tags": true,
+    "sensitive_values": true,
+    "data_sources": true,
+    "locals": true,
+    "no_hardcoded_ids": true,
+    "backend_with_locking": true,
+    "iam_least_privilege": true,
+    "sg_no_open_ingress": true,
+    "lifecycle_stateful": true
+  }
+}

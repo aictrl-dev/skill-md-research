@@ -12,7 +12,7 @@ build/
 *.swo
 *~
 
-# LaTeX build artifacts
+# LaTeX build artifacts (root layout and reorganized papers/N-name/paper/ layout)
 paper/*.aux
 paper/*.bbl
 paper/*.blg
@@ -24,7 +24,22 @@ paper/*.fls
 paper/*.synctex.gz
 paper/*.pdf
 !paper/figures/*.pdf
+**/paper/*.aux
+**/paper/*.bbl
+**/paper/*.blg
+**/paper/*.log
+**/paper/*.out
+**/paper/*.toc
+**/paper/*.fdb_latexmk
+**/paper/*.fls
+**/paper/*.synctex.gz
+**/paper/comment.cut
 
 # Raw experiment outputs (zipped per domain; scores.csv is tracked)
 domains/*/results/*.json
 domains/chart/results-v2/*.json
+**/domains/*/results/*.json
+**/domains/chart/results-v2/*.json
+
+# Browser/MCP tooling artifacts
+.playwright-mcp/

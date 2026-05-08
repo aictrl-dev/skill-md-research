@@ -1,0 +1,36 @@
+{
+  "task_id": "3",
+  "complexity": "complex",
+  "domain": "terraform",
+  "description": "Write Terraform configuration for an EKS cluster with IRSA (IAM Roles for Service Accounts), Secrets Manager integration, and strict network security:\n\n- EKS cluster with Kubernetes version passed as variable\n- EKS managed node group (instance types and scaling config as variables)\n- IAM OIDC identity provider for the EKS cluster (for IRSA)\n- EKS cluster IAM role with AmazonEKSClusterPolicy attachment\n- EKS node group IAM role with AmazonEKSWorkerNodePolicy, AmazonEKS_CNI_Policy, AmazonEC2ContainerRegistryReadOnly attachments\n- IRSA application IAM role with trust policy using StringEquals condition on the OIDC provider for a specific service account (e.g., \"system:serviceaccount:app:app-sa\")\n- IRSA role policy scoped to s3:GetObject, s3:ListBucket, secretsmanager:GetSecretValue — no wildcard actions or resources\n- Cluster security group: allow 443 from management CIDR (variable), not 0.0.0.0/0\n- Node security group: allow all inbound from cluster security group only (SG-to-SG reference), no open CIDR blocks\n- Security group rules as separate aws_security_group_rule resources\n- Secrets Manager secret for application credentials, encrypted with KMS\n- KMS key for secrets encryption\n- CloudWatch log group for EKS control plane logs\n- DynamoDB table for Terraform state locking\n- S3 backend configured with dynamodb_table for state locking\n- All stateful resources must have lifecycle { prevent_destroy = true }\n- Use locals block for common tags, with >=50% of taggable resources referencing local.* for tags\n- At least one data source (e.g., aws_caller_identity, tls_certificate for OIDC)\n- Variables with sensitive names must have sensitive = true\n- Provider version pinned in required_providers\n- No hardcoded AMI IDs, 12-digit account numbers, or region strings outside provider block\n\nInclude variables for region, project name, environment, VPC ID, subnet IDs, management CIDR, Kubernetes version, node instance types, and node scaling configuration. Output the EKS cluster endpoint, cluster certificate authority data, OIDC provider ARN, and IRSA role ARN.",
+  "provider": "aws",
+  "resources": [
+    "aws_eks_cluster",
+    "aws_eks_node_group",
+    "aws_iam_openid_connect_provider",
+    "aws_iam_role",
+    "aws_iam_role_policy",
+    "aws_iam_role_policy_attachment",
+    "aws_security_group",
+    "aws_security_group_rule",
+    "aws_secretsmanager_secret",
+    "aws_kms_key",
+    "aws_cloudwatch_log_group"
+  ],
+  "min_outputs": 4,
+  "requirements": {
+    "provider_pinned": true,
+    "variables_with_description": true,
+    "variables_with_type": true,
+    "outputs": true,
+    "tags": true,
+    "sensitive_values": true,
+    "data_sources": true,
+    "locals": true,
+    "no_hardcoded_ids": true,
+    "backend_with_locking": true,
+    "iam_least_privilege": true,
+    "sg_no_open_ingress": true,
+    "lifecycle_stateful": true
+  }
+}

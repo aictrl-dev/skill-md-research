@@ -1,9 +1,9 @@
 ---
-name: terraform-style-pseudocode
+name: terraform-style-pseudocode-examples
 description: Write Terraform configurations following AWS best practices for naming, structure, security, and maintainability.
 ---
 
-# Terraform Style (Pseudocode)
+# Terraform Style (Pseudocode + Examples)
 
 ```python
 from dataclasses import dataclass, field
@@ -59,7 +59,20 @@ VALID_VAR_TYPES = {
 
 @dataclass
 class Variable:
-    """A Terraform variable block."""
+    """A Terraform variable block.
+
+    Example HCL:
+        variable "bucket_name" {
+          description = "Name of the S3 bucket for application storage"
+          type        = string
+        }
+
+        variable "db_password" {
+          description = "Database master password"
+          type        = string
+          sensitive   = true
+        }
+    """
     name: str                   # e.g. "bucket_name"
     description: str | None     # Rule 2: MUST be non-empty
     type: str | None            # Rule 3: MUST be present (string, number, list(string), etc.)
@@ -68,7 +81,19 @@ class Variable:
 
 @dataclass
 class Output:
-    """A Terraform output block."""
+    """A Terraform output block.
+
+    Example HCL:
+        output "cluster_endpoint" {
+          description = "Endpoint of the EKS cluster"
+          value       = aws_eks_cluster.main.endpoint
+        }
+
+        output "replication_role_arn" {
+          description = "ARN of the S3 replication IAM role"
+          value       = aws_iam_role.replication_role.arn
+        }
+    """
     name: str                   # e.g. "vpc_id"
     value: str                  # e.g. "aws_vpc.main_vpc.id"
     description: str | None = None
@@ -76,7 +101,35 @@ class Output:
 
 @dataclass
 class Resource:
-    """A Terraform resource block."""
+    """A Terraform resource block.
+
+    Example HCL (with tags, lifecycle, and local.* tags):
+        resource "aws_s3_bucket" "app_bucket" {
+          bucket = var.bucket_name
+          tags   = local.common_tags
+
+          lifecycle {
+            prevent_destroy = true
+          }
+        }
+
+        resource "aws_dynamodb_table" "terraform_locks" {
+          name         = "terraform-state-locks"
+          billing_mode = "PAY_PER_REQUEST"
+          hash_key     = "LockID"
+
+          attribute {
+            name = "LockID"
+            type = "S"
+          }
+
+          tags = local.common_tags
+
+          lifecycle {
+            prevent_destroy = true
+          }
+        }
+    """
     type: str                   # e.g. "aws_s3_bucket"
     name: str                   # e.g. "app_bucket" — Rule 1: snake_case, descriptive prefix
     has_tags: bool = False      # Rule 5: MUST be True for TAGGABLE_RESOURCES
@@ -85,7 +138,38 @@ class Resource:
 
 @dataclass
 class IamPolicy:
-    """An IAM policy document (from aws_iam_role_policy or aws_iam_policy)."""
+    """An IAM policy document (from aws_iam_role_policy or aws_iam_policy).
+
+    Example HCL (scoped policy — GOOD):
+        resource "aws_iam_role_policy" "replication_policy" {
+          name = "s3-replication-policy"
+          role = aws_iam_role.replication_role.id
+
+          policy = jsonencode({
+            Version = "2012-10-17"
+            Statement = [{
+              Effect = "Allow"
+              Action = [
+                "s3:GetReplicationConfiguration",
+                "s3:ListBucket",
+                "s3:GetObjectVersionForReplication",
+                "s3:ReplicateObject",
+                "s3:ReplicateDelete"
+              ]
+              Resource = [
+                aws_s3_bucket.source.arn,
+                "${aws_s3_bucket.source.arn}/*"
+              ]
+            }]
+          })
+        }
+
+    FORBIDDEN patterns:
+        Action   = "*"          # wildcard action
+        Action   = ["s3:*"]     # service wildcard
+        Resource = "*"          # wildcard resource
+        Resource = ["*"]        # wildcard resource
+    """
     resource_name: str          # e.g. "replication_policy"
     actions: list[str]          # e.g. ["s3:GetObject", "s3:ListBucket"]
     resources: list[str]        # e.g. ["arn:aws:s3:::bucket/*"]
@@ -95,7 +179,32 @@ class IamPolicy:
 
 @dataclass
 class SecurityGroupRule:
-    """A security group ingress/egress rule."""
+    """A security group ingress/egress rule.
+
+    Example HCL (port-specific, CIDR-restricted — GOOD):
+        resource "aws_security_group_rule" "cluster_api" {
+          type              = "ingress"
+          from_port         = 443
+          to_port           = 443
+          protocol          = "tcp"
+          cidr_blocks       = [var.management_cidr]
+          security_group_id = aws_security_group.cluster_sg.id
+          description       = "K8s API from management network"
+        }
+
+    Example HCL (SG-to-SG reference — GOOD):
+        resource "aws_security_group_rule" "node_from_cluster" {
+          type                     = "ingress"
+          from_port                = 0
+          to_port                  = 65535
+          protocol                 = "tcp"
+          source_security_group_id = aws_security_group.cluster_sg.id
+          security_group_id        = aws_security_group.node_sg.id
+          description              = "All traffic from cluster control plane"
+        }
+
+    FORBIDDEN: cidr_blocks = ["0.0.0.0/0"] on ports other than 80 or 443.
+    """
     sg_name: str                # Parent security group name
     direction: str              # "ingress" or "egress"
     from_port: int
@@ -105,26 +214,75 @@ class SecurityGroupRule:
 
 @dataclass
 class DataSource:
-    """A Terraform data block."""
+    """A Terraform data block.
+
+    Example HCL:
+        data "aws_caller_identity" "current" {}
+
+        data "tls_certificate" "eks_oidc" {
+          url = aws_eks_cluster.main.identity[0].oidc[0].issuer
+        }
+    """
     type: str                   # e.g. "aws_ami"
     name: str                   # e.g. "amazon_linux"
 
 @dataclass
 class ProviderConfig:
-    """Provider and terraform block."""
+    """Provider and terraform block.
+
+    Example HCL:
+        terraform {
+          required_version = ">= 1.5"
+
+          required_providers {
+            aws = {
+              source  = "hashicorp/aws"
+              version = "~> 5.0"
+            }
+          }
+        }
+
+        provider "aws" {
+          region = var.aws_region
+        }
+    """
     provider: str               # e.g. "aws"
     version_constraint: str | None  # Rule 9: MUST be present, e.g. "~> 5.0"
     required_version: str | None    # e.g. ">= 1.5"
 
 @dataclass
 class BackendConfig:
-    """Backend configuration with state locking."""
+    """Backend configuration with state locking.
+
+    Example HCL:
+        terraform {
+          backend "s3" {
+            bucket         = "my-terraform-state"
+            key            = "project/terraform.tfstate"
+            region         = "us-east-1"
+            dynamodb_table = "terraform-state-locks"
+            encrypt        = true
+          }
+        }
+    """
     backend_type: str | None    # Rule 10: e.g. "s3", "gcs", "azurerm"
     lock_table: str | None      # Rule 10: DynamoDB table name for state locking
 
 @dataclass
 class LocalsBlock:
-    """A locals block with shared values."""
+    """A locals block with shared values.
+
+    Example HCL:
+        locals {
+          common_tags = {
+            Environment = var.environment
+            Project     = var.project_name
+            ManagedBy   = "terraform"
+          }
+
+          name_prefix = "${var.project_name}-${var.environment}"
+        }
+    """
     entries: dict[str, str]     # Rule 7: Must include common_tags or similar
 
 # -----------------------------------------------------------------------------
@@ -151,7 +309,14 @@ class TerraformConfig:
 
 def check_rule_1_naming(config: TerraformConfig) -> tuple[bool, str]:
     """Rule 1: snake_case resource names with descriptive prefix (>3 chars).
-    Bad: sg1, vpc1, role1. Good: app_security_group, main_vpc."""
+    Bad:  sg1, vpc1, role1.
+    Good: app_security_group, main_vpc, ecs_task_execution_role.
+
+    Example HCL (good naming):
+        resource "aws_vpc" "main_vpc" { ... }
+        resource "aws_security_group" "app_security_group" { ... }
+        resource "aws_iam_role" "ecs_task_execution_role" { ... }
+    """
     BAD_NAMES = re.compile(r'^[a-z]{1,3}\d*$')
     violations = []
     for r in config.resources:
@@ -184,7 +349,20 @@ def check_rule_4_outputs(config: TerraformConfig, min_outputs: int) -> tuple[boo
     return True, f"{len(config.outputs)} outputs defined (need >={min_outputs})"
 
 def check_rule_5_tags(config: TerraformConfig) -> tuple[bool, str]:
-    """Rule 5: Tags on all taggable resources."""
+    """Rule 5: Tags on all taggable resources.
+
+    Example HCL:
+        resource "aws_vpc" "main_vpc" {
+          cidr_block = var.vpc_cidr
+          tags       = local.common_tags
+        }
+
+        resource "aws_security_group" "app_sg" {
+          name   = "${local.name_prefix}-app-sg"
+          vpc_id = aws_vpc.main_vpc.id
+          tags   = merge(local.common_tags, { Name = "${local.name_prefix}-app-sg" })
+        }
+    """
     missing = [
         f"{r.type}.{r.name}"
         for r in config.resources
@@ -197,7 +375,35 @@ def check_rule_5_tags(config: TerraformConfig) -> tuple[bool, str]:
 # STRUCTURE (3 rules)
 
 def check_rule_6_lifecycle_stateful(config: TerraformConfig) -> tuple[bool, str]:
-    """Rule 6: prevent_destroy = true on every stateful resource."""
+    """Rule 6: prevent_destroy = true on every stateful resource.
+
+    Example HCL:
+        resource "aws_s3_bucket" "app_bucket" {
+          bucket = var.bucket_name
+          tags   = local.common_tags
+
+          lifecycle {
+            prevent_destroy = true
+          }
+        }
+
+        resource "aws_dynamodb_table" "terraform_locks" {
+          name         = "terraform-state-locks"
+          billing_mode = "PAY_PER_REQUEST"
+          hash_key     = "LockID"
+
+          attribute {
+            name = "LockID"
+            type = "S"
+          }
+
+          tags = local.common_tags
+
+          lifecycle {
+            prevent_destroy = true
+          }
+        }
+    """
     missing = [
         f"{r.type}.{r.name}"
         for r in config.resources
@@ -208,7 +414,22 @@ def check_rule_6_lifecycle_stateful(config: TerraformConfig) -> tuple[bool, str]
     return True, "all stateful resources have prevent_destroy = true"
 
 def check_rule_7_locals_for_tags(config: TerraformConfig) -> tuple[bool, str]:
-    """Rule 7: locals block exists AND >=50% of taggable resources reference local.*."""
+    """Rule 7: locals block exists AND >=50% of taggable resources reference local.*.
+
+    Example HCL:
+        locals {
+          common_tags = {
+            Environment = var.environment
+            Project     = var.project_name
+            ManagedBy   = "terraform"
+          }
+        }
+
+        resource "aws_vpc" "main_vpc" {
+          cidr_block = var.vpc_cidr
+          tags       = local.common_tags       # references local.*
+        }
+    """
     if config.locals is None or len(config.locals.entries) == 0:
         return False, "no locals block defined"
     taggable = [r for r in config.resources if r.type in TAGGABLE_RESOURCES]
@@ -221,8 +442,14 @@ def check_rule_7_locals_for_tags(config: TerraformConfig) -> tuple[bool, str]:
     return False, f"only {using_local}/{len(taggable)} use local.* tags ({pct:.0f}%), need >=50%"
 
 def check_rule_8_no_hardcoded_ids(tf_text: str) -> tuple[bool, str]:
-    """Rule 8: No hardcoded AMI IDs, 12-digit account numbers,
-    region strings outside provider block."""
+    """Rule 8: No hardcoded AMI IDs, account numbers, or region strings in resources.
+
+    Bad:  ami = "ami-0c55b159cbfafe1f0"
+    Good: ami = data.aws_ami.amazon_linux.id
+
+    Bad:  account_id = "123456789012"
+    Good: account_id = data.aws_caller_identity.current.account_id
+    """
     violations = []
     if re.search(r'ami-[0-9a-f]{8,17}', tf_text):
         violations.append("hardcoded AMI ID")
@@ -241,7 +468,19 @@ def check_rule_9_provider_pinned(config: TerraformConfig) -> tuple[bool, str]:
     return True, f"provider version: {config.provider.version_constraint}"
 
 def check_rule_10_backend_with_locking(config: TerraformConfig) -> tuple[bool, str]:
-    """Rule 10: Backend configured AND dynamodb_table for state locking."""
+    """Rule 10: Backend configured AND dynamodb_table for state locking.
+
+    Example HCL:
+        terraform {
+          backend "s3" {
+            bucket         = "my-terraform-state"
+            key            = "project/terraform.tfstate"
+            region         = "us-east-1"
+            dynamodb_table = "terraform-state-locks"
+            encrypt        = true
+          }
+        }
+    """
     if not config.backend.backend_type:
         return False, "no backend configured"
     if not config.backend.lock_table:
@@ -251,7 +490,32 @@ def check_rule_10_backend_with_locking(config: TerraformConfig) -> tuple[bool, s
 # SECURITY (3 rules)
 
 def check_rule_11_iam_least_privilege(config: TerraformConfig) -> tuple[bool, str]:
-    """Rule 11: No '*' in Action or Resource. No service wildcards (s3:*)."""
+    """Rule 11: No '*' in Action or Resource. No service wildcards (s3:*).
+
+    Example HCL (scoped policy — GOOD):
+        resource "aws_iam_role_policy" "lambda_logging" {
+          name = "lambda-logging"
+          role = aws_iam_role.lambda_role.id
+
+          policy = jsonencode({
+            Version = "2012-10-17"
+            Statement = [{
+              Effect   = "Allow"
+              Action   = [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ]
+              Resource = aws_cloudwatch_log_group.lambda_logs.arn
+            }]
+          })
+        }
+
+    FORBIDDEN:
+        Action   = "*"
+        Action   = ["s3:*"]
+        Resource = "*"
+    """
     if not config.iam_policies:
         return False, "no IAM policies found"
     violations = []
@@ -267,7 +531,21 @@ def check_rule_11_iam_least_privilege(config: TerraformConfig) -> tuple[bool, st
     return True, f"all {len(config.iam_policies)} IAM policies follow least privilege"
 
 def check_rule_12_sg_no_open_ingress(config: TerraformConfig) -> tuple[bool, str]:
-    """Rule 12: No 0.0.0.0/0 on non-80/443 ports."""
+    """Rule 12: No 0.0.0.0/0 on non-80/443 ports.
+
+    Example HCL (port-specific — GOOD):
+        resource "aws_security_group_rule" "vpc_endpoint_https" {
+          type              = "ingress"
+          from_port         = 443
+          to_port           = 443
+          protocol          = "tcp"
+          cidr_blocks       = [var.vpc_cidr]
+          security_group_id = aws_security_group.vpce_sg.id
+        }
+
+    FORBIDDEN:
+        cidr_blocks = ["0.0.0.0/0"] on port 22, 3306, 5432, etc.
+    """
     violations = []
     for rule in config.sg_rules:
         if rule.direction == "ingress" and "0.0.0.0/0" in rule.cidr_blocks:
@@ -279,7 +557,21 @@ def check_rule_12_sg_no_open_ingress(config: TerraformConfig) -> tuple[bool, str
 
 def check_rule_13_sensitive_marked(config: TerraformConfig) -> tuple[bool, str]:
     """Rule 13: Variables/outputs with sensitive keywords must have sensitive = true.
-    Keywords: password, secret, token, key, connection_string."""
+    Keywords: password, secret, token, key, connection_string.
+
+    Example HCL:
+        variable "db_password" {
+          description = "Database master password"
+          type        = string
+          sensitive   = true
+        }
+
+        output "db_connection_string" {
+          description = "Database connection string"
+          value       = "postgres://..."
+          sensitive   = true
+        }
+    """
     violations = []
     for v in config.variables:
         if any(kw in v.name.lower() for kw in SENSITIVE_KEYWORDS):
@@ -307,7 +599,15 @@ def check_rule_14_resource_coverage(config: TerraformConfig, expected: list[str]
     return False, f"only {len(found)}/{len(expected)} resources ({pct:.0f}%), need >=70%"
 
 def check_rule_15_data_sources_used(config: TerraformConfig) -> tuple[bool, str]:
-    """Rule 15: At least one data block defined."""
+    """Rule 15: At least one data block defined.
+
+    Example HCL:
+        data "aws_caller_identity" "current" {}
+
+        data "tls_certificate" "eks_oidc" {
+          url = aws_eks_cluster.main.identity[0].oidc[0].issuer
+        }
+    """
     if len(config.data_sources) == 0:
         return False, "no data sources defined"
     return True, f"{len(config.data_sources)} data sources defined"
