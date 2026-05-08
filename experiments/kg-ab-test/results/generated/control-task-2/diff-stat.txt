@@ -1,0 +1,3 @@
+ server/state/firestore-manager.ts | 26 +++++++++++++++++++++++++-
+ test/firestore-manager.test.ts    | 16 ++++++++++++++++
+ 2 files changed, 41 insertions(+), 1 deletion(-)

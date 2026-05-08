@@ -1,0 +1,1 @@
+Use the Bash tool to run: echo hello. Output only what the command printed. Do NOT use any other tools.

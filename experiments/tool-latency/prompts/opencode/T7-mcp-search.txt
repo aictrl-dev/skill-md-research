@@ -1,0 +1,1 @@
+Use the aictrl_query_context tool with domain "code", action "search", and query "StateManager". Output only the count of results. Do NOT use any other tools.

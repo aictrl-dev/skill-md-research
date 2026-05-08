@@ -1,0 +1,13 @@
+
+> ui@0.0.0 lint
+> eslint .
+
+
+/home/bulat/code/kg-blog-update/ui/src/contexts/AuthContext.tsx
+  18:14  warning  Fast refresh only works when a file only exports components. Move your React context(s) to a separate file  react-refresh/only-export-components
+
+/home/bulat/code/kg-blog-update/ui/src/contexts/OrganizationContext.tsx
+  16:14  warning  Fast refresh only works when a file only exports components. Move your React context(s) to a separate file  react-refresh/only-export-components
+
+✖ 2 problems (0 errors, 2 warnings)
+

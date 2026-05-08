@@ -1,0 +1,1 @@
+Use the glob tool to find all files matching the pattern "server/mcp/**/*.ts". Output only the count of files found. Do NOT use any other tools.

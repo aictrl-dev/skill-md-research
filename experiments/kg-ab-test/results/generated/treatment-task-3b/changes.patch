@@ -1,0 +1,289 @@
+diff --git a/server/mcp/tools/epics.ts b/server/mcp/tools/epics.ts
+index 022c54d..be25219 100644
+--- a/server/mcp/tools/epics.ts
++++ b/server/mcp/tools/epics.ts
+@@ -208,6 +208,42 @@ export const definitions: ToolDefinition[] = [
+       required: ['task_id'],
+     },
+   },
++  {
++    name: 'delete_task',
++    description:
++      'Permanently remove a task from an epic. Cascades to delete all features and acceptance criteria. ' +
++      'Safety check: rejects if task is actively claimed or in progress.',
++    inputSchema: {
++      type: 'object' as const,
++      properties: {
++        task_id: {
++          type: 'string',
++          description: 'Task ID to delete',
++        },
++      },
++      required: ['task_id'],
++    },
++  },
++  {
++    name: 'move_task',
++    description:
++      'Move a task from one epic to another. Preserves features, acceptance criteria, and evidence. ' +
++      'Updates dependency references. Safety check: rejects if task is in progress.',
++    inputSchema: {
++      type: 'object' as const,
++      properties: {
++        task_id: {
++          type: 'string',
++          description: 'Task ID to move',
++        },
++        target_epic_id: {
++          type: 'string',
++          description: 'Target Epic ID to move the task to',
++        },
++      },
++      required: ['task_id', 'target_epic_id'],
++    },
++  },
+ ];
+ 
+ export const toolNames = definitions.map(d => d.name);
+@@ -631,6 +667,115 @@ export async function handle(
+       }
+     }
+ 
++    case 'delete_task': {
++      const taskId = args.task_id as string;
++
++      try {
++        const task = await stateManager.getTask(taskId);
++        if (!task) {
++          return errorResponse('not_found', `Task ${taskId} not found`);
++        }
++
++        // Safety check: reject if task is actively claimed or in progress
++        if (task.claimedBySessionId) {
++          return errorResponse(
++            'task_claimed',
++            'Cannot delete a task that is actively claimed. Release the task first.'
++          );
++        }
++
++        if (task.status === 'active') {
++          return errorResponse(
++            'task_in_progress',
++            'Cannot delete a task that is in progress. Complete or release the task first.'
++          );
++        }
++
++        // Delete task (cascades to features)
++        await stateManager.deleteTask(taskId);
++
++        wsHandler.broadcast(sessionId, 'epic:task:deleted', { taskId, epicId: task.epicId });
++
++        return jsonResponse({
++          success: true,
++          task_id: taskId,
++          message: 'Task and all associated features deleted',
++        });
++      } catch (error) {
++        return errorResponse(
++          'delete_failed',
++          error instanceof Error ? error.message : 'Failed to delete task'
++        );
++      }
++    }
++
++    case 'move_task': {
++      const taskId = args.task_id as string;
++      const targetEpicId = args.target_epic_id as string;
++
++      try {
++        const task = await stateManager.getTask(taskId);
++        if (!task) {
++          return errorResponse('not_found', `Task ${taskId} not found`);
++        }
++
++        // Safety check: reject if task is in progress
++        if (task.status === 'active') {
++          return errorResponse(
++            'task_in_progress',
++            'Cannot move a task that is in progress. Complete or release the task first.'
++          );
++        }
++
++        // Verify target epic exists
++        const targetEpic = await stateManager.getEpic(targetEpicId);
++        if (!targetEpic) {
++          return errorResponse('not_found', `Target epic ${targetEpicId} not found`);
++        }
++
++        // Check if task has dependencies that would break
++        if (task.dependsOn && task.dependsOn.length > 0) {
++          // Get tasks in target epic to check dependency references
++          const targetEpicTasks = await stateManager.listTasks(targetEpicId);
++          
++          // Check if dependencies are within current epic (would break when moved)
++          const crossEpicDeps = task.dependsOn.filter(depId => 
++            !targetEpicTasks.find(t => t.id === depId)
++          );
++
++          if (crossEpicDeps.length > 0) {
++            return errorResponse(
++              'dependency_conflict',
++              `Task has dependencies that don't exist in target epic: ${crossEpicDeps.join(', ')}. ` +
++              `Remove dependencies before moving or ensure target epic contains the same tasks.`
++            );
++          }
++        }
++
++        // Move task and all features
++        const movedTask = await stateManager.moveTask(taskId, targetEpicId);
++
++        wsHandler.broadcast(sessionId, 'epic:task:moved', { 
++          taskId, 
++          fromEpicId: task.epicId, 
++          toEpicId: targetEpicId 
++        });
++
++        return jsonResponse({
++          success: true,
++          task_id: movedTask.id,
++          from_epic_id: task.epicId,
++          to_epic_id: targetEpicId,
++          message: `Task moved from ${task.epicId} to ${targetEpicId}`,
++        });
++      } catch (error) {
++        return errorResponse(
++          'move_failed',
++          error instanceof Error ? error.message : 'Failed to move task'
++        );
++      }
++    }
++
+     default:
+       return errorResponse('unknown_tool', `Unknown epic tool: ${name}`);
+   }
+diff --git a/server/state/firestore-manager.ts b/server/state/firestore-manager.ts
+index 353f7b0..fb8bba6 100644
+--- a/server/state/firestore-manager.ts
++++ b/server/state/firestore-manager.ts
+@@ -1487,6 +1487,7 @@ export class FirestoreStateManager implements IStateManager {
+     if (updates.jiraKey !== undefined) updateData.jiraKey = updates.jiraKey;
+     if (updates.stackLayerIds !== undefined) updateData.stackLayerIds = updates.stackLayerIds;
+     if (updates.assignedTo !== undefined) updateData.assignedTo = updates.assignedTo;
++    if (updates.epicId !== undefined) updateData.epicId = updates.epicId;
+ 
+     await taskRef.update(updateData);
+     const updated = await taskRef.get();
+@@ -1531,6 +1532,61 @@ export class FirestoreStateManager implements IStateManager {
+     log.info(`Task ${taskId} and ${features.length} features soft deleted`);
+   }
+ 
++  /**
++   * Move a task and all its features to a different epic
++   * Uses batch operations for optimal performance
++   *
++   * @param taskId - Task ID to move
++   * @param targetEpicId - Target Epic ID
++   */
++  async moveTask(taskId: string, targetEpicId: string): Promise<EpicTask> {
++    const now = new Date().toISOString();
++
++    // Get the task
++    const taskRef = this.db.collection('epicTasks').doc(taskId);
++    const taskDoc = await taskRef.get();
++    if (!taskDoc.exists) {
++      throw new Error(`Task ${taskId} not found`);
++    }
++
++    const task = taskDoc.data() as EpicTask;
++
++    // Verify target epic exists
++    const targetEpic = await this.getEpic(targetEpicId);
++    if (!targetEpic) {
++      throw new Error(`Target epic ${targetEpicId} not found`);
++    }
++
++    // Get all features for this task
++    const features = await this.listFeatures(taskId);
++
++    log.info(`Moving task ${taskId} from epic ${task.epicId} to ${targetEpicId}: ${features.length} features`);
++
++    // Batch update all entities
++    const batch = this.db.batch();
++
++    // Update features' epicId (denormalized field)
++    for (const feature of features) {
++      batch.update(this.db.collection('features').doc(feature.id), {
++        epicId: targetEpicId,
++        updatedAt: now
++      });
++    }
++
++    // Update task's epicId
++    batch.update(taskRef, {
++      epicId: targetEpicId,
++      updatedAt: now
++    });
++
++    await batch.commit();
++    log.info(`Task ${taskId} and ${features.length} features moved to epic ${targetEpicId}`);
++
++    // Return updated task
++    const updated = await taskRef.get();
++    return updated.data() as EpicTask;
++  }
++
+   /**
+    * Claim a task for a session
+    */
+diff --git a/server/state/interface.ts b/server/state/interface.ts
+index e4a85a0..ba53391 100644
+--- a/server/state/interface.ts
++++ b/server/state/interface.ts
+@@ -375,6 +375,11 @@ export interface IStateManager {
+    */
+   deleteTask(taskId: string): Promise<void>;
+ 
++  /**
++   * Move a task to a different epic (updates task + features epicId)
++   */
++  moveTask(taskId: string, targetEpicId: string): Promise<EpicTask>;
++
+   // ==========================================================================
+   // Task claiming (MCP workflow)
+   // ==========================================================================
+diff --git a/server/state/manager.ts b/server/state/manager.ts
+index 255295c..5a51545 100644
+--- a/server/state/manager.ts
++++ b/server/state/manager.ts
+@@ -639,6 +639,10 @@ export class StateManager {
+     throw new Error('Task operations are not supported in file-based storage backend. Use Firestore instead.');
+   }
+ 
++  async moveTask(_taskId: string, _targetEpicId: string): Promise<EpicTask> {
++    throw new Error('Task operations are not supported in file-based storage backend. Use Firestore instead.');
++  }
++
+   async claimTask(_taskId: string, _sessionId: string): Promise<EpicTask | null> {
+     throw new Error('Task operations are not supported in file-based storage backend. Use Firestore instead.');
+   }
+diff --git a/server/state/types.ts b/server/state/types.ts
+index d8b093e..b38761d 100644
+--- a/server/state/types.ts
++++ b/server/state/types.ts
+@@ -1700,6 +1700,8 @@ export type WSEventType =
+   | 'task:force_released'   // Task force released from stale session
+   | 'epic:task:updated'     // Task status changed
+   | 'epic:task:completed'   // Task completed (all features passed)
++  | 'epic:task:deleted'     // Task deleted
++  | 'epic:task:moved'       // Task moved between epics
+   // Status workflow events (human-in-the-loop)
+   | 'task:ready'            // Task marked as ready for implementation
+   | 'task:reverted_to_draft' // Task reverted to draft for requirement changes
+@@ -2109,6 +2111,7 @@ export interface UpdateEpicTaskRequest {
+   tags?: string[];
+   stackLayerIds?: string[];
+   jiraKey?: string;
++  epicId?: string;  // Move task to different epic
+ 
+   // Ticket integration — GitHub Issues (TICKET-1 epic)
+   githubIssueNumber?: number;       // Link/update GitHub issue number

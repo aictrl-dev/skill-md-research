@@ -1,0 +1,1 @@
+Use the read_file tool to read the file tsconfig.json. Output only the first line of the file. Do NOT use any other tools.

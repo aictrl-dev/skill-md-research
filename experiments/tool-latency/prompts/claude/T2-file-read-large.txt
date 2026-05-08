@@ -1,0 +1,1 @@
+Use the Read tool to read the file server/state/types.ts. Output only the first line of the file. Do NOT use any other tools.

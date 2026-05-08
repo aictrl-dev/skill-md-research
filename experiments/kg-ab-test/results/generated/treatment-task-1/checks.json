@@ -1,0 +1,10 @@
+{
+  "run_id": "treatment-task-1",
+  "duration_seconds": 83,
+  "build_exit": 0,
+  "lint_exit": 0,
+  "ui_build_exit": 0,
+  "ui_lint_exit": 0,
+  "compiles": true,
+  "lints": true
+}

@@ -1,0 +1,1 @@
+Use the mcp__aictrl-aictrl__query_context tool with domain "code", action "read", and query "server/state/types.ts". Output only the first line. Do NOT use any other tools.

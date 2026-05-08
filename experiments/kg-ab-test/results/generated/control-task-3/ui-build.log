@@ -1,0 +1,30 @@
+
+> ui@0.0.0 build
+> tsc -b && vite build
+
+vite v7.3.0 building client environment for production...
+transforming...
+✓ 2011 modules transformed.
+rendering chunks...
+[esbuild css minify]
+▲ [WARNING] Unexpected "=" [css-syntax-error]
+
+    <stdin>:18222:3:
+      18222 │  * ============================================================...
+            ╵    ^
+
+
+[plugin vite:reporter] 
+(!) /home/bulat/code/kg-blog-update/ui/src/lib/firebase.ts is dynamically imported by /home/bulat/code/kg-blog-update/ui/src/components/ChatPage.tsx but also statically imported by /home/bulat/code/kg-blog-update/ui/src/components/ChatPage.tsx, /home/bulat/code/kg-blog-update/ui/src/components/CreateEpic.tsx, /home/bulat/code/kg-blog-update/ui/src/components/DeveloperSettingsPage.tsx, /home/bulat/code/kg-blog-update/ui/src/components/EpicDetail.tsx, /home/bulat/code/kg-blog-update/ui/src/components/EpicList.tsx, /home/bulat/code/kg-blog-update/ui/src/components/GitSettingsPage.tsx, /home/bulat/code/kg-blog-update/ui/src/components/GitSyncPage.tsx, /home/bulat/code/kg-blog-update/ui/src/components/MemberManagement.tsx, /home/bulat/code/kg-blog-update/ui/src/components/OrganizationSettings.tsx, /home/bulat/code/kg-blog-update/ui/src/components/OrganizationSwitcher.tsx, /home/bulat/code/kg-blog-update/ui/src/components/PendingInvitations.tsx, /home/bulat/code/kg-blog-update/ui/src/components/RepoSkillsPage.tsx, /home/bulat/code/kg-blog-update/ui/src/components/SessionDetail.tsx, /home/bulat/code/kg-blog-update/ui/src/components/SharedPrompts.tsx, /home/bulat/code/kg-blog-update/ui/src/components/SkillPropagationPage.tsx, /home/bulat/code/kg-blog-update/ui/src/components/SyncHistoryPage.tsx, /home/bulat/code/kg-blog-update/ui/src/components/TeamManagement.tsx, /home/bulat/code/kg-blog-update/ui/src/components/TicketIntegrationPage.tsx, /home/bulat/code/kg-blog-update/ui/src/components/UserMenu.tsx, /home/bulat/code/kg-blog-update/ui/src/components/UserProfile.tsx, /home/bulat/code/kg-blog-update/ui/src/components/workflow/ReadinessPanel.tsx, /home/bulat/code/kg-blog-update/ui/src/components/workflow/ReviewPanel.tsx, /home/bulat/code/kg-blog-update/ui/src/contexts/AuthContext.tsx, /home/bulat/code/kg-blog-update/ui/src/contexts/OrganizationContext.tsx, /home/bulat/code/kg-blog-update/ui/src/hooks/fetchJson.ts, /home/bulat/code/kg-blog-update/ui/src/hooks/useApi.ts, /home/bulat/code/kg-blog-update/ui/src/hooks/useEventStream.ts, /home/bulat/code/kg-blog-update/ui/src/hooks/useFirestore.ts, /home/bulat/code/kg-blog-update/ui/src/hooks/useSessionData.ts, /home/bulat/code/kg-blog-update/ui/src/hooks/useWorkflowEvents.ts, /home/bulat/code/kg-blog-update/ui/src/main.tsx, /home/bulat/code/kg-blog-update/ui/src/pages/Migration.tsx, dynamic import will not move module into another chunk.
+
+computing gzip size...
+dist/index.html                               0.80 kB │ gzip:   0.42 kB
+dist/assets/index-BlxNsiQi.css              517.55 kB │ gzip:  74.83 kB
+dist/assets/HeroIllustration-CCVfI6Ij.js     17.02 kB │ gzip:   3.58 kB
+dist/assets/index-B6-dejy1.js             1,661.90 kB │ gzip: 459.91 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.98s

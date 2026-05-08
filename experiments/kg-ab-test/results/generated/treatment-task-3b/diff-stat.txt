@@ -1,0 +1,6 @@
+ server/mcp/tools/epics.ts         | 145 ++++++++++++++++++++++++++++++++++++++
+ server/state/firestore-manager.ts |  56 +++++++++++++++
+ server/state/interface.ts         |   5 ++
+ server/state/manager.ts           |   4 ++
+ server/state/types.ts             |   3 +
+ 5 files changed, 213 insertions(+)
