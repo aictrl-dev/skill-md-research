@@ -7,11 +7,7 @@ is excluded from analysis (not in the paper).
 
 Chart uses scores_deep.csv with pass_count/fail_count columns;
 the other three use scores.csv with auto_score/scored_rules.
-
-NOTE: Gemini 3.1 Pro data is included in the paper (108 runs) but has
-not yet been scored into the domain CSVs.  When Gemini CSVs are added,
-this script will pick them up automatically.  Until then, the totals
-here reflect the four original models (629 runs).
+Gemini 3.1 Pro data is loaded from papers/3-kpi-targets/gemini_scores.csv.
 """
 
 import os
@@ -25,6 +21,7 @@ from scipy import stats
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PAPER1_ROOT = os.path.dirname(SCRIPT_DIR)  # papers/1-pseudocode-format/
 DOMAINS_DIR = os.path.join(PAPER1_ROOT, "domains")
+GEMINI_CSV = os.path.join(PAPER1_ROOT, "..", "3-kpi-targets", "gemini_scores.csv")
 
 # Models to exclude from analysis (not in the paper)
 EXCLUDE_MODELS = {"glm-4.7-flash"}
@@ -59,12 +56,29 @@ def load_standard_domain(name, subdir):
     return df
 
 
+def load_gemini():
+    """Load Gemini 3.1 Pro data from the shared gemini_scores.csv."""
+    if not os.path.exists(GEMINI_CSV):
+        print(f"WARNING: Gemini data not found at {GEMINI_CSV}", file=sys.stderr)
+        return pd.DataFrame()
+    df = pd.read_csv(GEMINI_CSV)
+    # Normalize domain: sql-query → SQL, others to title case
+    domain_map = {"chart": "Chart", "dockerfile": "Dockerfile", "sql-query": "SQL", "terraform": "Terraform"}
+    df["domain"] = df["domain"].map(domain_map)
+    # Chart rows: use pass_count/fail_count for scoring
+    chart_mask = df["domain"] == "Chart"
+    df.loc[chart_mask, "auto_score"] = df.loc[chart_mask, "pass_count"]
+    df.loc[chart_mask, "scored_rules"] = df.loc[chart_mask, "pass_count"] + df.loc[chart_mask, "fail_count"]
+    return df
+
+
 frames = []
 for loader in [
     lambda: load_chart(),
     lambda: load_standard_domain("Dockerfile", "dockerfile"),
     lambda: load_standard_domain("SQL", "sql-query"),
     lambda: load_standard_domain("Terraform", "terraform"),
+    lambda: load_gemini(),
 ]:
     df = loader()
     if not df.empty:
