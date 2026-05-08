@@ -1,0 +1,8 @@
+{
+  "mcp": {
+    "aictrl": {
+      "type": "sse",
+      "url": "https://aictrl.dev/mcp/sse"
+    }
+  }
+}

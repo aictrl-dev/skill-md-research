@@ -30,12 +30,22 @@ TAGGABLE_RESOURCES = {
     "aws_ecs_service", "aws_ecs_task_definition", "aws_cloudwatch_log_group",
     "aws_eip", "aws_nat_gateway", "aws_internet_gateway", "aws_route_table",
     "aws_lb_target_group", "aws_secretsmanager_secret", "aws_iam_role",
+    "aws_eks_cluster", "aws_eks_node_group", "aws_kms_key",
+    "aws_dynamodb_table", "aws_lambda_function", "aws_api_gateway_stage",
+    "aws_wafv2_web_acl",
 }
 
-# Resources where data loss is catastrophic — lifecycle blocks recommended
+# Resources where lifecycle { prevent_destroy = true } is REQUIRED
 STATEFUL_RESOURCES = {
     "aws_s3_bucket", "aws_db_instance", "aws_efs_file_system",
     "aws_dynamodb_table", "aws_kms_key", "aws_secretsmanager_secret",
+    "aws_eks_cluster",
+}
+
+# Keywords in variable/output names that require sensitive = true
+SENSITIVE_KEYWORDS = {
+    "password", "secret", "token", "key", "connection_string",
+    "private_key", "api_key", "credentials",
 }
 
 # Valid Terraform variable types
@@ -53,7 +63,7 @@ class Variable:
     name: str                   # e.g. "bucket_name"
     description: str | None     # Rule 2: MUST be non-empty
     type: str | None            # Rule 3: MUST be present (string, number, list(string), etc.)
-    sensitive: bool = False     # Rule 12: Must be True for passwords, secrets, keys
+    sensitive: bool = False     # Rule 13: Must be True if name contains SENSITIVE_KEYWORDS
     default: str | None = None
 
 @dataclass
@@ -62,7 +72,7 @@ class Output:
     name: str                   # e.g. "vpc_id"
     value: str                  # e.g. "aws_vpc.main_vpc.id"
     description: str | None = None
-    sensitive: bool = False
+    sensitive: bool = False     # Rule 13: Must be True if name contains SENSITIVE_KEYWORDS
 
 @dataclass
 class Resource:
@@ -70,7 +80,28 @@ class Resource:
     type: str                   # e.g. "aws_s3_bucket"
     name: str                   # e.g. "app_bucket" — Rule 1: snake_case, descriptive prefix
     has_tags: bool = False      # Rule 5: MUST be True for TAGGABLE_RESOURCES
-    has_lifecycle: bool = False # Rule 6: Recommended for STATEFUL_RESOURCES
+    uses_local_tags: bool = False  # Rule 7: Should reference local.* for tags
+    has_lifecycle: bool = False # Rule 6: MUST be True for STATEFUL_RESOURCES
+
+@dataclass
+class IamPolicy:
+    """An IAM policy document (from aws_iam_role_policy or aws_iam_policy)."""
+    resource_name: str          # e.g. "replication_policy"
+    actions: list[str]          # e.g. ["s3:GetObject", "s3:ListBucket"]
+    resources: list[str]        # e.g. ["arn:aws:s3:::bucket/*"]
+    has_wildcard_action: bool = False   # Rule 11: MUST be False
+    has_wildcard_resource: bool = False # Rule 11: MUST be False
+    has_service_wildcard: bool = False  # Rule 11: MUST be False (e.g. "s3:*")
+
+@dataclass
+class SecurityGroupRule:
+    """A security group ingress/egress rule."""
+    sg_name: str                # Parent security group name
+    direction: str              # "ingress" or "egress"
+    from_port: int
+    to_port: int
+    cidr_blocks: list[str]      # e.g. ["10.0.0.0/8"]
+    source_sg_id: str | None = None  # SG-to-SG reference
 
 @dataclass
 class DataSource:
@@ -82,18 +113,19 @@ class DataSource:
 class ProviderConfig:
     """Provider and terraform block."""
     provider: str               # e.g. "aws"
-    version_constraint: str | None  # Rule 10: MUST be present, e.g. "~> 5.0"
+    version_constraint: str | None  # Rule 9: MUST be present, e.g. "~> 5.0"
     required_version: str | None    # e.g. ">= 1.5"
 
 @dataclass
 class BackendConfig:
-    """Backend configuration."""
-    backend_type: str | None    # Rule 11: e.g. "s3", "gcs", "azurerm"
+    """Backend configuration with state locking."""
+    backend_type: str | None    # Rule 10: e.g. "s3", "gcs", "azurerm"
+    lock_table: str | None      # Rule 10: DynamoDB table name for state locking
 
 @dataclass
 class LocalsBlock:
     """A locals block with shared values."""
-    entries: dict[str, str]     # Rule 14: At least one entry expected
+    entries: dict[str, str]     # Rule 7: Must include common_tags or similar
 
 # -----------------------------------------------------------------------------
 # TERRAFORM CONFIGURATION — all fields mandatory
@@ -106,20 +138,21 @@ class TerraformConfig:
     variables: list[Variable]
     outputs: list[Output]
     resources: list[Resource]
+    iam_policies: list[IamPolicy] = field(default_factory=list)
+    sg_rules: list[SecurityGroupRule] = field(default_factory=list)
     data_sources: list[DataSource] = field(default_factory=list)
     locals: LocalsBlock | None = None
 
 # -----------------------------------------------------------------------------
-# VALIDATION RULES — 14-rule checklist
+# VALIDATION RULES — 15-rule checklist (zero free points)
 # -----------------------------------------------------------------------------
 
-# NAMING (1 rule)
+# STYLE (5 rules)
 
 def check_rule_1_naming(config: TerraformConfig) -> tuple[bool, str]:
-    """Rule 1: snake_case resource names with descriptive prefix.
-    Bad: sg1, vpc1, role1, main (alone for non-obvious resources).
-    Good: app_security_group, main_vpc, ecs_task_execution_role."""
-    BAD_NAMES = re.compile(r'^[a-z]{1,3}\d*$')  # sg1, vpc1, r1, a
+    """Rule 1: snake_case resource names with descriptive prefix (>3 chars).
+    Bad: sg1, vpc1, role1. Good: app_security_group, main_vpc."""
+    BAD_NAMES = re.compile(r'^[a-z]{1,3}\d*$')
     violations = []
     for r in config.resources:
         if not re.match(r'^[a-z][a-z0-9_]*$', r.name):
@@ -129,8 +162,6 @@ def check_rule_1_naming(config: TerraformConfig) -> tuple[bool, str]:
     if violations:
         return False, "; ".join(violations)
     return True, "all resource names are descriptive snake_case"
-
-# VARIABLES (2 rules)
 
 def check_rule_2_var_description(config: TerraformConfig) -> tuple[bool, str]:
     """Rule 2: All variables have a description attribute."""
@@ -146,15 +177,11 @@ def check_rule_3_var_type(config: TerraformConfig) -> tuple[bool, str]:
         return False, f"missing type: {missing}"
     return True, f"all {len(config.variables)} variables have types"
 
-# OUTPUTS (1 rule)
-
-def check_rule_4_outputs(config: TerraformConfig) -> tuple[bool, str]:
-    """Rule 4: At least one output block defined."""
-    if len(config.outputs) == 0:
-        return False, "no outputs defined"
-    return True, f"{len(config.outputs)} outputs defined"
-
-# TAGS (1 rule)
+def check_rule_4_outputs(config: TerraformConfig, min_outputs: int) -> tuple[bool, str]:
+    """Rule 4: At least N outputs defined (N from task JSON)."""
+    if len(config.outputs) < min_outputs:
+        return False, f"{len(config.outputs)} outputs, need >={min_outputs}"
+    return True, f"{len(config.outputs)} outputs defined (need >={min_outputs})"
 
 def check_rule_5_tags(config: TerraformConfig) -> tuple[bool, str]:
     """Rule 5: Tags on all taggable resources."""
@@ -167,183 +194,185 @@ def check_rule_5_tags(config: TerraformConfig) -> tuple[bool, str]:
         return False, f"missing tags: {missing}"
     return True, "all taggable resources have tags"
 
-# LIFECYCLE (1 rule)
+# STRUCTURE (3 rules)
 
-def check_rule_6_lifecycle(config: TerraformConfig) -> tuple[bool, str]:
-    """Rule 6: lifecycle blocks on stateful resources. MANUAL CHECK."""
-    # Always needs human review — lifecycle is a recommendation, not strict
-    return True, "needs_review"
+def check_rule_6_lifecycle_stateful(config: TerraformConfig) -> tuple[bool, str]:
+    """Rule 6: prevent_destroy = true on every stateful resource."""
+    missing = [
+        f"{r.type}.{r.name}"
+        for r in config.resources
+        if r.type in STATEFUL_RESOURCES and not r.has_lifecycle
+    ]
+    if missing:
+        return False, f"missing lifecycle prevent_destroy: {missing}"
+    return True, "all stateful resources have prevent_destroy = true"
 
-# STRUCTURE (2 rules)
+def check_rule_7_locals_for_tags(config: TerraformConfig) -> tuple[bool, str]:
+    """Rule 7: locals block exists AND >=50% of taggable resources reference local.*."""
+    if config.locals is None or len(config.locals.entries) == 0:
+        return False, "no locals block defined"
+    taggable = [r for r in config.resources if r.type in TAGGABLE_RESOURCES]
+    if not taggable:
+        return True, "locals present, no taggable resources"
+    using_local = sum(1 for r in taggable if r.uses_local_tags)
+    pct = using_local / len(taggable) * 100
+    if pct >= 50:
+        return True, f"{using_local}/{len(taggable)} use local.* tags ({pct:.0f}%)"
+    return False, f"only {using_local}/{len(taggable)} use local.* tags ({pct:.0f}%), need >=50%"
 
-def check_rule_7_var_separation(tf_text: str) -> tuple[bool, str]:
-    """Rule 7: Variables grouped together, not scattered between resources.
-    SEMI — heuristic: check if variable blocks appear between resource blocks."""
-    # Best-effort: look for resource...variable...resource pattern
-    blocks = re.findall(r'^\s*(resource|variable)\b', tf_text, re.MULTILINE)
-    saw_resource = False
-    saw_var_after_resource = False
-    saw_resource_after_var_after_resource = False
-    for b in blocks:
-        if b == "resource":
-            if saw_var_after_resource:
-                saw_resource_after_var_after_resource = True
-            saw_resource = True
-        elif b == "variable":
-            if saw_resource:
-                saw_var_after_resource = True
-    if saw_resource_after_var_after_resource:
-        return False, "variables scattered between resource blocks"
-    return True, "variables appear grouped"
-
-def check_rule_8_file_structure(tf_text: str) -> tuple[bool, str]:
-    """Rule 8: Module file structure mentioned (main.tf/variables.tf/outputs.tf).
-    SEMI — check if output mentions file names or multi-file structure."""
-    file_markers = ["main.tf", "variables.tf", "outputs.tf", "data.tf", "locals.tf"]
-    found = [f for f in file_markers if f in tf_text]
-    if found:
-        return True, f"file structure mentioned: {found}"
-    return True, "needs_review (single file output)"
-
-# VALUES (1 rule)
-
-def check_rule_9_no_hardcoded_ids(tf_text: str) -> tuple[bool, str]:
-    """Rule 9: No hardcoded AMI IDs, account numbers, or region strings in resources.
-    - ami-[0-9a-f]{8,17} — hardcoded AMI
-    - 12-digit number — AWS account ID
-    - Region string like "us-east-1" outside provider block"""
+def check_rule_8_no_hardcoded_ids(tf_text: str) -> tuple[bool, str]:
+    """Rule 8: No hardcoded AMI IDs, 12-digit account numbers,
+    region strings outside provider block."""
     violations = []
     if re.search(r'ami-[0-9a-f]{8,17}', tf_text):
-        violations.append("hardcoded AMI ID (ami-*)")
+        violations.append("hardcoded AMI ID")
     if re.search(r'(?<!\d)\d{12}(?!\d)', tf_text):
-        violations.append("possible hardcoded AWS account ID (12 digits)")
-    # Region in resource blocks (not provider): find "us-east-1" etc. in resource context
-    # This is best-effort — region in provider block is acceptable
+        violations.append("possible hardcoded AWS account ID")
     if violations:
         return False, "; ".join(violations)
     return True, "no hardcoded IDs found"
 
-# PROVIDER (1 rule)
+# PROVIDER & STATE (2 rules)
 
-def check_rule_10_provider_pinned(config: TerraformConfig) -> tuple[bool, str]:
-    """Rule 10: Provider version pinned in required_providers block."""
+def check_rule_9_provider_pinned(config: TerraformConfig) -> tuple[bool, str]:
+    """Rule 9: Provider version pinned in required_providers block."""
     if not config.provider.version_constraint:
         return False, "provider version not pinned"
     return True, f"provider version: {config.provider.version_constraint}"
 
-# BACKEND (1 rule)
-
-def check_rule_11_backend(config: TerraformConfig) -> tuple[bool, str]:
-    """Rule 11: Backend configured (terraform { backend "..." {} })."""
+def check_rule_10_backend_with_locking(config: TerraformConfig) -> tuple[bool, str]:
+    """Rule 10: Backend configured AND dynamodb_table for state locking."""
     if not config.backend.backend_type:
         return False, "no backend configured"
-    return True, f"backend: {config.backend.backend_type}"
+    if not config.backend.lock_table:
+        return False, f"backend {config.backend.backend_type} but no dynamodb_table for locking"
+    return True, f"backend {config.backend.backend_type} with lock table {config.backend.lock_table}"
 
-# SENSITIVE (1 rule — conditional)
+# SECURITY (3 rules)
 
-def check_rule_12_sensitive(config: TerraformConfig, task_requires: bool) -> tuple[bool, str]:
-    """Rule 12: Sensitive values marked with sensitive = true.
-    Only checked when the task requires sensitive handling."""
-    if not task_requires:
-        return True, "n/a (task does not require sensitive values)"
-    sensitive_vars = [v.name for v in config.variables if v.sensitive]
-    sensitive_outputs = [o.name for o in config.outputs if o.sensitive]
-    if not sensitive_vars and not sensitive_outputs:
-        return False, "task requires sensitive values but none marked sensitive"
-    return True, f"sensitive vars: {sensitive_vars}, outputs: {sensitive_outputs}"
+def check_rule_11_iam_least_privilege(config: TerraformConfig) -> tuple[bool, str]:
+    """Rule 11: No '*' in Action or Resource. No service wildcards (s3:*)."""
+    if not config.iam_policies:
+        return False, "no IAM policies found"
+    violations = []
+    for p in config.iam_policies:
+        if p.has_wildcard_action:
+            violations.append(f"{p.resource_name}: Action = '*'")
+        if p.has_wildcard_resource:
+            violations.append(f"{p.resource_name}: Resource = '*'")
+        if p.has_service_wildcard:
+            violations.append(f"{p.resource_name}: service wildcard (e.g. s3:*)")
+    if violations:
+        return False, "; ".join(violations)
+    return True, f"all {len(config.iam_policies)} IAM policies follow least privilege"
 
-# DATA SOURCES (1 rule — conditional)
+def check_rule_12_sg_no_open_ingress(config: TerraformConfig) -> tuple[bool, str]:
+    """Rule 12: No 0.0.0.0/0 on non-80/443 ports."""
+    violations = []
+    for rule in config.sg_rules:
+        if rule.direction == "ingress" and "0.0.0.0/0" in rule.cidr_blocks:
+            if rule.from_port not in (80, 443):
+                violations.append(f"{rule.sg_name}: 0.0.0.0/0 on port {rule.from_port}")
+    if violations:
+        return False, "; ".join(violations)
+    return True, "all SG ingress rules pass"
 
-def check_rule_13_data_sources(config: TerraformConfig, task_requires: bool) -> tuple[bool, str]:
-    """Rule 13: Data sources used for lookups when task requires them."""
-    if not task_requires:
-        return True, "n/a (task does not require data sources)"
+def check_rule_13_sensitive_marked(config: TerraformConfig) -> tuple[bool, str]:
+    """Rule 13: Variables/outputs with sensitive keywords must have sensitive = true.
+    Keywords: password, secret, token, key, connection_string."""
+    violations = []
+    for v in config.variables:
+        if any(kw in v.name.lower() for kw in SENSITIVE_KEYWORDS):
+            if not v.sensitive:
+                violations.append(f"var.{v.name}")
+    for o in config.outputs:
+        if any(kw in o.name.lower() for kw in SENSITIVE_KEYWORDS):
+            if not o.sensitive:
+                violations.append(f"output.{o.name}")
+    if violations:
+        return False, f"missing sensitive = true: {violations}"
+    return True, "all sensitive-named vars/outputs marked sensitive"
+
+# SEMANTIC CORRECTNESS (2 rules)
+
+def check_rule_14_resource_coverage(config: TerraformConfig, expected: list[str]) -> tuple[bool, str]:
+    """Rule 14: >=70% of required resource types present."""
+    if not expected:
+        return True, "no expected resources"
+    actual = {r.type for r in config.resources}
+    found = [r for r in expected if r in actual]
+    pct = len(found) / len(expected) * 100
+    if pct >= 70:
+        return True, f"{len(found)}/{len(expected)} resources ({pct:.0f}%)"
+    return False, f"only {len(found)}/{len(expected)} resources ({pct:.0f}%), need >=70%"
+
+def check_rule_15_data_sources_used(config: TerraformConfig) -> tuple[bool, str]:
+    """Rule 15: At least one data block defined."""
     if len(config.data_sources) == 0:
-        return False, "task requires data sources but none defined"
+        return False, "no data sources defined"
     return True, f"{len(config.data_sources)} data sources defined"
-
-# LOCALS (1 rule)
-
-def check_rule_14_locals(config: TerraformConfig) -> tuple[bool, str]:
-    """Rule 14: Locals block present for shared/computed values."""
-    if config.locals is None or len(config.locals.entries) == 0:
-        return False, "no locals block defined"
-    return True, f"locals defined: {list(config.locals.entries.keys())}"
 
 # -----------------------------------------------------------------------------
 # COMPLETE VALIDATION
 # -----------------------------------------------------------------------------
 
 def validate_terraform(config: TerraformConfig, tf_text: str, task: dict) -> list[tuple[str, bool, str]]:
-    """Run all 14 rules. Returns list of (rule_name, passed, detail)."""
-    requires_sensitive = task.get("requirements", {}).get("sensitive_values", False)
-    requires_data = task.get("requirements", {}).get("data_sources", False)
+    """Run all 15 rules. Returns list of (rule_name, passed, detail)."""
+    min_outputs = task.get("min_outputs", 1)
+    expected_resources = task.get("resources", [])
 
     return [
-        ("rule_1_naming",           *check_rule_1_naming(config)),
-        ("rule_2_var_description",  *check_rule_2_var_description(config)),
-        ("rule_3_var_type",         *check_rule_3_var_type(config)),
-        ("rule_4_outputs",          *check_rule_4_outputs(config)),
-        ("rule_5_tags",             *check_rule_5_tags(config)),
-        ("rule_6_lifecycle",        *check_rule_6_lifecycle(config)),
-        ("rule_7_var_separation",   *check_rule_7_var_separation(tf_text)),
-        ("rule_8_file_structure",   *check_rule_8_file_structure(tf_text)),
-        ("rule_9_no_hardcoded_ids", *check_rule_9_no_hardcoded_ids(tf_text)),
-        ("rule_10_provider_pinned", *check_rule_10_provider_pinned(config)),
-        ("rule_11_backend",         *check_rule_11_backend(config)),
-        ("rule_12_sensitive",       *check_rule_12_sensitive(config, requires_sensitive)),
-        ("rule_13_data_sources",    *check_rule_13_data_sources(config, requires_data)),
-        ("rule_14_locals",          *check_rule_14_locals(config)),
+        ("rule_1_naming",              *check_rule_1_naming(config)),
+        ("rule_2_var_description",     *check_rule_2_var_description(config)),
+        ("rule_3_var_type",            *check_rule_3_var_type(config)),
+        ("rule_4_outputs",             *check_rule_4_outputs(config, min_outputs)),
+        ("rule_5_tags",                *check_rule_5_tags(config)),
+        ("rule_6_lifecycle_stateful",  *check_rule_6_lifecycle_stateful(config)),
+        ("rule_7_locals_for_tags",     *check_rule_7_locals_for_tags(config)),
+        ("rule_8_no_hardcoded_ids",    *check_rule_8_no_hardcoded_ids(tf_text)),
+        ("rule_9_provider_pinned",     *check_rule_9_provider_pinned(config)),
+        ("rule_10_backend_with_locking", *check_rule_10_backend_with_locking(config)),
+        ("rule_11_iam_least_privilege", *check_rule_11_iam_least_privilege(config)),
+        ("rule_12_sg_no_open_ingress", *check_rule_12_sg_no_open_ingress(config)),
+        ("rule_13_sensitive_marked",   *check_rule_13_sensitive_marked(config)),
+        ("rule_14_resource_coverage",  *check_rule_14_resource_coverage(config, expected_resources)),
+        ("rule_15_data_sources_used",  *check_rule_15_data_sources_used(config)),
     ]
 
 # -----------------------------------------------------------------------------
-# 14-RULE CHECKLIST SUMMARY
+# 15-RULE CHECKLIST SUMMARY
 # -----------------------------------------------------------------------------
 
-# NAMING (1)
-#  1. snake_case resource names with descriptive prefix (not sg1, vpc1)
-
-# VARIABLES (2)
+# STYLE (5)
+#  1. snake_case resource names with descriptive prefix (>3 chars)
 #  2. All variables have description attribute
 #  3. All variables have type constraint
+#  4. At least N outputs defined (N from task)
+#  5. Tags on all taggable resources
 
-# OUTPUTS (1)
-#  4. At least one output block defined
+# STRUCTURE (3)
+#  6. lifecycle { prevent_destroy = true } on all stateful resources
+#  7. locals block + >=50% taggable resources reference local.* for tags
+#  8. No hardcoded AMI IDs, account numbers, region strings
 
-# TAGS (1)
-#  5. Tags on all taggable resources (aws_instance, aws_vpc, aws_s3_bucket, etc.)
+# PROVIDER & STATE (2)
+#  9. Provider version pinned in required_providers
+# 10. Backend configured with dynamodb_table for state locking
 
-# LIFECYCLE (1)
-#  6. lifecycle blocks on stateful resources (MANUAL — always needs_review)
+# SECURITY (3)
+# 11. IAM least privilege — no wildcards in Action/Resource
+# 12. SG ingress — no 0.0.0.0/0 on non-80/443 ports
+# 13. Sensitive vars/outputs with keyword names marked sensitive = true
 
-# STRUCTURE (2)
-#  7. Variables grouped together, not scattered between resources (SEMI)
-#  8. File structure mentioned — main.tf/variables.tf/outputs.tf (SEMI)
-
-# VALUES (1)
-#  9. No hardcoded AMI IDs (ami-*), account numbers (12-digit), region strings
-
-# PROVIDER (1)
-# 10. Provider version pinned in required_providers block
-
-# BACKEND (1)
-# 11. Backend configured (terraform { backend "..." {} })
-
-# SENSITIVE (1 — conditional)
-# 12. Sensitive values marked sensitive = true (when task requires it)
-
-# DATA SOURCES (1 — conditional)
-# 13. Data sources used for lookups (when task requires them)
-
-# LOCALS (1)
-# 14. Locals block present for shared/computed values
+# SEMANTIC CORRECTNESS (2)
+# 14. >=70% of required resource types present
+# 15. At least one data source block defined
 ```
 
 ## Usage
 
 1. Construct `TerraformConfig` with **all** fields from the generated HCL
-2. Call `validate_terraform(config, tf_text, task)` to check all 14 rules
+2. Call `validate_terraform(config, tf_text, task)` to check all 15 rules
 3. Empty violations list = fully compliant
-4. Rule 6 always returns `needs_review` (requires human judgment)
-5. Rules 7, 8 are semi-automatable (heuristic checks)
-6. Rules 12, 13 are conditional (only checked when task requires them)
+4. All 15 rules are fully automated — no manual review needed
+5. All rules count toward `auto_score` — no exclusions

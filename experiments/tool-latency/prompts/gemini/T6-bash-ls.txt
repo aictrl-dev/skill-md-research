@@ -1,0 +1,1 @@
+Use the run_shell_command tool to run: ls -la server/mcp/. Output only the number of entries listed. Do NOT use any other tools.

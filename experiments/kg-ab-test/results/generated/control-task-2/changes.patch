@@ -1,0 +1,64 @@
+diff --git a/server/state/firestore-manager.ts b/server/state/firestore-manager.ts
+index 353f7b0..c9d58c8 100644
+--- a/server/state/firestore-manager.ts
++++ b/server/state/firestore-manager.ts
+@@ -2158,7 +2158,31 @@ export class FirestoreStateManager implements IStateManager {
+     const orgId = uuidv4();
+     const now = new Date().toISOString();
+ 
+-    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
++    const baseSlug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
++    
++    // Ensure slug uniqueness by checking for collisions
++    let slug = baseSlug;
++    let suffix = 2;
++    
++    while (true) {
++      const existingOrgSnapshot = await this.db
++        .collection('organizations')
++        .where('slug', '==', slug)
++        .where('deletedAt', '==', null)
++        .limit(1)
++        .get();
++      
++      if (existingOrgSnapshot.empty) {
++        break;
++      }
++      
++      slug = `${baseSlug}-${suffix}`;
++      suffix++;
++    }
++
++    if (slug !== baseSlug) {
++      log.info({ baseSlug, finalSlug: slug }, 'Slug collision detected, using suffix');
++    }
+ 
+     const org: Organization = {
+       id: orgId,
+diff --git a/test/firestore-manager.test.ts b/test/firestore-manager.test.ts
+index e1c3024..7bffec0 100644
+--- a/test/firestore-manager.test.ts
++++ b/test/firestore-manager.test.ts
+@@ -491,6 +491,22 @@ describe('FirestoreStateManager', () => {
+       expect(org.members[testUserId].role).toBe('owner');
+     });
+ 
++    it('should generate unique slugs for organizations with duplicate names', async () => {
++      const org1 = await manager.createOrganization('Test Org Duplicate', testUserId);
++      const org2 = await manager.createOrganization('Test Org Duplicate', testUserId);
++      const org3 = await manager.createOrganization('Test Org Duplicate', testUserId);
++      createdOrgIds.push(org1.id, org2.id, org3.id);
++
++      expect(org1.slug).toBe('test-org-duplicate');
++      expect(org2.slug).toBe('test-org-duplicate-2');
++      expect(org3.slug).toBe('test-org-duplicate-3');
++      
++      // All slugs should be unique
++      expect(org1.slug).not.toBe(org2.slug);
++      expect(org2.slug).not.toBe(org3.slug);
++      expect(org1.slug).not.toBe(org3.slug);
++    });
++
+     it('should get an organization by ID', async () => {
+       const created = await manager.createOrganization('Get Org Test', testUserId);
+       createdOrgIds.push(created.id);

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Evaluate Terraform experiment results: extract HCL from LLM output,
-apply automated rule checks (14 rules), output CSV.
+apply automated rule checks (15 rules), output CSV.
 
 Usage:
     python evaluate_terraform.py                  # Process all results in results/
@@ -18,7 +18,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).parent
 
 # Import shared token extraction from top-level evaluate.py
-sys.path.insert(0, str(SCRIPT_DIR.parent.parent))
+sys.path.insert(0, str(SCRIPT_DIR.parent.parent / "scripts"))
 from evaluate import extract_token_usage, extract_from_permission_denials, TOKEN_FIELDS
 RESULTS_DIR = SCRIPT_DIR / "results"
 TEST_DATA_DIR = SCRIPT_DIR / "test-data"
@@ -31,14 +31,22 @@ TAGGABLE_RESOURCES = {
     "aws_ecs_service", "aws_ecs_task_definition", "aws_cloudwatch_log_group",
     "aws_eip", "aws_nat_gateway", "aws_internet_gateway", "aws_route_table",
     "aws_lb_target_group", "aws_secretsmanager_secret", "aws_iam_role",
-    # Note: S3 sub-resources (aws_s3_bucket_versioning, etc.) don't support
-    # tags directly — tags go on the parent aws_s3_bucket resource.
+    "aws_eks_cluster", "aws_eks_node_group", "aws_kms_key",
+    "aws_dynamodb_table", "aws_lambda_function", "aws_api_gateway_stage",
+    "aws_wafv2_web_acl",
 }
 
-# Resource types where lifecycle blocks are recommended (stateful)
+# Resource types where lifecycle { prevent_destroy = true } is required
 STATEFUL_RESOURCES = {
     "aws_s3_bucket", "aws_db_instance", "aws_efs_file_system",
     "aws_dynamodb_table", "aws_kms_key", "aws_secretsmanager_secret",
+    "aws_eks_cluster",
+}
+
+# Keywords in variable/output names that require sensitive = true
+SENSITIVE_KEYWORDS = {
+    "password", "secret", "token", "key", "connection_string",
+    "private_key", "api_key", "credentials",
 }
 
 
@@ -86,7 +94,6 @@ def extract_terraform(raw_output: str) -> tuple[str | None, str | None]:
         pass
 
     # Step 1b: Fallback to permission_denials (models sometimes use Write tool)
-    # Check for HCL block patterns (not just keyword mentions in summaries)
     has_hcl = bool(re.search(r'\b(resource|variable)\s+"', text_to_search))
     if not has_hcl:
         denied_content = extract_from_permission_denials(raw_output)
@@ -98,8 +105,6 @@ def extract_terraform(raw_output: str) -> tuple[str | None, str | None]:
         r"```(?:hcl|terraform|tf)\s*\n(.*?)\n\s*```",
         r"```\s*\n(.*?)\n\s*```",
     ]
-    # Collect ALL fenced blocks and concatenate — LLMs often split into
-    # multiple fences (e.g., one per file: main.tf, variables.tf, outputs.tf)
     all_blocks = []
     for pattern in fence_patterns:
         for match in re.finditer(pattern, text_to_search, re.DOTALL):
@@ -112,7 +117,6 @@ def extract_terraform(raw_output: str) -> tuple[str | None, str | None]:
         return combined, None
 
     # Step 3: Try to find terraform/provider/resource/variable blocks in plain text
-    # Look for the first HCL keyword and grab everything from there
     hcl_start = re.search(
         r'^\s*(terraform|provider|resource|variable|data|locals|output)\s',
         text_to_search,
@@ -120,7 +124,6 @@ def extract_terraform(raw_output: str) -> tuple[str | None, str | None]:
     )
     if hcl_start:
         candidate = text_to_search[hcl_start.start():].strip()
-        # Trim trailing LLM explanation
         candidate = _trim_trailing_explanation(candidate)
         if _looks_like_terraform(candidate):
             return candidate, None
@@ -131,7 +134,6 @@ def extract_terraform(raw_output: str) -> tuple[str | None, str | None]:
 def _looks_like_terraform(text: str) -> bool:
     """Check if text looks like Terraform HCL."""
     keywords = ["resource", "variable", "provider", "terraform", "output", "data", "locals"]
-    # Must have at least one HCL block pattern: keyword "type" "name" {
     for kw in keywords:
         if re.search(rf'\b{kw}\s', text):
             return True
@@ -139,11 +141,7 @@ def _looks_like_terraform(text: str) -> bool:
 
 
 def _trim_trailing_explanation(text: str) -> str:
-    """Remove trailing LLM explanation after the HCL code.
-
-    Heuristic: if we see a line that starts with common explanation phrases
-    after a closing brace, stop there.
-    """
+    """Remove trailing LLM explanation after the HCL code."""
     lines = text.split('\n')
     result_lines = []
     brace_depth = 0
@@ -156,7 +154,6 @@ def _trim_trailing_explanation(text: str) -> str:
         if brace_depth <= 0 and '}' in stripped:
             last_close_idx = i
 
-    # Check for explanation after the last closing brace at depth 0
     if last_close_idx >= 0 and last_close_idx < len(result_lines) - 1:
         remaining = result_lines[last_close_idx + 1:]
         explanation_starters = [
@@ -171,7 +168,6 @@ def _trim_trailing_explanation(text: str) -> str:
                 result_lines = result_lines[:last_close_idx + 1 + i]
                 break
 
-    # Remove trailing blank lines
     while result_lines and result_lines[-1].strip() == '':
         result_lines.pop()
 
@@ -181,19 +177,12 @@ def _trim_trailing_explanation(text: str) -> str:
 # --- Structure Validation ----------------------------------------------------
 
 def validate_structure(tf_text: str) -> tuple[bool, list[str]]:
-    """Check that the Terraform config has at least one resource block.
-
-    Returns (is_valid, list_of_errors).
-    """
+    """Check that the Terraform config has at least one resource block."""
     errors = []
-
     if not tf_text or not tf_text.strip():
         return False, ["empty terraform configuration"]
-
-    # Must have at least one resource block
     if not re.search(r'\bresource\s+"[^"]+"\s+"[^"]+"\s*\{', tf_text):
         errors.append("no resource blocks found")
-
     return len(errors) == 0, errors
 
 
@@ -253,20 +242,51 @@ def _extract_block_body(text: str, open_brace_pos: int) -> str:
             depth -= 1
             if depth == 0:
                 return text[start:i + 1]
-    # Unmatched brace — return everything from start
     return text[start:]
 
 
-# --- Individual Rule Checks ---------------------------------------------------
+def _extract_iam_policy_json(body: str) -> list[str]:
+    """Extract IAM policy JSON from an HCL resource body.
+
+    Handles both jsonencode({...}) and heredoc (<<EOF...EOF) patterns.
+    Returns list of JSON-like strings representing policy documents.
+    """
+    policies = []
+
+    # Pattern 1: jsonencode({...}) — extract the inner dict
+    for match in re.finditer(r'jsonencode\s*\(', body):
+        inner = _extract_block_body(body, match.end() - 1)
+        if inner:
+            # Remove the outer parens
+            policies.append(inner[1:-1] if inner.startswith('(') else inner)
+
+    # Pattern 2: heredoc <<EOF ... EOF or <<-EOF ... EOF
+    for match in re.finditer(r'<<-?\s*(\w+)\s*\n(.*?)\n\s*\1', body, re.DOTALL):
+        policies.append(match.group(2))
+
+    # Pattern 3: inline policy = "..." with escaped JSON
+    for match in re.finditer(r'policy\s*=\s*"((?:[^"\\]|\\.)*)"', body):
+        policies.append(match.group(1).replace('\\"', '"').replace('\\n', '\n'))
+
+    return policies
+
+
+def _strip_hcl_comments(text: str) -> str:
+    """Remove single-line comments from HCL text."""
+    text = re.sub(r'#.*$', '', text, flags=re.MULTILINE)
+    text = re.sub(r'//.*$', '', text, flags=re.MULTILINE)
+    return text
+
+
+# --- Individual Rule Checks (15 rules) ---------------------------------------
 
 def check_rule_1_naming(tf_text: str, task: dict) -> tuple[bool, str]:
-    """Rule 1 (NAMING): snake_case resource names with descriptive prefix.
-    Bad: sg1, vpc1, r1. Good: app_security_group, main_vpc."""
+    """Rule 1 (NAMING): snake_case resource names, descriptive (>3 chars)."""
     resources = _find_resource_blocks(tf_text)
     if not resources:
         return False, "no resources found"
 
-    BAD_NAME = re.compile(r'^[a-z]{1,3}\d*$')  # sg1, vpc1, r1, a, ab
+    BAD_NAME = re.compile(r'^[a-z]{1,3}\d*$')
     violations = []
     for rtype, rname, _ in resources:
         if not re.match(r'^[a-z][a-z0-9_]*$', rname):
@@ -280,7 +300,7 @@ def check_rule_1_naming(tf_text: str, task: dict) -> tuple[bool, str]:
 
 
 def check_rule_2_var_description(tf_text: str, task: dict) -> tuple[bool, str]:
-    """Rule 2 (VARIABLES): All variables have description attribute."""
+    """Rule 2 (VAR_DESCRIPTION): All variables have description attribute."""
     variables = _find_variable_blocks(tf_text)
     if not variables:
         return False, "no variables defined"
@@ -296,7 +316,7 @@ def check_rule_2_var_description(tf_text: str, task: dict) -> tuple[bool, str]:
 
 
 def check_rule_3_var_type(tf_text: str, task: dict) -> tuple[bool, str]:
-    """Rule 3 (VARIABLES): All variables have type constraint."""
+    """Rule 3 (VAR_TYPE): All variables have type constraint."""
     variables = _find_variable_blocks(tf_text)
     if not variables:
         return False, "no variables defined"
@@ -312,11 +332,12 @@ def check_rule_3_var_type(tf_text: str, task: dict) -> tuple[bool, str]:
 
 
 def check_rule_4_outputs(tf_text: str, task: dict) -> tuple[bool, str]:
-    """Rule 4 (OUTPUTS): At least one output block defined."""
+    """Rule 4 (OUTPUTS_PRESENT): At least N outputs (N from task min_outputs)."""
     outputs = _find_output_blocks(tf_text)
-    if len(outputs) == 0:
-        return False, "no outputs defined"
-    return True, f"{len(outputs)} outputs defined: {[o[0] for o in outputs]}"
+    min_outputs = task.get("min_outputs", 1)
+    if len(outputs) < min_outputs:
+        return False, f"{len(outputs)} outputs defined, need >={min_outputs}"
+    return True, f"{len(outputs)} outputs defined (need >={min_outputs}): {[o[0] for o in outputs]}"
 
 
 def check_rule_5_tags(tf_text: str, task: dict) -> tuple[bool, str]:
@@ -330,8 +351,6 @@ def check_rule_5_tags(tf_text: str, task: dict) -> tuple[bool, str]:
     for rtype, rname, body in resources:
         if rtype in TAGGABLE_RESOURCES:
             checked += 1
-            # Check for tags = { or tags = local. or tags = merge( or tags = var.
-            # Also accept dynamic "tag" blocks (common in modules)
             has_tags = (
                 re.search(r'\btags\s*=', body) or
                 re.search(r'dynamic\s+"tags?"', body)
@@ -346,73 +365,75 @@ def check_rule_5_tags(tf_text: str, task: dict) -> tuple[bool, str]:
     return True, f"all {checked} taggable resources have tags"
 
 
-def check_rule_6_lifecycle(tf_text: str, task: dict) -> tuple[bool, str]:
-    """Rule 6 (LIFECYCLE): lifecycle blocks on stateful resources. MANUAL CHECK.
-    Always returns True with needs_review."""
-    return True, "needs_review"
+def check_rule_6_lifecycle_stateful(tf_text: str, task: dict) -> tuple[bool, str]:
+    """Rule 6 (LIFECYCLE_STATEFUL): prevent_destroy = true on every stateful resource."""
+    resources = _find_resource_blocks(tf_text)
+    if not resources:
+        return False, "no resources found"
+
+    missing = []
+    checked = 0
+    for rtype, rname, body in resources:
+        if rtype in STATEFUL_RESOURCES:
+            checked += 1
+            has_prevent = re.search(r'prevent_destroy\s*=\s*true', body)
+            if not has_prevent:
+                missing.append(f"{rtype}.{rname}")
+
+    if not checked:
+        return True, "no stateful resources found"
+    if missing:
+        return False, f"missing lifecycle prevent_destroy on: {missing[:5]}"
+    return True, f"all {checked} stateful resources have prevent_destroy = true"
 
 
-def check_rule_7_var_separation(tf_text: str, task: dict) -> tuple[bool, str]:
-    """Rule 7 (STRUCTURE): Variables grouped together, not scattered between resources.
-    SEMI — heuristic: check if variable blocks appear between resource blocks."""
-    # Extract ordered list of top-level block types
-    blocks = re.findall(r'^\s*(resource|variable)\b', tf_text, re.MULTILINE)
+def check_rule_7_locals_for_tags(tf_text: str, task: dict) -> tuple[bool, str]:
+    """Rule 7 (LOCALS_FOR_TAGS): locals block exists AND >=50% of taggable resources
+    reference local.* for tags."""
+    if not re.search(r'\blocals\s*\{', tf_text):
+        return False, "no locals block defined"
 
-    if not blocks or 'variable' not in blocks:
-        return True, "needs_review (no variable blocks found)"
+    resources = _find_resource_blocks(tf_text)
+    taggable = [(rtype, rname, body) for rtype, rname, body in resources
+                if rtype in TAGGABLE_RESOURCES]
 
-    saw_resource = False
-    saw_var_after_resource = False
-    saw_resource_after_var_after_resource = False
+    if not taggable:
+        return True, "locals block present, no taggable resources"
 
-    for b in blocks:
-        if b == "resource":
-            if saw_var_after_resource:
-                saw_resource_after_var_after_resource = True
-            saw_resource = True
-        elif b == "variable":
-            if saw_resource:
-                saw_var_after_resource = True
+    using_local = 0
+    for rtype, rname, body in taggable:
+        # Check if tags reference local.* (local.common_tags, local.tags, merge(local.*, ...))
+        tags_match = re.search(r'\btags\s*=\s*(.*?)$', body, re.MULTILINE)
+        if tags_match:
+            tags_val = tags_match.group(1).strip()
+            if 'local.' in tags_val:
+                using_local += 1
+            # Also check merge(local.*, ...) on the same or next lines
+            elif re.search(r'merge\s*\(.*local\.', body):
+                using_local += 1
 
-    if saw_resource_after_var_after_resource:
-        return False, "variables scattered between resource blocks"
-    return True, "variables appear grouped"
-
-
-def check_rule_8_file_structure(tf_text: str, task: dict) -> tuple[bool, str]:
-    """Rule 8 (STRUCTURE): Module file structure mentioned.
-    SEMI — check if output mentions file names like main.tf/variables.tf/outputs.tf."""
-    file_markers = ["main.tf", "variables.tf", "outputs.tf", "data.tf", "locals.tf"]
-    found = [f for f in file_markers if f in tf_text]
-    if found:
-        return True, f"file structure mentioned: {found}"
-    return True, "needs_review (single file output)"
+    pct = using_local / len(taggable) * 100
+    if pct >= 50:
+        return True, f"{using_local}/{len(taggable)} taggable resources use local.* for tags ({pct:.0f}%)"
+    return False, f"only {using_local}/{len(taggable)} taggable resources use local.* for tags ({pct:.0f}%), need >=50%"
 
 
-def check_rule_9_no_hardcoded_ids(tf_text: str, task: dict) -> tuple[bool, str]:
-    """Rule 9 (VALUES): No hardcoded AMI IDs, account numbers, or region strings in resources.
-    - ami-[0-9a-f]{8,17}: hardcoded AMI
-    - 12-digit number: AWS account ID
-    - Region string like 'us-east-1' outside provider block"""
+def check_rule_8_no_hardcoded_ids(tf_text: str, task: dict) -> tuple[bool, str]:
+    """Rule 8 (NO_HARDCODED_IDS): No AMI IDs, 12-digit account numbers,
+    region strings outside provider block."""
     violations = []
 
-    # Check for hardcoded AMI IDs
     if re.search(r'ami-[0-9a-f]{8,17}', tf_text):
         violations.append("hardcoded AMI ID (ami-*)")
 
-    # Check for 12-digit AWS account IDs (not inside comments)
-    # Remove single-line comments first
-    text_no_comments = re.sub(r'#.*$', '', tf_text, flags=re.MULTILINE)
-    text_no_comments = re.sub(r'//.*$', '', text_no_comments, flags=re.MULTILINE)
+    text_no_comments = _strip_hcl_comments(tf_text)
     if re.search(r'(?<!\d)\d{12}(?!\d)', text_no_comments):
         violations.append("possible hardcoded AWS account ID (12 digits)")
 
-    # Check for region strings in resource blocks (not in provider blocks)
-    # Strategy: find region-like strings, then verify they're not inside a provider block
     region_pattern = r'"(us|eu|ap|sa|ca|me|af)-(east|west|south|north|central|northeast|southeast|southwest|northwest)-\d"'
-    # Remove provider blocks using brace-counting (handles nested braces)
+    # Remove provider, terraform, and variable blocks — region strings are acceptable there
     text_no_provider = tf_text
-    for match in reversed(list(re.finditer(r'(?:provider\s+"[^"]+"|terraform)\s*\{', tf_text))):
+    for match in reversed(list(re.finditer(r'(?:provider\s+"[^"]+"|terraform|variable\s+"[^"]+")\s*\{', tf_text))):
         block_body = _extract_block_body(tf_text, match.end() - 1)
         text_no_provider = text_no_provider[:match.start()] + text_no_provider[match.start() + len(match.group()) + len(block_body) - 1:]
     if re.search(region_pattern, text_no_provider):
@@ -423,18 +444,13 @@ def check_rule_9_no_hardcoded_ids(tf_text: str, task: dict) -> tuple[bool, str]:
     return True, "no hardcoded IDs found"
 
 
-def check_rule_10_provider_pinned(tf_text: str, task: dict) -> tuple[bool, str]:
-    """Rule 10 (PROVIDER): Provider version pinned in required_providers block."""
-    # Look for required_providers block
+def check_rule_9_provider_pinned(tf_text: str, task: dict) -> tuple[bool, str]:
+    """Rule 9 (PROVIDER_PINNED): Provider version pinned in required_providers block."""
     rp_match = re.search(r'required_providers\s*\{', tf_text)
     if not rp_match:
         return False, "no required_providers block found"
 
-    # Extract the required_providers block body
     rp_body = _extract_block_body(tf_text, rp_match.end() - 1)
-
-    # Look for version constraint inside a provider namespace block
-    # Pattern: aws = { source = "...", version = "..." }
     provider_blocks = re.findall(r'\w+\s*=\s*\{([^}]*)\}', rp_body)
     for pb in provider_blocks:
         if re.search(r'\bversion\s*=\s*"[^"]*"', pb):
@@ -445,61 +461,218 @@ def check_rule_10_provider_pinned(tf_text: str, task: dict) -> tuple[bool, str]:
     return False, "required_providers block found but no version constraint"
 
 
-def check_rule_11_backend(tf_text: str, task: dict) -> tuple[bool, str]:
-    """Rule 11 (BACKEND): Backend configured (terraform { backend '...' {} } or cloud {})."""
-    if re.search(r'backend\s+"[^"]+"\s*\{', tf_text):
-        match = re.search(r'backend\s+"([^"]+)"\s*\{', tf_text)
-        backend_type = match.group(1) if match else "?"
-        return True, f"backend configured: {backend_type}"
-    # Terraform Cloud / Enterprise uses cloud {} block instead of backend
-    if re.search(r'\bcloud\s*\{', tf_text):
-        return True, "backend configured: terraform cloud"
-    return False, "no backend configuration found"
+def check_rule_10_backend_with_locking(tf_text: str, task: dict) -> tuple[bool, str]:
+    """Rule 10 (BACKEND_WITH_LOCKING): Backend configured AND dynamodb_table for state locking."""
+    has_backend = re.search(r'backend\s+"[^"]+"\s*\{', tf_text)
+    has_cloud = re.search(r'\bcloud\s*\{', tf_text)
+
+    if not has_backend and not has_cloud:
+        return False, "no backend configuration found"
+
+    if has_backend:
+        backend_match = re.search(r'backend\s+"([^"]+)"\s*\{', tf_text)
+        backend_type = backend_match.group(1) if backend_match else "?"
+        backend_body = _extract_block_body(tf_text, backend_match.end() - 1)
+        if re.search(r'\bdynamodb_table\s*=', backend_body):
+            return True, f"backend {backend_type} with DynamoDB locking"
+        return False, f"backend {backend_type} configured but no dynamodb_table for state locking"
+
+    # Terraform Cloud uses its own locking
+    return True, "backend configured: terraform cloud (built-in locking)"
 
 
-def check_rule_12_sensitive(tf_text: str, task: dict) -> tuple[bool, str]:
-    """Rule 12 (SENSITIVE): Sensitive values marked with sensitive = true.
-    Only checked when the task requires sensitive handling."""
-    requires_sensitive = task.get("requirements", {}).get("sensitive_values", False)
-    if not requires_sensitive:
-        return True, "n/a (task does not require sensitive values)"
+def check_rule_11_iam_least_privilege(tf_text: str, task: dict) -> tuple[bool, str]:
+    """Rule 11 (IAM_LEAST_PRIVILEGE): No '*' in Action or Resource in IAM policies.
+    No service wildcards (s3:*, ec2:*, etc.)."""
+    resources = _find_resource_blocks(tf_text)
+    iam_resources = [
+        (rtype, rname, body)
+        for rtype, rname, body in resources
+        if rtype in ("aws_iam_role_policy", "aws_iam_policy", "aws_iam_policy_document")
+    ]
 
-    # Check variables and outputs for sensitive = true
+    if not iam_resources:
+        # Also check inline assume_role_policy on aws_iam_role
+        iam_roles = [(rtype, rname, body) for rtype, rname, body in resources
+                     if rtype == "aws_iam_role"]
+        # If no IAM policy resources at all, this is a fail for tasks that require IAM
+        if not iam_roles:
+            return False, "no IAM policy resources found"
+        # Check assume_role_policy on roles — those are trust policies, not permission policies
+        # Permission policies are what we care about
+        return False, "no IAM permission policy resources found (aws_iam_role_policy or aws_iam_policy)"
+
+    violations = []
+    for rtype, rname, body in iam_resources:
+        policy_docs = _extract_iam_policy_json(body)
+
+        # Check both the raw body and extracted policy docs for wildcards
+        # HCL jsonencode uses unquoted keys (Action =), JSON uses quoted ("Action":)
+        check_texts = [body] + policy_docs
+
+        found_action_wildcard = False
+        found_resource_wildcard = False
+        found_service_wildcard = False
+
+        for check_text in check_texts:
+            # Action = "*" (HCL unquoted key)
+            if re.search(r'\bAction\s*=\s*"\*"', check_text):
+                found_action_wildcard = True
+            # "Action": "*" (JSON quoted key)
+            if re.search(r'"Action"\s*:\s*"\*"', check_text):
+                found_action_wildcard = True
+            # Action = ["*"] or "Action": ["*"]
+            if re.search(r'\bAction\s*[:=]\s*\[\s*"\*"\s*\]', check_text):
+                found_action_wildcard = True
+            # HCL data source style: actions = ["*"]
+            if re.search(r'\bactions?\s*=\s*\[\s*"\*"\s*\]', check_text):
+                found_action_wildcard = True
+
+            # Resource = "*" (HCL unquoted key)
+            if re.search(r'\bResource\s*=\s*"\*"', check_text):
+                found_resource_wildcard = True
+            # "Resource": "*" (JSON quoted key)
+            if re.search(r'"Resource"\s*:\s*"\*"', check_text):
+                found_resource_wildcard = True
+            # Resource = ["*"] or "Resource": ["*"]
+            if re.search(r'\bResource\s*[:=]\s*\[\s*"\*"\s*\]', check_text):
+                found_resource_wildcard = True
+            # HCL data source style: resources = ["*"]
+            if re.search(r'\bresources?\s*=\s*\[\s*"\*"\s*\]', check_text):
+                found_resource_wildcard = True
+
+            # Service wildcards: "s3:*", "ec2:*", etc.
+            service_wildcards = re.findall(r'"([a-z0-9]+):\*"', check_text)
+            if service_wildcards:
+                found_service_wildcard = True
+
+        if found_action_wildcard:
+            violations.append(f"{rtype}.{rname}: wildcard Action")
+        if found_resource_wildcard:
+            violations.append(f"{rtype}.{rname}: wildcard Resource")
+        if found_service_wildcard:
+            violations.append(f"{rtype}.{rname}: service wildcard")
+
+    # Deduplicate
+    violations = list(dict.fromkeys(violations))
+
+    if violations:
+        return False, "; ".join(violations[:5])
+    return True, f"all {len(iam_resources)} IAM policies follow least privilege"
+
+
+def check_rule_12_sg_no_open_ingress(tf_text: str, task: dict) -> tuple[bool, str]:
+    """Rule 12 (SG_NO_OPEN_INGRESS): No 0.0.0.0/0 on non-80/443 ports.
+    Checks inline ingress {} blocks and aws_security_group_rule resources."""
+    violations = []
+
+    # Check inline security group ingress blocks
+    sg_resources = [(rtype, rname, body) for rtype, rname, body in _find_resource_blocks(tf_text)
+                    if rtype == "aws_security_group"]
+
+    for rtype, rname, body in sg_resources:
+        # Find ingress blocks within the SG body
+        for ing_match in re.finditer(r'\bingress\s*\{', body):
+            ing_body = _extract_block_body(body, ing_match.end() - 1)
+            if _ingress_has_open_cidr(ing_body):
+                # Check if it's on a safe port (80, 443)
+                port = _extract_port(ing_body)
+                if port not in (80, 443):
+                    violations.append(f"{rtype}.{rname}: ingress 0.0.0.0/0 on port {port}")
+
+    # Check aws_security_group_rule resources
+    sg_rules = [(rtype, rname, body) for rtype, rname, body in _find_resource_blocks(tf_text)
+                if rtype == "aws_security_group_rule"]
+
+    for rtype, rname, body in sg_rules:
+        if re.search(r'\btype\s*=\s*"ingress"', body):
+            if _ingress_has_open_cidr(body):
+                port = _extract_port(body)
+                if port not in (80, 443):
+                    violations.append(f"{rtype}.{rname}: ingress 0.0.0.0/0 on port {port}")
+
+    if violations:
+        return False, "; ".join(violations[:5])
+
+    # Count SGs found for detail message
+    total_sgs = len(sg_resources) + len(sg_rules)
+    if total_sgs == 0:
+        return True, "no security groups found"
+    return True, f"all {total_sgs} security group entries pass ingress check"
+
+
+def _ingress_has_open_cidr(block_body: str) -> bool:
+    """Check if an ingress block has 0.0.0.0/0 or ::/0."""
+    return bool(re.search(r'0\.0\.0\.0/0|::/0', block_body))
+
+
+def _extract_port(block_body: str) -> int | None:
+    """Extract the port from an ingress block (from_port or to_port)."""
+    match = re.search(r'\bfrom_port\s*=\s*(\d+)', block_body)
+    if match:
+        return int(match.group(1))
+    match = re.search(r'\bto_port\s*=\s*(\d+)', block_body)
+    if match:
+        return int(match.group(1))
+    return None
+
+
+def check_rule_13_sensitive_marked(tf_text: str, task: dict) -> tuple[bool, str]:
+    """Rule 13 (SENSITIVE_MARKED): Variables/outputs with sensitive keywords
+    in the name must have sensitive = true. Keyword-heuristic on all tasks."""
     variables = _find_variable_blocks(tf_text)
     outputs = _find_output_blocks(tf_text)
 
-    sensitive_vars = [
-        vname for vname, body in variables
-        if re.search(r'\bsensitive\s*=\s*true\b', body)
-    ]
-    sensitive_outputs = [
-        oname for oname, body in outputs
-        if re.search(r'\bsensitive\s*=\s*true\b', body)
-    ]
+    violations = []
 
-    if not sensitive_vars and not sensitive_outputs:
-        return False, "task requires sensitive values but none marked sensitive = true"
-    return True, f"sensitive vars: {sensitive_vars}, outputs: {sensitive_outputs}"
+    for vname, body in variables:
+        vname_lower = vname.lower()
+        if any(kw in vname_lower for kw in SENSITIVE_KEYWORDS):
+            if not re.search(r'\bsensitive\s*=\s*true\b', body):
+                violations.append(f"var.{vname}: contains sensitive keyword but not marked sensitive")
+
+    for oname, body in outputs:
+        oname_lower = oname.lower()
+        if any(kw in oname_lower for kw in SENSITIVE_KEYWORDS):
+            if not re.search(r'\bsensitive\s*=\s*true\b', body):
+                violations.append(f"output.{oname}: contains sensitive keyword but not marked sensitive")
+
+    if violations:
+        return False, "; ".join(violations[:5])
+
+    # Count how many sensitive items we found
+    sensitive_vars = [vname for vname, body in variables
+                      if re.search(r'\bsensitive\s*=\s*true\b', body)]
+    sensitive_outputs = [oname for oname, body in outputs
+                         if re.search(r'\bsensitive\s*=\s*true\b', body)]
+
+    if sensitive_vars or sensitive_outputs:
+        return True, f"sensitive vars: {sensitive_vars}, outputs: {sensitive_outputs}"
+    return True, "no variables/outputs with sensitive keywords found"
 
 
-def check_rule_13_data_sources(tf_text: str, task: dict) -> tuple[bool, str]:
-    """Rule 13 (DATA): Data sources used for lookups when task requires them."""
-    requires_data = task.get("requirements", {}).get("data_sources", False)
-    if not requires_data:
-        return True, "n/a (task does not require data sources)"
+def check_rule_14_resource_coverage(tf_text: str, task: dict) -> tuple[bool, str]:
+    """Rule 14 (RESOURCE_COVERAGE): >=70% of required resource types present."""
+    expected = task.get("resources", [])
+    if not expected:
+        return True, "no expected resources in task"
 
+    actual_types = set(re.findall(r'resource\s+"([^"]+)"', tf_text))
+    found = [r for r in expected if r in actual_types]
+    pct = len(found) / len(expected) * 100
+    if pct >= 70:
+        return True, f"{len(found)}/{len(expected)} resources ({pct:.0f}%)"
+    missing = [r for r in expected if r not in actual_types]
+    return False, f"only {len(found)}/{len(expected)} resources ({pct:.0f}%), need >=70%. Missing: {missing[:5]}"
+
+
+def check_rule_15_data_sources_used(tf_text: str, task: dict) -> tuple[bool, str]:
+    """Rule 15 (DATA_SOURCES_USED): At least one data block."""
     data_blocks = _find_data_blocks(tf_text)
     if not data_blocks:
-        return False, "task requires data sources but none defined"
+        return False, "no data sources defined"
     names = [f"{dtype}.{dname}" for dtype, dname in data_blocks]
     return True, f"{len(data_blocks)} data sources: {names}"
-
-
-def check_rule_14_locals(tf_text: str, task: dict) -> tuple[bool, str]:
-    """Rule 14 (LOCALS): Locals block present for shared/computed values."""
-    if re.search(r'\blocals\s*\{', tf_text):
-        return True, "locals block present"
-    return False, "no locals block defined"
 
 
 # --- All Checks Registry -----------------------------------------------------
@@ -510,54 +683,16 @@ RULE_CHECKS = [
     ("rule_3_var_type", check_rule_3_var_type),
     ("rule_4_outputs", check_rule_4_outputs),
     ("rule_5_tags", check_rule_5_tags),
-    ("rule_6_lifecycle", check_rule_6_lifecycle),
-    ("rule_7_var_separation", check_rule_7_var_separation),
-    ("rule_8_file_structure", check_rule_8_file_structure),
-    ("rule_9_no_hardcoded_ids", check_rule_9_no_hardcoded_ids),
-    ("rule_10_provider_pinned", check_rule_10_provider_pinned),
-    ("rule_11_backend", check_rule_11_backend),
-    ("rule_12_sensitive", check_rule_12_sensitive),
-    ("rule_13_data_sources", check_rule_13_data_sources),
-    ("rule_14_locals", check_rule_14_locals),
-]
-
-# Rules excluded from auto_score (manual-only, cannot be verified deterministically)
-EXCLUDED_RULES = {"rule_6_lifecycle"}
-
-
-# --- Outcome Checks (semantic correctness, not style) ----------------------------
-
-def outcome_resources_present(tf_text: str, task: dict) -> tuple[bool, str]:
-    """OUTCOME: All required AWS resource types are defined."""
-    expected = task.get("resources", [])
-    if not expected:
-        return True, "no expected resources in task"
-    import re
-    # Extract resource type strings from resource blocks
-    actual_types = set(re.findall(r'resource\s+"([^"]+)"', tf_text))
-    missing = [r for r in expected if r not in actual_types]
-    if not missing:
-        return True, f"all {len(expected)} expected resources present"
-    return False, f"missing {len(missing)}/{len(expected)} resources: {missing[:5]}"
-
-
-def outcome_resource_coverage(tf_text: str, task: dict) -> tuple[bool, str]:
-    """OUTCOME: Percentage of required resources that are present (>=60% to pass)."""
-    expected = task.get("resources", [])
-    if not expected:
-        return True, "no expected resources in task"
-    import re
-    actual_types = set(re.findall(r'resource\s+"([^"]+)"', tf_text))
-    found = [r for r in expected if r in actual_types]
-    pct = len(found) / len(expected) * 100
-    if pct >= 60:
-        return True, f"{len(found)}/{len(expected)} resources ({pct:.0f}%)"
-    return False, f"only {len(found)}/{len(expected)} resources ({pct:.0f}%), need >=60%"
-
-
-OUTCOME_CHECKS = [
-    ("outcome_resources_present", outcome_resources_present),
-    ("outcome_resource_coverage", outcome_resource_coverage),
+    ("rule_6_lifecycle_stateful", check_rule_6_lifecycle_stateful),
+    ("rule_7_locals_for_tags", check_rule_7_locals_for_tags),
+    ("rule_8_no_hardcoded_ids", check_rule_8_no_hardcoded_ids),
+    ("rule_9_provider_pinned", check_rule_9_provider_pinned),
+    ("rule_10_backend_with_locking", check_rule_10_backend_with_locking),
+    ("rule_11_iam_least_privilege", check_rule_11_iam_least_privilege),
+    ("rule_12_sg_no_open_ingress", check_rule_12_sg_no_open_ingress),
+    ("rule_13_sensitive_marked", check_rule_13_sensitive_marked),
+    ("rule_14_resource_coverage", check_rule_14_resource_coverage),
+    ("rule_15_data_sources_used", check_rule_15_data_sources_used),
 ]
 
 CSV_FIELDS = [
@@ -574,15 +709,10 @@ CSV_FIELDS = [
     "structure_valid",
     "structure_errors",
 ]
-# Add rule columns
 for _rule_name, _ in RULE_CHECKS:
     CSV_FIELDS.append(f"{_rule_name}_pass")
     CSV_FIELDS.append(f"{_rule_name}_detail")
-CSV_FIELDS.extend(["auto_score", "scored_rules", "needs_manual_review"])
-for _outcome_name, _ in OUTCOME_CHECKS:
-    CSV_FIELDS.append(f"{_outcome_name}_pass")
-    CSV_FIELDS.append(f"{_outcome_name}_detail")
-CSV_FIELDS.append("outcome_score")
+CSV_FIELDS.extend(["auto_score", "scored_rules"])
 
 
 # --- Task Loading -------------------------------------------------------------
@@ -617,10 +747,8 @@ def evaluate_run(result_file: Path) -> dict:
         "duration_ms": result.get("duration_ms", ""),
     }
 
-    # Load task data for conditional checks
     task = load_task(row["task"])
 
-    # Extract token usage and Terraform HCL from raw output
     raw_output = result.get("raw_output", "")
     row.update(extract_token_usage(raw_output))
 
@@ -630,7 +758,6 @@ def evaluate_run(result_file: Path) -> dict:
     row["extraction_error"] = extract_error or ""
 
     if tf_text is None:
-        # Cannot check anything else
         row["structure_valid"] = False
         row["structure_errors"] = extract_error or "extraction failed"
         for rule_name, _ in RULE_CHECKS:
@@ -638,52 +765,29 @@ def evaluate_run(result_file: Path) -> dict:
             row[f"{rule_name}_detail"] = "no Terraform HCL extracted"
         row["auto_score"] = 0
         row["scored_rules"] = 0
-        row["needs_manual_review"] = False
-        for outcome_name, _ in OUTCOME_CHECKS:
-            row[f"{outcome_name}_pass"] = False
-            row[f"{outcome_name}_detail"] = "no Terraform HCL extracted"
-        row["outcome_score"] = 0
         return row
 
-    # Structure validation
     struct_ok, struct_errors = validate_structure(tf_text)
     row["structure_valid"] = struct_ok
     row["structure_errors"] = "; ".join(struct_errors) if struct_errors else ""
 
-    # Run all rule checks
     auto_score = 0
     scored_rules = 0
-    needs_review = False
     for rule_name, check_fn in RULE_CHECKS:
         passed, detail = check_fn(tf_text, task)
         row[f"{rule_name}_pass"] = passed
         row[f"{rule_name}_detail"] = detail
-        if rule_name not in EXCLUDED_RULES:
-            scored_rules += 1
-            if passed:
-                auto_score += 1
-        if "needs_review" in detail:
-            needs_review = True
+        scored_rules += 1
+        if passed:
+            auto_score += 1
 
     row["auto_score"] = auto_score
     row["scored_rules"] = scored_rules
-    row["needs_manual_review"] = needs_review
-
-    # Outcome checks (semantic correctness)
-    outcome_score = 0
-    for outcome_name, check_fn in OUTCOME_CHECKS:
-        passed, detail = check_fn(tf_text, task)
-        row[f"{outcome_name}_pass"] = passed
-        row[f"{outcome_name}_detail"] = detail
-        if passed:
-            outcome_score += 1
-    row["outcome_score"] = outcome_score
 
     return row
 
 
 def main():
-    # Determine which files to process
     if len(sys.argv) > 1:
         files = [Path(f) for f in sys.argv[1:] if f.endswith(".json")]
     else:
@@ -707,26 +811,21 @@ def main():
         except Exception as e:
             print(f"  ERROR processing {f.name}: {e}")
 
-    # Write CSV
     os.makedirs(RESULTS_DIR, exist_ok=True)
     with open(OUTPUT_CSV, "w", newline="") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=CSV_FIELDS)
         writer.writeheader()
         writer.writerows(rows)
 
-    # Summary
     extraction_ok = sum(1 for r in rows if r["extraction_ok"])
     structure_valid = sum(1 for r in rows if r["structure_valid"])
-    needs_review = sum(1 for r in rows if r["needs_manual_review"])
 
     print(f"\nResults written to {OUTPUT_CSV}")
     print(f"  Total runs: {len(rows)}")
     print(f"  Extraction ok: {extraction_ok}/{len(rows)}")
     print(f"  Structure valid: {structure_valid}/{len(rows)}")
-    print(f"  Needs manual review: {needs_review}/{len(rows)}")
 
-    # Auto-score summary by condition
-    print(f"\nAuto-score by condition (max {len(RULE_CHECKS) - len(EXCLUDED_RULES)} scored rules, {len(EXCLUDED_RULES)} excluded):")
+    print(f"\nAuto-score by condition (max {len(RULE_CHECKS)} rules):")
     conditions = {}
     for r in rows:
         cond = r["condition"]

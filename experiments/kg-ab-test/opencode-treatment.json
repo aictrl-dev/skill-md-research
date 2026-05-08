@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "aictrl": {
+      "type": "remote",
+      "url": "https://aictrl.dev/aictrl/mcp",
+      "enabled": true,
+      "timeout": 10000,
+      "headers": {
+        "Authorization": "Bearer 4b3bd42f7b664e5918292d38d47911203412344a4f9859fbc630aeaadb2f00e3"
+      }
+    }
+  }
+}

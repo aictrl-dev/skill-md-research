@@ -1,0 +1,5 @@
+run_id,input_tokens,output_tokens,reasoning_tokens,cache_read,total_tokens,steps,duration_s,compiles,lints
+control-task-1,44996,6603,0,2504832,2556431,62,503,true,true
+control-task-2,45596,3587,0,699456,748639,19,178,true,true
+treatment-task-1,40877,1285,0,288320,330482,8,83,true,true
+treatment-task-2,43424,3550,0,1182656,1229630,28,377,true,true
