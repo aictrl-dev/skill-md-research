@@ -1,0 +1,11 @@
+{
+  "name": "code-review-research",
+  "private": true,
+  "type": "module",
+  "description": "Hypothesis/metrics/results framework for code-review-agent experiments",
+  "scripts": {
+    "test": "npx tsx --test scripts/schema.test.ts scripts/aggregate.test.ts scripts/sync-sheet.test.ts scripts/score-path.test.ts",
+    "aggregate": "npx tsx scripts/aggregate.ts",
+    "sync": "npx tsx scripts/sync-sheet.ts"
+  }
+}
