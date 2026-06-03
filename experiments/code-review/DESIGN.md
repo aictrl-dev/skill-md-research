@@ -1,7 +1,7 @@
 # Code-Review Research Framework — Design
 
 **Date:** 2026-06-03
-**Status:** design (pre-implementation)
+**Status:** implemented (see [`PLAN.md`](./PLAN.md), [`README.md`](./README.md))
 **Repo:** `aictrl-dev/skill-md-research`
 **Home:** `experiments/code-review/`
 

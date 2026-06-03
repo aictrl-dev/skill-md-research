@@ -1,5 +1,7 @@
 # Code-Review Research Framework — Implementation Plan
 
+> **Status: COMPLETE.** All tasks were implemented via subagent-driven development (schema.ts, aggregate.ts, sync-sheet.ts + tests, README/TRACKER/package.json, and the backward-compatible `score.ts` change). The unchecked boxes below are the original execution guide, retained for reference.
+>
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build the connective tissue that turns the one-off `cr-loop` study into a repeatable code-review research practice: an `aggregate.ts` that rolls per-PR scores into one experiment-level Results row, a `sync-sheet.ts` that validates a row and emits MCP-ready cells, plus README/TRACKER docs.
