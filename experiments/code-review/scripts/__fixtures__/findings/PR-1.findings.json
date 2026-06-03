@@ -1,0 +1,1 @@
+{ "prNumber": 1, "findings": [ { "file": "a.ts", "line": 10, "severity": "BUG", "title": "matches g1" } ] }
