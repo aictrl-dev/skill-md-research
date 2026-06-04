@@ -59,6 +59,9 @@ interface AnswerKeyEntry {
   verdict: 'TRUE' | 'FALSE' | 'UNCERTAIN';
   action: 'FIX' | 'DEFER' | 'IGNORE';
   reason: string;
+  /** Optional defect-class label (e.g. 'null-safety', 'security'). Drives the
+   *  per-class breakdown; absent on older keys (e.g. cr-loop) → uncategorised. */
+  category?: string;
 }
 
 export interface SkillFinding {
@@ -67,6 +70,15 @@ export interface SkillFinding {
   severity: string;
   title?: string;
   description?: string;
+  category?: string;
+}
+
+/** Per-defect-class tally, keyed by category. '' = uncategorised. */
+export interface CategoryTotals {
+  tp: number;
+  fp: number;
+  fn: number;
+  novels: number;
 }
 
 export interface ScoreResult {
@@ -79,6 +91,9 @@ export interface ScoreResult {
     falseNegatives: number;
     novelFindings: number;
     halfCredits: number; // UNCERTAIN matches count for 0.5
+    /** Same tallies split by defect class. Keys are answer-key categories
+     *  (and skill-finding categories for novels); '' = uncategorised. */
+    byCategory: Record<string, CategoryTotals>;
   };
   precision: number;
   recall: number;
@@ -154,12 +169,18 @@ export function score(
   let fp = 0;
   let halfCredits = 0;
 
+  const byCategory: Record<string, CategoryTotals> = {};
+  const bucket = (cat: string | undefined): CategoryTotals =>
+    (byCategory[cat ?? ''] ??= { tp: 0, fp: 0, fn: 0, novels: 0 });
+
   for (const idx of matchedAnswerKey) {
     const ak = labels[idx];
-    if (ak.verdict === 'TRUE') tp += 1;
-    else if (ak.verdict === 'FALSE') fp += 1;
+    const b = bucket(ak.category);
+    if (ak.verdict === 'TRUE') { tp += 1; b.tp += 1; }
+    else if (ak.verdict === 'FALSE') { fp += 1; b.fp += 1; }
     else if (ak.verdict === 'UNCERTAIN') {
       tp += 0.5;
+      b.tp += 0.5;
       halfCredits += 1;
     }
   }
@@ -173,13 +194,15 @@ export function score(
   let fn = 0;
   for (const m of missed) {
     if (m.verdict !== 'TRUE') continue;
-    if (m.action === 'FIX') fn += 1;
-    else fn += 0.5;
+    const w = m.action === 'FIX' ? 1 : 0.5;
+    fn += w;
+    bucket(m.category).fn += w;
   }
 
   // Novel = skill findings with no answer-key match. Not penalised here
   // (could be a new TP), but reported for downstream grading.
   const novel = skillFindings.filter((_, i) => !matchedSkill.has(i));
+  for (const sf of novel) bucket(sf.category).novels += 1;
 
   const precision = tp + fp === 0 ? 0 : tp / (tp + fp);
   const recall = tp + fn === 0 ? 0 : tp / (tp + fn);
@@ -195,6 +218,7 @@ export function score(
       falseNegatives: fn,
       novelFindings: novel.length,
       halfCredits,
+      byCategory,
     },
     precision,
     recall,
