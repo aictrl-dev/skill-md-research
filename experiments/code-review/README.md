@@ -26,14 +26,22 @@ fields. [`TRACKER.md`](./TRACKER.md) is a thin human pointer to it.
      --answer-key extended \
      --experiment cr-loop --hypothesis H-003 --variant "Phase E" \
      --skill-version code-review.SKILL.v3.md --model zai-coding-plan/glm-5.1 \
-     --kg-state populated --baseline-f1 0.369 --out /tmp/row.json
+     --tool-config "KG:populated" --baseline-f1 0.369 \
+     --out /tmp/row.json --breakdown-out /tmp/breakdown.json
    ```
-4. **Sync** — validate + shape the row, then append it via the google-sheets MCP:
+   (`--kg-state populated` still works — it maps to `--tool-config "KG:populated"`.)
+   `--breakdown-out` writes one per-defect-class row for every class the answer
+   key labels via `category` (skips only-novel classes; empty for cr-loop, whose
+   key predates the taxonomy). SNR (TP/FP) and Significance (ΔF1 vs noise floor)
+   are derived automatically.
+4. **Sync** — validate + shape the row(s), then append via the google-sheets MCP:
    ```bash
-   npx tsx scripts/sync-sheet.ts --in /tmp/row.json --known-hids H-001,H-002,H-003
+   npx tsx scripts/sync-sheet.ts --in /tmp/row.json \
+     --breakdown-in /tmp/breakdown.json --known-hids H-001,H-002,H-003
    ```
-   Feed the printed `{ sheet, values }` to the MCP `update_cells` /
-   `batch_update_cells` tool (the agent assigns the next `R-ID`).
+   Feed each printed payload (`{ sheet: "Experiments", values }` and
+   `{ sheet: "ClassBreakdown", values }`) to the MCP `update_cells` /
+   `batch_update_cells` tool (the agent assigns the next `E-ID`).
 5. **Triage novels** — adjudicate produced findings with no answer-key match;
    fold confirmed-real ones into `answer-key-extended.json` and re-score.
 6. **Conclude** — set the `Hypotheses` Status and one-line Learning.
@@ -52,10 +60,13 @@ fields. [`TRACKER.md`](./TRACKER.md) is a thin human pointer to it.
 
 ## Files
 
-- `scripts/schema.ts` — Results column contract, enums, validation, cell ordering.
-- `scripts/aggregate.ts` — per-PR scores → one micro-averaged Results row.
-- `scripts/sync-sheet.ts` — validate a row + emit the MCP append payload.
-- Reuses `../cr-loop/scripts/score.ts` (`score()`) as the per-PR scorer.
+- `scripts/schema.ts` — `Experiments` (25-col) + `ClassBreakdown` (12-col) row
+  contracts, enums, validation, cell ordering.
+- `scripts/aggregate.ts` — per-PR scores → one micro-averaged `Experiments` row
+  + per-defect-class `ClassBreakdown` rows (derives SNR + Significance).
+- `scripts/sync-sheet.ts` — validate rows + emit the MCP append payloads.
+- Reuses `../cr-loop/scripts/score.ts` (`score()`) as the per-PR scorer; it now
+  also returns `totals.byCategory` for the per-class breakdown.
 
 ## Tests
 

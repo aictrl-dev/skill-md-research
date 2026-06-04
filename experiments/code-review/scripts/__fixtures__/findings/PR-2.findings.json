@@ -1,1 +1,1 @@
-{ "prNumber": 2, "findings": [ { "file": "c.ts", "line": 5, "severity": "SECURITY", "title": "repeats known FP" }, { "file": "d.ts", "line": 99, "severity": "BUG", "title": "novel" } ] }
+{ "prNumber": 2, "findings": [ { "file": "c.ts", "line": 5, "severity": "SECURITY", "title": "repeats known FP", "category": "security" }, { "file": "d.ts", "line": 99, "severity": "BUG", "title": "novel", "category": "performance" } ] }

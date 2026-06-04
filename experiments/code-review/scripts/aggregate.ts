@@ -1,35 +1,56 @@
 #!/usr/bin/env npx tsx
 /**
- * Aggregate per-PR cr-loop scores for one variant into a single Results row.
+ * Aggregate per-PR cr-loop scores for one variant into a single Experiments row,
+ * plus a per-defect-class breakdown (one ClassBreakdown row per class that the
+ * answer key labels via `category`).
  *
  * Reuses cr-loop's trusted score() per PR, then micro-averages: sum TP/FP/FN
  * across PRs and compute precision/recall/F1 from the sums (NOT a mean of
  * per-PR F1s, which would over-weight small PRs).
  *
+ * SNR (TP/FP) and Significance (|ΔF1| vs the small-sample noise floor) are
+ * DERIVED here; SNR is null when FP === 0, Significance is '' until a baseline
+ * is supplied. With a single seed the best a positive ΔF1 earns is
+ * 'inconclusive' — 'confirmed' is reserved for multi-seed runs (set manually).
+ *
  * Usage:
  *   npx tsx aggregate.ts --findings-dir <dir> --answer-key <orig|extended> \
- *     --experiment cr-loop --hypothesis H-003 --variant "Phase E" \
+ *     --experiment csharp-review --hypothesis H-001 --variant "Phase E" \
  *     --skill-version code-review.SKILL.v3.md --model zai-coding-plan/glm-5.1 \
- *     --kg-state populated [--baseline-f1 0.369] [--cost "46M tok"] \
- *     [--log-link log/004.md] [--out results-row.json]
+ *     --tool-config "KG:populated" [--baseline-f1 0.369] [--cost "$1.20"] \
+ *     [--latency "1200/3400"] [--tokens-per-pr 9000] \
+ *     [--annotation-coverage dense] [--seed 1] [--log-link log/004.md] \
+ *     [--out row.json] [--breakdown-out breakdown.json]
  *
- * --answer-key orig|extended resolves to cr-loop/answer-key.json or
- * answer-key-extended.json. For tests, pass --answer-key-path + --answer-key-version.
+ * Back-compat: --kg-state <empty|populated> maps to --tool-config "KG:<value>".
+ * For tests, pass --answer-key-path + --answer-key-version.
  */
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { score, type SkillFinding } from '../../cr-loop/scripts/score.ts';
+import { score, type SkillFinding, type CategoryTotals } from '../../cr-loop/scripts/score.ts';
 import {
-  type ResultsRow,
-  type KgState,
+  type ExperimentRow,
+  type ClassBreakdownRow,
   type AnswerKeyVersion,
-  KG_STATES,
+  type DefectClass,
   ANSWER_KEY_VERSIONS,
-  validateResultsRow,
+  DEFECT_CLASSES,
+  validateExperimentRow,
+  validateClassBreakdownRow,
 } from './schema.ts';
 
 const round3 = (n: number): number => Math.round(n * 1000) / 1000;
+
+/** ΔF1 within this band of zero is indistinguishable from single-seed noise. */
+export const NOISE_FLOOR = 0.01;
+
+const prf = (tp: number, fp: number, fn: number): { precision: number; recall: number; f1: number } => {
+  const precision = tp + fp === 0 ? 0 : tp / (tp + fp);
+  const recall = tp + fn === 0 ? 0 : tp / (tp + fn);
+  const f1 = precision + recall === 0 ? 0 : (2 * precision * recall) / (precision + recall);
+  return { precision, recall, f1 };
+};
 
 export interface AggregateMeta {
   experiment: string;
@@ -37,10 +58,19 @@ export interface AggregateMeta {
   variant: string;
   skillVersion: string;
   model: string;
-  kgState: KgState;
+  toolContextConfig: string;
   baselineF1?: number | null;
   cost?: string;
   logLink?: string;
+  latency?: string;
+  tokensPerPr?: number | null;
+  annotationCoverage?: ExperimentRow['annotationCoverage'];
+  seed?: string;
+}
+
+export interface AggregateResult {
+  row: ExperimentRow;
+  breakdown: ClassBreakdownRow[];
 }
 
 export function aggregate(
@@ -48,7 +78,7 @@ export function aggregate(
   answerKeyPath: string,
   answerKeyVersion: AnswerKeyVersion,
   meta: AggregateMeta,
-): ResultsRow {
+): AggregateResult {
   if (!fs.existsSync(findingsDir) || !fs.statSync(findingsDir).isDirectory()) {
     throw new Error(`aggregate: findings dir not found: ${findingsDir}`);
   }
@@ -61,6 +91,9 @@ export function aggregate(
   }
 
   let tp = 0, fp = 0, fn = 0, novels = 0;
+  const byCategory: Record<string, CategoryTotals> = {};
+  const acc = (cat: string): CategoryTotals => (byCategory[cat] ??= { tp: 0, fp: 0, fn: 0, novels: 0 });
+
   for (const file of files) {
     const full = path.join(findingsDir, file);
     const data = JSON.parse(fs.readFileSync(full, 'utf8')) as {
@@ -79,20 +112,27 @@ export function aggregate(
     fp += r.totals.falsePositives;
     fn += r.totals.falseNegatives;
     novels += r.totals.novelFindings;
+    for (const [cat, t] of Object.entries(r.totals.byCategory)) {
+      const b = acc(cat);
+      b.tp += t.tp; b.fp += t.fp; b.fn += t.fn; b.novels += t.novels;
+    }
   }
 
-  const precision = tp + fp === 0 ? 0 : tp / (tp + fp);
-  const recall = tp + fn === 0 ? 0 : tp / (tp + fn);
-  const f1 = precision + recall === 0 ? 0 : (2 * precision * recall) / (precision + recall);
+  const { precision, recall, f1 } = prf(tp, fp, fn);
   const baseline = meta.baselineF1 ?? null;
+  const deltaF1 = baseline === null ? null : round3(f1 - baseline);
+  const snr = fp === 0 ? null : round3(tp / fp);
 
-  return {
+  let significance: ExperimentRow['significance'] = '';
+  if (deltaF1 !== null) significance = Math.abs(deltaF1) < NOISE_FLOOR ? 'noise' : 'inconclusive';
+
+  const row: ExperimentRow = {
     experiment: meta.experiment,
     hId: meta.hId,
     variant: meta.variant,
     skillVersion: meta.skillVersion,
     model: meta.model,
-    kgState: meta.kgState,
+    toolContextConfig: meta.toolContextConfig,
     answerKeyVersion,
     nPrs: files.length,
     tp: round3(tp),
@@ -102,10 +142,41 @@ export function aggregate(
     precision: round3(precision),
     recall: round3(recall),
     f1: round3(f1),
-    deltaF1: baseline === null ? null : round3(f1 - baseline),
+    deltaF1,
     cost: meta.cost ?? '',
     logLink: meta.logLink ?? '',
+    snr,
+    latency: meta.latency ?? '',
+    tokensPerPr: meta.tokensPerPr ?? null,
+    annotationCoverage: meta.annotationCoverage ?? '',
+    seed: meta.seed ?? '',
+    significance,
   };
+
+  // One breakdown row per *categorised* class (skip the '' uncategorised bucket,
+  // e.g. cr-loop, whose answer key predates the taxonomy). Unknown labels → 'other'.
+  const breakdown: ClassBreakdownRow[] = Object.entries(byCategory)
+    .filter(([cat, t]) => cat !== '' && t.tp + t.fp + t.fn > 0)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([cat, t]) => {
+      const known = (DEFECT_CLASSES as readonly string[]).includes(cat);
+      const m = prf(t.tp, t.fp, t.fn);
+      return {
+        experiment: meta.experiment,
+        hId: meta.hId,
+        answerKeyVersion,
+        defectClass: (known ? cat : 'other') as DefectClass,
+        tp: round3(t.tp),
+        fp: round3(t.fp),
+        fn: round3(t.fn),
+        precision: round3(m.precision),
+        recall: round3(m.recall),
+        f1: round3(m.f1),
+        notes: known ? '' : `label '${cat}' not in taxonomy → mapped to 'other'`,
+      };
+    });
+
+  return { row, breakdown };
 }
 
 // ---- CLI ----
@@ -143,28 +214,41 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     console.error('aggregate: --findings-dir is required');
     process.exit(1);
   }
-  if (!(KG_STATES as readonly string[]).includes(a['kg-state'])) {
-    console.error(`aggregate: --kg-state must be one of ${KG_STATES.join(' | ')}`);
+  // tool config: prefer --tool-config; fall back to legacy --kg-state.
+  const toolContextConfig = a['tool-config']
+    ?? (a['kg-state'] ? `KG:${a['kg-state']}` : '');
+  if (!toolContextConfig) {
+    console.error('aggregate: --tool-config (or legacy --kg-state) is required');
     process.exit(1);
   }
   const ak = resolveAnswerKey(a);
-  const row = aggregate(a['findings-dir'], ak.path, ak.version, {
+  const { row, breakdown } = aggregate(a['findings-dir'], ak.path, ak.version, {
     experiment: a.experiment,
     hId: a.hypothesis,
     variant: a.variant,
     skillVersion: a['skill-version'],
     model: a.model,
-    kgState: a['kg-state'] as KgState,
+    toolContextConfig,
     baselineF1: a['baseline-f1'] ? Number(a['baseline-f1']) : null,
     cost: a.cost,
     logLink: a['log-link'],
+    latency: a.latency,
+    tokensPerPr: a['tokens-per-pr'] ? Number(a['tokens-per-pr']) : null,
+    annotationCoverage: a['annotation-coverage'] as ExperimentRow['annotationCoverage'],
+    seed: a.seed,
   });
-  validateResultsRow(row);
-  const json = JSON.stringify(row, null, 2);
+  validateExperimentRow(row);
+  breakdown.forEach((b) => validateClassBreakdownRow(b));
+
+  const rowJson = JSON.stringify(row, null, 2);
   if (a.out) {
-    fs.writeFileSync(a.out, json);
+    fs.writeFileSync(a.out, rowJson);
     console.error(`aggregate: wrote ${a.out}`);
   } else {
-    console.log(json);
+    console.log(rowJson);
+  }
+  if (a['breakdown-out']) {
+    fs.writeFileSync(a['breakdown-out'], JSON.stringify(breakdown, null, 2));
+    console.error(`aggregate: wrote ${a['breakdown-out']} (${breakdown.length} class rows)`);
   }
 }
