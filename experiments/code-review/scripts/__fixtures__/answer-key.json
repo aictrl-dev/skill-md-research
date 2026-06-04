@@ -1,0 +1,9 @@
+{
+  "1": [
+    { "bot": "x", "severity": "BUG", "file": "a.ts", "line": "10", "description": "real bug, fixed", "verdict": "TRUE", "action": "FIX", "reason": "" },
+    { "bot": "x", "severity": "BUG", "file": "b.ts", "line": "20", "description": "real bug, missed", "verdict": "TRUE", "action": "FIX", "reason": "" }
+  ],
+  "2": [
+    { "bot": "x", "severity": "SECURITY", "file": "c.ts", "line": "5", "description": "known false positive", "verdict": "FALSE", "action": "IGNORE", "reason": "" }
+  ]
+}

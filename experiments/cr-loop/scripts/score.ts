@@ -61,7 +61,7 @@ interface AnswerKeyEntry {
   reason: string;
 }
 
-interface SkillFinding {
+export interface SkillFinding {
   file: string;
   line?: number | string;
   severity: string;
@@ -69,7 +69,7 @@ interface SkillFinding {
   description?: string;
 }
 
-interface ScoreResult {
+export interface ScoreResult {
   prNumber: number;
   totals: {
     answerKeySize: number;
@@ -128,8 +128,12 @@ function matchesAnswerKey(skill: SkillFinding, ak: AnswerKeyEntry): boolean {
   return linesIntersect(parseLineRange(skill.line), parseLineRange(ak.line));
 }
 
-export function score(prNumber: number, skillFindings: SkillFinding[]): ScoreResult {
-  const answerKey = JSON.parse(fs.readFileSync(ANSWER_KEY_PATH, 'utf8')) as Record<string, AnswerKeyEntry[]>;
+export function score(
+  prNumber: number,
+  skillFindings: SkillFinding[],
+  answerKeyPath: string = ANSWER_KEY_PATH,
+): ScoreResult {
+  const answerKey = JSON.parse(fs.readFileSync(answerKeyPath, 'utf8')) as Record<string, AnswerKeyEntry[]>;
   const labels = answerKey[String(prNumber)] ?? [];
 
   const matchedAnswerKey = new Set<number>();
