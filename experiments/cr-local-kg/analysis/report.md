@@ -91,8 +91,27 @@ Pilot reviews on real task files exposed a blocker and its fix:
   authorized:true when session.organizationId is missing → authorization
   bypass"*, **which is exactly the gold TRUE finding 205-C1.**
 
-**opencode / aictrl-CLI CANNOT run gemma4 without thinking — confirmed
-exhaustively (6 opencode routes + model-level, all fail; raw `/v1` works).**
+**CORRECTION (resolved): opencode/aictrl-CLI CAN run gemma — the key is
+`options: { "reasoningEffort": "none" }` (camelCase).** My earlier "cannot"
+conclusion was wrong: I was passing the wrong parameter name. opencode's vendored
+openai-compatible model only recognises the AI-SDK **camelCase `reasoningEffort`**
+and maps it to the body's `reasoning_effort`; **snake_case `reasoning_effort` is
+silently dropped** (parsed-out by the options schema, then overwritten with
+`undefined` at `openai-compatible-chat-language-model.ts:175`). With
+`reasoningEffort:"none"`, opencode runs the 205 review in **14 s with 4 findings**.
+This restores the production-relatable path (opencode / `aictrl run`).
+
+Why the other attempts failed (root cause traced in `../cli`):
+- `options.reasoning_effort` (snake) → stripped by the schema, dropped at line 175.
+- `options.think:false` / `reasoning:false` / `thinking:{disabled}` → not ollama-`/v1`
+  fields; ollama ignores them (and native `think:false` only works on `/api/chat`).
+- `--variant none|minimal` → the openai-compatible variant table only defines
+  `low/medium/high` and requires `capabilities.reasoning:true`; no `none` variant.
+- Matches upstream issues: opencode hangs on ollama's `reasoning` field
+  (anomalyco/opencode#21903), `reasoning_effort` not forwarded (openclaw#13575,
+  #33272), ollama rejects `minimal`/`false`, honours `none` (ollama#12004, #14820).
+
+**Original (now-superseded) failure table, for the record:**
 
 | approach | result |
 |---|---|
