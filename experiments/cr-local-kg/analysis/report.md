@@ -91,9 +91,19 @@ Pilot reviews on real task files exposed a blocker and its fix:
   authorized:true when session.organizationId is missing → authorization
   bypass"*, **which is exactly the gold TRUE finding 205-C1.**
 
+**opencode CANNOT disable thinking for this model — confirmed exhaustively.**
+Three approaches all leave thinking on (review → `[]`, 150–300 s):
+`options.think:false`, model-level `thinking:{type:disabled}`, and the schema's
+real field model-level `reasoning:false`. Root cause is architectural: opencode
+drives ollama over the **OpenAI-compatible `/v1`** endpoint, which has **no
+thinking parameter** — ollama's `think` flag exists only on its **native
+`/api/chat`**. `reasoning:false` only affects providers with native AI-SDK
+reasoning (Anthropic/OpenAI), not the openai-compatible→ollama transport.
+
 **Decision: drive ollama's native `/api/chat` (with `think:false`) directly,
-not opencode.** Native chat supports `think:false` **and** tool-calling together;
-opencode does not expose the thinking toggle for this model. The runner therefore
+not opencode.** Native chat supports `think:false` **and** tool-calling together.
+Bonus: native `options.seed` gives reproducible per-rep seeds (better than
+opencode's temperature-only variance). The runner therefore
 becomes a thin native-ollama loop:
 - **control:** `/api/chat` with `think:false`, no tools, inlined code → findings.
 - **treatment:** same + `tools:[query_context]`; on a `tool_call`, POST to the
