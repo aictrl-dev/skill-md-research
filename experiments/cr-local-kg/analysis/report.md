@@ -45,32 +45,42 @@ condition**. The treatment (KG) condition is blocked on an MCP credential.
   / `message.thinking` (native). The final answer still arrives as normal
   content; the findings parser should read the content channel, not reasoning.
 
-### opencode treatment (aictrl KG MCP) — BLOCKED on auth
+### opencode treatment (aictrl KG MCP) — WORKING
 
-- opencode connects to `https://aictrl.dev/aictrl/mcp` but the server returns
-  **`401` with `www-authenticate: Bearer resource="…session-control…/mcp"`** —
-  the hardcoded token reused from `kg-ab-test/opencode-treatment.json` is no
-  longer accepted. opencode then initiates an **OAuth** flow (dynamic client
-  registration → browser redirect to `aictrl.dev/oauth/authorize`), which cannot
-  complete in a headless run, so the KG tools never attach and gemma answers
-  without `query_context`.
-- **Resolution is a credential decision (see below).** Everything else in the
-  treatment path is identical to the working control path.
+- **Auth header is `X-API-Key`, not `Authorization: Bearer`.** A plain bearer
+  returns `401` + `www-authenticate` (which made opencode fall back to an
+  un-completable OAuth flow). With `X-API-Key: <aictrl key>` the gateway
+  (`https://aictrl.dev/aictrl/mcp`) returns `200` and `initialize` succeeds. The
+  key is read from a gitignored `.env.local` (`AICTRL_MCP_TOKEN`) via opencode's
+  `{env:…}` interpolation — no secret in git.
+- opencode connects over StreamableHTTP (no OAuth) and exposes **6 tools**:
+  `query_context` (the KG entry point), `update_backlog`, and four review-write
+  tools (`record_review_started`, `record_finding`, `record_finding_verdict`,
+  `record_review_completed`). The old "24 KG tools" figure is stale.
+- **gemma4 calls the KG through opencode**: the treatment smoke shows gemma
+  invoking `aictrl_query_context` (twice) before answering. Core bet confirmed at
+  the integration level (it also emits tool calls natively, e.g.
+  `get_callers({symbol:"computeRiskScore"})`).
 
-### Tool-calling (the core bet) — VALIDATED at the model level
+### KG is populated for the aictrl code domain — risk #2 RESOLVED
 
-- Independent of the MCP-auth issue, gemma4 **does emit tool calls.** Native
-  `/api/chat` with a function definition produced a correct
-  `tool_call: get_callers({symbol:"computeRiskScore"})`. So once a KG MCP is
-  attached, gemma is capable of driving it. (Whether a 12B model uses 24 KG
-  tools *well* across real reviews is the experiment's actual question.)
+Direct `query_context` calls return real, accurate data matching our task files:
 
-### Open decision — how to authenticate the treatment KG MCP
+| query | result |
+|---|---|
+| `code/search checkOrgMember` | `server/lib/authorization.ts` (fn, exported) — our module 205 |
+| `code/search PullRequestManager` | methods in `server/services/pull-request-manager.ts` |
+| `code/callers computeRiskScore` | defined `server/services/risk-scoring.ts:33` (task 101), **called by `runSecurityScan` @ `server/services/security-scanner.ts:224`** |
 
-1. **Fresh static bearer / API key** that the aictrl MCP accepts directly →
-   drop into `opencode-treatment.json`, zero further setup.
-2. **Complete the OAuth flow once interactively**, let opencode cache the token,
-   then run the sweep headless against the production KG.
-3. **Local aictrl backend + Neo4j** (cr-loop style, `X-Executor-Secret` header,
-   no OAuth) — most control/reproducibility, heaviest setup, and the KG must be
-   indexed for the pinned commit `6b6bb39b`.
+The cross-file caller data is exactly what the treatment condition needs. (Note:
+`search` results have `lines:null`; `callers` include line numbers.)
+
+### Design note for the harness build (Task 4)
+
+- **Restrict the treatment agent to `query_context` only.** The MCP also exposes
+  `record_*` write tools that mutate the *production* code-review store; the
+  reviewer agent must not be able to call them. Configure opencode tool
+  allow/deny (or a minimal custom agent) so only `query_context` (control: no MCP
+  tools at all) is available, and so gemma can't wander into `record_finding`.
+- gemma4 is a **thinking** model: reasoning lands in `reasoning_content`/​
+  `message.thinking`; the findings parser must read the content channel.
