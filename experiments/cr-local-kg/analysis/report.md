@@ -12,11 +12,16 @@ condition**. The treatment (KG) condition is blocked on an MCP credential.
   128k–256k context, gemma4 spills to an **86% CPU / 14% GPU** split (KV cache
   doesn't fit 12 GB) → ~1–3 tok/s, and a single short request exceeded a 180s
   timeout. The 96k-context variant has the same problem.
-- **Fix — `gemma4:12b-cr` (num_ctx 32768).** Created via Modelfile
-  (`FROM gemma4:12b` + `PARAMETER num_ctx 32768`, temperature 0.7). Loads at
-  **8.1 GB, 100% GPU**, and runs at **~60 tok/s generation / ~511 tok/s prompt
-  eval** warm. 32k context comfortably covers our tasks (largest module ≈1.5k
-  LOC ≈ ~12–20k tokens). Retains `tools` + `thinking` capabilities.
+- **Fix — `gemma4:12b-cr` (num_ctx 65536).** Created via Modelfile
+  (`FROM gemma4:12b` + `PARAMETER num_ctx 65536`, temperature 0.7). Loads at
+  **8.1 GB model / ~10.3 GB total VRAM, 100% GPU** (1.4 GB free), and runs at
+  **~60 tok/s generation / ~511 tok/s prompt eval** warm. Tested 32k → 64k:
+  identical speed and model size (gemma's sliding-window + flash-attn keep the
+  KV cache tiny; ollama pre-allocates the full 64k KV at load, so VRAM is
+  steady-state). 64k chosen over 32k for treatment-context headroom (largest
+  module ≈1.5k LOC ≈ ~20k tokens + system prompt + 24 KG tool defs + reasoning +
+  tool results across turns). **96k still spills to CPU** — 64k is the max
+  context that stays fully GPU-resident on 12 GB. Retains `tools` + `thinking`.
 - **Cold load ≈ 160s; warm step ≈ 7s.** Early opencode "hangs" were the model
   being **evicted between sparse calls and cold-loading past the timeout**, not
   an opencode bug. During a back-to-back sweep the model stays warm; we also pin

@@ -7,7 +7,7 @@
       "options": { "baseURL": "http://localhost:11434/v1" },
       "models": {
         "gemma4:12b-cr": {
-          "name": "Gemma4 12B (32k ctx, review)",
+          "name": "Gemma4 12B (64k ctx, review)",
           "tools": true,
           "options": { "temperature": 0.7 }
         }
