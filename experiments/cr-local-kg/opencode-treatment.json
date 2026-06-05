@@ -14,6 +14,24 @@
       }
     }
   },
+  "agent": {
+    "review": {
+      "description": "Code reviewer: emits findings JSON, may query the KG, no writes.",
+      "mode": "primary",
+      "prompt": "You are a precise senior code reviewer. Use the query_context tool to check cross-file usage when helpful, then output ONLY the requested JSON array of findings. Do not modify files or run commands.",
+      "tools": {
+        "write": false, "edit": false, "patch": false, "bash": false,
+        "read": false, "grep": false, "glob": false, "list": false,
+        "webfetch": false, "todowrite": false, "todoread": false, "task": false,
+        "skill": false,
+        "aictrl_record_review_started": false,
+        "aictrl_record_finding": false,
+        "aictrl_record_finding_verdict": false,
+        "aictrl_record_review_completed": false,
+        "aictrl_update_backlog": false
+      }
+    }
+  },
   "mcp": {
     "aictrl": {
       "type": "remote",

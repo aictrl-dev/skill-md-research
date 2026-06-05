@@ -75,7 +75,35 @@ Direct `query_context` calls return real, accurate data matching our task files:
 The cross-file caller data is exactly what the treatment condition needs. (Note:
 `search` results have `lines:null`; `callers` include line numbers.)
 
-### Design note for the harness build (Task 4)
+### CRITICAL FINDING — gemma4 thinking swallows output; opencode can't disable it
+
+Pilot reviews on real task files exposed a blocker and its fix:
+
+- **With thinking ON (the only mode opencode gives), gemma returns nothing.**
+  Reviewing module 205 (authorization, which contains a real privilege-escalation
+  bug) via opencode took **127–236 s** and produced `[]` — gemma reasons at length
+  in the hidden thinking channel, then emits an empty `content`. Setting
+  `options.think:false` in the opencode model config does **not** help: opencode's
+  openai-compatible `/v1` path forces reasoning on (still 235 s → `[]`).
+- **With thinking OFF (native ollama `/api/chat`, `think:false`), gemma is a
+  genuinely good reviewer.** The same 205 review took **11 s** and produced
+  substantive findings — including line 308 *"checkOrgAdminBySession returns
+  authorized:true when session.organizationId is missing → authorization
+  bypass"*, **which is exactly the gold TRUE finding 205-C1.**
+
+**Decision: drive ollama's native `/api/chat` (with `think:false`) directly,
+not opencode.** Native chat supports `think:false` **and** tool-calling together;
+opencode does not expose the thinking toggle for this model. The runner therefore
+becomes a thin native-ollama loop:
+- **control:** `/api/chat` with `think:false`, no tools, inlined code → findings.
+- **treatment:** same + `tools:[query_context]`; on a `tool_call`, POST to the
+  aictrl MCP (`X-API-Key`) and feed the result back until gemma returns content.
+- The opencode configs (`opencode-{control,treatment}.json`) and the `review`
+  agent are kept as reference but are **not** the execution path. The reviewer
+  prompt (`prompts/review.md`), `build-prompt.ts`, the findings parser, the
+  scorer, and the registry are all unchanged.
+
+### Design note (carried into the native runner)
 
 - **Restrict the treatment agent to `query_context` only.** The MCP also exposes
   `record_*` write tools that mutate the *production* code-review store; the

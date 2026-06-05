@@ -14,5 +14,18 @@
       }
     }
   },
+  "agent": {
+    "review": {
+      "description": "Code reviewer: emits findings JSON, no file mutations.",
+      "mode": "primary",
+      "prompt": "You are a precise senior code reviewer. Follow the user's instructions exactly and output ONLY the requested JSON array of findings. Do not modify files or run commands.",
+      "tools": {
+        "write": false, "edit": false, "patch": false, "bash": false,
+        "read": false, "grep": false, "glob": false, "list": false,
+        "webfetch": false, "todowrite": false, "todoread": false, "task": false,
+        "skill": false
+      }
+    }
+  },
   "mcp": {}
 }
