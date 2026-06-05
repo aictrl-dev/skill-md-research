@@ -1,0 +1,33 @@
+{
+  // aictrl CLI config for the treatment condition: local gemma via ollama
+  // (thinking OFF via reasoningEffort:none) + the aictrl KG MCP + the real
+  // explore-context / code-review skills. Use with:
+  //   AICTRL_CONFIG=$PWD/aictrl-treatment.jsonc AICTRL_MCP_TOKEN=... \
+  //     aictrl run --model ollama/gemma4:12b-cr --format json --dir <scratch> "<prompt>"
+  "$schema": "https://aictrl.dev/config.json",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": { "baseURL": "http://localhost:11434/v1" },
+      "models": {
+        "gemma4:12b-cr": {
+          "name": "Gemma4 12B (64k ctx, review)",
+          "tools": true,
+          "options": { "temperature": 0.7, "reasoningEffort": "none" }
+        }
+      }
+    }
+  },
+  "mcp": {
+    "aictrl": {
+      "type": "remote",
+      "url": "https://aictrl.dev/aictrl/mcp",
+      "enabled": true,
+      "headers": { "X-API-Key": "{env:AICTRL_MCP_TOKEN}" }
+    }
+  },
+  "skills": {
+    "paths": ["/home/bulat/code/skill-md-research/experiments/cr-local-kg/runtime-skills"]
+  }
+}

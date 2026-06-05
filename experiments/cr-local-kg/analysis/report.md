@@ -5,6 +5,20 @@
 Headless `opencode` → local `ollama` → `gemma4` is **working for the control
 condition**. The treatment (KG) condition is blocked on an MCP credential.
 
+> **UPDATE — production-relatable harness works.** We run the experiment through
+> the real **`aictrl run`** CLI (the production code-review runtime) + ollama
+> gemma (`reasoningEffort:none` disables thinking) + the aictrl KG MCP
+> (`X-API-Key`) + the real **`explore-context` + `code-review` skills** (via
+> config `skills.paths` → `runtime-skills/`). Verified on module 205:
+> `aictrl run` connects the MCP (`toolCount=6`), loads the skills, and **gemma
+> organically calls `query_context` 4× during the review** (vs 0 with the
+> bespoke native runner where the skill was only prompt text) — flagging line
+> 412, on the gold `checkOrgAdminBySession` bug (410–413). The `explore-context`
+> skill loaded through the real skill system is the KG-usage lever (cr-loop's
+> 0→69 mechanism). Configs: `aictrl-{treatment,control}.jsonc` (control = no MCP).
+> Note: a non-fatal `Provider does not exist in model list aictrl` log line
+> appears but does not block the run.
+
 ### Hardware / model
 
 - **GPU:** RTX 5070, 12 GB VRAM. System: 31 GB RAM (~8 GB free).
