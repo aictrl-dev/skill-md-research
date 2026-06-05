@@ -86,7 +86,7 @@ async function mcpQueryContext(token: string, sid: string, args: Record<string, 
 async function chat(messages: ChatMsg[], tools: unknown[] | undefined, seed: number): Promise<ChatMsg> {
   const body: Record<string, unknown> = {
     model: MODEL, messages, think: false, stream: false,
-    options: { temperature: 0.7, seed, num_predict: 2500 },
+    options: { temperature: 0.7, seed, num_predict: 4000 },
   };
   if (tools) body.tools = tools;
   const r = await fetch(`${OLLAMA}/api/chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });

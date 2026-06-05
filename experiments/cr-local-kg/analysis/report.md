@@ -103,7 +103,17 @@ reasoning (Anthropic/OpenAI), not the openai-compatible→ollama transport.
 **Decision: drive ollama's native `/api/chat` (with `think:false`) directly,
 not opencode.** Native chat supports `think:false` **and** tool-calling together.
 Bonus: native `options.seed` gives reproducible per-rep seeds (better than
-opencode's temperature-only variance). The runner therefore
+opencode's temperature-only variance).
+
+**Thinking mode ruled out empirically (not a token-budget artifact).** With
+`num_predict: 16000`, think:true on module 205 ran **267 s**, generated **15,049
+tokens / 61k chars of reasoning**, terminated naturally (`done_reason: stop`),
+and **still emitted `[]`** in `content` — the model drafts findings mid-thought
+then talks itself out of reporting. `think:false` produces **3 real findings in
+6 s** on the same task. So thinking is ~40× slower AND worse for this
+structured-output task. The runner uses `think:false`, `num_predict: 4000`
+(headroom for reason-in-content chain-of-thought, which lands in the parseable
+`content` channel). The runner therefore
 becomes a thin native-ollama loop:
 - **control:** `/api/chat` with `think:false`, no tools, inlined code → findings.
 - **treatment:** same + `tools:[query_context]`; on a `tool_call`, POST to the
