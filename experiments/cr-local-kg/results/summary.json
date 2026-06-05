@@ -1,0 +1,241 @@
+{
+  "generatedAt": "2026-06-05T15:10:00.014Z",
+  "reps": [
+    1,
+    2,
+    3
+  ],
+  "answerKeyPath": "/home/bulat/code/skill-md-research/experiments/cr-local-kg/answer-key.json",
+  "baseDir": "/home/bulat/code/skill-md-research/experiments/cr-local-kg/results/raw",
+  "conditions": {
+    "control": {
+      "overall": {
+        "n": 60,
+        "expected": 60,
+        "coverage": 1,
+        "skipped": 0,
+        "truePositives": 3.5,
+        "falsePositives": 0,
+        "falseNegatives": 116,
+        "novelFindings": 49,
+        "precision": 1,
+        "recall": 0.029,
+        "f1": 0.057,
+        "kg": {
+          "reviewsWithCalls": 0,
+          "pctReviewsWithCalls": 0,
+          "avgCallsPerReview": 0,
+          "totalCalls": 0,
+          "byAction": {}
+        },
+        "tokens": {
+          "totalOutput": 57641,
+          "avgOutputPerReview": 960.683,
+          "totalReasoning": 0,
+          "avgModelStepsPerReview": 3.967,
+          "input (cumulative across steps, re-counts re-sent context)": 3779014,
+          "sessionsParsed": 60
+        },
+        "time": {
+          "avgSeconds": 30.3,
+          "medianSeconds": 18,
+          "nTimed": 60
+        }
+      },
+      "byClass": {
+        "file": {
+          "n": 45,
+          "expected": 45,
+          "coverage": 1,
+          "skipped": 0,
+          "truePositives": 1,
+          "falsePositives": 0,
+          "falseNegatives": 66.5,
+          "novelFindings": 25,
+          "precision": 1,
+          "recall": 0.015,
+          "f1": 0.029,
+          "kg": {
+            "reviewsWithCalls": 0,
+            "pctReviewsWithCalls": 0,
+            "avgCallsPerReview": 0,
+            "totalCalls": 0,
+            "byAction": {}
+          },
+          "tokens": {
+            "totalOutput": 48946,
+            "avgOutputPerReview": 1087.689,
+            "totalReasoning": 0,
+            "avgModelStepsPerReview": 4.489,
+            "input (cumulative across steps, re-counts re-sent context)": 3149886,
+            "sessionsParsed": 45
+          },
+          "time": {
+            "avgSeconds": 33.689,
+            "medianSeconds": 18,
+            "nTimed": 45
+          }
+        },
+        "module": {
+          "n": 15,
+          "expected": 15,
+          "coverage": 1,
+          "skipped": 0,
+          "truePositives": 2.5,
+          "falsePositives": 0,
+          "falseNegatives": 49.5,
+          "novelFindings": 24,
+          "precision": 1,
+          "recall": 0.048,
+          "f1": 0.092,
+          "kg": {
+            "reviewsWithCalls": 0,
+            "pctReviewsWithCalls": 0,
+            "avgCallsPerReview": 0,
+            "totalCalls": 0,
+            "byAction": {}
+          },
+          "tokens": {
+            "totalOutput": 8695,
+            "avgOutputPerReview": 579.667,
+            "totalReasoning": 0,
+            "avgModelStepsPerReview": 2.4,
+            "input (cumulative across steps, re-counts re-sent context)": 629128,
+            "sessionsParsed": 15
+          },
+          "time": {
+            "avgSeconds": 20.133,
+            "medianSeconds": 18,
+            "nTimed": 15
+          }
+        }
+      }
+    },
+    "treatment": {
+      "overall": {
+        "n": 60,
+        "expected": 60,
+        "coverage": 1,
+        "skipped": 0,
+        "truePositives": 6.5,
+        "falsePositives": 0,
+        "falseNegatives": 113,
+        "novelFindings": 74,
+        "precision": 1,
+        "recall": 0.054,
+        "f1": 0.103,
+        "kg": {
+          "reviewsWithCalls": 43,
+          "pctReviewsWithCalls": 71.667,
+          "avgCallsPerReview": 1.5,
+          "totalCalls": 90,
+          "byAction": {
+            "callers": 10,
+            "impact": 29,
+            "search": 33,
+            "context": 16,
+            "read": 1,
+            "caller": 1
+          }
+        },
+        "tokens": {
+          "totalOutput": 17376,
+          "avgOutputPerReview": 289.6,
+          "totalReasoning": 0,
+          "avgModelStepsPerReview": 3.2,
+          "input (cumulative across steps, re-counts re-sent context)": 3634678,
+          "sessionsParsed": 60
+        },
+        "time": {
+          "avgSeconds": 19.35,
+          "medianSeconds": 18,
+          "nTimed": 60
+        }
+      },
+      "byClass": {
+        "file": {
+          "n": 45,
+          "expected": 45,
+          "coverage": 1,
+          "skipped": 0,
+          "truePositives": 4,
+          "falsePositives": 0,
+          "falseNegatives": 63.5,
+          "novelFindings": 45,
+          "precision": 1,
+          "recall": 0.059,
+          "f1": 0.112,
+          "kg": {
+            "reviewsWithCalls": 34,
+            "pctReviewsWithCalls": 75.556,
+            "avgCallsPerReview": 1.511,
+            "totalCalls": 68,
+            "byAction": {
+              "callers": 10,
+              "impact": 19,
+              "search": 29,
+              "context": 8,
+              "read": 1,
+              "caller": 1
+            }
+          },
+          "tokens": {
+            "totalOutput": 11609,
+            "avgOutputPerReview": 257.978,
+            "totalReasoning": 0,
+            "avgModelStepsPerReview": 3.133,
+            "input (cumulative across steps, re-counts re-sent context)": 2453343,
+            "sessionsParsed": 45
+          },
+          "time": {
+            "avgSeconds": 18.089,
+            "medianSeconds": 17,
+            "nTimed": 45
+          }
+        },
+        "module": {
+          "n": 15,
+          "expected": 15,
+          "coverage": 1,
+          "skipped": 0,
+          "truePositives": 2.5,
+          "falsePositives": 0,
+          "falseNegatives": 49.5,
+          "novelFindings": 29,
+          "precision": 1,
+          "recall": 0.048,
+          "f1": 0.092,
+          "kg": {
+            "reviewsWithCalls": 9,
+            "pctReviewsWithCalls": 60,
+            "avgCallsPerReview": 1.467,
+            "totalCalls": 22,
+            "byAction": {
+              "impact": 10,
+              "search": 4,
+              "context": 8
+            }
+          },
+          "tokens": {
+            "totalOutput": 5767,
+            "avgOutputPerReview": 384.467,
+            "totalReasoning": 0,
+            "avgModelStepsPerReview": 3.4,
+            "input (cumulative across steps, re-counts re-sent context)": 1181335,
+            "sessionsParsed": 15
+          },
+          "time": {
+            "avgSeconds": 23.133,
+            "medianSeconds": 23,
+            "nTimed": 15
+          }
+        }
+      }
+    }
+  },
+  "deltas": {
+    "f1Overall": 0.046,
+    "f1File": 0.083,
+    "f1Module": 0
+  }
+}
