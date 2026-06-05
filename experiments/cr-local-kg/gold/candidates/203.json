@@ -1,0 +1,30 @@
+[
+  {
+    "file": "server/services/finding-snippet-locator.ts",
+    "line": "26-35",
+    "severity": "HIGH",
+    "title": "Multi-line snippet can never match, falsely closing unchanged findings",
+    "description": "normalizeLineSnippet collapses '\\s+' (including newlines) so a multi-line lineSnippet becomes one space-joined string, but isSnippetPresentInFile only compares it against single content lines split on '\\n', so any snippet spanning more than one line never matches and the still-present finding is wrongly reconciled as fixed."
+  },
+  {
+    "file": "server/services/finding-snippet-locator.ts",
+    "line": "31-34",
+    "severity": "MEDIUM",
+    "title": "Trivial/common snippets keep deleted findings stale-open via spurious whole-line match",
+    "description": "A short cited snippet that normalizes to a ubiquitous line (e.g. '}', '});', 'return;', 'break;') matches any equally-normalized line still present in the file, so isSnippetPresentInFile returns true and the finding stays open even after the originally cited code was deleted."
+  },
+  {
+    "file": "server/services/finding-fingerprint.ts",
+    "line": "37-44",
+    "severity": "HIGH",
+    "title": "Distinct findings on identical-looking lines collide to one fingerprint and get deduped away",
+    "description": "Because ruleId/description are intentionally excluded and the only anchor is the normalized whole-line text, two genuinely different findings citing lines with identical normalized content in the same file produce the same sha256 fingerprint, so the upsert dedup treats them as one and silently drops the second finding."
+  },
+  {
+    "file": "server/services/finding-fingerprint.ts",
+    "line": 35,
+    "severity": "MEDIUM",
+    "title": "Path normalization is fingerprint-only; reconcile grouping/fetch uses raw file, splitting the contract",
+    "description": "computeFindingFingerprint normalizes file via trim().toLowerCase() so case/whitespace-different paths share a fingerprint, but reconcileFindings groups findings and calls fetchFile on the raw finding.file, so two findings merged under one fingerprint but stored with differently-cased paths are reconciled against possibly the wrong (or a failing) file fetch."
+  }
+]

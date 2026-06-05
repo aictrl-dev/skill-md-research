@@ -1,0 +1,12 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/risk-scoring.ts",
+    "line": "36-39",
+    "description": "computeRiskScore looks up SEVERITY_WEIGHTS[finding.severity] with no fallback, so any finding whose severity is not one of the four known keys (plausible for the loosely-structured LLM scanner findings the module explicitly accepts at runtime) yields undefined, turning the entire reduce result into NaN, which then propagates to getRiskLevel (returning 'high') and is persisted as the skill's riskScore.",
+    "verdict": "FALSE",
+    "action": "IGNORE",
+    "reason": "The candidate's premise is wrong: LLM findings are Zod-validated via LLMFindingSchema (severity: z.enum(['low','medium','high','critical']) in scanners/llm/schemas.ts, .parse() throws on any other value) and rule findings use hardcoded ScanSeverity-typed definitions, so no unknown severity can ever reach computeRiskScore and the NaN path is unreachable."
+  }
+]

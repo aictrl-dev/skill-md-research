@@ -1,0 +1,12 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/lifecycle-event-validator.ts",
+    "line": "77-79",
+    "description": "event_timestamp is validated only with isNaN(Date.parse(...)), which accepts non-ISO-8601 inputs such as date-only strings ('2026-04-01'), missing-timezone strings ('2026-04-01T14:30:00'), and free-form dates ('April 1, 2026'); it does not enforce the documented ISO 8601 UTC-with-milliseconds contract, so malformed timestamps pass validation and reach BigQuery.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "Line 77 uses isNaN(Date.parse(event.event_timestamp)) whose error message even claims 'must be valid ISO 8601', yet Date.parse in Node accepts date-only, no-timezone, and free-form dates (empirically verified all return true), while docs/standards/event-design-standard.md lines 54/69 mandate 'ISO 8601 UTC with milliseconds' / explicit '.000Z' suffix and 'Never local time'."
+  }
+]

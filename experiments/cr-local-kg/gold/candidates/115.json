@@ -1,0 +1,9 @@
+[
+  {
+    "file": "server/lib/cache.ts",
+    "line": "58-71",
+    "severity": "HIGH",
+    "title": "getOrFetch has no in-flight coalescing — cache stampede on concurrent misses",
+    "description": "Concurrent getOrFetch calls for the same uncached key each observe a miss and all invoke loader() before any set() completes, so N simultaneous requests issue N Firestore reads (thundering herd), defeating the cache's purpose of reducing reads; it should store and await a shared in-flight promise keyed by the cache key."
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/state/postgres/db.ts",
+    "line": "144-151",
+    "description": "closePgPool sets _pool = null and then awaits p.end(); a concurrent getPgDb() during that in-flight await sees _pool === null and creates a fresh Pool, so the just-created pool is never drained and the connections from the closing pool may leak.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "Mechanism is real — closePgPool nulls _db (145) and _pool (148) synchronously before `await p.end()` (149), so a getPgDb() racing during the await would build a new pool/_db; but the only production callers (scripts/firestore-export-to-pg.ts:1501, scripts/reconcile-migration.ts:701) invoke it in CLI shutdown finally blocks where no concurrent getPgDb() is expected, so impact is negligible."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/state/postgres/db.ts",
+    "line": "82-83",
+    "description": "readNumber is called for DB_STATEMENT_TIMEOUT_MS and DB_QUERY_TIMEOUT_MS without allowZero, so setting either to 0 (pg's documented value to disable the timeout) throws 'Invalid ...' instead of disabling it.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "Lines 82-83 call readNumber without the third allowZero arg (unlike DB_POOL_MIN on line 80 which passes true), so the `n === 0 && !allowZero` guard at line 59 throws `Invalid DB_STATEMENT_TIMEOUT_MS: 0`, making pg's documented 0-disables-timeout value unreachable via env var."
+  }
+]

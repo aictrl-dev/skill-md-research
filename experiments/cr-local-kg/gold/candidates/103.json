@@ -1,0 +1,51 @@
+[
+  {
+    "file": "server/services/security-policy.ts",
+    "line": "107-128",
+    "severity": "HIGH",
+    "title": "TOCTOU race: stale-scan guard does not protect subsequent writes",
+    "description": "The latest-scan check at lines 109-113 and the skill/dependent/audit writes starting at line 128 are not atomic, so a newer scan completing concurrently after the guard passes will have its results overwritten by this stale enforcement run."
+  },
+  {
+    "file": "server/services/security-policy.ts",
+    "line": "198-205",
+    "severity": "MEDIUM",
+    "title": "Suspend audit entry omits securityWarning change",
+    "description": "The auto-suspend branch writes securityWarning into skillUpdates (line 180) but its audit 'changes' record only logs status and riskScore, leaving the warning-message change off the audit trail."
+  },
+  {
+    "file": "server/services/security-policy.ts",
+    "line": 200,
+    "severity": "MEDIUM",
+    "title": "Suspend audit 'before' riskScore is fabricated",
+    "description": "The before value `currentSkill.securityWarning ? riskScore : 0` reports the new riskScore (or 0) rather than the skill's actual prior riskScore, which is never read into currentSkill (line 122)."
+  },
+  {
+    "file": "server/services/security-policy.ts",
+    "line": 220,
+    "severity": "MEDIUM",
+    "title": "Warn audit 'before' riskScore hardcoded to 0",
+    "description": "The warn-mode audit records riskScore before as a literal 0, discarding the skill's real previous riskScore and corrupting the audit diff on re-scans."
+  },
+  {
+    "file": "server/services/security-policy.ts",
+    "line": 161,
+    "severity": "MEDIUM",
+    "title": "Reinstate audit 'before' riskScore uses input score instead of prior value",
+    "description": "On a clean scan the reinstate audit logs riskScore before as the input `riskScore` (a clean-scan score) rather than the skill's actual previous riskScore, which is never captured into currentSkill."
+  },
+  {
+    "file": "server/services/security-policy.ts",
+    "line": "138-148",
+    "severity": "MEDIUM",
+    "title": "Clean scan clears dependent template/workflow warnings without audit entries",
+    "description": "Templates and workflows are reset to securityWarning: null with no corresponding audit entries, unlike the warn path which audits every dependent, leaving dependent reinstatement untracked."
+  },
+  {
+    "file": "server/services/security-policy.ts",
+    "line": "247",
+    "severity": "LOW",
+    "title": "Dependent template/workflow audit 'before' hardcoded to null",
+    "description": "The template (line 247) and workflow (line 269) warn audits record securityWarning before as null even when the dependent was already warned by a prior scan, mis-stating the audit diff."
+  }
+]

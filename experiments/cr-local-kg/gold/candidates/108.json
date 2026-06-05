@@ -1,0 +1,23 @@
+[
+  {
+    "file": "server/api/code-review-routes.ts",
+    "line": "169-177",
+    "severity": "HIGH",
+    "title": "since/until accept date-only strings that break the inclusive range against full-timestamp openedAt",
+    "description": "The ISO_8601_RE only anchors the YYYY-MM-DD prefix and Date.parse accepts date-only values like '2024-01-01', but openedAt is stored as a full ISO timestamp and Firestore compares lexicographically, so until='2024-01-01' silently excludes every PR opened on that day (e.g. '2024-01-01T09:00:00Z' > '2024-01-01')."
+  },
+  {
+    "file": "server/api/code-review-routes.ts",
+    "line": "174-177",
+    "severity": "LOW",
+    "title": "No validation that since <= until",
+    "description": "An inverted range such as since='2025-01-01'&until='2024-01-01' is accepted and produces a query that can never match, returning an empty list with 200 instead of a 400 indicating the bad range."
+  },
+  {
+    "file": "server/api/code-review-routes.ts",
+    "line": "151-153",
+    "severity": "LOW",
+    "title": "Malformed cursor is silently ignored and pagination restarts from page one",
+    "description": "The route only length-caps the cursor; a corrupt or tampered cursor is swallowed by the manager's decodeListCursor catch (logged as warn) and the listing silently restarts from the first page rather than returning a 400, masking client pagination bugs and producing duplicate results."
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "HIGH",
+    "file": "server/services/security-policy.ts",
+    "line": "107-128",
+    "description": "The latest-scan check at lines 109-113 and the skill/dependent/audit writes starting at line 128 are not atomic, so a newer scan completing concurrently after the guard passes will have its results overwritten by this stale enforcement run.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "The guard (getLatestScanResult at 109-113) and the subsequent Firestore updates (128+, 188, 208, 235, 257) run as separate non-transactional ops with no re-check, so a newer scan landing after the guard is silently overwritten; real but a low-probability concurrency edge case."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/security-policy.ts",
+    "line": "198-205",
+    "description": "The auto-suspend branch writes securityWarning into skillUpdates (line 180) but its audit 'changes' record only logs status and riskScore, leaving the warning-message change off the audit trail.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "skillUpdates sets securityWarning (line 180) and the suspend write applies it (line 188), but the suspend audit changes (198-201) only record status and riskScore, unlike the warn branch (219) which audits securityWarning."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/security-policy.ts",
+    "line": "200",
+    "description": "The before value `currentSkill.securityWarning ? riskScore : 0` reports the new riskScore (or 0) rather than the skill's actual prior riskScore, which is never read into currentSkill (line 122).",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "currentSkill is cast as {status?; securityWarning?} at line 122 and never carries riskScore, so `before: currentSkill.securityWarning ? riskScore : 0` (200) reports the new score or 0, never the true prior riskScore."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/security-policy.ts",
+    "line": "220",
+    "description": "The warn-mode audit records riskScore before as a literal 0, discarding the skill's real previous riskScore and corrupting the audit diff on re-scans.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "Line 220 hardcodes `riskScore: { before: 0, after: riskScore }`; the prior riskScore is never read from the skill doc (line 122 type omits it), so re-scans log a fabricated before=0."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/security-policy.ts",
+    "line": "161",
+    "description": "On a clean scan the reinstate audit logs riskScore before as the input `riskScore` (a clean-scan score) rather than the skill's actual previous riskScore, which is never captured into currentSkill.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "riskScore passed from security-scanner.ts:274 is the current (clean) scan score, and line 161 logs `before: riskScore`; the skill's actual prior riskScore is never captured into currentSkill (line 122), so the reinstate diff is wrong."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/security-policy.ts",
+    "line": "138-148",
+    "description": "Templates and workflows are reset to securityWarning: null with no corresponding audit entries, unlike the warn path which audits every dependent, leaving dependent reinstatement untracked.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "The clean-scan loops (138-148) update each template/workflow to securityWarning:null with no createAuditEntry calls, whereas the warn path (234-275) emits an audit entry per dependent, so dependent reinstatement is untracked."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/services/security-policy.ts",
+    "line": "247",
+    "description": "The template (line 247) and workflow (line 269) warn audits record securityWarning before as null even when the dependent was already warned by a prior scan, mis-stating the audit diff.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "Lines 247 and 269 hardcode `before: null` rather than reading tpl/wf.securityWarning (the dependent docs do carry that field, written at 236/258), so a re-warn of an already-warned dependent mis-states the diff; low-impact audit cosmetics."
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/state/postgres/api-key-store.ts",
+    "line": "118-128",
+    "description": "createApiKey accepts a non-null harnessId (data.harnessId) and inserts without any try/catch, so calling it with a harnessId whose (userId,orgId,harnessId) triple already has an active row raises a raw Postgres 23505 from uq_api_keys_active_harness that is never mapped to the ApiKeyManagerError('CONFLICT') sentinel the harness methods produce, leaking a DB-level error to callers.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "Confirmed: createApiKey (lines 118-128) inserts harnessId (data.harnessId ?? null) with no try/catch, and the partial index uq_api_keys_active_harness (schema/api-keys.ts:89-91, WHERE revoked_at IS NULL) would raise an unmapped 23505 for a duplicate active triple — unlike createHarnessKeyIfNoneActive which wraps the insert and calls isActiveHarnessUniqueViolation; however no production caller drives a non-null harnessId through this generic method (POST /keys at auth-routes.ts:84-119 never sets harnessId; harness creation uses createHarnessKeyIfNoneActive), so it is a latent defensive gap exercised only by tests with unique harnessIds (test 2, line 138-143)."
+  }
+]

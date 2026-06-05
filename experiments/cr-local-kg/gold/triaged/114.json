@@ -1,0 +1,12 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/lib/pagination.ts",
+    "line": "67-69",
+    "description": "decodeCursor cannot signal failure: Buffer.from(cursor, 'base64url') silently drops invalid characters instead of throwing, so a malformed or forged cursor decodes to a garbage string that callers (e.g. routes.ts:32) treat as a real doc ID; unlike every store-level decoder (admin-store/audit-store/task-template-store), it lacks a try/catch returning null on bad input.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "Confirmed: pagination.ts:67-69 decodeCursor has no try/catch and base64url decode silently drops invalid chars, while audit-store.ts:82-97, admin-store.ts:136 and task-template-store.ts:177 all wrap decode+validate in try/catch returning null; callers routes.ts:32/66 and skills-routes.ts:202 do compare the decoded value as a doc id, but the harm is limited since each guards with findIndex + 'if (idx >= 0)' so a bad cursor just falls back to the first page (real consistency/robustness gap, correctly LOW)."
+  }
+]

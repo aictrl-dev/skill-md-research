@@ -1,0 +1,9 @@
+[
+  {
+    "file": "server/state/postgres/api-key-store.ts",
+    "line": "118-128",
+    "severity": "MEDIUM",
+    "description": "createApiKey accepts a non-null harnessId (data.harnessId) and inserts without any try/catch, so calling it with a harnessId whose (userId,orgId,harnessId) triple already has an active row raises a raw Postgres 23505 from uq_api_keys_active_harness that is never mapped to the ApiKeyManagerError('CONFLICT') sentinel the harness methods produce, leaking a DB-level error to callers.",
+    "title": "createApiKey leaks raw 23505 from the active-harness partial index instead of CONFLICT"
+  }
+]

@@ -1,0 +1,610 @@
+{
+  "101": [
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/risk-scoring.ts",
+      "line": "36-39",
+      "description": "computeRiskScore looks up SEVERITY_WEIGHTS[finding.severity] with no fallback, so any finding whose severity is not one of the four known keys (plausible for the loosely-structured LLM scanner findings the module explicitly accepts at runtime) yields undefined, turning the entire reduce result into NaN, which then propagates to getRiskLevel (returning 'high') and is persisted as the skill's riskScore.",
+      "verdict": "FALSE",
+      "action": "IGNORE",
+      "reason": "The candidate's premise is wrong: LLM findings are Zod-validated via LLMFindingSchema (severity: z.enum(['low','medium','high','critical']) in scanners/llm/schemas.ts, .parse() throws on any other value) and rule findings use hardcoded ScanSeverity-typed definitions, so no unknown severity can ever reach computeRiskScore and the NaN path is unreachable."
+    }
+  ],
+  "102": [
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/state/postgres/oauth-store.ts",
+      "line": "243-249",
+      "description": "touchToken is documented (here and in the port at lines 180-185) as a non-blocking fire-and-forget update that silently no-ops, but unlike the Firestore adapter (which wraps the update in try/catch and swallows/logs errors) and the legacy route (oauth-routes.ts:854 uses .catch), this implementation lets any DB error reject the promise, so a transient DB failure during the per-verification touch can break token verification.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "oauth-store.ts:243-249 awaits the update with no try/catch, while the port doc (ports/oauth-store.ts:180-185) and Firestore adapter (firestore-oauth-adapter.ts:189-198, swallows NOT_FOUND/log.warn) and legacy route (oauth-routes.ts:854 fire-and-forget .catch) all treat the touch as non-blocking — so a transient DB error here rejects and, for a caller awaiting the documented fire-and-forget call, would break verification."
+    }
+  ],
+  "103": [
+    {
+      "bot": "claude-oracle",
+      "severity": "HIGH",
+      "file": "server/services/security-policy.ts",
+      "line": "107-128",
+      "description": "The latest-scan check at lines 109-113 and the skill/dependent/audit writes starting at line 128 are not atomic, so a newer scan completing concurrently after the guard passes will have its results overwritten by this stale enforcement run.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "The guard (getLatestScanResult at 109-113) and the subsequent Firestore updates (128+, 188, 208, 235, 257) run as separate non-transactional ops with no re-check, so a newer scan landing after the guard is silently overwritten; real but a low-probability concurrency edge case."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/security-policy.ts",
+      "line": "198-205",
+      "description": "The auto-suspend branch writes securityWarning into skillUpdates (line 180) but its audit 'changes' record only logs status and riskScore, leaving the warning-message change off the audit trail.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "skillUpdates sets securityWarning (line 180) and the suspend write applies it (line 188), but the suspend audit changes (198-201) only record status and riskScore, unlike the warn branch (219) which audits securityWarning."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/security-policy.ts",
+      "line": "200",
+      "description": "The before value `currentSkill.securityWarning ? riskScore : 0` reports the new riskScore (or 0) rather than the skill's actual prior riskScore, which is never read into currentSkill (line 122).",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "currentSkill is cast as {status?; securityWarning?} at line 122 and never carries riskScore, so `before: currentSkill.securityWarning ? riskScore : 0` (200) reports the new score or 0, never the true prior riskScore."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/security-policy.ts",
+      "line": "220",
+      "description": "The warn-mode audit records riskScore before as a literal 0, discarding the skill's real previous riskScore and corrupting the audit diff on re-scans.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Line 220 hardcodes `riskScore: { before: 0, after: riskScore }`; the prior riskScore is never read from the skill doc (line 122 type omits it), so re-scans log a fabricated before=0."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/security-policy.ts",
+      "line": "161",
+      "description": "On a clean scan the reinstate audit logs riskScore before as the input `riskScore` (a clean-scan score) rather than the skill's actual previous riskScore, which is never captured into currentSkill.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "riskScore passed from security-scanner.ts:274 is the current (clean) scan score, and line 161 logs `before: riskScore`; the skill's actual prior riskScore is never captured into currentSkill (line 122), so the reinstate diff is wrong."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/security-policy.ts",
+      "line": "138-148",
+      "description": "Templates and workflows are reset to securityWarning: null with no corresponding audit entries, unlike the warn path which audits every dependent, leaving dependent reinstatement untracked.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "The clean-scan loops (138-148) update each template/workflow to securityWarning:null with no createAuditEntry calls, whereas the warn path (234-275) emits an audit entry per dependent, so dependent reinstatement is untracked."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/services/security-policy.ts",
+      "line": "247",
+      "description": "The template (line 247) and workflow (line 269) warn audits record securityWarning before as null even when the dependent was already warned by a prior scan, mis-stating the audit diff.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Lines 247 and 269 hardcode `before: null` rather than reading tpl/wf.securityWarning (the dependent docs do carry that field, written at 236/258), so a re-warn of an already-warned dependent mis-states the diff; low-impact audit cosmetics."
+    }
+  ],
+  "104": [],
+  "105": [
+    {
+      "bot": "claude-oracle",
+      "severity": "HIGH",
+      "file": "server/services/graph-build-service.ts",
+      "line": "106-113",
+      "description": "cleanupStaleJobs only queries status in ['cloning','building','syncing_issues'] and excludes 'queued', so a job that is created but never picked up by the executor (e.g. Pub/Sub publish failed before fallback, or process crashed before updateJobStatus) stays 'queued' forever and is never failed/cleaned.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Line 112 omits 'queued' from the cleanup query, and a job stays 'queued' until the executor's first call updateJobStatus(...,'cloning') at executor.ts:179, so a Pub/Sub message lost after createJob or a crash before execute leaves an un-cleanable queued job."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "HIGH",
+      "file": "server/services/graph-build-service.ts",
+      "line": "88-96",
+      "description": "Because hasActiveJob counts 'queued' as active and cleanupStaleJobs never clears 'queued' jobs, a single stuck queued job makes hasActiveJob return true indefinitely, so the repo can never start another build (409 forever) and it permanently consumes a slot in countActiveJobs against the org concurrency limit.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "hasActiveJob includes 'queued' (line 91) and both triggers early-return on it (kg-routes.ts:658 returns 409, github-app-routes.ts:1541 skips), while countActiveJobs also counts 'queued' (line 100); combined with cleanup never clearing 'queued' (line 112), one orphaned queued job blocks the repo and consumes an org slot permanently."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/graph-build-service.ts",
+      "line": "53-65",
+      "description": "cleanupStaleJobs can mark a still-running job 'failed' (STALE_JOB_CLEANUP) while its executor keeps running and later calls updateJobStatus(...,'completed'), and since updateJobStatus does an unconditional update with no check that the current status is non-terminal, the stale-failed job is silently flipped back to completed (or vice-versa), corrupting the state machine.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "updateJobStatus does an unconditional .update(update) (line 64) with no terminal-state guard, and the stale threshold (10 min, line 107) equals the build timeout default (executor.ts:29 DEFAULT_BUILD_TIMEOUT_MS = 10 min), so a long-running job can be marked failed by cleanup at the boundary and then overwritten to 'completed' by the executor (executor.ts:248/538)."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/graph-build-service.ts",
+      "line": "53-65",
+      "description": "updateJobStatus uses Firestore .update() which rejects if the document does not exist; if a job doc was deleted (or never persisted) the executor's status writes throw an unhandled error instead of failing gracefully, unlike .set({merge:true}).",
+      "verdict": "UNCERTAIN",
+      "action": "DEFER",
+      "reason": "The factual claim is correct (line 64 uses .update() which Firestore rejects on missing docs), but no code path deletes graph-build-jobs docs (grep found none) and createJob awaits .set() (line 48) before the executor is ever called, so the missing-doc trigger is not demonstrated in this codebase."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/graph-build-service.ts",
+      "line": "25-51",
+      "description": "createJob performs an unconditional set with no transaction or uniqueness guard, and callers run hasActiveJob/countActiveJobs as separate reads beforehand, so two concurrent trigger requests for the same repo can both observe no active job and both createJob, producing duplicate concurrent builds and exceeding the org concurrency limit.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "createJob does an unconditional .set(job) with a random UUID and no transaction/uniqueness guard (lines 33,48), and both callers read hasActiveJob/countActiveJobs as separate ops before createJob (kg-routes.ts:657-678, github-app-routes.ts:1540-1567), a genuine TOCTOU allowing two concurrent triggers to both create active builds."
+    }
+  ],
+  "106": [
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/permission-config-builder.ts",
+      "line": "8-32",
+      "description": "The permission keys 'list', 'lsp', and 'codesearch' are valid configurable keys (ALL_PERMISSION_KEYS) and correspond to real OpenCode/aictrl runtime tools, but no entry in TOOL_TO_PERMISSION_KEY ever produces them; therefore any skill with a non-empty allowedTools list always gets list/lsp/codesearch set to 'ask' (deny in headless mode) with no tool name an author could declare to enable them, silently under-granting directory-listing and code-search capabilities the agent commonly auto-invokes.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "list/lsp/codesearch appear in ALL_PERMISSION_KEYS (line 30, labeled 'all permission keys that can be configured in aictrl') but in no branch of buildPermissionConfig — not in TOOL_TO_PERMISSION_KEY (lines 8-22), not in the mcp__/aictrl_ prefix branch (lines 81-84), and not in ALWAYS_ALLOWED_KEYS (line 54) — so the line 98 loop always assigns them 'ask' for any non-empty allowedTools, exactly the auto-invoked-but-undeclarable case the authors solved for task/todowrite/skill via ALWAYS_ALLOWED_KEYS."
+    }
+  ],
+  "107": [
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/lifecycle-event-validator.ts",
+      "line": "77-79",
+      "description": "event_timestamp is validated only with isNaN(Date.parse(...)), which accepts non-ISO-8601 inputs such as date-only strings ('2026-04-01'), missing-timezone strings ('2026-04-01T14:30:00'), and free-form dates ('April 1, 2026'); it does not enforce the documented ISO 8601 UTC-with-milliseconds contract, so malformed timestamps pass validation and reach BigQuery.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Line 77 uses isNaN(Date.parse(event.event_timestamp)) whose error message even claims 'must be valid ISO 8601', yet Date.parse in Node accepts date-only, no-timezone, and free-form dates (empirically verified all return true), while docs/standards/event-design-standard.md lines 54/69 mandate 'ISO 8601 UTC with milliseconds' / explicit '.000Z' suffix and 'Never local time'."
+    }
+  ],
+  "108": [
+    {
+      "bot": "claude-oracle",
+      "severity": "HIGH",
+      "file": "server/api/code-review-routes.ts",
+      "line": "169-177",
+      "description": "The ISO_8601_RE only anchors the YYYY-MM-DD prefix and Date.parse accepts date-only values like '2024-01-01', but openedAt is stored as a full ISO timestamp and Firestore compares lexicographically, so until='2024-01-01' silently excludes every PR opened on that day (e.g. '2024-01-01T09:00:00Z' > '2024-01-01').",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "ISO_8601_RE=/^\\d{4}-\\d{2}-\\d{2}/ (line 76) accepts date-only strings, until is passed verbatim to q.where('openedAt','<=',until) (manager line 795) and openedAt is z.string().datetime() full RFC3339 (line 213), so a date-only until lexicographically excludes same-day PRs with a time component."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/api/code-review-routes.ts",
+      "line": "174-177",
+      "description": "An inverted range such as since='2025-01-01'&until='2024-01-01' is accepted and produces a query that can never match, returning an empty list with 200 instead of a 400 indicating the bad range.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "since (169-177) and until (174-177) are each validated only for ISO format, with no since<=until comparison in the route or manager (manager lines 794-795 apply both bounds independently), so an inverted range yields an empty 200 page rather than a 400."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/api/code-review-routes.ts",
+      "line": "151-153",
+      "description": "The route only length-caps the cursor; a corrupt or tampered cursor is swallowed by the manager's decodeListCursor catch (logged as warn) and the listing silently restarts from the first page rather than returning a 400, masking client pagination bugs and producing duplicate results.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Route only validates cursor length (line 151), and manager listPullRequests wraps decodeListCursor in try/catch that logs warn and leaves startAfter=null (lines 803-809), so a malformed cursor silently restarts pagination from page one instead of erroring."
+    }
+  ],
+  "109": [
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/api/billing-routes.ts",
+      "line": "97",
+      "description": "The checkout seat check validates `seats < 1 || seats > 500` but does not assert `Number.isInteger(seats)`, so a fractional value like 2.5 passes validation and is forwarded to Stripe as line-item quantity.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "billing-routes.ts:97 only checks `typeof seats !== 'number' || seats < 1 || seats > 500`, and seats is passed unmodified into createCheckoutSession (billing.service.ts:125 `quantity: seats`), so a non-integer like 2.5 passes route validation; low impact since Stripe rejects non-integer quantity, but the missing Number.isInteger check is real."
+    }
+  ],
+  "110": [
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/state/postgres/db.ts",
+      "line": "144-151",
+      "description": "closePgPool sets _pool = null and then awaits p.end(); a concurrent getPgDb() during that in-flight await sees _pool === null and creates a fresh Pool, so the just-created pool is never drained and the connections from the closing pool may leak.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Mechanism is real — closePgPool nulls _db (145) and _pool (148) synchronously before `await p.end()` (149), so a getPgDb() racing during the await would build a new pool/_db; but the only production callers (scripts/firestore-export-to-pg.ts:1501, scripts/reconcile-migration.ts:701) invoke it in CLI shutdown finally blocks where no concurrent getPgDb() is expected, so impact is negligible."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/state/postgres/db.ts",
+      "line": "82-83",
+      "description": "readNumber is called for DB_STATEMENT_TIMEOUT_MS and DB_QUERY_TIMEOUT_MS without allowZero, so setting either to 0 (pg's documented value to disable the timeout) throws 'Invalid ...' instead of disabling it.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Lines 82-83 call readNumber without the third allowZero arg (unlike DB_POOL_MIN on line 80 which passes true), so the `n === 0 && !allowZero` guard at line 59 throws `Invalid DB_STATEMENT_TIMEOUT_MS: 0`, making pg's documented 0-disables-timeout value unreachable via env var."
+    }
+  ],
+  "111": [
+    {
+      "bot": "claude-oracle",
+      "severity": "HIGH",
+      "file": "server/api/workflow-run-routes.ts",
+      "line": "215-233",
+      "description": "The cancel route restricts to run owner OR org admin (lines 185-191), but the restart route only calls checkOrgMember, so any non-owner org member can restart (and thereby re-attribute) a run they do not own.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Restart route (lines 229-236) gates only on checkOrgMember, while cancel (lines 185-188) requires owner-or-checkOrgAdmin; restartWorkflowRun calls wfManager.createWorkflowRun(originalRun.orgId, userId, ...) at orchestrator line 1524, attributing the fresh run to the caller, so any org member can restart and re-own another user's run."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/api/workflow-run-routes.ts",
+      "line": "123",
+      "description": "req.query.status is cast directly to WorkflowRunStatus[] (options.statuses = [status as WorkflowRunStatus]) with no check against the allowed enum ('queued'|'running'|'cancelling'|'completed'|'failed'|'cancelled'|'paused'), so an invalid status string is passed unchecked into listWorkflowRuns.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Line 123 casts the raw query string to WorkflowRunStatus with no enum check (enum defined types.ts:4683-4690), and listWorkflowRuns forwards it into a Firestore '.where(status, in, [...])' (workflow-manager.ts:691-692); impact is benign (empty result set, not an error/injection) so MEDIUM is generous but the unvalidated-cast claim is accurate."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/api/workflow-run-routes.ts",
+      "line": "118-124",
+      "description": "limit is only guarded by !isNaN(limit); a negative or zero limit (e.g. ?limit=-5) passes the check and is forwarded to listWorkflowRuns without bounds validation.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "For ?limit=-5, line 124 'if (limit && !isNaN(limit))' is true so options.limit=-5 reaches listWorkflowRuns and query.limit(-5) (workflow-manager.ts:695-696), which Firestore rejects; note zero is actually filtered out (0 is falsy), so the 'zero' part of the description is wrong but the negative-limit bounds gap is real."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/api/workflow-run-routes.ts",
+      "line": "39-44",
+      "description": "inputs is read from req.body and forwarded as inputs ?? {} (line 61) without verifying it is a plain object, so a client sending inputs as an array, string, or number passes it unchecked into orchestrator.startRun.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Line 61 forwards 'inputs ?? {}' into startRun(...) (orchestrator.ts:641) which stores it via createWorkflowRun (orchestrator.ts:696) with no plain-object check, so a non-object body value passes unchecked; real but low-impact input-hardening gap."
+    }
+  ],
+  "112": [],
+  "113": [
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/state/postgres/api-key-store.ts",
+      "line": "118-128",
+      "description": "createApiKey accepts a non-null harnessId (data.harnessId) and inserts without any try/catch, so calling it with a harnessId whose (userId,orgId,harnessId) triple already has an active row raises a raw Postgres 23505 from uq_api_keys_active_harness that is never mapped to the ApiKeyManagerError('CONFLICT') sentinel the harness methods produce, leaking a DB-level error to callers.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Confirmed: createApiKey (lines 118-128) inserts harnessId (data.harnessId ?? null) with no try/catch, and the partial index uq_api_keys_active_harness (schema/api-keys.ts:89-91, WHERE revoked_at IS NULL) would raise an unmapped 23505 for a duplicate active triple — unlike createHarnessKeyIfNoneActive which wraps the insert and calls isActiveHarnessUniqueViolation; however no production caller drives a non-null harnessId through this generic method (POST /keys at auth-routes.ts:84-119 never sets harnessId; harness creation uses createHarnessKeyIfNoneActive), so it is a latent defensive gap exercised only by tests with unique harnessIds (test 2, line 138-143)."
+    }
+  ],
+  "114": [
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/lib/pagination.ts",
+      "line": "67-69",
+      "description": "decodeCursor cannot signal failure: Buffer.from(cursor, 'base64url') silently drops invalid characters instead of throwing, so a malformed or forged cursor decodes to a garbage string that callers (e.g. routes.ts:32) treat as a real doc ID; unlike every store-level decoder (admin-store/audit-store/task-template-store), it lacks a try/catch returning null on bad input.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Confirmed: pagination.ts:67-69 decodeCursor has no try/catch and base64url decode silently drops invalid chars, while audit-store.ts:82-97, admin-store.ts:136 and task-template-store.ts:177 all wrap decode+validate in try/catch returning null; callers routes.ts:32/66 and skills-routes.ts:202 do compare the decoded value as a doc id, but the harm is limited since each guards with findIndex + 'if (idx >= 0)' so a bad cursor just falls back to the first page (real consistency/robustness gap, correctly LOW)."
+    }
+  ],
+  "115": [
+    {
+      "bot": "claude-oracle",
+      "severity": "HIGH",
+      "file": "server/lib/cache.ts",
+      "line": "58-71",
+      "description": "Concurrent getOrFetch calls for the same uncached key each observe a miss and all invoke loader() before any set() completes, so N simultaneous requests issue N Firestore reads (thundering herd), defeating the cache's purpose of reducing reads; it should store and await a shared in-flight promise keyed by the cache key.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Lines 59-70 do get -> on miss await loader() -> set(), with no in-flight promise map, and lru-cache provides no coalescing, so concurrent misses each run loader(); however getOrFetch is never called anywhere in the repo (all callers in auth.ts/git-http.ts use manual get/set), so the stated thundering-herd impact is currently dead-code, lowering real severity."
+    }
+  ],
+  "201": [
+    {
+      "bot": "claude-oracle",
+      "severity": "HIGH",
+      "file": "server/services/validation-runner.ts",
+      "line": "141-142",
+      "description": "loadValidationRules only verifies that parsed.name and parsed.type exist, so a definition with type:'llm' lacking a criteria array (or type:'deterministic' lacking rules) passes the filter, then countTotalChecks reads rule.criteria.length / rule.rules.length and throws a TypeError, aborting the entire pipeline into the catch block (error status, totalChecks:0) instead of producing a per-file error entry.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "loadValidationRules (lines 68-73) only checks parsed.name/parsed.type before casting to ValidationDefinition with no criteria/rules validation, and countTotalChecks (lines 227,229) unconditionally reads (rule).rules.length / (rule).criteria.length, so a typed-but-incomplete YAML throws a TypeError caught by the outer try/catch (line 196) producing status:'error', totalChecks:0 for the whole run."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/validation-runner.ts",
+      "line": "146-152",
+      "description": "For a deterministic definition that parsed but has no rules array, def.rules is undefined and runDeterministicChecks(def.rules, ...) calls rules.map on undefined, throwing and sending the whole run to the error branch rather than degrading gracefully.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "runDeterministicChecks (deterministic.ts line 241) does rules.map(...), so a deterministic def with undefined rules throws; in practice countTotalChecks at line 227 reaches def.rules.length first, but either way the missing-rules case crashes into the catch block (line 196) instead of yielding a per-file error entry."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/validation-runner.ts",
+      "line": "256-264",
+      "description": "totalChecks is computed as def.criteria.length, but the LLM may return a results array with a different length (fewer or more than the criteria), so passedChecks/checks.length no longer correspond to totalChecks and the progress denominator becomes wrong.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "totalChecks comes from countTotalChecks summing criteria.length (line 229), while the per-criterion results are mapped 1:1 from response.results (lines 256-264) whose length the LLM controls and is never reconciled against criteria.length, so checks.length and passedChecks can diverge from totalChecks."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/validation-runner.ts",
+      "line": "269-275",
+      "description": "When gradeByCriteria throws, the catch returns a single failed ValidationCheckResult for the whole definition, but countTotalChecks already counted def.criteria.length checks for it, so the final checks array is shorter than totalChecks and the failed criteria are not individually represented.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "The catch at lines 269-275 returns exactly one failed ValidationCheckResult per failed LlmValidation, while countTotalChecks (line 229) counted def.criteria.length for that def, so on error checks.length < totalChecks and individual criteria are collapsed into one entry."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/validation-runner.ts",
+      "line": "176-179",
+      "description": "The OpenAI client is constructed with apiKey: process.env.ZHIPU_API_KEY with no presence check; if the env var is unset every LLM call fails with an auth error that is only surfaced as a generic per-check 'LLM grading error', masking a misconfiguration.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Lines 176-179 pass process.env.ZHIPU_API_KEY directly to new OpenAI() with no presence check, and a resulting auth failure is only surfaced via the per-check catch (lines 265-275) as 'LLM grading error: ...', so a missing key is reported as a graded failure rather than a clear configuration error; real but low-impact observability nit."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/validation-checks/llm-grader.ts",
+      "line": "92-100",
+      "description": "gradeByCriteria sends response_format json_schema with strict:true to the Zhipu GLM base URL via the OpenAI SDK; if that endpoint ignores or rejects strict json_schema the model can return prose, causing JSON.parse(content) or GradingResponse.parse to throw and every criterion to be reported as a single grading error.",
+      "verdict": "UNCERTAIN",
+      "action": "DEFER",
+      "reason": "The code does send response_format json_schema strict:true to the Zhipu base URL (lines 92-100) and JSON.parse/GradingResponse.parse (line 107) would throw on prose, collapsing into one error entry; whether the GLM endpoint honors strict json_schema cannot be determined from the code, so the failure mode is plausible but unverified."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/services/validation-checks/deterministic.ts",
+      "line": "54",
+      "description": "new RegExp(pattern, 's') forces dotAll and never enables multiline, so rule authors cannot make ^/$ match per-line and cannot control case-insensitivity, silently altering the semantics of user-supplied patterns.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Line 54 hardcodes new RegExp(pattern, 's'); DeterministicRule (types.ts 3959-3968) exposes no flags field, so authors cannot enable m/i and dotAll is always forced, changing pattern semantics; real but low-severity design limitation."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/services/validation-runner.ts",
+      "line": "169-175",
+      "description": "When isLlmMockEnabled() is true, the mock maps one synthetic passed check per LlmValidation rule (r => ...), but totalChecks counted criteria.length per rule, so passedChecks (number of definitions) does not match totalChecks (number of criteria) under the mock flag.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Lines 169-175 map one synthetic passed check per llmRule, while countTotalChecks (line 229) summed criteria.length per rule, so under the mock flag passedChecks (def count) does not match totalChecks (criteria count); real but mock-only/cosmetic."
+    }
+  ],
+  "202": [
+    {
+      "bot": "claude-oracle",
+      "severity": "HIGH",
+      "file": "server/api/integration-routes.ts",
+      "line": "159-161",
+      "description": "For a 9-character credential the mask shows slice(0,4)+'****'+slice(-4), exposing 8 of the 9 actual characters, so short tokens/passwords are effectively revealed by the GET-single response.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Lines 159-161 use `val.length > 8 ? val.slice(0,4)+'****'+val.slice(-4)` so a 9-char secret yields e.g. '1234****6789', hiding only the single middle char while leaking 8 of 9."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/api/integration-routes.ts",
+      "line": "265-269",
+      "description": "On a successful test testError is undefined, and because Firestore is configured with ignoreUndefinedProperties the prior lastError field is left untouched, so an integration shows status 'connected' while still carrying an old error message.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Test passes lastError: testError(=undefined) at line 268; updateIntegration line 127 skips it via `if (input.lastError !== undefined)` and db.ts:21 sets ignoreUndefinedProperties:true, so a stale lastError survives alongside status 'connected'."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/state/integration-manager.ts",
+      "line": "123",
+      "description": "updateIntegration overwrites the entire credentials map with the supplied object instead of merging, so a partial PATCH that includes only one credential key silently drops all other previously stored credential fields.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Line 123 does `updates.credentials = input.credentials` (whole-object assign) and line 131 calls `.update(updates)`, replacing the credentials map wholesale with no merge of existing keys."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/api/integration-routes.ts",
+      "line": "78-83",
+      "description": "checkAccess only calls checkOrgMember, so a non-admin member can create/delete integrations and read masked credentials, even though sensitive credential resources elsewhere are gated by checkOrgAdmin.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "checkAccess (line 78) calls only checkOrgMember which authorizes any role (authorization.ts:85-104), and it gates every CRUD route including DELETE/test; comparable credential-storing routes like bitbucket-routes.ts gate connect/disconnect with checkOrgAdmin (lines 151,217,265)."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/api/integration-routes.ts",
+      "line": "41",
+      "description": "UpdateApiIntegrationBodySchema declares label as z.string().optional() without .min(1), so a PATCH can set label to an empty string even though CreateApiIntegrationBodySchema enforces a non-empty label.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Line 41 is `label: z.string().optional()` (no .min(1)) while the create schema line 35 is `z.string().min(1)`, so PATCH accepts label '' inconsistently with create."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/api/integration-routes.ts",
+      "line": "44-46",
+      "description": "The update schema accepts status, lastTestedAt and lastError directly from the request body, allowing a client to mark an integration 'connected' or fabricate test metadata without any actual connection test.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Lines 44-46 expose status/lastTestedAt/lastError in UpdateApiIntegrationBodySchema and the PATCH handler passes parsed.data straight to updateIntegration (line 183-185), which writes them (manager lines 125-127), so a client can set status:'connected' with no test."
+    }
+  ],
+  "203": [
+    {
+      "bot": "claude-oracle",
+      "severity": "HIGH",
+      "file": "server/services/finding-snippet-locator.ts",
+      "line": "26-35",
+      "description": "normalizeLineSnippet collapses '\\s+' (including newlines) so a multi-line lineSnippet becomes one space-joined string, but isSnippetPresentInFile only compares it against single content lines split on '\\n', so any snippet spanning more than one line never matches and the still-present finding is wrongly reconciled as fixed.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Mechanically confirmed: normalizeLineSnippet (finding-fingerprint.ts:8) turns '\\n' into ' ', while isSnippetPresentInFile splits content on '\\n' and normalizes each single line, so a multi-line snippet can never equal any single normalized line -> isPresent=false -> markFindingFixedOnPush closes it; mitigated only by the MCP contract that line_snippet is 'Raw text of the first cited line' (code-review.ts:199), which is unenforced, so a multi-line bot snippet triggers a wrong close."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/finding-snippet-locator.ts",
+      "line": "31-34",
+      "description": "A short cited snippet that normalizes to a ubiquitous line (e.g. '}', '});', 'return;', 'break;') matches any equally-normalized line still present in the file, so isSnippetPresentInFile returns true and the finding stays open even after the originally cited code was deleted.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "Confirmed by running the match logic: snippet '}' equals any normalized '}' line elsewhere in the file, so isSnippetPresentInFile returns true and the finding is counted unchanged/stays open even though the originally cited code was deleted; whole-line exact-match has no anchoring to the cited line number, making trivial snippets a real false-negative-on-close source."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "HIGH",
+      "file": "server/services/finding-fingerprint.ts",
+      "line": "37-44",
+      "description": "Because ruleId/description are intentionally excluded and the only anchor is the normalized whole-line text, two genuinely different findings citing lines with identical normalized content in the same file produce the same sha256 fingerprint, so the upsert dedup treats them as one and silently drops the second finding.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "Postgres findings table has partial UNIQUE (organization_id, fingerprint) (schema/code-review.ts:325-327) and recordFinding inserts with .onConflictDoNothing() (code-review-store.ts:888); since computeFindingFingerprint excludes description/severity and even the line number when a snippet is present (lines 37-38), two distinct findings (different findingId via buildFindingId) on identical normalized snippets in the same file collide on the fingerprint index and the second is silently dropped while recordFinding still returns success."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/services/finding-fingerprint.ts",
+      "line": "35",
+      "description": "computeFindingFingerprint normalizes file via trim().toLowerCase() so case/whitespace-different paths share a fingerprint, but reconcileFindings groups findings and calls fetchFile on the raw finding.file, so two findings merged under one fingerprint but stored with differently-cased paths are reconciled against possibly the wrong (or a failing) file fetch.",
+      "verdict": "FALSE",
+      "action": "IGNORE",
+      "reason": "reconcileFindings groups by and fetches each finding's OWN raw finding.file (pull-request-manager.ts:1406/1424, code-review-store.ts:1340/1349) and never uses the fingerprint to choose a fetch path, so every finding is always reconciled against the exact path it cited; the normalization-domain inconsistency is real but the claimed wrong/failing fetch cannot occur, and in Postgres differently-cased paths share a fingerprint so the second never even persists."
+    }
+  ],
+  "204": [
+    {
+      "bot": "claude-oracle",
+      "severity": "HIGH",
+      "file": "server/mcp/tools/kg.ts",
+      "line": "89-94",
+      "description": "The Neo4j query matches File on {org_id, path} with LIMIT 1, but File nodes are unique only by (org_id, repo_id, path) (graph-build-executor.ts uses repoFullName as repo_id), so when an org has two connected repos sharing the same file path the fetcher picks an arbitrary repo and returns the wrong repo's content via that repo's installation token.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "init-schema.ts:18 enforces uniqueness on (org_id, repo_id, path) and notes the old (org_id, path) constraint was replaced; graph-build-executor.ts:170-171 sets repoId = repoFullName, so kg.ts:90 'MATCH (f:File {org_id, path}) ... LIMIT 1' is genuinely ambiguous across an org's repos and yields the wrong repo_id (then wrong installation token at line 105)."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/mcp/tools/kg.ts",
+      "line": "105",
+      "description": "getInstallationToken throws on revoked/suspended installations or GitHub 5xx, but the surrounding try/catch swallows it into return null (line 126), which code-read renders as 'File not found', hiding genuine auth/upstream errors from the caller.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "github-app-service.ts:135-145 throws an Error on any non-ok access_tokens response; that throw at kg.ts:105 is inside the try whose catch (kg.ts:125-128) returns null, and code-read.ts:130-135 turns a null fetch into 'Error: File not found', so auth/upstream failures are indistinguishable from a missing file."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/mcp/tools/kg.ts",
+      "line": "110",
+      "description": "connection.defaultBranch is concatenated directly into the Contents API query string, so a branch name containing reserved URL characters (e.g. '#', '?', or spaces) produces a malformed URL or resolves the wrong ref.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "kg.ts:110 interpolates `?ref=${connection.defaultBranch}` raw while the path segments on line 109 are encodeURIComponent'd; a defaultBranch containing '#'/'%' would break the ref, though git forbids spaces/'?' in branch names so real-world impact is narrow (LOW)."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/services/github-app-service.ts",
+      "line": "119-149",
+      "description": "getInstallationToken has no token/JWT caching despite 1-hour TTL, so each code_read fallback (and every listAccessibleRepos/fetchPullRequestFiles/postPullRequestComment call) incurs an avoidable extra GitHub request.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "getInstallationToken (119-149) unconditionally generateJwt()'s and POSTs to access_tokens with no cache (no cache/Cache anywhere in the file), and it is the shared token source for listAccessibleRepos:234, fetchPullRequestFiles:321 and postPullRequestComment, confirming the avoidable round-trips; correctness-neutral efficiency issue."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/services/github-app-service.ts",
+      "line": "124",
+      "description": "The installationId is interpolated raw into the /app/installations/${installationId}/access_tokens path, inconsistent with getInstallationDetails (line 470) which wraps it in encodeURIComponent, leaving the value untrusted/unvalidated at this call site.",
+      "verdict": "TRUE",
+      "action": "DEFER",
+      "reason": "line 124 interpolates installationId raw while getInstallationDetails:470 (and lines 522) use encodeURIComponent, a real inconsistency; impact is minimal since installationId is GitHub's numeric ID, so LOW/DEFER for consistency rather than a live bug."
+    }
+  ],
+  "205": [
+    {
+      "bot": "claude-oracle",
+      "severity": "HIGH",
+      "file": "server/lib/authorization.ts",
+      "line": "410-413",
+      "description": "When the looked-up session has no organizationId, checkOrgAdminBySession returns { authorized: true } unconditionally, so any authenticated user passes the org-admin check for org-less sessions (e.g. in reflections-routes.ts approve/reject, any user can approve reflections on a session lacking org context).",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "authorization.ts:410-413 returns {authorized:true} when session.organizationId is falsy, and reflections-routes.ts:172/223 use this result directly to gate PATCH approve/reject and POST /apply; org-less sessions are reachable because routes.ts:127 calls createSession(name,false,userId) with no organizationId, so any authenticated user can approve/apply reflections on those sessions."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "HIGH",
+      "file": "server/middleware/auth-guards.ts",
+      "line": "122-127",
+      "description": "When isAuthEnabled() is false these guards call next() and skip the membership/admin check entirely, granting full access — inconsistent with the equivalent factories in authorization.ts (requireOrgMember/requireOrgAdmin) which return 400, so the same routes behave as wide-open vs. closed depending on which guard set protects them.",
+      "verdict": "UNCERTAIN",
+      "action": "DEFER",
+      "reason": "The code difference is real (auth-guards.ts:124-127 calls next() vs authorization.ts:438-441/470-473 returning 400), but when isAuthEnabled() is false the entire auth layer is intentionally open (auth.ts:97-99 sets userId='anonymous' for everyone), so this is a design inconsistency rather than a privilege escalation between distinct authenticated users."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/middleware/auth-guards.ts",
+      "line": "188-206",
+      "description": "requireTeamLeadOrAdmin has no auth-disabled branch and depends on req.authResult populated by requireTeamAccess, but when auth is disabled requireTeamAccess calls next() without setting req.authResult, so requireTeamLeadOrAdmin then responds 500 'must be used after requireTeamAccess' for every request, breaking the route under auth-disabled mode.",
+      "verdict": "FALSE",
+      "action": "IGNORE",
+      "reason": "requireTeamLeadOrAdmin is only used in team-skills-routes.ts:60/93/149, and every such route chains requireAuthEnabled() first, which returns 400 when auth is disabled (auth-guards.ts:103-107), short-circuiting before requireTeamAccess/requireTeamLeadOrAdmin run, so the described 500 path is unreachable."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "MEDIUM",
+      "file": "server/middleware/auth-guards.ts",
+      "line": "233-237",
+      "description": "If req.params[orgIdParam] is absent the guard calls next() and skips the suspension check; with its default orgIdParam='orgId' this means any route whose param is not literally named 'orgId' (e.g. team routes using ':id') silently bypasses suspension enforcement instead of failing closed.",
+      "verdict": "UNCERTAIN",
+      "action": "DEFER",
+      "reason": "The fail-open logic is real (auth-guards.ts:233-237: missing orgId param -> next()), but checkOrgSuspension is never imported or wired into any route or router anywhere in the codebase (grep finds no usages outside its own definition), so the bypass is a latent defect with no currently reachable exploit path."
+    },
+    {
+      "bot": "claude-oracle",
+      "severity": "LOW",
+      "file": "server/middleware/auth-guards.ts",
+      "line": "83-89",
+      "description": "The 15-minute admin session freshness enforcement is gated on `if (req.authTime)`, so any super-admin request lacking authTime (e.g. an auth path that sets isSuperAdmin but not authTime) bypasses the freshness requirement entirely rather than being rejected.",
+      "verdict": "FALSE",
+      "action": "IGNORE",
+      "reason": "The only path setting req.isSuperAdmin is verifyFirebaseToken (auth.ts:115), which on the same line-pair always also sets req.authTime from decodedToken.auth_time (auth.ts:116), and admin-routes.ts:51 wires only verifyFirebaseToken (explicitly not API keys), so no reachable path produces isSuperAdmin=true without authTime; auth_time is a standard always-present Firebase claim."
+    }
+  ]
+}

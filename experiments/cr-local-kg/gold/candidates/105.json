@@ -1,0 +1,37 @@
+[
+  {
+    "file": "server/services/graph-build-service.ts",
+    "line": "106-113",
+    "severity": "HIGH",
+    "title": "Stale cleanup ignores stuck 'queued' jobs",
+    "description": "cleanupStaleJobs only queries status in ['cloning','building','syncing_issues'] and excludes 'queued', so a job that is created but never picked up by the executor (e.g. Pub/Sub publish failed before fallback, or process crashed before updateJobStatus) stays 'queued' forever and is never failed/cleaned."
+  },
+  {
+    "file": "server/services/graph-build-service.ts",
+    "line": "88-96",
+    "severity": "HIGH",
+    "title": "Permanently-queued job blocks all future builds",
+    "description": "Because hasActiveJob counts 'queued' as active and cleanupStaleJobs never clears 'queued' jobs, a single stuck queued job makes hasActiveJob return true indefinitely, so the repo can never start another build (409 forever) and it permanently consumes a slot in countActiveJobs against the org concurrency limit."
+  },
+  {
+    "file": "server/services/graph-build-service.ts",
+    "line": "53-65",
+    "severity": "MEDIUM",
+    "title": "updateJobStatus has no terminal-state guard, lets cleanup result be overwritten",
+    "description": "cleanupStaleJobs can mark a still-running job 'failed' (STALE_JOB_CLEANUP) while its executor keeps running and later calls updateJobStatus(...,'completed'), and since updateJobStatus does an unconditional update with no check that the current status is non-terminal, the stale-failed job is silently flipped back to completed (or vice-versa), corrupting the state machine."
+  },
+  {
+    "file": "server/services/graph-build-service.ts",
+    "line": "53-65",
+    "severity": "MEDIUM",
+    "title": "update() throws on non-existent job document",
+    "description": "updateJobStatus uses Firestore .update() which rejects if the document does not exist; if a job doc was deleted (or never persisted) the executor's status writes throw an unhandled error instead of failing gracefully, unlike .set({merge:true})."
+  },
+  {
+    "file": "server/services/graph-build-service.ts",
+    "line": "25-51",
+    "severity": "MEDIUM",
+    "title": "Check-then-create concurrency race allows duplicate active builds",
+    "description": "createJob performs an unconditional set with no transaction or uniqueness guard, and callers run hasActiveJob/countActiveJobs as separate reads beforehand, so two concurrent trigger requests for the same repo can both observe no active job and both createJob, producing duplicate concurrent builds and exceeding the org concurrency limit."
+  }
+]

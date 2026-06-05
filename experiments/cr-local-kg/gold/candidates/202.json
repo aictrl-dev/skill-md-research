@@ -1,0 +1,44 @@
+[
+  {
+    "file": "server/api/integration-routes.ts",
+    "line": "159-161",
+    "severity": "HIGH",
+    "title": "Credential masking leaks most of short secrets",
+    "description": "For a 9-character credential the mask shows slice(0,4)+'****'+slice(-4), exposing 8 of the 9 actual characters, so short tokens/passwords are effectively revealed by the GET-single response."
+  },
+  {
+    "file": "server/api/integration-routes.ts",
+    "line": "265-269",
+    "severity": "MEDIUM",
+    "title": "Successful connection test does not clear stale lastError",
+    "description": "On a successful test testError is undefined, and because Firestore is configured with ignoreUndefinedProperties the prior lastError field is left untouched, so an integration shows status 'connected' while still carrying an old error message."
+  },
+  {
+    "file": "server/state/integration-manager.ts",
+    "line": 123,
+    "severity": "MEDIUM",
+    "title": "PATCH credentials full-replace causes silent data loss",
+    "description": "updateIntegration overwrites the entire credentials map with the supplied object instead of merging, so a partial PATCH that includes only one credential key silently drops all other previously stored credential fields."
+  },
+  {
+    "file": "server/api/integration-routes.ts",
+    "line": "78-83",
+    "severity": "MEDIUM",
+    "title": "Any org member can read, update, and delete integration credentials",
+    "description": "checkAccess only calls checkOrgMember, so a non-admin member can create/delete integrations and read masked credentials, even though sensitive credential resources elsewhere are gated by checkOrgAdmin."
+  },
+  {
+    "file": "server/api/integration-routes.ts",
+    "line": 41,
+    "severity": "LOW",
+    "title": "Update label allows empty string while create requires min(1)",
+    "description": "UpdateApiIntegrationBodySchema declares label as z.string().optional() without .min(1), so a PATCH can set label to an empty string even though CreateApiIntegrationBodySchema enforces a non-empty label."
+  },
+  {
+    "file": "server/api/integration-routes.ts",
+    "line": "44-46",
+    "severity": "LOW",
+    "title": "PATCH lets clients spoof status/lastTestedAt/lastError",
+    "description": "The update schema accepts status, lastTestedAt and lastError directly from the request body, allowing a client to mark an integration 'connected' or fabricate test metadata without any actual connection test."
+  }
+]

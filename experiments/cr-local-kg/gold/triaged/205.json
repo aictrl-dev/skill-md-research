@@ -1,0 +1,52 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "HIGH",
+    "file": "server/lib/authorization.ts",
+    "line": "410-413",
+    "description": "When the looked-up session has no organizationId, checkOrgAdminBySession returns { authorized: true } unconditionally, so any authenticated user passes the org-admin check for org-less sessions (e.g. in reflections-routes.ts approve/reject, any user can approve reflections on a session lacking org context).",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "authorization.ts:410-413 returns {authorized:true} when session.organizationId is falsy, and reflections-routes.ts:172/223 use this result directly to gate PATCH approve/reject and POST /apply; org-less sessions are reachable because routes.ts:127 calls createSession(name,false,userId) with no organizationId, so any authenticated user can approve/apply reflections on those sessions."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "HIGH",
+    "file": "server/middleware/auth-guards.ts",
+    "line": "122-127",
+    "description": "When isAuthEnabled() is false these guards call next() and skip the membership/admin check entirely, granting full access — inconsistent with the equivalent factories in authorization.ts (requireOrgMember/requireOrgAdmin) which return 400, so the same routes behave as wide-open vs. closed depending on which guard set protects them.",
+    "verdict": "UNCERTAIN",
+    "action": "DEFER",
+    "reason": "The code difference is real (auth-guards.ts:124-127 calls next() vs authorization.ts:438-441/470-473 returning 400), but when isAuthEnabled() is false the entire auth layer is intentionally open (auth.ts:97-99 sets userId='anonymous' for everyone), so this is a design inconsistency rather than a privilege escalation between distinct authenticated users."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/middleware/auth-guards.ts",
+    "line": "188-206",
+    "description": "requireTeamLeadOrAdmin has no auth-disabled branch and depends on req.authResult populated by requireTeamAccess, but when auth is disabled requireTeamAccess calls next() without setting req.authResult, so requireTeamLeadOrAdmin then responds 500 'must be used after requireTeamAccess' for every request, breaking the route under auth-disabled mode.",
+    "verdict": "FALSE",
+    "action": "IGNORE",
+    "reason": "requireTeamLeadOrAdmin is only used in team-skills-routes.ts:60/93/149, and every such route chains requireAuthEnabled() first, which returns 400 when auth is disabled (auth-guards.ts:103-107), short-circuiting before requireTeamAccess/requireTeamLeadOrAdmin run, so the described 500 path is unreachable."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/middleware/auth-guards.ts",
+    "line": "233-237",
+    "description": "If req.params[orgIdParam] is absent the guard calls next() and skips the suspension check; with its default orgIdParam='orgId' this means any route whose param is not literally named 'orgId' (e.g. team routes using ':id') silently bypasses suspension enforcement instead of failing closed.",
+    "verdict": "UNCERTAIN",
+    "action": "DEFER",
+    "reason": "The fail-open logic is real (auth-guards.ts:233-237: missing orgId param -> next()), but checkOrgSuspension is never imported or wired into any route or router anywhere in the codebase (grep finds no usages outside its own definition), so the bypass is a latent defect with no currently reachable exploit path."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/middleware/auth-guards.ts",
+    "line": "83-89",
+    "description": "The 15-minute admin session freshness enforcement is gated on `if (req.authTime)`, so any super-admin request lacking authTime (e.g. an auth path that sets isSuperAdmin but not authTime) bypasses the freshness requirement entirely rather than being rejected.",
+    "verdict": "FALSE",
+    "action": "IGNORE",
+    "reason": "The only path setting req.isSuperAdmin is verifyFirebaseToken (auth.ts:115), which on the same line-pair always also sets req.authTime from decodedToken.auth_time (auth.ts:116), and admin-routes.ts:51 wires only verifyFirebaseToken (explicitly not API keys), so no reachable path produces isSuperAdmin=true without authTime; auth_time is a standard always-present Firebase claim."
+  }
+]

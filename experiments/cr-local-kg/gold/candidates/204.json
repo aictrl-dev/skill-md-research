@@ -1,0 +1,37 @@
+[
+  {
+    "file": "server/mcp/tools/kg.ts",
+    "line": "89-94",
+    "severity": "HIGH",
+    "title": "File lookup keyed only on (org_id, path) can resolve to the wrong repo",
+    "description": "The Neo4j query matches File on {org_id, path} with LIMIT 1, but File nodes are unique only by (org_id, repo_id, path) (graph-build-executor.ts uses repoFullName as repo_id), so when an org has two connected repos sharing the same file path the fetcher picks an arbitrary repo and returns the wrong repo's content via that repo's installation token."
+  },
+  {
+    "file": "server/mcp/tools/kg.ts",
+    "line": 105,
+    "severity": "MEDIUM",
+    "title": "GitHub installation-token failures are masked as 'file not found'",
+    "description": "getInstallationToken throws on revoked/suspended installations or GitHub 5xx, but the surrounding try/catch swallows it into return null (line 126), which code-read renders as 'File not found', hiding genuine auth/upstream errors from the caller."
+  },
+  {
+    "file": "server/mcp/tools/kg.ts",
+    "line": 110,
+    "severity": "LOW",
+    "title": "defaultBranch interpolated into ?ref= without encoding",
+    "description": "connection.defaultBranch is concatenated directly into the Contents API query string, so a branch name containing reserved URL characters (e.g. '#', '?', or spaces) produces a malformed URL or resolves the wrong ref."
+  },
+  {
+    "file": "server/services/github-app-service.ts",
+    "line": "119-149",
+    "severity": "LOW",
+    "title": "getInstallationToken has no token/JWT caching despite 1-hour TTL",
+    "description": "Every call mints a fresh App JWT and performs a GitHub access_tokens round-trip even though installation tokens are valid for 1 hour, so each code_read fallback (and every listAccessibleRepos/fetchPullRequestFiles/postPullRequestComment call) incurs an avoidable extra GitHub request."
+  },
+  {
+    "file": "server/services/github-app-service.ts",
+    "line": 124,
+    "severity": "LOW",
+    "title": "installationId not URL-encoded in access-tokens request",
+    "description": "The installationId is interpolated raw into the /app/installations/${installationId}/access_tokens path, inconsistent with getInstallationDetails (line 470) which wraps it in encodeURIComponent, leaving the value untrusted/unvalidated at this call site."
+  }
+]

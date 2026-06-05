@@ -1,0 +1,62 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "HIGH",
+    "file": "server/api/integration-routes.ts",
+    "line": "159-161",
+    "description": "For a 9-character credential the mask shows slice(0,4)+'****'+slice(-4), exposing 8 of the 9 actual characters, so short tokens/passwords are effectively revealed by the GET-single response.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "Lines 159-161 use `val.length > 8 ? val.slice(0,4)+'****'+val.slice(-4)` so a 9-char secret yields e.g. '1234****6789', hiding only the single middle char while leaking 8 of 9."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/api/integration-routes.ts",
+    "line": "265-269",
+    "description": "On a successful test testError is undefined, and because Firestore is configured with ignoreUndefinedProperties the prior lastError field is left untouched, so an integration shows status 'connected' while still carrying an old error message.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "Test passes lastError: testError(=undefined) at line 268; updateIntegration line 127 skips it via `if (input.lastError !== undefined)` and db.ts:21 sets ignoreUndefinedProperties:true, so a stale lastError survives alongside status 'connected'."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/state/integration-manager.ts",
+    "line": "123",
+    "description": "updateIntegration overwrites the entire credentials map with the supplied object instead of merging, so a partial PATCH that includes only one credential key silently drops all other previously stored credential fields.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "Line 123 does `updates.credentials = input.credentials` (whole-object assign) and line 131 calls `.update(updates)`, replacing the credentials map wholesale with no merge of existing keys."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/api/integration-routes.ts",
+    "line": "78-83",
+    "description": "checkAccess only calls checkOrgMember, so a non-admin member can create/delete integrations and read masked credentials, even though sensitive credential resources elsewhere are gated by checkOrgAdmin.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "checkAccess (line 78) calls only checkOrgMember which authorizes any role (authorization.ts:85-104), and it gates every CRUD route including DELETE/test; comparable credential-storing routes like bitbucket-routes.ts gate connect/disconnect with checkOrgAdmin (lines 151,217,265)."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/api/integration-routes.ts",
+    "line": "41",
+    "description": "UpdateApiIntegrationBodySchema declares label as z.string().optional() without .min(1), so a PATCH can set label to an empty string even though CreateApiIntegrationBodySchema enforces a non-empty label.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "Line 41 is `label: z.string().optional()` (no .min(1)) while the create schema line 35 is `z.string().min(1)`, so PATCH accepts label '' inconsistently with create."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/api/integration-routes.ts",
+    "line": "44-46",
+    "description": "The update schema accepts status, lastTestedAt and lastError directly from the request body, allowing a client to mark an integration 'connected' or fabricate test metadata without any actual connection test.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "Lines 44-46 expose status/lastTestedAt/lastError in UpdateApiIntegrationBodySchema and the PATCH handler passes parsed.data straight to updateIntegration (line 183-185), which writes them (manager lines 125-127), so a client can set status:'connected' with no test."
+  }
+]

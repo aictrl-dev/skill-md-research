@@ -1,0 +1,9 @@
+[
+  {
+    "file": "server/services/permission-config-builder.ts",
+    "line": "8-32",
+    "severity": "MEDIUM",
+    "description": "The permission keys 'list', 'lsp', and 'codesearch' are valid configurable keys (ALL_PERMISSION_KEYS) and correspond to real OpenCode/aictrl runtime tools, but no entry in TOOL_TO_PERMISSION_KEY ever produces them; therefore any skill with a non-empty allowedTools list always gets list/lsp/codesearch set to 'ask' (deny in headless mode) with no tool name an author could declare to enable them, silently under-granting directory-listing and code-search capabilities the agent commonly auto-invokes.",
+    "title": "list/lsp/codesearch permission keys are unreachable — restricted skills can never be granted them"
+  }
+]

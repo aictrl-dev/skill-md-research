@@ -1,0 +1,42 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "HIGH",
+    "file": "server/services/finding-snippet-locator.ts",
+    "line": "26-35",
+    "description": "normalizeLineSnippet collapses '\\s+' (including newlines) so a multi-line lineSnippet becomes one space-joined string, but isSnippetPresentInFile only compares it against single content lines split on '\\n', so any snippet spanning more than one line never matches and the still-present finding is wrongly reconciled as fixed.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "Mechanically confirmed: normalizeLineSnippet (finding-fingerprint.ts:8) turns '\\n' into ' ', while isSnippetPresentInFile splits content on '\\n' and normalizes each single line, so a multi-line snippet can never equal any single normalized line -> isPresent=false -> markFindingFixedOnPush closes it; mitigated only by the MCP contract that line_snippet is 'Raw text of the first cited line' (code-review.ts:199), which is unenforced, so a multi-line bot snippet triggers a wrong close."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/finding-snippet-locator.ts",
+    "line": "31-34",
+    "description": "A short cited snippet that normalizes to a ubiquitous line (e.g. '}', '});', 'return;', 'break;') matches any equally-normalized line still present in the file, so isSnippetPresentInFile returns true and the finding stays open even after the originally cited code was deleted.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "Confirmed by running the match logic: snippet '}' equals any normalized '}' line elsewhere in the file, so isSnippetPresentInFile returns true and the finding is counted unchanged/stays open even though the originally cited code was deleted; whole-line exact-match has no anchoring to the cited line number, making trivial snippets a real false-negative-on-close source."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "HIGH",
+    "file": "server/services/finding-fingerprint.ts",
+    "line": "37-44",
+    "description": "Because ruleId/description are intentionally excluded and the only anchor is the normalized whole-line text, two genuinely different findings citing lines with identical normalized content in the same file produce the same sha256 fingerprint, so the upsert dedup treats them as one and silently drops the second finding.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "Postgres findings table has partial UNIQUE (organization_id, fingerprint) (schema/code-review.ts:325-327) and recordFinding inserts with .onConflictDoNothing() (code-review-store.ts:888); since computeFindingFingerprint excludes description/severity and even the line number when a snippet is present (lines 37-38), two distinct findings (different findingId via buildFindingId) on identical normalized snippets in the same file collide on the fingerprint index and the second is silently dropped while recordFinding still returns success."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/finding-fingerprint.ts",
+    "line": "35",
+    "description": "computeFindingFingerprint normalizes file via trim().toLowerCase() so case/whitespace-different paths share a fingerprint, but reconcileFindings groups findings and calls fetchFile on the raw finding.file, so two findings merged under one fingerprint but stored with differently-cased paths are reconciled against possibly the wrong (or a failing) file fetch.",
+    "verdict": "FALSE",
+    "action": "IGNORE",
+    "reason": "reconcileFindings groups by and fetches each finding's OWN raw finding.file (pull-request-manager.ts:1406/1424, code-review-store.ts:1340/1349) and never uses the fingerprint to choose a fetch path, so every finding is always reconciled against the exact path it cited; the normalization-domain inconsistency is real but the claimed wrong/failing fetch cannot occur, and in Postgres differently-cased paths share a fingerprint so the second never even persists."
+  }
+]

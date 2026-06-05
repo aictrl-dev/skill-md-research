@@ -1,0 +1,42 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "HIGH",
+    "file": "server/api/workflow-run-routes.ts",
+    "line": "215-233",
+    "description": "The cancel route restricts to run owner OR org admin (lines 185-191), but the restart route only calls checkOrgMember, so any non-owner org member can restart (and thereby re-attribute) a run they do not own.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "Restart route (lines 229-236) gates only on checkOrgMember, while cancel (lines 185-188) requires owner-or-checkOrgAdmin; restartWorkflowRun calls wfManager.createWorkflowRun(originalRun.orgId, userId, ...) at orchestrator line 1524, attributing the fresh run to the caller, so any org member can restart and re-own another user's run."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/api/workflow-run-routes.ts",
+    "line": "123",
+    "description": "req.query.status is cast directly to WorkflowRunStatus[] (options.statuses = [status as WorkflowRunStatus]) with no check against the allowed enum ('queued'|'running'|'cancelling'|'completed'|'failed'|'cancelled'|'paused'), so an invalid status string is passed unchecked into listWorkflowRuns.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "Line 123 casts the raw query string to WorkflowRunStatus with no enum check (enum defined types.ts:4683-4690), and listWorkflowRuns forwards it into a Firestore '.where(status, in, [...])' (workflow-manager.ts:691-692); impact is benign (empty result set, not an error/injection) so MEDIUM is generous but the unvalidated-cast claim is accurate."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/api/workflow-run-routes.ts",
+    "line": "118-124",
+    "description": "limit is only guarded by !isNaN(limit); a negative or zero limit (e.g. ?limit=-5) passes the check and is forwarded to listWorkflowRuns without bounds validation.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "For ?limit=-5, line 124 'if (limit && !isNaN(limit))' is true so options.limit=-5 reaches listWorkflowRuns and query.limit(-5) (workflow-manager.ts:695-696), which Firestore rejects; note zero is actually filtered out (0 is falsy), so the 'zero' part of the description is wrong but the negative-limit bounds gap is real."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/api/workflow-run-routes.ts",
+    "line": "39-44",
+    "description": "inputs is read from req.body and forwarded as inputs ?? {} (line 61) without verifying it is a plain object, so a client sending inputs as an array, string, or number passes it unchecked into orchestrator.startRun.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "Line 61 forwards 'inputs ?? {}' into startRun(...) (orchestrator.ts:641) which stores it via createWorkflowRun (orchestrator.ts:696) with no plain-object check, so a non-object body value passes unchecked; real but low-impact input-hardening gap."
+  }
+]

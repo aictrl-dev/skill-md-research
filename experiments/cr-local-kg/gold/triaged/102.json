@@ -1,0 +1,12 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/state/postgres/oauth-store.ts",
+    "line": "243-249",
+    "description": "touchToken is documented (here and in the port at lines 180-185) as a non-blocking fire-and-forget update that silently no-ops, but unlike the Firestore adapter (which wraps the update in try/catch and swallows/logs errors) and the legacy route (oauth-routes.ts:854 uses .catch), this implementation lets any DB error reject the promise, so a transient DB failure during the per-verification touch can break token verification.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "oauth-store.ts:243-249 awaits the update with no try/catch, while the port doc (ports/oauth-store.ts:180-185) and Firestore adapter (firestore-oauth-adapter.ts:189-198, swallows NOT_FOUND/log.warn) and legacy route (oauth-routes.ts:854 fire-and-forget .catch) all treat the touch as non-blocking — so a transient DB error here rejects and, for a caller awaiting the documented fire-and-forget call, would break verification."
+  }
+]

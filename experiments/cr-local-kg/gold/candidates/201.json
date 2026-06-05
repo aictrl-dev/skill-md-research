@@ -1,0 +1,58 @@
+[
+  {
+    "file": "server/services/validation-runner.ts",
+    "line": "141-142",
+    "severity": "HIGH",
+    "title": "Malformed but typed validation YAML crashes the whole pipeline",
+    "description": "loadValidationRules only verifies that parsed.name and parsed.type exist, so a definition with type:'llm' lacking a criteria array (or type:'deterministic' lacking rules) passes the filter, then countTotalChecks reads rule.criteria.length / rule.rules.length and throws a TypeError, aborting the entire pipeline into the catch block (error status, totalChecks:0) instead of producing a per-file error entry."
+  },
+  {
+    "file": "server/services/validation-runner.ts",
+    "line": "146-152",
+    "severity": "MEDIUM",
+    "title": "Deterministic definition with missing rules array crashes pipeline",
+    "description": "For a deterministic definition that parsed but has no rules array, def.rules is undefined and runDeterministicChecks(def.rules, ...) calls rules.map on undefined, throwing and sending the whole run to the error branch rather than degrading gracefully."
+  },
+  {
+    "file": "server/services/validation-runner.ts",
+    "line": "256-264",
+    "severity": "MEDIUM",
+    "title": "Per-criterion result count can diverge from totalChecks",
+    "description": "totalChecks is computed as def.criteria.length, but the LLM may return a results array with a different length (fewer or more than the criteria), so passedChecks/checks.length no longer correspond to totalChecks and the progress denominator becomes wrong."
+  },
+  {
+    "file": "server/services/validation-runner.ts",
+    "line": "269-275",
+    "severity": "MEDIUM",
+    "title": "LLM error collapses N criteria into a single failed check, breaking counts",
+    "description": "When gradeByCriteria throws, the catch returns a single failed ValidationCheckResult for the whole definition, but countTotalChecks already counted def.criteria.length checks for it, so the final checks array is shorter than totalChecks and the failed criteria are not individually represented."
+  },
+  {
+    "file": "server/services/validation-runner.ts",
+    "line": "176-179",
+    "severity": "MEDIUM",
+    "title": "Missing ZHIPU_API_KEY yields opaque pipeline error instead of clear status",
+    "description": "The OpenAI client is constructed with apiKey: process.env.ZHIPU_API_KEY with no presence check; if the env var is unset every LLM call fails with an auth error that is only surfaced as a generic per-check 'LLM grading error', masking a misconfiguration."
+  },
+  {
+    "file": "server/services/validation-checks/llm-grader.ts",
+    "line": "92-100",
+    "severity": "MEDIUM",
+    "title": "strict json_schema response_format assumed but GLM/Zhipu endpoint may not honor it",
+    "description": "gradeByCriteria sends response_format json_schema with strict:true to the Zhipu GLM base URL via the OpenAI SDK; if that endpoint ignores or rejects strict json_schema the model can return prose, causing JSON.parse(content) or GradingResponse.parse to throw and every criterion to be reported as a single grading error."
+  },
+  {
+    "file": "server/services/validation-checks/deterministic.ts",
+    "line": "54",
+    "severity": "LOW",
+    "title": "Regex flags hardcoded to dotAll with no multiline support",
+    "description": "new RegExp(pattern, 's') forces dotAll and never enables multiline, so rule authors cannot make ^/$ match per-line and cannot control case-insensitivity, silently altering the semantics of user-supplied patterns."
+  },
+  {
+    "file": "server/services/validation-runner.ts",
+    "line": "169-175",
+    "severity": "LOW",
+    "title": "LLM mock path emits one pass per definition, not per criterion",
+    "description": "When isLlmMockEnabled() is true, the mock maps one synthetic passed check per LlmValidation rule (r => ...), but totalChecks counted criteria.length per rule, so passedChecks (number of definitions) does not match totalChecks (number of criteria) under the mock flag."
+  }
+]

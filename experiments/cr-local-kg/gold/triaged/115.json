@@ -1,0 +1,12 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "HIGH",
+    "file": "server/lib/cache.ts",
+    "line": "58-71",
+    "description": "Concurrent getOrFetch calls for the same uncached key each observe a miss and all invoke loader() before any set() completes, so N simultaneous requests issue N Firestore reads (thundering herd), defeating the cache's purpose of reducing reads; it should store and await a shared in-flight promise keyed by the cache key.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "Lines 59-70 do get -> on miss await loader() -> set(), with no in-flight promise map, and lru-cache provides no coalescing, so concurrent misses each run loader(); however getOrFetch is never called anywhere in the repo (all callers in auth.ts/git-http.ts use manual get/set), so the stated thundering-herd impact is currently dead-code, lowering real severity."
+  }
+]

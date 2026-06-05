@@ -1,0 +1,82 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "HIGH",
+    "file": "server/services/validation-runner.ts",
+    "line": "141-142",
+    "description": "loadValidationRules only verifies that parsed.name and parsed.type exist, so a definition with type:'llm' lacking a criteria array (or type:'deterministic' lacking rules) passes the filter, then countTotalChecks reads rule.criteria.length / rule.rules.length and throws a TypeError, aborting the entire pipeline into the catch block (error status, totalChecks:0) instead of producing a per-file error entry.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "loadValidationRules (lines 68-73) only checks parsed.name/parsed.type before casting to ValidationDefinition with no criteria/rules validation, and countTotalChecks (lines 227,229) unconditionally reads (rule).rules.length / (rule).criteria.length, so a typed-but-incomplete YAML throws a TypeError caught by the outer try/catch (line 196) producing status:'error', totalChecks:0 for the whole run."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/validation-runner.ts",
+    "line": "146-152",
+    "description": "For a deterministic definition that parsed but has no rules array, def.rules is undefined and runDeterministicChecks(def.rules, ...) calls rules.map on undefined, throwing and sending the whole run to the error branch rather than degrading gracefully.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "runDeterministicChecks (deterministic.ts line 241) does rules.map(...), so a deterministic def with undefined rules throws; in practice countTotalChecks at line 227 reaches def.rules.length first, but either way the missing-rules case crashes into the catch block (line 196) instead of yielding a per-file error entry."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/validation-runner.ts",
+    "line": "256-264",
+    "description": "totalChecks is computed as def.criteria.length, but the LLM may return a results array with a different length (fewer or more than the criteria), so passedChecks/checks.length no longer correspond to totalChecks and the progress denominator becomes wrong.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "totalChecks comes from countTotalChecks summing criteria.length (line 229), while the per-criterion results are mapped 1:1 from response.results (lines 256-264) whose length the LLM controls and is never reconciled against criteria.length, so checks.length and passedChecks can diverge from totalChecks."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/validation-runner.ts",
+    "line": "269-275",
+    "description": "When gradeByCriteria throws, the catch returns a single failed ValidationCheckResult for the whole definition, but countTotalChecks already counted def.criteria.length checks for it, so the final checks array is shorter than totalChecks and the failed criteria are not individually represented.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "The catch at lines 269-275 returns exactly one failed ValidationCheckResult per failed LlmValidation, while countTotalChecks (line 229) counted def.criteria.length for that def, so on error checks.length < totalChecks and individual criteria are collapsed into one entry."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/validation-runner.ts",
+    "line": "176-179",
+    "description": "The OpenAI client is constructed with apiKey: process.env.ZHIPU_API_KEY with no presence check; if the env var is unset every LLM call fails with an auth error that is only surfaced as a generic per-check 'LLM grading error', masking a misconfiguration.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "Lines 176-179 pass process.env.ZHIPU_API_KEY directly to new OpenAI() with no presence check, and a resulting auth failure is only surfaced via the per-check catch (lines 265-275) as 'LLM grading error: ...', so a missing key is reported as a graded failure rather than a clear configuration error; real but low-impact observability nit."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/validation-checks/llm-grader.ts",
+    "line": "92-100",
+    "description": "gradeByCriteria sends response_format json_schema with strict:true to the Zhipu GLM base URL via the OpenAI SDK; if that endpoint ignores or rejects strict json_schema the model can return prose, causing JSON.parse(content) or GradingResponse.parse to throw and every criterion to be reported as a single grading error.",
+    "verdict": "UNCERTAIN",
+    "action": "DEFER",
+    "reason": "The code does send response_format json_schema strict:true to the Zhipu base URL (lines 92-100) and JSON.parse/GradingResponse.parse (line 107) would throw on prose, collapsing into one error entry; whether the GLM endpoint honors strict json_schema cannot be determined from the code, so the failure mode is plausible but unverified."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/services/validation-checks/deterministic.ts",
+    "line": "54",
+    "description": "new RegExp(pattern, 's') forces dotAll and never enables multiline, so rule authors cannot make ^/$ match per-line and cannot control case-insensitivity, silently altering the semantics of user-supplied patterns.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "Line 54 hardcodes new RegExp(pattern, 's'); DeterministicRule (types.ts 3959-3968) exposes no flags field, so authors cannot enable m/i and dotAll is always forced, changing pattern semantics; real but low-severity design limitation."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/services/validation-runner.ts",
+    "line": "169-175",
+    "description": "When isLlmMockEnabled() is true, the mock maps one synthetic passed check per LlmValidation rule (r => ...), but totalChecks counted criteria.length per rule, so passedChecks (number of definitions) does not match totalChecks (number of criteria) under the mock flag.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "Lines 169-175 map one synthetic passed check per llmRule, while countTotalChecks (line 229) summed criteria.length per rule, so under the mock flag passedChecks (def count) does not match totalChecks (criteria count); real but mock-only/cosmetic."
+  }
+]

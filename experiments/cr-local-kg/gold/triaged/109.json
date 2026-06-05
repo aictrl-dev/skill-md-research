@@ -1,0 +1,12 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/api/billing-routes.ts",
+    "line": "97",
+    "description": "The checkout seat check validates `seats < 1 || seats > 500` but does not assert `Number.isInteger(seats)`, so a fractional value like 2.5 passes validation and is forwarded to Stripe as line-item quantity.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "billing-routes.ts:97 only checks `typeof seats !== 'number' || seats < 1 || seats > 500`, and seats is passed unmodified into createCheckoutSession (billing.service.ts:125 `quantity: seats`), so a non-integer like 2.5 passes route validation; low impact since Stripe rejects non-integer quantity, but the missing Number.isInteger check is real."
+  }
+]

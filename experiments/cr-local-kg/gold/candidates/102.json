@@ -1,0 +1,9 @@
+[
+  {
+    "file": "server/state/postgres/oauth-store.ts",
+    "line": "243-249",
+    "severity": "MEDIUM",
+    "title": "touchToken does not satisfy its documented fire-and-forget contract",
+    "description": "touchToken is documented (here and in the port at lines 180-185) as a non-blocking fire-and-forget update that silently no-ops, but unlike the Firestore adapter (which wraps the update in try/catch and swallows/logs errors) and the legacy route (oauth-routes.ts:854 uses .catch), this implementation lets any DB error reject the promise, so a transient DB failure during the per-verification touch can break token verification."
+  }
+]

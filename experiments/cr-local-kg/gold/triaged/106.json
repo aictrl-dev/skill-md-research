@@ -1,0 +1,12 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/permission-config-builder.ts",
+    "line": "8-32",
+    "description": "The permission keys 'list', 'lsp', and 'codesearch' are valid configurable keys (ALL_PERMISSION_KEYS) and correspond to real OpenCode/aictrl runtime tools, but no entry in TOOL_TO_PERMISSION_KEY ever produces them; therefore any skill with a non-empty allowedTools list always gets list/lsp/codesearch set to 'ask' (deny in headless mode) with no tool name an author could declare to enable them, silently under-granting directory-listing and code-search capabilities the agent commonly auto-invokes.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "list/lsp/codesearch appear in ALL_PERMISSION_KEYS (line 30, labeled 'all permission keys that can be configured in aictrl') but in no branch of buildPermissionConfig — not in TOOL_TO_PERMISSION_KEY (lines 8-22), not in the mcp__/aictrl_ prefix branch (lines 81-84), and not in ALWAYS_ALLOWED_KEYS (line 54) — so the line 98 loop always assigns them 'ask' for any non-empty allowedTools, exactly the auto-invoked-but-undeclarable case the authors solved for task/todowrite/skill via ALWAYS_ALLOWED_KEYS."
+  }
+]

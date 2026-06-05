@@ -1,0 +1,30 @@
+[
+  {
+    "file": "server/api/workflow-run-routes.ts",
+    "line": "215-233",
+    "severity": "HIGH",
+    "title": "Restart authorization weaker than cancel: any org member can restart another user's run",
+    "description": "The cancel route restricts to run owner OR org admin (lines 185-191), but the restart route only calls checkOrgMember, so any non-owner org member can restart (and thereby re-attribute) a run they do not own."
+  },
+  {
+    "file": "server/api/workflow-run-routes.ts",
+    "line": "123",
+    "severity": "MEDIUM",
+    "title": "status query param coerced to WorkflowRunStatus without validation",
+    "description": "req.query.status is cast directly to WorkflowRunStatus[] (options.statuses = [status as WorkflowRunStatus]) with no check against the allowed enum ('queued'|'running'|'cancelling'|'completed'|'failed'|'cancelled'|'paused'), so an invalid status string is passed unchecked into listWorkflowRuns."
+  },
+  {
+    "file": "server/api/workflow-run-routes.ts",
+    "line": "118-124",
+    "severity": "LOW",
+    "title": "Non-positive / out-of-range limit not rejected",
+    "description": "limit is only guarded by !isNaN(limit); a negative or zero limit (e.g. ?limit=-5) passes the check and is forwarded to listWorkflowRuns without bounds validation."
+  },
+  {
+    "file": "server/api/workflow-run-routes.ts",
+    "line": "39-44",
+    "severity": "LOW",
+    "title": "inputs not validated as an object",
+    "description": "inputs is read from req.body and forwarded as inputs ?? {} (line 61) without verifying it is a plain object, so a client sending inputs as an array, string, or number passes it unchecked into orchestrator.startRun."
+  }
+]

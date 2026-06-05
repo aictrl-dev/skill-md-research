@@ -1,0 +1,9 @@
+[
+  {
+    "file": "server/lib/pagination.ts",
+    "line": "67-69",
+    "severity": "LOW",
+    "description": "decodeCursor cannot signal failure: Buffer.from(cursor, 'base64url') silently drops invalid characters instead of throwing, so a malformed or forged cursor decodes to a garbage string that callers (e.g. routes.ts:32) treat as a real doc ID; unlike every store-level decoder (admin-store/audit-store/task-template-store), it lacks a try/catch returning null on bad input.",
+    "title": "decodeCursor has no validation / cannot report a bad cursor"
+  }
+]

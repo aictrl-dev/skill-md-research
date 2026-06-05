@@ -1,0 +1,52 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "HIGH",
+    "file": "server/services/graph-build-service.ts",
+    "line": "106-113",
+    "description": "cleanupStaleJobs only queries status in ['cloning','building','syncing_issues'] and excludes 'queued', so a job that is created but never picked up by the executor (e.g. Pub/Sub publish failed before fallback, or process crashed before updateJobStatus) stays 'queued' forever and is never failed/cleaned.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "Line 112 omits 'queued' from the cleanup query, and a job stays 'queued' until the executor's first call updateJobStatus(...,'cloning') at executor.ts:179, so a Pub/Sub message lost after createJob or a crash before execute leaves an un-cleanable queued job."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "HIGH",
+    "file": "server/services/graph-build-service.ts",
+    "line": "88-96",
+    "description": "Because hasActiveJob counts 'queued' as active and cleanupStaleJobs never clears 'queued' jobs, a single stuck queued job makes hasActiveJob return true indefinitely, so the repo can never start another build (409 forever) and it permanently consumes a slot in countActiveJobs against the org concurrency limit.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "hasActiveJob includes 'queued' (line 91) and both triggers early-return on it (kg-routes.ts:658 returns 409, github-app-routes.ts:1541 skips), while countActiveJobs also counts 'queued' (line 100); combined with cleanup never clearing 'queued' (line 112), one orphaned queued job blocks the repo and consumes an org slot permanently."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/graph-build-service.ts",
+    "line": "53-65",
+    "description": "cleanupStaleJobs can mark a still-running job 'failed' (STALE_JOB_CLEANUP) while its executor keeps running and later calls updateJobStatus(...,'completed'), and since updateJobStatus does an unconditional update with no check that the current status is non-terminal, the stale-failed job is silently flipped back to completed (or vice-versa), corrupting the state machine.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "updateJobStatus does an unconditional .update(update) (line 64) with no terminal-state guard, and the stale threshold (10 min, line 107) equals the build timeout default (executor.ts:29 DEFAULT_BUILD_TIMEOUT_MS = 10 min), so a long-running job can be marked failed by cleanup at the boundary and then overwritten to 'completed' by the executor (executor.ts:248/538)."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/graph-build-service.ts",
+    "line": "53-65",
+    "description": "updateJobStatus uses Firestore .update() which rejects if the document does not exist; if a job doc was deleted (or never persisted) the executor's status writes throw an unhandled error instead of failing gracefully, unlike .set({merge:true}).",
+    "verdict": "UNCERTAIN",
+    "action": "DEFER",
+    "reason": "The factual claim is correct (line 64 uses .update() which Firestore rejects on missing docs), but no code path deletes graph-build-jobs docs (grep found none) and createJob awaits .set() (line 48) before the executor is ever called, so the missing-doc trigger is not demonstrated in this codebase."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/services/graph-build-service.ts",
+    "line": "25-51",
+    "description": "createJob performs an unconditional set with no transaction or uniqueness guard, and callers run hasActiveJob/countActiveJobs as separate reads beforehand, so two concurrent trigger requests for the same repo can both observe no active job and both createJob, producing duplicate concurrent builds and exceeding the org concurrency limit.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "createJob does an unconditional .set(job) with a random UUID and no transaction/uniqueness guard (lines 33,48), and both callers read hasActiveJob/countActiveJobs as separate ops before createJob (kg-routes.ts:657-678, github-app-routes.ts:1540-1567), a genuine TOCTOU allowing two concurrent triggers to both create active builds."
+  }
+]

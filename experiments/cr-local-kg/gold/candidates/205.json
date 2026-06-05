@@ -1,0 +1,37 @@
+[
+  {
+    "file": "server/lib/authorization.ts",
+    "line": "410-413",
+    "severity": "HIGH",
+    "title": "checkOrgAdminBySession grants admin access when session has no organizationId",
+    "description": "When the looked-up session has no organizationId, checkOrgAdminBySession returns { authorized: true } unconditionally, so any authenticated user passes the org-admin check for org-less sessions (e.g. in reflections-routes.ts approve/reject, any user can approve reflections on a session lacking org context)."
+  },
+  {
+    "file": "server/middleware/auth-guards.ts",
+    "line": "122-127",
+    "severity": "HIGH",
+    "title": "requireOrgRole/requireTeamAccess fully bypass authorization when auth is disabled",
+    "description": "When isAuthEnabled() is false these guards call next() and skip the membership/admin check entirely, granting full access — inconsistent with the equivalent factories in authorization.ts (requireOrgMember/requireOrgAdmin) which return 400, so the same routes behave as wide-open vs. closed depending on which guard set protects them."
+  },
+  {
+    "file": "server/middleware/auth-guards.ts",
+    "line": "188-206",
+    "severity": "MEDIUM",
+    "title": "requireTeamLeadOrAdmin returns 500 when auth is disabled",
+    "description": "requireTeamLeadOrAdmin has no auth-disabled branch and depends on req.authResult populated by requireTeamAccess, but when auth is disabled requireTeamAccess calls next() without setting req.authResult, so requireTeamLeadOrAdmin then responds 500 'must be used after requireTeamAccess' for every request, breaking the route under auth-disabled mode."
+  },
+  {
+    "file": "server/middleware/auth-guards.ts",
+    "line": "233-237",
+    "severity": "MEDIUM",
+    "title": "checkOrgSuspension fails open (calls next) when orgId param is missing",
+    "description": "If req.params[orgIdParam] is absent the guard calls next() and skips the suspension check; with its default orgIdParam='orgId' this means any route whose param is not literally named 'orgId' (e.g. team routes using ':id') silently bypasses suspension enforcement instead of failing closed."
+  },
+  {
+    "file": "server/middleware/auth-guards.ts",
+    "line": "83-89",
+    "severity": "LOW",
+    "title": "requireSuperAdmin session-freshness check silently skipped when authTime is absent",
+    "description": "The 15-minute admin session freshness enforcement is gated on `if (req.authTime)`, so any super-admin request lacking authTime (e.g. an auth path that sets isSuperAdmin but not authTime) bypasses the freshness requirement entirely rather than being rejected."
+  }
+]

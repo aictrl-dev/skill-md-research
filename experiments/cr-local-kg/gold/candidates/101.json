@@ -1,0 +1,9 @@
+[
+  {
+    "file": "server/services/risk-scoring.ts",
+    "line": "36-39",
+    "severity": "MEDIUM",
+    "title": "Unknown severity value produces NaN risk score",
+    "description": "computeRiskScore looks up SEVERITY_WEIGHTS[finding.severity] with no fallback, so any finding whose severity is not one of the four known keys (plausible for the loosely-structured LLM scanner findings the module explicitly accepts at runtime) yields undefined, turning the entire reduce result into NaN, which then propagates to getRiskLevel (returning 'high') and is persisted as the skill's riskScore."
+  }
+]

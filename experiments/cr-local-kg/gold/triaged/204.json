@@ -1,0 +1,52 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "HIGH",
+    "file": "server/mcp/tools/kg.ts",
+    "line": "89-94",
+    "description": "The Neo4j query matches File on {org_id, path} with LIMIT 1, but File nodes are unique only by (org_id, repo_id, path) (graph-build-executor.ts uses repoFullName as repo_id), so when an org has two connected repos sharing the same file path the fetcher picks an arbitrary repo and returns the wrong repo's content via that repo's installation token.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "init-schema.ts:18 enforces uniqueness on (org_id, repo_id, path) and notes the old (org_id, path) constraint was replaced; graph-build-executor.ts:170-171 sets repoId = repoFullName, so kg.ts:90 'MATCH (f:File {org_id, path}) ... LIMIT 1' is genuinely ambiguous across an org's repos and yields the wrong repo_id (then wrong installation token at line 105)."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "MEDIUM",
+    "file": "server/mcp/tools/kg.ts",
+    "line": "105",
+    "description": "getInstallationToken throws on revoked/suspended installations or GitHub 5xx, but the surrounding try/catch swallows it into return null (line 126), which code-read renders as 'File not found', hiding genuine auth/upstream errors from the caller.",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "github-app-service.ts:135-145 throws an Error on any non-ok access_tokens response; that throw at kg.ts:105 is inside the try whose catch (kg.ts:125-128) returns null, and code-read.ts:130-135 turns a null fetch into 'Error: File not found', so auth/upstream failures are indistinguishable from a missing file."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/mcp/tools/kg.ts",
+    "line": "110",
+    "description": "connection.defaultBranch is concatenated directly into the Contents API query string, so a branch name containing reserved URL characters (e.g. '#', '?', or spaces) produces a malformed URL or resolves the wrong ref.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "kg.ts:110 interpolates `?ref=${connection.defaultBranch}` raw while the path segments on line 109 are encodeURIComponent'd; a defaultBranch containing '#'/'%' would break the ref, though git forbids spaces/'?' in branch names so real-world impact is narrow (LOW)."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/services/github-app-service.ts",
+    "line": "119-149",
+    "description": "getInstallationToken has no token/JWT caching despite 1-hour TTL, so each code_read fallback (and every listAccessibleRepos/fetchPullRequestFiles/postPullRequestComment call) incurs an avoidable extra GitHub request.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "getInstallationToken (119-149) unconditionally generateJwt()'s and POSTs to access_tokens with no cache (no cache/Cache anywhere in the file), and it is the shared token source for listAccessibleRepos:234, fetchPullRequestFiles:321 and postPullRequestComment, confirming the avoidable round-trips; correctness-neutral efficiency issue."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/services/github-app-service.ts",
+    "line": "124",
+    "description": "The installationId is interpolated raw into the /app/installations/${installationId}/access_tokens path, inconsistent with getInstallationDetails (line 470) which wraps it in encodeURIComponent, leaving the value untrusted/unvalidated at this call site.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "line 124 interpolates installationId raw while getInstallationDetails:470 (and lines 522) use encodeURIComponent, a real inconsistency; impact is minimal since installationId is GitHub's numeric ID, so LOW/DEFER for consistency rather than a live bug."
+  }
+]

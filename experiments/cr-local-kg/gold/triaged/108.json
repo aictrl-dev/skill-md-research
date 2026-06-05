@@ -1,0 +1,32 @@
+[
+  {
+    "bot": "claude-oracle",
+    "severity": "HIGH",
+    "file": "server/api/code-review-routes.ts",
+    "line": "169-177",
+    "description": "The ISO_8601_RE only anchors the YYYY-MM-DD prefix and Date.parse accepts date-only values like '2024-01-01', but openedAt is stored as a full ISO timestamp and Firestore compares lexicographically, so until='2024-01-01' silently excludes every PR opened on that day (e.g. '2024-01-01T09:00:00Z' > '2024-01-01').",
+    "verdict": "TRUE",
+    "action": "FIX",
+    "reason": "ISO_8601_RE=/^\\d{4}-\\d{2}-\\d{2}/ (line 76) accepts date-only strings, until is passed verbatim to q.where('openedAt','<=',until) (manager line 795) and openedAt is z.string().datetime() full RFC3339 (line 213), so a date-only until lexicographically excludes same-day PRs with a time component."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/api/code-review-routes.ts",
+    "line": "174-177",
+    "description": "An inverted range such as since='2025-01-01'&until='2024-01-01' is accepted and produces a query that can never match, returning an empty list with 200 instead of a 400 indicating the bad range.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "since (169-177) and until (174-177) are each validated only for ISO format, with no since<=until comparison in the route or manager (manager lines 794-795 apply both bounds independently), so an inverted range yields an empty 200 page rather than a 400."
+  },
+  {
+    "bot": "claude-oracle",
+    "severity": "LOW",
+    "file": "server/api/code-review-routes.ts",
+    "line": "151-153",
+    "description": "The route only length-caps the cursor; a corrupt or tampered cursor is swallowed by the manager's decodeListCursor catch (logged as warn) and the listing silently restarts from the first page rather than returning a 400, masking client pagination bugs and producing duplicate results.",
+    "verdict": "TRUE",
+    "action": "DEFER",
+    "reason": "Route only validates cursor length (line 151), and manager listPullRequests wraps decodeListCursor in try/catch that logs warn and leaves startAfter=null (lines 803-809), so a malformed cursor silently restarts pagination from page one instead of erroring."
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "file": "server/api/billing-routes.ts",
+    "line": 97,
+    "severity": "LOW",
+    "title": "Seats validation allows non-integer values",
+    "description": "The checkout seat check validates `seats < 1 || seats > 500` but does not assert `Number.isInteger(seats)`, so a fractional value like 2.5 passes validation and is forwarded to Stripe as line-item quantity."
+  }
+]
