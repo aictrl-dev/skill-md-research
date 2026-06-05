@@ -1,10 +1,12 @@
 {
-  // aictrl CLI config for the control condition (NO KG MCP): local gemma via ollama
-  // (thinking OFF via reasoningEffort:none) + the aictrl KG MCP + the real
-  // explore-context / code-review skills. Use with:
-  //   AICTRL_CONFIG=$PWD/aictrl-treatment.jsonc AICTRL_MCP_TOKEN=... \
-  //     aictrl run --model ollama/gemma4:12b-cr --format json --dir <scratch> "<prompt>"
+  // aictrl CLI config for the CONTROL condition (NO KG MCP): local gemma via
+  // ollama (thinking OFF via reasoningEffort:none) + the explore-context /
+  // code-review skills, but the aictrl KG MCP is explicitly DISABLED so the
+  // reviewer has no query_context tool. NOTE: AICTRL_CONFIG merges with the
+  // user's global aictrl config, which defines the aictrl MCP — so we must set
+  // enabled:false here to suppress the inherited MCP (omitting it is NOT enough).
   "$schema": "https://aictrl.dev/config.json",
+  "mcp": { "aictrl": { "enabled": false } },
   "provider": {
     "ollama": {
       "npm": "@ai-sdk/openai-compatible",

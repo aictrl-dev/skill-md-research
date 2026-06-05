@@ -1,3 +1,4 @@
 results/raw/**/*.session.json
 results/raw/**/*.jsonl
 .env.local
+results/raw/**/*.log
