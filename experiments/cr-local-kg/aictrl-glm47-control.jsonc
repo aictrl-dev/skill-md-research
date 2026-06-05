@@ -1,0 +1,33 @@
+{
+  // aictrl config for the CONTROL condition using Zhipu GLM-4.7 (no KG MCP).
+  // Mirrors aictrl-control.jsonc but swaps the model to GLM-4.7 via Zhipu's
+  // OpenAI-compatible API. Used to compare GLM-4.7 vs gemma4:12b-cr on the
+  // same 20 tasks + same answer-key, KG disabled in both.
+  //
+  // Requirements:
+  //   export ZHIPU_API_KEY=<your-key>   # from https://open.bigmodel.cn
+  //   export AICTRL_CONFIG=$PWD/aictrl-glm47-control.jsonc
+  //   run-aictrl.sh --condition control --rep 1 --model zhipu/glm-4.7
+  "$schema": "https://aictrl.dev/config.json",
+  "mcp": { "aictrl": { "enabled": false } },
+  "provider": {
+    "zhipu": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Zhipu AI",
+      "options": {
+        "baseURL": "https://open.bigmodel.cn/api/paas/v4/",
+        "apiKey": "{env:ZHIPU_API_KEY}"
+      },
+      "models": {
+        "glm-4.7": {
+          "name": "GLM-4.7",
+          "tools": true,
+          "options": { "temperature": 0.7 }
+        }
+      }
+    }
+  },
+  "skills": {
+    "paths": ["/home/bulat/code/skill-md-research/experiments/cr-local-kg/runtime-skills"]
+  }
+}

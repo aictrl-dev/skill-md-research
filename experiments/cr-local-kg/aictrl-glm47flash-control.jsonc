@@ -1,0 +1,32 @@
+{
+  // aictrl config for the CONTROL condition using Zhipu GLM-4.7-flash (no KG MCP).
+  // Cheap fast variant — same 20 tasks, no KG, for cost/speed comparison vs
+  // gemma4:12b and GLM-4.7.
+  //
+  // Requirements:
+  //   export ZHIPU_API_KEY=<your-key>   # from https://open.bigmodel.cn
+  //   export AICTRL_CONFIG=$PWD/aictrl-glm47flash-control.jsonc
+  //   run-aictrl.sh --condition control --rep 1 --model zhipu/glm-4.7-flash
+  "$schema": "https://aictrl.dev/config.json",
+  "mcp": { "aictrl": { "enabled": false } },
+  "provider": {
+    "zhipu": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Zhipu AI",
+      "options": {
+        "baseURL": "https://open.bigmodel.cn/api/paas/v4/",
+        "apiKey": "{env:ZHIPU_API_KEY}"
+      },
+      "models": {
+        "glm-4.7-flash": {
+          "name": "GLM-4.7-flash",
+          "tools": true,
+          "options": { "temperature": 0.7 }
+        }
+      }
+    }
+  },
+  "skills": {
+    "paths": ["/home/bulat/code/skill-md-research/experiments/cr-local-kg/runtime-skills"]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  // aictrl config for the TREATMENT condition using Zhipu GLM-4.7 (KG MCP enabled).
+  // Tests whether GLM-4.7 + KG context improves over GLM-4.7 control, mirroring
+  // the gemma4 KG experiment (E-001 vs E-002).
+  //
+  // Requirements:
+  //   export ZHIPU_API_KEY=<your-key>
+  //   export AICTRL_MCP_TOKEN=<your-aictrl-token>
+  //   export AICTRL_CONFIG=$PWD/aictrl-glm47-treatment.jsonc
+  //   run-aictrl.sh --condition treatment --rep 1 --model zhipu/glm-4.7
+  "$schema": "https://aictrl.dev/config.json",
+  "provider": {
+    "zhipu": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Zhipu AI",
+      "options": {
+        "baseURL": "https://open.bigmodel.cn/api/paas/v4/",
+        "apiKey": "{env:ZHIPU_API_KEY}"
+      },
+      "models": {
+        "glm-4.7": {
+          "name": "GLM-4.7",
+          "tools": true,
+          "options": { "temperature": 0.7 }
+        }
+      }
+    }
+  },
+  "mcp": {
+    "aictrl": {
+      "type": "remote",
+      "url": "https://aictrl.dev/aictrl/mcp",
+      "enabled": true,
+      "headers": { "X-API-Key": "{env:AICTRL_MCP_TOKEN}" }
+    }
+  },
+  "skills": {
+    "paths": ["/home/bulat/code/skill-md-research/experiments/cr-local-kg/runtime-skills"]
+  }
+}

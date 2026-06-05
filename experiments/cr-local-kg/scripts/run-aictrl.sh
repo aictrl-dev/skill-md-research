@@ -20,6 +20,7 @@ while [[ $# -gt 0 ]]; do case $1 in
   --condition) COND="$2"; shift 2;;
   --rep) REP="$2"; shift 2;;
   --task) ONLY="$2"; shift 2;;
+  --model) MODEL="$2"; shift 2;;
   *) echo "unknown arg $1"; exit 1;;
 esac; done
 [[ -n "$COND" && -n "$REP" ]] || { echo "need --condition and --rep"; exit 1; }
