@@ -1,0 +1,28 @@
+{
+  "repo": "aictrl-dev/aictrl",
+  "pinCommit": "6b6bb39b44cc1d74a44d41ebd12a12139e17331f",
+  "pinDir": "/home/bulat/code/aictrl_main-cr-pin",
+  "tasks": [
+    { "id": 101, "class": "file", "title": "risk-scoring: aggregate score weighting + 0-100 bounds + severity mapping", "paths": ["server/services/risk-scoring.ts"] },
+    { "id": 102, "class": "file", "title": "oauth-store: token lifecycle, onConflictDoNothing idempotency, date round-trip", "paths": ["server/state/postgres/oauth-store.ts"] },
+    { "id": 103, "class": "file", "title": "security-policy: async enforcement state machine + race guard + audit trail", "paths": ["server/services/security-policy.ts"] },
+    { "id": 104, "class": "file", "title": "webhook-event-publisher: payload normalization + feature-flag dev fallback", "paths": ["server/services/webhook-event-publisher.ts"] },
+    { "id": 105, "class": "file", "title": "graph-build-service: KG build job state machine + stale-job cleanup", "paths": ["server/services/graph-build-service.ts"] },
+    { "id": 106, "class": "file", "title": "permission-config-builder: tool-name to permission-key mapping + allowlist", "paths": ["server/services/permission-config-builder.ts"] },
+    { "id": 107, "class": "file", "title": "lifecycle-event-validator: multi-validator envelope checks + error accumulation", "paths": ["server/services/lifecycle-event-validator.ts"] },
+    { "id": 108, "class": "file", "title": "code-review-routes: query-param validation, enum/date parsing, timing-leak guard", "paths": ["server/api/code-review-routes.ts"] },
+    { "id": 109, "class": "file", "title": "billing-routes: stripe signature handling + seat range validation + PII masking", "paths": ["server/api/billing-routes.ts"] },
+    { "id": 110, "class": "file", "title": "postgres db: AsyncLocalStorage transaction nesting + pool lifecycle + env bounds", "paths": ["server/state/postgres/db.ts"] },
+    { "id": 111, "class": "file", "title": "workflow-run-routes: auth checks + custom error-code propagation + status coercion", "paths": ["server/api/workflow-run-routes.ts"] },
+    { "id": 112, "class": "file", "title": "crypto: AES-GCM encrypt/decrypt, HKDF, timing-safe compare, env handling", "paths": ["server/lib/crypto.ts"] },
+    { "id": 113, "class": "file", "title": "api-key-store: race-safe harness key create/rotate, SELECT FOR UPDATE, 23505 mapping", "paths": ["server/state/postgres/api-key-store.ts"] },
+    { "id": 114, "class": "file", "title": "pagination: cursor base64url encode/decode + hasMore off-by-one + limit clamp", "paths": ["server/lib/pagination.ts"] },
+    { "id": 115, "class": "file", "title": "cache: LRU TTL wrapper, negative-miss handling, getOrFetch null semantics", "paths": ["server/lib/cache.ts"] },
+
+    { "id": 201, "class": "module", "title": "validation pipeline: runner orchestrates deterministic + llm-grader checks", "paths": ["server/services/validation-runner.ts", "server/services/validation-checks/deterministic.ts", "server/services/validation-checks/llm-grader.ts"] },
+    { "id": 202, "class": "module", "title": "integration CRUD: routes + zod-error formatter + integration-manager", "paths": ["server/api/integration-routes.ts", "server/lib/format-zod-error.ts", "server/state/integration-manager.ts"] },
+    { "id": 203, "class": "module", "title": "finding dedup: fingerprint hashing + snippet-presence locator (used together in reconcile)", "paths": ["server/services/finding-fingerprint.ts", "server/services/finding-snippet-locator.ts"] },
+    { "id": 204, "class": "module", "title": "KG content-fetch chain: query_context tool delegates to repo-connection + github-app services", "paths": ["server/mcp/tools/kg.ts", "server/services/repo-connection-service.ts", "server/services/github-app-service.ts"] },
+    { "id": 205, "class": "module", "title": "authorization: RBAC core (checkOrgMember/Admin) + guard middleware factories", "paths": ["server/lib/authorization.ts", "server/middleware/auth-guards.ts"] }
+  ]
+}
