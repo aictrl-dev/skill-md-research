@@ -1,26 +1,15 @@
 {
   // aictrl config for the TREATMENT condition using Zhipu GLM-4.7-flash (KG MCP enabled).
-  // Fast + cheap variant with KG context — tests whether KG compensates for model
-  // capability gap vs full GLM-4.7.
   //
-  // Requirements:
-  //   export ZHIPU_API_KEY=<your-key>
-  //   export AICTRL_MCP_TOKEN=<your-aictrl-token>
-  //   export AICTRL_CONFIG=$PWD/aictrl-glm47flash-treatment.jsonc
-  //   run-aictrl.sh --condition treatment --rep 1 --model zhipu/glm-4.7-flash
+  // Usage:
+  //   run-aictrl.sh --condition treatment --rep 1 \
+  //     --model zhipuai/glm-4.7-flash \
+  //     --config $PWD/aictrl-glm47flash-treatment.jsonc
   "$schema": "https://aictrl.dev/config.json",
   "provider": {
-    "zhipu": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Zhipu AI",
-      "options": {
-        "baseURL": "https://open.bigmodel.cn/api/paas/v4/",
-        "apiKey": "{env:ZHIPU_API_KEY}"
-      },
+    "zhipuai": {
       "models": {
         "glm-4.7-flash": {
-          "name": "GLM-4.7-flash",
-          "tools": true,
           "options": { "temperature": 0.7 }
         }
       }

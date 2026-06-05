@@ -1,27 +1,17 @@
 {
   // aictrl config for the TREATMENT condition using Zhipu GLM-4.7 (KG MCP enabled).
-  // Tests whether GLM-4.7 + KG context improves over GLM-4.7 control, mirroring
-  // the gemma4 KG experiment (E-001 vs E-002).
+  // Thinking disabled to match gemma4 experiment setup.
   //
-  // Requirements:
-  //   export ZHIPU_API_KEY=<your-key>
-  //   export AICTRL_MCP_TOKEN=<your-aictrl-token>
-  //   export AICTRL_CONFIG=$PWD/aictrl-glm47-treatment.jsonc
-  //   run-aictrl.sh --condition treatment --rep 1 --model zhipu/glm-4.7
+  // Usage:
+  //   run-aictrl.sh --condition treatment --rep 1 \
+  //     --model zhipuai/glm-4.7 \
+  //     --config $PWD/aictrl-glm47-treatment.jsonc
   "$schema": "https://aictrl.dev/config.json",
   "provider": {
-    "zhipu": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Zhipu AI",
-      "options": {
-        "baseURL": "https://open.bigmodel.cn/api/paas/v4/",
-        "apiKey": "{env:ZHIPU_API_KEY}"
-      },
+    "zhipuai": {
       "models": {
         "glm-4.7": {
-          "name": "GLM-4.7",
-          "tools": true,
-          "options": { "temperature": 0.7 }
+          "options": { "temperature": 0.7, "thinking": { "type": "disabled" } }
         }
       }
     }

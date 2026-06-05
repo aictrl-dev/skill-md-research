@@ -15,19 +15,26 @@ EXP_DIR="$(dirname "$SCRIPT_DIR")"
 MODEL="ollama/gemma4:12b-cr"
 SCRATCH=/tmp/cr-scratch; mkdir -p "$SCRATCH"
 
-COND=""; REP=""; ONLY=""
+COND=""; REP=""; ONLY=""; CONFIG_OVERRIDE=""
 while [[ $# -gt 0 ]]; do case $1 in
   --condition) COND="$2"; shift 2;;
   --rep) REP="$2"; shift 2;;
   --task) ONLY="$2"; shift 2;;
   --model) MODEL="$2"; shift 2;;
+  --config) CONFIG_OVERRIDE="$2"; shift 2;;
   *) echo "unknown arg $1"; exit 1;;
 esac; done
 [[ -n "$COND" && -n "$REP" ]] || { echo "need --condition and --rep"; exit 1; }
 
-export AICTRL_CONFIG="$EXP_DIR/aictrl-${COND}.jsonc"
+# config: explicit --config wins; else default aictrl-{cond}.jsonc
+if [[ -n "$CONFIG_OVERRIDE" ]]; then
+  export AICTRL_CONFIG="$CONFIG_OVERRIDE"
+else
+  export AICTRL_CONFIG="$EXP_DIR/aictrl-${COND}.jsonc"
+fi
+# always source .env.local for AICTRL_MCP_TOKEN + ZHIPU_API_KEY etc.
+[[ -f "$EXP_DIR/.env.local" ]] && { set -a; . "$EXP_DIR/.env.local"; set +a; }
 if [[ "$COND" == "treatment" ]]; then
-  set -a; . "$EXP_DIR/.env.local"; set +a
   [[ -n "${AICTRL_MCP_TOKEN:-}" ]] || { echo "treatment needs AICTRL_MCP_TOKEN in .env.local"; exit 1; }
 fi
 
@@ -54,10 +61,13 @@ for line in "${TASK_LINES[@]}"; do
   FIND="$OUT_DIR/PR-${ID}.findings.json"
 
   PROMPT="$(npx tsx -e '
-    const fs=require("fs");const repo=process.argv[1];const paths=process.argv[2].split(",");
+    const fs=require("fs");const repo=process.argv[1];const paths=process.argv[2].split(",");const cond=process.argv[3];
     const blocks=paths.map(p=>`\n--- FILE: ${p} ---\n\`\`\`\n${fs.readFileSync(repo+"/"+p,"utf8")}\n\`\`\`\n`).join("\n");
-    process.stdout.write("Use your code-review skill to review the following aictrl source file(s) for real defects. Follow the explore-context protocol: verify findings with query_context (callers/impact/search) before recording them. Output findings as a JSON array.\n"+blocks);
-  ' "$PIN_DIR" "$PATHS")"
+    const kgNote = cond==="treatment"
+      ? "Follow the explore-context protocol: verify findings with query_context (callers/impact/search) before recording them."
+      : "The code is provided inline — review it directly without graph tools.";
+    process.stdout.write(`Use your code-review skill to review the following aictrl source file(s) for real defects. ${kgNote} Output findings as a JSON array.\n${blocks}`);
+  ' "$PIN_DIR" "$PATHS" "$COND")"
   if [[ -z "$PROMPT" ]]; then echo "[$(date +%H:%M:%S)] SKIP $COND rep$REP task $ID — empty prompt"; continue; fi
 
   echo "[$(date +%H:%M:%S)] $COND rep$REP task $ID ($CLASS)"
