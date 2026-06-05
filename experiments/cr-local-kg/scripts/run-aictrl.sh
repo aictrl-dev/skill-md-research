@@ -45,11 +45,15 @@ npx tsx -e '
   ' "$PIN_DIR" "$PATHS")"
   echo "[$(date +%H:%M:%S)] $COND rep$REP task $ID ($CLASS)"
   START=$(date +%s)
+  # </dev/null: stop aictrl from consuming the while-loop's piped stdin (task list)
   aictrl run --print-logs --log-level INFO --format json --dir "$SCRATCH" --model "$MODEL" \
-    --title "cr-${COND}-${REP}-${ID}" "$PROMPT" >"$SESSION" 2>"$LOG" || true
+    --title "cr-${COND}-${REP}-${ID}" "$PROMPT" </dev/null >"$SESSION" 2>"$LOG" || true
   DUR=$(($(date +%s)-START))
   npx tsx "$SCRIPT_DIR/parse-session.ts" --session "$SESSION" --pr "$ID" --out "$OUT_DIR/PR-${ID}.findings.json"
-  KG=$(grep -c 'permission=aictrl_query_context' "$LOG" 2>/dev/null || echo 0)
+  # grep -c prints "0" AND exits 1 on no-match — capture cleanly (no '|| echo 0'
+  # which would emit "0\n0" and corrupt the CSV/meta). Force a single integer.
+  KG=$(grep -c 'permission=aictrl_query_context' "$LOG" 2>/dev/null) || true
+  [[ "$KG" =~ ^[0-9]+$ ]] || KG=0
   N=$(npx tsx -e 'console.log(JSON.parse(require("fs").readFileSync(process.argv[1])).findings.length)' "$OUT_DIR/PR-${ID}.findings.json")
   # persist per-review timing/KG so aggregate.ts + the report can use it
   printf '{"prNumber":%s,"condition":"%s","rep":%s,"class":"%s","durationSeconds":%s,"queryContextCalls":%s,"findings":%s}\n' \
