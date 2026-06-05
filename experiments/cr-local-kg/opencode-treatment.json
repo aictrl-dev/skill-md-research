@@ -21,7 +21,7 @@
       "enabled": true,
       "timeout": 10000,
       "headers": {
-        "Authorization": "Bearer {env:AICTRL_MCP_TOKEN}"
+        "X-API-Key": "{env:AICTRL_MCP_TOKEN}"
       }
     }
   }
