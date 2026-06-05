@@ -19,7 +19,8 @@
       }
     }
   },
+  // control uses isolated skills dir: code-review only, no explore-context
   "skills": {
-    "paths": ["/home/bulat/code/skill-md-research/experiments/cr-local-kg/runtime-skills"]
+    "paths": ["/home/bulat/code/skill-md-research/experiments/cr-local-kg/runtime-skills-control"]
   }
 }

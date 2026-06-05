@@ -13,6 +13,7 @@ set -uo pipefail   # NOT -e: one bad task must never kill the whole sweep
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 EXP_DIR="$(dirname "$SCRIPT_DIR")"
 MODEL="ollama/gemma4:12b-cr"
+RESULTS_DIR="raw"   # relative to $EXP_DIR/results/; override with --results-dir
 SCRATCH=/tmp/cr-scratch; mkdir -p "$SCRATCH"
 
 COND=""; REP=""; ONLY=""; CONFIG_OVERRIDE=""
@@ -22,6 +23,7 @@ while [[ $# -gt 0 ]]; do case $1 in
   --task) ONLY="$2"; shift 2;;
   --model) MODEL="$2"; shift 2;;
   --config) CONFIG_OVERRIDE="$2"; shift 2;;
+  --results-dir) RESULTS_DIR="$2"; shift 2;;
   *) echo "unknown arg $1"; exit 1;;
 esac; done
 [[ -n "$COND" && -n "$REP" ]] || { echo "need --condition and --rep"; exit 1; }
@@ -56,7 +58,7 @@ for line in "${TASK_LINES[@]}"; do
   for p in "${PARR[@]}"; do [[ -f "$PIN_DIR/$p" ]] || miss="$p"; done
   if [[ -n "$miss" ]]; then echo "[$(date +%H:%M:%S)] SKIP $COND rep$REP task $ID — missing $miss"; continue; fi
 
-  OUT_DIR="$EXP_DIR/results/raw/rep-${REP}/${COND}/${CLASS}s"; mkdir -p "$OUT_DIR"
+  OUT_DIR="$EXP_DIR/results/${RESULTS_DIR}/rep-${REP}/${COND}/${CLASS}s"; mkdir -p "$OUT_DIR"
   SESSION="$OUT_DIR/PR-${ID}.session.json"; LOG="$OUT_DIR/PR-${ID}.log"
   FIND="$OUT_DIR/PR-${ID}.findings.json"
 
@@ -65,7 +67,7 @@ for line in "${TASK_LINES[@]}"; do
     const blocks=paths.map(p=>`\n--- FILE: ${p} ---\n\`\`\`\n${fs.readFileSync(repo+"/"+p,"utf8")}\n\`\`\`\n`).join("\n");
     const kgNote = cond==="treatment"
       ? "Follow the explore-context protocol: verify findings with query_context (callers/impact/search) before recording them."
-      : "The code is provided inline — review it directly without graph tools.";
+      : "Review the code directly.";
     process.stdout.write(`Use your code-review skill to review the following aictrl source file(s) for real defects. ${kgNote} Output findings as a JSON array.\n${blocks}`);
   ' "$PIN_DIR" "$PATHS" "$COND")"
   if [[ -z "$PROMPT" ]]; then echo "[$(date +%H:%M:%S)] SKIP $COND rep$REP task $ID — empty prompt"; continue; fi
@@ -87,7 +89,7 @@ for line in "${TASK_LINES[@]}"; do
 
   printf '{"prNumber":%s,"condition":"%s","rep":%s,"class":"%s","durationSeconds":%s,"queryContextCalls":%s,"findings":%s}\n' \
     "$ID" "$COND" "$REP" "$CLASS" "$DUR" "$KG" "$N" > "$OUT_DIR/PR-${ID}.meta.json"
-  echo "$ID,$CLASS,$COND,$REP,$N,$KG,$DUR" >> "$EXP_DIR/results/timing.csv"
+  echo "$ID,$CLASS,$COND,$REP,$N,$KG,$DUR" >> "$EXP_DIR/results/${RESULTS_DIR}-timing.csv"
   echo "   -> $N findings, $KG query_context calls, ${DUR}s"
 done
 echo "done: $COND rep $REP"
