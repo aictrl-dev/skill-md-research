@@ -91,14 +91,30 @@ Pilot reviews on real task files exposed a blocker and its fix:
   authorized:true when session.organizationId is missing → authorization
   bypass"*, **which is exactly the gold TRUE finding 205-C1.**
 
-**opencode CANNOT disable thinking for this model — confirmed exhaustively.**
-Three approaches all leave thinking on (review → `[]`, 150–300 s):
-`options.think:false`, model-level `thinking:{type:disabled}`, and the schema's
-real field model-level `reasoning:false`. Root cause is architectural: opencode
-drives ollama over the **OpenAI-compatible `/v1`** endpoint, which has **no
-thinking parameter** — ollama's `think` flag exists only on its **native
-`/api/chat`**. `reasoning:false` only affects providers with native AI-SDK
-reasoning (Anthropic/OpenAI), not the openai-compatible→ollama transport.
+**opencode / aictrl-CLI CANNOT run gemma4 without thinking — confirmed
+exhaustively (6 opencode routes + model-level, all fail; raw `/v1` works).**
+
+| approach | result |
+|---|---|
+| raw ollama `/v1` `reasoning_effort:"none"` | ✅ 7 s, real findings — the lever EXISTS |
+| raw ollama `/api/chat` `think:false` | ✅ 6–11 s, real findings |
+| opencode `options.think:false` | ✗ timeout / `[]` |
+| opencode model `thinking:{type:disabled}` | ✗ timeout / `[]` |
+| opencode model `reasoning:false` (schema's real field) | ✗ timeout / `[]` |
+| opencode `options.reasoning_effort:"none"` | ✗ timeout / `[]` |
+| opencode `--variant minimal` / `--variant none` | ✗ timeout / `[]` |
+| ollama Modelfile `PARAMETER think false` | ✗ "unknown parameter" |
+
+Root cause: gemma4 thinks by default over ollama; the only disable is
+`reasoning_effort:"none"`, honored **only** at the raw `/v1` layer; opencode's
+openai-compatible provider does **not** forward any reasoning control into the
+request body (its `reasoning`/`--variant` controls are wired for native
+AI-SDK reasoning providers like Anthropic/OpenAI, not the openai-compatible→
+ollama transport), and ollama has no Modelfile-level thinking toggle. The
+production executor avoids this only because it runs **GLM-5.1**, whose Coder
+API returns reasoning AND a usable final answer. **`aictrl run` is an opencode
+fork (v0.3.2, same flags) → same gap.** So the production CLI runtime cannot be
+used to test a local thinking-model like gemma4; the native runner is required.
 
 **Decision: drive ollama's native `/api/chat` (with `think:false`) directly,
 not opencode.** Native chat supports `think:false` **and** tool-calling together.
