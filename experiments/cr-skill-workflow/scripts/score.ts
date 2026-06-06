@@ -109,7 +109,48 @@ for (const s of ['file','module']) {
   const c = prf(byScope[s]); console.log(`  ${s}: F1=${r3(c.f1)} (n=${byScope[s].n})`);
 }
 
+// ── Union-of-reps F1 ──
+// For each PR, pool findings across ALL reps, dedup on file+line overlap, score
+// once. This is the apples-to-apples comparison against the 0.355 union-of-3
+// baseline: it answers "if you ran the process N times and merged, how good?".
+// The per-run number above is the stricter "single execution" metric.
+function unionScore(): Agg {
+  const byPR: Record<string, Finding[]> = {};
+  for (const rep of reps) {
+    for (const sub of ['files', 'modules']) {
+      const dir = path.join(resultsBase, expId, `rep-${rep}`, 'treatment', sub);
+      if (!fs.existsSync(dir)) continue;
+      for (const f of fs.readdirSync(dir)) {
+        if (!/^PR-\d+\.findings\.json$/.test(f)) continue;
+        const data = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')) as { prNumber?: number; findings?: Finding[] };
+        const pr = String(data.prNumber ?? f.match(/PR-(\d+)/)?.[1]);
+        (byPR[pr] ??= []);
+        for (const sf of (data.findings ?? [])) {
+          const dup = byPR[pr].some(ex => ex.file === sf.file && overlap(parseLine(ex.line), parseLine(sf.line)));
+          if (!dup) byPR[pr].push(sf);
+        }
+      }
+    }
+  }
+  const agg = blank();
+  for (const [pr, findings] of Object.entries(byPR)) {
+    const tmp = path.join(resultsBase, `.union-${pr}.json`);
+    fs.writeFileSync(tmp, JSON.stringify({ prNumber: Number(pr), findings }));
+    scoreFile(tmp, agg);
+    fs.unlinkSync(tmp);
+  }
+  return agg;
+}
+const u = unionScore();
+const up = prf(u);
+console.log(`  union-of-${reps.length}: P=${r3(up.p)} R=${r3(up.r)} F1=${r3(up.f1)} | TP=${u.tp} FP=${u.fp} FN=${u.fn} novels=${u.novels} n=${u.n}`);
+
 // Write scores.json
 const scoresPath = path.join(resultsBase, expId, 'scores.json');
-fs.writeFileSync(scoresPath, JSON.stringify({ expId, reps, overall: { ...o, ...overall }, byScope: Object.fromEntries(Object.entries(byScope).map(([k,v])=>[k,{...prf(v),...v}])) }, null, 2));
+fs.writeFileSync(scoresPath, JSON.stringify({
+  expId, reps,
+  overall: { ...o, ...overall },
+  byScope: Object.fromEntries(Object.entries(byScope).map(([k,v])=>[k,{...prf(v),...v}])),
+  union: { ...up, ...u },
+}, null, 2));
 console.log(`\nscores.json → ${scoresPath}`);

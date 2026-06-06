@@ -32,14 +32,32 @@ make the prompt's KG step more forceful or move enrichment into its own DAG node
 4. If probe F1 ≥ baseline × 0.90, run full sweep: `bash scripts/run-research-loop.sh --eval`
 5. The loop script commits on improvement, reverts on regression.
 
+## Target & budget
+- **Goal: beat the union-of-3 trick (per-run F1 > 0.355) with a single DAG execution.**
+- **AI node budget: ≤ 5 model calls per task.** Iterate on DAG *structure* within that budget.
+- Recall is the bottleneck (baseline R=0.13, ~34/100 TRUE found). The lever is coverage:
+  diverse passes unioned find more distinct true defects than identical reps.
+
 ## Hypotheses backlog (try in order)
 
-1. ✅ **exp-001**: Structured 4-step workflow (scan→enrich→filter→output) — did it beat baseline?
-2. ✅ **exp-002**: Two-pass chain (pass 2 hunts for what pass 1 missed)
-3. **Next**: KG pre-fetch node — inject callers/impact for all functions before the review model runs
-4. Confidence threshold tuning — raise minimum confidence to reduce FP
-5. Module-scope: cross-file summarisation before reviewing individual files
-6. Iterative refinement: a third pass that only re-examines dropped candidates
+1. ✅ **exp-001**: 4-step type-1 workflow (scan→enrich→filter→output). Probe F1 ~0.22–0.24.
+2. ✅ **exp-002**: Two-pass union chain (pass2 hunts what pass1 missed; output:union).
+3. 🔄 **exp-003**: 5-specialist UNION panel (security/correctness/concurrency/validation/
+   edgecases, reviewed independently, output:union). Detailed 5-task probe: F1=0.333,
+   P=0.455, R=0.263, novels=30 — recall ~2× baseline. Full sweep running.
+4. **Next levers if exp-003 < 0.355:**
+   - Replace weakest specialist lens with a duplicate of the strongest (measure per-lens TP).
+   - Add a 5th-node "second look" that re-reads only high-density files for more recall.
+   - Push specialists to be MORE exhaustive (raise finding volume → recall), accept lower P.
+   - Precision guard: a final filter node OR confidence threshold to trim FP if P collapses.
+   - KG-prefetch node feeding callers/impact into one review node (precision aid).
+
+## Notes
+- novels (findings matching no oracle entry) are NOT scored as FP under relaxed F1, but a
+  high novel count = lots of unverified output. Track it; if recall stalls while novels
+  balloon, the model is hallucinating rather than finding real bugs.
+- Probes (5 tasks, 1 rep) are NOISY (saw 0.257 vs 0.333 on the same DAG). Use them only to
+  filter; trust the full 20×3 sweep for keep/discard decisions.
 
 ## What has been tried
 (see research/results.tsv)
