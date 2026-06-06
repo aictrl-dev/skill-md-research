@@ -226,3 +226,105 @@ An experiment is considered a positive signal if:
 - TP count increases without FP count increasing proportionally
 
 Negative results are equally valuable — they rule out hypotheses and narrow the search space.
+
+---
+
+## Autoresearch loop (adapted from github.com/karpathy/autoresearch)
+
+The framework supports a fully autonomous research loop where an AI agent proposes, runs, scores, and commits or reverts experiments without human intervention.
+
+### Component mapping
+
+| Autoresearch | cr-skill-workflow |
+|---|---|
+| `train.py` (agent modifies) | `current/` directory — SKILL.md + dag.yaml |
+| `val_bpb` metric | F1 per-run from `score.ts` |
+| `TIME_BUDGET = 300s` | Probe run: 5 representative tasks × 1 rep (~5 min) |
+| `program.md` | `research/loop.md` — standing instructions for the AI researcher |
+| `results.tsv` | `research/results.tsv` + Google Sheet row |
+| git commit / `git reset` | Same — commit if improved, revert if not |
+
+### The `current/` convention
+
+Rather than numbered experiment directories for in-flight work, the agent always modifies `experiments/cr-skill-workflow/current/` — the live candidate. On success it is copied to `exp-NNN/` and committed. On failure, `git reset` discards the change.
+
+```
+experiments/cr-skill-workflow/
+  current/          ← agent always edits this
+    SKILL.md        (type 1) or dag.yaml + prompts/ (type 2)
+  exp-001-…/        ← committed, kept experiments
+  exp-002-…/
+  research/
+    loop.md         ← standing meta-instructions for the AI researcher
+    results.tsv     ← append-only run log (never committed, lives in .gitignore)
+```
+
+### `research/loop.md`
+
+The human-iterable instructions that guide the AI researcher. Starts minimal, grows as we learn what works:
+
+```markdown
+# Code Review Research Loop
+
+## Goal
+Maximize per-run F1 for Gemma 4 on the 20-task benchmark.
+Baseline: per-run F1 = 0.204, union-of-3 F1 = 0.355.
+
+## What you control
+Modify `current/SKILL.md` (type 1) or `current/dag.yaml` + prompt templates (type 2).
+Never modify `answer-key.json`, task files, or the scoring scripts.
+
+## Hypotheses to explore (in order)
+1. Structured multi-step workflow (scan → enrich → filter → output)
+2. Two-pass chain (pass 2 sees pass 1 findings)
+3. KG pre-fetch as a separate node injecting callers/impact
+4. Confidence-weighted filtering (drop findings below threshold before second pass)
+5. …(extended as we learn)
+
+## What has been tried
+(see research/results.tsv)
+```
+
+### The iteration loop
+
+```
+while true:
+  1. Read research/loop.md and research/results.tsv
+  2. Propose a change to current/ (edit SKILL.md or dag.yaml/prompts)
+  3. PROBE: run-workflow.sh --exp current --rep 1 --tasks probe-5
+     → quick F1 on 5 representative tasks (~5 min)
+  4. If probe F1 < baseline × 0.90: skip full sweep, record discard, git reset, continue
+  5. FULL SWEEP: run-workflow.sh --exp current --reps 3
+     → F1 on all 20 tasks, 3 reps
+  6. If full F1 > best_so_far:
+       copy current/ → exp-NNN/
+       git commit -m "exp-NNN: <hypothesis>"
+       update best_so_far
+       append KEEP row to results.tsv + Google Sheet
+     else:
+       git reset HEAD current/
+       append DISCARD row to results.tsv + Google Sheet
+```
+
+### `research/results.tsv` format
+
+Tab-separated, append-only, not committed to git:
+
+```
+commit    exp_id    f1_probe  f1_full  f1_union3  status   description
+HEAD      exp-001   0.211     0.218    0.371      keep     structured 4-step workflow
+HEAD~1    exp-002   0.194     —        —          discard  two-pass: probe below threshold
+HEAD~1    exp-003   0.207     0.221    0.378      keep     KG callers injected before pass1
+```
+
+### Probe task set
+
+5 tasks representative of the full 20 (3 file-scope, 2 module-scope), chosen to cover a range of bug types. Fixed as `research/probe-tasks.txt` so probe results are comparable across iterations.
+
+### Autonomous run command
+
+```bash
+scripts/run-research-loop.sh [--iterations N] [--min-improvement 0.005]
+```
+
+Runs the loop for N iterations (default: until manually stopped). Stops early if F1 has not improved in 5 consecutive full sweeps (convergence signal). `--min-improvement` sets the ΔF1 threshold for a KEEP vs DISCARD decision (default: 0.005).
