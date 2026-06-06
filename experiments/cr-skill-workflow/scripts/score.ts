@@ -26,13 +26,22 @@ const get = (flag: string, def: string) => {
 const expId = get('--exp', '');
 const resultsBase = get('--results-base', path.join(EXP_DIR, 'results'));
 const reps = get('--reps', '1,2,3').split(',').map(s => s.trim());
+// --min-confidence N drops findings with confidence < N before scoring. A
+// finding with no confidence field is kept (treated as 10) so absence never
+// silently filters it. Lets us precision-tune verbose panels for free.
+const minConf = Number(get('--min-confidence', '0'));
 if (!expId) { console.error('Usage: score.ts --exp <exp-id>'); process.exit(1); }
 
 const AK_PATH = path.join(EXP_DIR, 'answer-key.json');
 const ak: Record<string, AKEntry[]> = JSON.parse(fs.readFileSync(AK_PATH, 'utf8'));
 
 interface AKEntry { verdict: string; action: string; file: string; line: string; }
-interface Finding { file: string; line?: number | string; }
+interface Finding { file: string; line?: number | string; confidence?: number }
+
+/** Apply the --min-confidence gate. Missing confidence ⇒ kept. */
+function passesConf(f: Finding): boolean {
+  return (f.confidence ?? 10) >= minConf;
+}
 
 function parseLine(l: string | number | undefined) {
   if (l == null || l === '') return null;
@@ -57,7 +66,7 @@ const r3 = (n: number) => (Math.round(n * 1000) / 1000).toFixed(3);
 function scoreFile(fullPath: string, into: Agg) {
   const data = JSON.parse(fs.readFileSync(fullPath, 'utf8')) as { prNumber?: number; findings?: Finding[] };
   const pr = String(data.prNumber ?? fullPath.match(/PR-(\d+)/)?.[1]);
-  const findings: Finding[] = data.findings ?? [];
+  const findings: Finding[] = (data.findings ?? []).filter(passesConf);
   const labels = ak[pr] ?? [];
   const usedAK = new Set<number>(), usedF = new Set<number>();
   findings.forEach((sf, i) => {
@@ -125,7 +134,7 @@ function unionScore(): Agg {
         const data = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')) as { prNumber?: number; findings?: Finding[] };
         const pr = String(data.prNumber ?? f.match(/PR-(\d+)/)?.[1]);
         (byPR[pr] ??= []);
-        for (const sf of (data.findings ?? [])) {
+        for (const sf of (data.findings ?? []).filter(passesConf)) {
           const dup = byPR[pr].some(ex => ex.file === sf.file && overlap(parseLine(ex.line), parseLine(sf.line)));
           if (!dup) byPR[pr].push(sf);
         }

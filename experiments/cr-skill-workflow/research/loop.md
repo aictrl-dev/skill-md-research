@@ -52,6 +52,15 @@ make the prompt's KG step more forceful or move enrichment into its own DAG node
    - Precision guard: a final filter node OR confidence threshold to trim FP if P collapses.
    - KG-prefetch node feeding callers/impact into one review node (precision aid).
 
+## Findings
+- **exp-003 single-execution F1 ≈ 0.40 on full rep-1 (20 tasks)** — beats the 0.355
+  union-of-3 baseline with ONE execution. Recall 0.40 (3× baseline), precision 0.40.
+- **gemma confidence is uncalibrated.** `--min-confidence` sweep on exp-003 rep-1:
+  conf≥0 F1=0.399, ≥6 0.387, ≥7 0.358, ≥8 0.234, ≥9 0.178. Raising the cutoff only
+  loses recall; precision stays ~0.40 until ≥9 (where recall collapses). ⇒ Do NOT
+  gate on self-reported confidence. Precision must come from INDEPENDENT signals:
+  judge node, KG-verify (callers=0), or cross-specialist vote count (≥2 lenses agree).
+
 ## Notes
 - novels (findings matching no oracle entry) are NOT scored as FP under relaxed F1, but a
   high novel count = lots of unverified output. Track it; if recall stalls while novels
