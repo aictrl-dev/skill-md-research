@@ -1,0 +1,20 @@
+id: exp-009-fifteen-lens-union
+hypothesis: "15 distinct parallel lenses unioned — does breadth keep lifting recall/F2 past 10 lenses, or saturate? AI nodes = 15; union terminal."
+reps: 3
+nodes:
+  apicontract: { prompt: prompts/apicontract.md, inputs: [code], outputs: [findings] }
+  arithmetic: { prompt: prompts/arithmetic.md, inputs: [code], outputs: [findings] }
+  authz: { prompt: prompts/authz.md, inputs: [code], outputs: [findings] }
+  boundary: { prompt: prompts/boundary.md, inputs: [code], outputs: [findings] }
+  concurrency: { prompt: prompts/concurrency.md, inputs: [code], outputs: [findings] }
+  config: { prompt: prompts/config.md, inputs: [code], outputs: [findings] }
+  errors: { prompt: prompts/errors.md, inputs: [code], outputs: [findings] }
+  idempotency: { prompt: prompts/idempotency.md, inputs: [code], outputs: [findings] }
+  injection: { prompt: prompts/injection.md, inputs: [code], outputs: [findings] }
+  logic: { prompt: prompts/logic.md, inputs: [code], outputs: [findings] }
+  nullsafety: { prompt: prompts/nullsafety.md, inputs: [code], outputs: [findings] }
+  resources: { prompt: prompts/resources.md, inputs: [code], outputs: [findings] }
+  secrets: { prompt: prompts/secrets.md, inputs: [code], outputs: [findings] }
+  statemachine: { prompt: prompts/statemachine.md, inputs: [code], outputs: [findings] }
+  validation: { prompt: prompts/validation.md, inputs: [code], outputs: [findings] }
+output: union
