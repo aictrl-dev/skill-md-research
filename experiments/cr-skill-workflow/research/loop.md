@@ -133,6 +133,19 @@ distinct lenses.** gemma is stochastic, so repeating a lens surfaces different r
 run; union captures them. More distinct lenses just rediscover the same set. exp-010 is the
 strongest config found; full 3-rep sweep running for the headline number.
 
+## Directed resampling wins (H-013) — current best
+Head-to-head on real-bug subset (rep-1, same session):
+- exp-010 (5×3 INDEPENDENT):    REAL recall 0.667, F2 0.523, F1 0.395, FP 41
+- **exp-011 (5×3 DIRECTED rounds): REAL recall 0.816 (20/24 real bugs), F2 0.581, F1 0.406, FP 54**
+- exp-003 union-of-3-reps (ref): REAL recall 0.681, F2 0.497
+
+Telling rounds 2–3 "these are already found — look elsewhere" converts rediscovery-overlap
+into fresh coverage: recall 0.67→0.82. Cost: more FP/novels (predicted), precision ~flat.
+**exp-011 is the strongest config found.** Full 3-rep sweep running for the headline.
+Progression of the winning idea: 5-lens union → resample ×3 (recall lever) → DIRECT the
+resampling (coverage lever). Next idea if needed: per-round dedup/verify to claw back the
+extra FP without losing the recall.
+
 ## Standing recommendation
 Future benchmark should pin a **buildable, runnable repo** (deps + test runner). That single
 change unblocks the two strongest precision levers — static-analysis nodes AND test execution
