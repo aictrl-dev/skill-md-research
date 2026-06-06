@@ -1,0 +1,26 @@
+A first pass has already reviewed the code below and found these issues:
+
+```json
+{{ pass1.findings }}
+```
+
+Your task is the **second pass**: find defects the first pass missed.
+
+Rules:
+1. Do NOT repeat findings already listed above (same file + line range).
+2. Focus on code paths, edge cases, and interactions the first pass did not examine.
+3. Pay special attention to: error paths, concurrent access, boundary conditions,
+   implicit assumptions about caller behaviour.
+
+Output **only new findings** (not in the first-pass list) as a single JSON array
+inside one ```json fenced block** and nothing after it.
+
+```json
+[
+  { "file": "path/to/file.ts", "line": 42, "severity": "HIGH",
+    "title": "short title", "description": "one specific sentence",
+    "confidence": 8 }
+]
+```
+
+Output `[]` if you find nothing new.

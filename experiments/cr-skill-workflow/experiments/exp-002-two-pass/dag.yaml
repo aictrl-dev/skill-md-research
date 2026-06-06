@@ -1,0 +1,13 @@
+id: exp-002-two-pass
+hypothesis: "Second pass sees first-pass findings and hunts for what was missed, increasing recall"
+reps: 3
+nodes:
+  pass1:
+    prompt: prompts/pass1.md
+    inputs: [code]
+    outputs: [findings]
+  pass2:
+    prompt: prompts/pass2.md.j2
+    inputs: [code, pass1.findings]
+    outputs: [findings]
+output: pass2
