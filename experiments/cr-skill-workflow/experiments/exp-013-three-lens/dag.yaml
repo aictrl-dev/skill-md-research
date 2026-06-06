@@ -1,0 +1,8 @@
+id: exp-013-three-lens
+hypothesis: "3-lens union (validation/edgecases/concurrency, the top-3 by unique TP in ablation) — low-end point: how much of the 5-lens F2 do 3 lenses retain?"
+reps: 3
+nodes:
+  validation: { prompt: prompts/validation.md, inputs: [code], outputs: [findings] }
+  edgecases: { prompt: prompts/edgecases.md, inputs: [code], outputs: [findings] }
+  concurrency: { prompt: prompts/concurrency.md, inputs: [code], outputs: [findings] }
+output: union

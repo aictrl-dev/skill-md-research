@@ -1,0 +1,15 @@
+id: exp-012-directed-r2
+hypothesis: "Directed resampling R=2 (10 nodes): how much of the R=3 (exp-011, 15-node) gain does 2 rounds capture? Finds the efficiency knee of the directed family."
+reps: 3
+nodes:
+  security_r1: { prompt: prompts/security_r1.md, inputs: [code], outputs: [findings] }
+  correctness_r1: { prompt: prompts/correctness_r1.md, inputs: [code], outputs: [findings] }
+  concurrency_r1: { prompt: prompts/concurrency_r1.md, inputs: [code], outputs: [findings] }
+  validation_r1: { prompt: prompts/validation_r1.md, inputs: [code], outputs: [findings] }
+  edgecases_r1: { prompt: prompts/edgecases_r1.md, inputs: [code], outputs: [findings] }
+  security_r2: { prompt: prompts/security_r2.md, inputs: [code], outputs: [findings] }
+  correctness_r2: { prompt: prompts/correctness_r2.md, inputs: [code], outputs: [findings] }
+  concurrency_r2: { prompt: prompts/concurrency_r2.md, inputs: [code], outputs: [findings] }
+  validation_r2: { prompt: prompts/validation_r2.md, inputs: [code], outputs: [findings] }
+  edgecases_r2: { prompt: prompts/edgecases_r2.md, inputs: [code], outputs: [findings] }
+output: union

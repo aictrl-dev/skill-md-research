@@ -1,0 +1,6 @@
+id: exp-014-single
+hypothesis: "Single comprehensive reviewer (1 node) — the floor of the curve; how far above this does multi-node get us?"
+reps: 3
+nodes:
+  review: { prompt: prompts/review.md, inputs: [code], outputs: [findings] }
+output: review
