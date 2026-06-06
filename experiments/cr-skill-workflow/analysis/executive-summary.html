@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>cr-skill-workflow — Executive Summary</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{--ink:#1a2233;--muted:#5b6677;--line:#e3e8ef;--bg:#f7f9fc;--accent:#9467bd;--good:#2ca02c;--bad:#d62728;--blue:#1f77b4;--orange:#ff7f0e;}
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 20px 80px}
+  h1{font-size:30px;margin:0 0 4px} h2{font-size:21px;margin:38px 0 12px;border-bottom:2px solid var(--line);padding-bottom:6px}
+  h3{font-size:16px;margin:20px 0 8px;color:var(--muted)}
+  .sub{color:var(--muted);margin:0 0 8px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 2px rgba(20,30,60,.04)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+  table{border-collapse:collapse;width:100%;font-size:14px;margin:6px 0}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left}
+  th{background:#eef2f8;font-weight:600} tr:nth-child(even) td{background:#fafcff}
+  .win{background:#eaf7ee!important;font-weight:600}
+  .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;color:#fff;margin-right:4px}
+  .t-good{background:var(--good)} .t-bad{background:var(--bad)} .t-acc{background:var(--accent)} .t-mut{background:var(--muted)}
+  .kpi{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0}
+  .kpi .b{flex:1;min-width:150px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .kpi .n{font-size:26px;font-weight:700} .kpi .l{font-size:12px;color:var(--muted)}
+  figure{margin:0} figcaption{font-size:12px;color:var(--muted);text-align:center;margin-top:6px}
+  .dag{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:900px){.dag{grid-template-columns:1fr 1fr}}@media(max-width:600px){.dag{grid-template-columns:1fr}}
+  .dagcard{border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff}
+  .dagcard h4{margin:2px 0 2px;font-size:14px} .dagcard p{margin:0 0 6px;font-size:12px;color:var(--muted)}
+  svg{width:100%;height:auto}
+  code{background:#eef2f8;padding:1px 5px;border-radius:4px;font-size:13px}
+  .note{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Local-Gemma Code Review — Workflow Research</h1>
+<p class="sub">Maximising <b>Gemma-4-12B</b> (local, thinking off) code-review quality by searching over DAG workflow shapes. Benchmark: 20 tasks from the <code>aictrl</code> TypeScript service, scored against a 387-entry oracle (137 TRUE / 43 real-impact / 246 FALSE). Owner: byapparov · 2026-06-06.</p>
+
+<div class="kpi">
+  <div class="b"><div class="n">0.355&rarr;0.49</div><div class="l">FULL-set F1 vs the union-of-3 baseline (single execution beats the trick)</div></div>
+  <div class="b"><div class="n">0.581</div><div class="l">Best REAL-set F2 (directed resampling, real-bug subset)</div></div>
+  <div class="b"><div class="n">20 / 24</div><div class="l">real bugs found by the winning shape (vs Haiku 1-pass 13/43)</div></div>
+  <div class="b"><div class="n">N=10</div><div class="l">efficiency sweet spot: 89% of max F2 at ⅔ the calls</div></div>
+</div>
+
+<h2>Executive summary</h2>
+<div class="card">
+<p>We built a DAG workflow engine for code review (model nodes + deterministic script nodes; <code>union</code> / <code>judge</code> / <code>proof-obligation</code> / <code>directed-rounds</code> transitions; dual F1 + recall-weighted <b>F2</b> scoring; an autoresearch loop) and swept the topology space. Findings:</p>
+<ul>
+<li><b>Diverse specialists, unioned, is the recall engine.</b> 5 independent lenses (security / correctness / concurrency / validation / edge-cases) merged → tripled recall over a single pass and beat the 0.355 union-of-3 baseline with one execution (FULL F1 0.44 / union-of-3 0.49).</li>
+<li><b>Spend budget on resampling, not on more distinct lenses.</b> Distinct-lens breadth saturates at ~5 (10 and 15 distinct lenses are flat). Re-running the same 5 lenses and unioning lifts recall sharply.</li>
+<li><b>Direct the resampling and it wins.</b> Telling later rounds "these are already found — look elsewhere" converts rediscovery-overlap into fresh coverage: REAL recall 0.67→0.82, REAL F2 0.52→0.58. <span class="tag t-acc">winner</span></li>
+<li><b>Every model-side precision lever failed.</b> Judge/filter nodes delete recall; self-confidence is uncalibrated; proof-obligation (require a failing test) cuts hallucinations 4× but sacrifices too much recall. For a 12B model, precision must come from an <i>external</i> signal (static analysis / test execution), which the isolated-snippet benchmark can't run.</li>
+<li><b>Frontier vs local:</b> Haiku 4.5 single-pass = honest precision 0.39 but recall only 0.32 (13/43 real). The cheap local ensemble matches/exceeds frontier <i>recall</i> at $0 — it just trades precision and ~15× the calls. Implies a <b>cheap-generator + strong-verifier</b> pipeline.</li>
+</ul>
+</div>
+
+<h2>Headline results</h2>
+<table>
+<tr><th>Configuration</th><th>AI nodes</th><th>REAL F1</th><th>REAL F2</th><th>recall</th><th>precision</th><th>note</th></tr>
+<tr><td>gemma single pass</td><td>1</td><td>0.24</td><td>0.19</td><td>0.17</td><td>0.40</td><td>floor</td></tr>
+<tr><td>gemma 5-lens union</td><td>5</td><td>0.36</td><td>0.41</td><td>0.46</td><td>0.30</td><td>recall engine</td></tr>
+<tr class="win"><td>gemma directed resampling (5×3)</td><td>15</td><td>0.41</td><td><b>0.58</b></td><td>0.82</td><td>0.27</td><td>best shape</td></tr>
+<tr><td>gemma directed R2</td><td>10</td><td>0.39</td><td>0.52</td><td>0.67</td><td>0.27</td><td>efficient</td></tr>
+<tr><td>Haiku 4.5 single pass *</td><td>1</td><td>0.35</td><td>0.33</td><td>0.32</td><td>0.39</td><td>honest frontier-tier</td></tr>
+<tr><td>Opus single pass *†</td><td>1</td><td>0.73</td><td>0.67</td><td>0.63</td><td>0.87†</td><td>† precision circular</td></tr>
+</table>
+<p class="note">gemma rows: REAL-set on the real-bug-rich subset (recall-comparable). * Haiku/Opus on the full oracle (different basis). † Opus authored the original oracle, so its precision is structurally inflated; compare recall.</p>
+
+<h2>DAG shapes we tried</h2>
+<div class="dag" id="dags"></div>
+
+<h2>Response curves</h2>
+<p class="sub">Quality (REAL-set F2) vs cost. Cost shown two ways: individual LLM calls, and total tokens for a full 20×3 sweep (input-dominated — each node re-sends the file, ~15.7k tokens/call). Square points are non-directed topologies at the same node count, showing <b>shape matters more than size</b>.</p>
+<div class="grid">
+  <figure class="card"><canvas id="callsChart" height="240"></canvas><figcaption>Individual LLM calls → REAL F2 (directed family + topology variants)</figcaption></figure>
+  <figure class="card"><canvas id="tokChart" height="240"></canvas><figcaption>Total tokens (full 20×3 sweep) → REAL F2</figcaption></figure>
+</div>
+<p class="note">Diminishing returns: F2/node falls 0.090 → 0.013 as nodes grow. <b>N=10 directed</b> captures 89% of the 15-node F2 at ⅔ the cost; <b>N=5 union</b> is the budget option (71% at ⅓). No hard saturation within 15.</p>
+
+<h2>What worked / what didn't</h2>
+<div class="grid">
+<div class="card"><h3>Levers that help</h3>
+<p><span class="tag t-good">union</span> merge diverse lenses → recall<br/>
+<span class="tag t-good">resampling</span> repeat lenses ×N, union → more recall<br/>
+<span class="tag t-good">directed rounds</span> carry findings forward, "look elsewhere" → coverage</p></div>
+<div class="card"><h3>Dead ends</h3>
+<p><span class="tag t-bad">judge node</span> filtering deletes recall<br/>
+<span class="tag t-bad">confidence gate</span> gemma confidence uncalibrated<br/>
+<span class="tag t-bad">more distinct lenses</span> saturates at 5<br/>
+<span class="tag t-mut">proof-obligation</span> best precision, but recall collapses</p></div>
+</div>
+
+<h2>Recommendation</h2>
+<div class="card">
+<p><b>Ship the directed-resampling panel</b> (5 lenses × directed rounds). Pick the point on the curve by budget: <b>R3 / 15 calls</b> for max recall, <b>R2 / 10 calls</b> for the best cost-quality, <b>5-lens union</b> when calls are scarce. For precision, pair it with a strong-model or <b>test-execution verifier</b> — the one lever that could cut false positives without losing recall, unblocked only on a <b>buildable, runnable repo</b> (the current isolated-snippet benchmark can't compile/run tests).</p>
+</div>
+
+<p class="note">Generated from cr-skill-workflow experiments E-001…E-014 + model baselines. Numbers are micro-averaged; gemma curve points are single-rep real-bug-subset probes (±0.03 variance).</p>
+</div>
+
+<script>
+const C={code:'#eef2f8',lens:'#e8eefc',out:'#eaf7ee',bad:'#fde7e7',acc:'#efe7f7',kg:'#fff3e0',line:'#9aa7bd',ink:'#1a2233'};
+function box(x,y,w,h,fill,label,fs){return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${fill}" stroke="${C.line}"/><text x="${x+w/2}" y="${y+h/2+4}" font-size="${fs||11}" text-anchor="middle" fill="${C.ink}">${label}</text>`;}
+function arr(x1,y1,x2,y2){return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${C.line}" stroke-width="1.5" marker-end="url(#a)"/>`;}
+const defs=`<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="${C.line}"/></marker></defs>`;
+function svg(inner,h){return `<svg viewBox="0 0 260 ${h}" xmlns="http://www.w3.org/2000/svg">${defs}${inner}</svg>`;}
+const dags=[
+ {t:"Single review",n:"1 node · floor",d:()=>svg(box(10,40,70,28,C.code,"code")+arr(80,54,110,54)+box(110,40,60,28,C.lens,"review")+arr(170,54,200,54)+box(200,40,52,28,C.out,"find",10),108)},
+ {t:"5-lens union",n:"5 nodes · recall engine",d:()=>{let s=box(8,52,46,24,C.code,"code",10);const ys=[8,32,56,80,104];const nm=["security","correct.","concur.","validat.","edge"];ys.forEach((y,i)=>{s+=arr(54,64,86,y+12);s+=box(86,y,90,24,C.lens,nm[i],10);s+=arr(176,y+12,206,64);});s+=box(206,52,46,24,C.out,"union",10);return svg(s,128)}},
+ {t:"Judge (FAILED)",n:"4 lenses → judge",d:()=>{let s=box(8,40,42,24,C.code,"code",10);const nm=["sec","corr","conc","valid"];[8,34,60,86].forEach((y,i)=>{s+=arr(50,52,80,y+10);s+=box(80,y,70,20,C.lens,nm[i],10);s+=arr(150,y+10,176,52);});s+=box(176,40,46,24,C.bad,"judge",10);s+=arr(222,52,240,52)+box(240,40,16,24,C.out,"",10);return svg(s,116)}},
+ {t:"Proof-obligation",n:"5 lenses + repro/test",d:()=>{let s=box(8,52,46,24,C.code,"code",10);[8,32,56,80,104].forEach((y)=>{s+=arr(54,64,86,y+12);s+=box(86,y,96,24,C.acc,"lens +proof",10);s+=arr(182,y+12,206,64);});s+=box(206,52,46,24,C.out,"union",10);return svg(s,128)}},
+ {t:"5×3 independent",n:"15 nodes · resampling",d:()=>{let s=box(6,52,40,24,C.code,"code",10);for(let r=0;r<3;r++){for(let i=0;i<5;i++){const y=4+i*24;s+=box(60+r*54,y,50,20,C.lens,"L"+(i+1),9);}}[60,114,168].forEach(x=>s+=arr(46,64,x,64));s+=arr(218,64,236,64)+box(236,52,20,24,C.out,"∪",11);return svg(s,128)}},
+ {t:"5×3 DIRECTED ★",n:"15 nodes · winner",d:()=>{let s=box(4,52,38,24,C.code,"code",9);s+=arr(42,64,58,64);
+   s+=box(58,40,46,20,C.lens,"round1",9);s+=box(58,66,46,20,C.lens,"5 lens",9);
+   s+=arr(104,60,120,60)+box(120,40,52,20,C.acc,"round2",9)+box(120,66,52,20,C.acc,"see r1",9);
+   s+=arr(172,60,186,60)+box(186,40,52,20,C.acc,"round3",9)+box(186,66,52,20,C.acc,"see r1,2",9);
+   s+=arr(212,86,212,100)+box(150,100,70,22,C.out,"union all",10);return svg(s,132)}},
+ {t:"KG-prefetch",n:"script node (free)",d:()=>{let s=box(6,40,40,24,C.code,"code",10)+arr(46,52,66,52)+box(66,40,64,24,C.kg,"KG script",10)+arr(130,52,150,52);
+   [30,56,82].forEach(y=>s+=box(150,y-12,80,20,C.lens,"lens+ctx",9));s+=arr(230,52,244,52)+box(244,40,12,24,C.out,"",10);return svg(s,112)}},
+];
+document.getElementById("dags").insertAdjacentHTML("beforeend",dags.map(g=>`<div class="dagcard"><h4>${g.t}</h4><p>${g.n}</p><figure>${g.d()}</figure></div>`).join(""));
+
+const directed=[{x:1,y:0.192},{x:3,y:0.372},{x:5,y:0.414},{x:10,y:0.516},{x:15,y:0.581}];
+const others=[{x:5,y:0.198,e:"proof-oblig"},{x:10,y:0.407,e:"10-lens"},{x:15,y:0.420,e:"15-lens"},{x:15,y:0.523,e:"5×3 indep"}];
+const TOK=15700*60;
+const mkTok=a=>a.map(p=>({x:+(p.x*TOK/1e6).toFixed(2),y:p.y,e:p.e}));
+function chart(id,xlabel,dir,oth){
+ new Chart(document.getElementById(id),{data:{datasets:[
+   {type:"line",label:"directed family (best per node)",data:dir,borderColor:"#9467bd",backgroundColor:"#9467bd",tension:.25,pointRadius:5,fill:false},
+   {type:"scatter",label:"other topologies (same size, worse)",data:oth,borderColor:"#888",backgroundColor:"#bbb",pointRadius:5,pointStyle:"rectRot"}
+ ]},options:{responsive:true,plugins:{legend:{labels:{font:{size:11}}},
+   tooltip:{callbacks:{label:c=>`${c.raw.e?c.raw.e+": ":""}F2=${c.raw.y} @ ${c.raw.x} ${xlabel.indexOf("token")>=0?"M tok":"calls"}`}}},
+   scales:{x:{type:"linear",title:{display:true,text:xlabel}},y:{title:{display:true,text:"REAL-set F2"},min:0.15,max:0.62}}}});
+}
+chart("callsChart","individual LLM calls (AI nodes)",directed,others);
+chart("tokChart","total tokens, millions (full 20×3 sweep)",mkTok(directed),mkTok(others));
+</script>
+</body>
+</html>
