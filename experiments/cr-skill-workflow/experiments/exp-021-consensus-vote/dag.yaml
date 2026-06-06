@@ -1,0 +1,20 @@
+id: exp-021-consensus-vote
+hypothesis: "H-018 CONSENSUS VOTE. Same 15 INDEPENDENT voters as exp-010 (5 lenses x3, no direction so voters can rediscover the same bug), but terminal merge = vote: keep every finding (recall preserved) and annotate votes (number of resamples agreeing) + nLenses. Offline analysis on exp-010 probe data showed REAL precision rises monotonically with votes (0.36 keep-all to 0.50 at votes>=3 to 0.80 at votes>=5) — the first LOCAL precision signal that lifts without a model judge deleting recall. This run gets the full 20-task, held-out-calibrated F2 (rank-f2.ts) to confirm consensus beats keep-all on UNSEEN tasks. AI nodes = 15; vote terminal."
+reps: 3
+nodes:
+  security_1: { prompt: prompts/security.md, inputs: [code], outputs: [findings] }
+  security_2: { prompt: prompts/security.md, inputs: [code], outputs: [findings] }
+  security_3: { prompt: prompts/security.md, inputs: [code], outputs: [findings] }
+  correctness_1: { prompt: prompts/correctness.md, inputs: [code], outputs: [findings] }
+  correctness_2: { prompt: prompts/correctness.md, inputs: [code], outputs: [findings] }
+  correctness_3: { prompt: prompts/correctness.md, inputs: [code], outputs: [findings] }
+  concurrency_1: { prompt: prompts/concurrency.md, inputs: [code], outputs: [findings] }
+  concurrency_2: { prompt: prompts/concurrency.md, inputs: [code], outputs: [findings] }
+  concurrency_3: { prompt: prompts/concurrency.md, inputs: [code], outputs: [findings] }
+  validation_1: { prompt: prompts/validation.md, inputs: [code], outputs: [findings] }
+  validation_2: { prompt: prompts/validation.md, inputs: [code], outputs: [findings] }
+  validation_3: { prompt: prompts/validation.md, inputs: [code], outputs: [findings] }
+  edgecases_1: { prompt: prompts/edgecases.md, inputs: [code], outputs: [findings] }
+  edgecases_2: { prompt: prompts/edgecases.md, inputs: [code], outputs: [findings] }
+  edgecases_3: { prompt: prompts/edgecases.md, inputs: [code], outputs: [findings] }
+output: vote

@@ -146,6 +146,31 @@ Progression of the winning idea: 5-lens union → resample ×3 (recall lever) �
 resampling (coverage lever). Next idea if needed: per-round dedup/verify to claw back the
 extra FP without losing the recall.
 
+## CONSENSUS VOTE — the first local precision signal that works (H-018)
+Two independent literature-review agents converged: small-model review = candidate discovery
+(optimise recall); hard LLM judges delete recall (matches our exp-004/005); and the missing
+lever is **statistical agreement across decorrelated resamples**, not model self-judgment.
+
+Built (gemma-only, no execution, no extra AI nodes):
+- `output: vote` merge (run-workflow.sh) — clusters findings across resample nodes by file+line±5,
+  keeps EVERY cluster (recall preserved), annotates `votes` (# nodes agreeing) + `nLenses`.
+- `score.ts --min-votes N` — threshold on agreement (not on uncalibrated self-confidence).
+- `rank-f2.ts` — calibrates the (minVotes,minLenses) cut on a TRAIN split, reports HELD-OUT F2.
+- `vote-analyze.ts` — retroactive vote analysis from persisted per-node files (zero GPU).
+
+**Offline result (zero GPU) on exp-010's real 15-voter data — hypothesis HOLDS:**
+REAL precision rises monotonically with votes — `votes>=1` P=0.362 (21/21 real) → `>=3` P=0.500
+(7/21) → `>=5` P=0.800 (4/21) → `>=6` P=1.000. 1-vote findings are mostly junk (9 realTP vs 18
+FP + 27 novels). exp-007 (proof-obligation, *directed* not independent) shows NO signal →
+confirms consensus needs **independent** voters that can rediscover, not directed/judge shapes.
+
+**Design tension (important):** coverage-direction *suppresses* rediscovery (tells r2/r3 to skip
+known findings) → kills the vote signal. So the two ideas need separate configs:
+- **exp-020-coverage-directed** (output:vote, 5 lenses × 3 DIRECTED rounds + structured
+  coverage-map script node) = the RECALL generator (extends exp-011; target: beat R3 F2 0.581).
+- **exp-021-consensus-vote** (output:vote, 5 lenses × 3 INDEPENDENT) = the PRECISION/consensus
+  experiment; votes are informative here. Both ready; need a full-20-task GPU run when free.
+
 ## Standing recommendation
 Future benchmark should pin a **buildable, runnable repo** (deps + test runner). That single
 change unblocks the two strongest precision levers — static-analysis nodes AND test execution

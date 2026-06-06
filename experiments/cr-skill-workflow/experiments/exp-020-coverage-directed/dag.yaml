@@ -1,0 +1,34 @@
+id: exp-020-coverage-directed
+hypothesis: "H-014 (coverage-guided directed resampling + consensus vote). Replace exp-011's free-text 'look elsewhere' carry-forward with a STRUCTURED coverage map (already_found / covered_files / covered_bug_classes / unexplored_symbols / unexplored_failure_modes) computed by a deterministic script node between rounds, so rounds 2-3 target the exact uncovered cells. Terminal merge = `vote`: keep every finding (recall preserved) but annotate each with votes (# resamples agreeing) and nLenses (# lenses agreeing) — the first LOCAL precision signal, calibrated for F2 on held-out tasks by rank-f2.ts. Targets: beat exp-011 R2 F2 0.516 @10 calls / R3 0.581 @15, and let the vote cut lift precision without the recall loss that every model-side judge caused. AI nodes = 15 (2 script nodes are free)."
+reps: 3
+nodes:
+  security_r1:    { prompt: prompts/security_r1.md,    inputs: [code], outputs: [findings] }
+  correctness_r1: { prompt: prompts/correctness_r1.md, inputs: [code], outputs: [findings] }
+  concurrency_r1: { prompt: prompts/concurrency_r1.md, inputs: [code], outputs: [findings] }
+  validation_r1:  { prompt: prompts/validation_r1.md,  inputs: [code], outputs: [findings] }
+  edgecases_r1:   { prompt: prompts/edgecases_r1.md,   inputs: [code], outputs: [findings] }
+
+  coverage_r2:
+    type: script
+    run: scripts/coverage-map.ts
+    inputs: [code, security_r1.findings, correctness_r1.findings, concurrency_r1.findings, validation_r1.findings, edgecases_r1.findings]
+    outputs: [context]
+
+  security_r2:    { prompt: prompts/security_r2.md,    inputs: [code, coverage_r2.context], outputs: [findings] }
+  correctness_r2: { prompt: prompts/correctness_r2.md, inputs: [code, coverage_r2.context], outputs: [findings] }
+  concurrency_r2: { prompt: prompts/concurrency_r2.md, inputs: [code, coverage_r2.context], outputs: [findings] }
+  validation_r2:  { prompt: prompts/validation_r2.md,  inputs: [code, coverage_r2.context], outputs: [findings] }
+  edgecases_r2:   { prompt: prompts/edgecases_r2.md,   inputs: [code, coverage_r2.context], outputs: [findings] }
+
+  coverage_r3:
+    type: script
+    run: scripts/coverage-map.ts
+    inputs: [code, security_r2.findings, correctness_r2.findings, concurrency_r2.findings, validation_r2.findings, edgecases_r2.findings]
+    outputs: [context]
+
+  security_r3:    { prompt: prompts/security_r3.md,    inputs: [code, coverage_r3.context], outputs: [findings] }
+  correctness_r3: { prompt: prompts/correctness_r3.md, inputs: [code, coverage_r3.context], outputs: [findings] }
+  concurrency_r3: { prompt: prompts/concurrency_r3.md, inputs: [code, coverage_r3.context], outputs: [findings] }
+  validation_r3:  { prompt: prompts/validation_r3.md,  inputs: [code, coverage_r3.context], outputs: [findings] }
+  edgecases_r3:   { prompt: prompts/edgecases_r3.md,   inputs: [code, coverage_r3.context], outputs: [findings] }
+output: vote

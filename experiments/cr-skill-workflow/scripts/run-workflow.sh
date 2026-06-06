@@ -187,6 +187,39 @@ if [[ -f "$EXP_PATH/dag.yaml" ]]; then
         }
         fs.writeFileSync(process.env.FIND, JSON.stringify({prNumber:pr, findings:all}, null, 2));
       ' "$ID" "$TASK_SCRATCH"/findings-*.json
+    elif [[ "$OUTPUT_NODE" == "vote" ]]; then
+      # CONSENSUS-VOTE merge (exp-020/021). Cluster findings across ALL resample
+      # nodes by file + overlapping line (+/-5, same tolerance the scorer uses) and
+      # keep EVERY cluster (recall preserved), but annotate each with:
+      #   votes   = # of distinct resample nodes that surfaced it  (statistical
+      #             agreement — the first LOCAL precision signal, not a model judge)
+      #   nLenses = # of distinct lenses (node name minus _r<round>) that agreed
+      # The representative finding is the cluster member with the most specific
+      # line and the highest self-confidence. score.ts --min-votes thresholds on
+      # `votes`; rank-f2.ts calibrates a held-out F2 cut over these features.
+      FIND="$FIND" npx tsx -e '
+        const fs=require("fs"), path=require("path");
+        const pr=parseInt(process.argv[1]);
+        const TOL=5;
+        const ln=(l)=>{ if(l==null||l==="") return null; const m=String(l).match(/^(\d+)/); return m?parseInt(m[1]):null; };
+        const clusters=[]; // {file, line, members:[{f,node,lens,conf}], votes:Set, lenses:Set, rep}
+        for (const fp of process.argv.slice(2)) {
+          const node=path.basename(fp,".json").replace(/^findings-/,"");
+          const lens=node.replace(/_(?:r|round)?\d+$/,"");
+          for (const x of (JSON.parse(fs.readFileSync(fp,"utf8")).findings ?? [])) {
+            const xl=ln(x.line);
+            let c=clusters.find(c=>c.file===x.file && ((c.line==null)===(xl==null)) && (c.line==null||Math.abs(c.line-xl)<=TOL));
+            if(!c){ c={file:x.file,line:xl,votes:new Set(),lenses:new Set(),rep:x,repConf:(x.confidence??0)}; clusters.push(c); }
+            c.votes.add(node); c.lenses.add(lens);
+            // prefer a representative with a concrete line, then higher confidence
+            const better=(xl!=null && c.line==null) || ((x.confidence??0)>c.repConf);
+            if(better){ c.rep=x; c.repConf=(x.confidence??0); if(c.line==null) c.line=xl; }
+          }
+        }
+        const all=clusters.map(c=>({...c.rep, votes:c.votes.size, nLenses:c.lenses.size}));
+        all.sort((a,b)=>(b.votes-a.votes)||((b.confidence??0)-(a.confidence??0)));
+        fs.writeFileSync(process.env.FIND, JSON.stringify({prNumber:pr, findings:all}, null, 2));
+      ' "$ID" "$TASK_SCRATCH"/findings-*.json
     else
       cp "$TASK_SCRATCH/findings-${OUTPUT_NODE}.json" "$FIND"
     fi

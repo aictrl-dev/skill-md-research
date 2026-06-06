@@ -30,6 +30,11 @@ const reps = get('--reps', '1,2,3').split(',').map(s => s.trim());
 // finding with no confidence field is kept (treated as 10) so absence never
 // silently filters it. Lets us precision-tune verbose panels for free.
 const minConf = Number(get('--min-confidence', '0'));
+// --min-votes N drops consensus-vote findings (exp-020/021) with votes < N. A
+// finding with no `votes` field is kept (treated as Infinity) so this never
+// filters non-vote experiments. votes = # of decorrelated resamples that
+// surfaced the finding — statistical agreement, the first LOCAL precision signal.
+const minVotes = Number(get('--min-votes', '0'));
 // --tasks 105,201,... restricts scoring to those PR ids (for probe-subset reads).
 const taskFilter = new Set(get('--tasks', '').split(',').map(s => s.trim()).filter(Boolean));
 const prAllowed = (pr: string) => taskFilter.size === 0 || taskFilter.has(pr);
@@ -48,11 +53,11 @@ interface AKEntry { verdict: string; action: string; file: string; line: string;
 // A TRUE entry counts toward the REAL set unless explicitly tagged theoretical.
 // (Untagged TRUE defaults to real, so real-set == full-set until tagging lands.)
 const isRealTrue = (lbl: AKEntry) => lbl.verdict === 'TRUE' && (lbl.impact ?? 'real') === 'real';
-interface Finding { file: string; line?: number | string; confidence?: number }
+interface Finding { file: string; line?: number | string; confidence?: number; votes?: number }
 
-/** Apply the --min-confidence gate. Missing confidence ⇒ kept. */
+/** Apply the --min-confidence and --min-votes gates. Missing field ⇒ kept. */
 function passesConf(f: Finding): boolean {
-  return (f.confidence ?? 10) >= minConf;
+  return (f.confidence ?? 10) >= minConf && (f.votes ?? Infinity) >= minVotes;
 }
 
 function parseLine(l: string | number | undefined) {
