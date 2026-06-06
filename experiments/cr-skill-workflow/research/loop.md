@@ -108,7 +108,21 @@ callers/impact) is the recommended next experiment.
   precision lever (judge, confidence, pruning, union) fails or hurts.
 - Results + hypotheses synced to the Google Sheet (E-003/E-003r/E-003u/E-003ur, E-004, E-005;
   H-008 confirmed, H-009 refuted, H-010 confirmed).
-- Open next step (not yet run): KG-prefetch script node for precision.
+## Open experiments (precision phase, continued)
+- exp-006 KG-prefetch (script node → specialists): probe ~neutral (FP 24→21, recall down);
+  full sweep ABANDONED mid-rep-1 (slow: ~16 KG queries/task/rep ≈ 2.5h) for the higher-EV
+  proof-obligation lever. KG context = marginal nudge, not a breakthrough for a 12B model.
+- **exp-007 PROOF OBLIGATION (H-011, RUNNING):** each finding must carry repro steps + a
+  unit test that fails on the current code; drop anything unsubstantiatable. Generation-time
+  precision gate (unlike the failed judge node).
+- **H-012 (deferred, runtime blocker): EXECUTE the proposed tests** on the spot, keep only
+  findings whose test genuinely fails — ground-truth FP removal. Needs a buildable+runnable
+  repo (same prerequisite as static-analysis nodes); impossible on isolated snippets.
+
+## Standing recommendation
+Future benchmark should pin a **buildable, runnable repo** (deps + test runner). That single
+change unblocks the two strongest precision levers — static-analysis nodes AND test execution
+(H-012) — which the current isolated-snippet task-files cannot support.
 
 ## Notes
 - novels (findings matching no oracle entry) are NOT scored as FP under relaxed F1, but a
