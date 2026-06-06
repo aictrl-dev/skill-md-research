@@ -1,0 +1,9 @@
+{
+  "$schema": "https://aictrl.dev/config.json",
+  "mcp": { "aictrl": { "enabled": false } },
+  "provider": {
+    "zhipuai": {
+      "models": { "glm-4.7": { "options": { "temperature": 0.7, "thinking": { "type": "disabled" } } } }
+    }
+  }
+}

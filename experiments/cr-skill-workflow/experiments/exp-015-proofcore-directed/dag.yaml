@@ -1,0 +1,20 @@
+id: exp-015-proofcore-directed
+hypothesis: "H-014: proof-obligated round 1 (each finding has repro+failing test = objectively high-confidence core) feeds directed rounds 2-3 that look elsewhere. Hybrid of the winner (exp-011 directed) + proof-obligation (exp-007). Aim: keep directed recall while the carried-forward signal is clean (no FP misdirecting later rounds), and yield a precision-tagged subset. 15 nodes; union."
+reps: 3
+nodes:
+  security_r1: { prompt: prompts/security_r1.md, inputs: [code], outputs: [findings] }
+  correctness_r1: { prompt: prompts/correctness_r1.md, inputs: [code], outputs: [findings] }
+  concurrency_r1: { prompt: prompts/concurrency_r1.md, inputs: [code], outputs: [findings] }
+  validation_r1: { prompt: prompts/validation_r1.md, inputs: [code], outputs: [findings] }
+  edgecases_r1: { prompt: prompts/edgecases_r1.md, inputs: [code], outputs: [findings] }
+  security_r2: { prompt: prompts/security_r2.md, inputs: [code], outputs: [findings] }
+  correctness_r2: { prompt: prompts/correctness_r2.md, inputs: [code], outputs: [findings] }
+  concurrency_r2: { prompt: prompts/concurrency_r2.md, inputs: [code], outputs: [findings] }
+  validation_r2: { prompt: prompts/validation_r2.md, inputs: [code], outputs: [findings] }
+  edgecases_r2: { prompt: prompts/edgecases_r2.md, inputs: [code], outputs: [findings] }
+  security_r3: { prompt: prompts/security_r3.md, inputs: [code], outputs: [findings] }
+  correctness_r3: { prompt: prompts/correctness_r3.md, inputs: [code], outputs: [findings] }
+  concurrency_r3: { prompt: prompts/concurrency_r3.md, inputs: [code], outputs: [findings] }
+  validation_r3: { prompt: prompts/validation_r3.md, inputs: [code], outputs: [findings] }
+  edgecases_r3: { prompt: prompts/edgecases_r3.md, inputs: [code], outputs: [findings] }
+output: union

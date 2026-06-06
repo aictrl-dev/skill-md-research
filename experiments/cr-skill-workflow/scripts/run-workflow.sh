@@ -34,11 +34,15 @@ PIN_DIR="$(npx tsx -e 'console.log(JSON.parse(require("fs").readFileSync(process
 # Both are loaded so every experiment can reach the knowledge graph.
 SKILLS_PATH="$EXP_PATH/skills"
 BASE_SKILLS_PATH="$EXP_DIR/base-skills"
+# Per-experiment config override: experiments/<id>/aictrl.jsonc wins over the
+# shared default (lets an experiment flip thinking on, change model opts, etc.).
+CONFIG_SRC="$EXP_DIR/aictrl-workflow.jsonc"
+[[ -f "$EXP_PATH/aictrl.jsonc" ]] && CONFIG_SRC="$EXP_PATH/aictrl.jsonc"
 TMP_CONFIG=$(mktemp /tmp/aictrl-wf-XXXXXX.jsonc)
 trap 'rm -f "$TMP_CONFIG"' EXIT
 sed -e "s|__BASE_SKILLS_PATH__|$BASE_SKILLS_PATH|g" \
     -e "s|__SKILLS_PATH__|$SKILLS_PATH|g" \
-    "$EXP_DIR/aictrl-workflow.jsonc" > "$TMP_CONFIG"
+    "$CONFIG_SRC" > "$TMP_CONFIG"
 export AICTRL_CONFIG="$TMP_CONFIG"
 
 # --- TYPE DETECTION ---
