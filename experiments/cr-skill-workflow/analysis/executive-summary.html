@@ -6,7 +6,7 @@
 <title>cr-skill-workflow — Executive Summary</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 <style>
-  :root{--ink:#1a2233;--muted:#5b6677;--line:#e3e8ef;--bg:#f7f9fc;--accent:#9467bd;--good:#2ca02c;--bad:#d62728;--blue:#1f77b4;--orange:#ff7f0e;}
+  :root{--ink:#1a2233;--muted:#5b6677;--line:#e3e8ef;--bg:#f7f9fc;--accent:#9467bd;--good:#2ca02c;--bad:#d62728;}
   *{box-sizing:border-box}
   body{margin:0;font:15px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
   .wrap{max-width:1080px;margin:0 auto;padding:32px 20px 80px}
@@ -26,11 +26,11 @@
   .kpi .b{flex:1;min-width:150px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   .kpi .n{font-size:26px;font-weight:700} .kpi .l{font-size:12px;color:var(--muted)}
   figure{margin:0} figcaption{font-size:12px;color:var(--muted);text-align:center;margin-top:6px}
-  .dag{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-  @media(max-width:900px){.dag{grid-template-columns:1fr 1fr}}@media(max-width:600px){.dag{grid-template-columns:1fr}}
-  .dagcard{border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff}
-  .dagcard h4{margin:2px 0 2px;font-size:14px} .dagcard p{margin:0 0 6px;font-size:12px;color:var(--muted)}
-  svg{width:100%;height:auto}
+  .dag{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:760px){.dag{grid-template-columns:1fr}}
+  .dagcard{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff}
+  .dagcard h4{margin:2px 0 2px;font-size:14px} .dagcard p{margin:0 0 8px;font-size:12px;color:var(--muted)}
+  .dagcard .mermaid{text-align:center}
   code{background:#eef2f8;padding:1px 5px;border-radius:4px;font-size:13px}
   .note{font-size:13px;color:var(--muted)}
 </style>
@@ -73,15 +73,148 @@
 <p class="note">gemma rows: REAL-set on the real-bug-rich subset (recall-comparable). * Haiku/Opus on the full oracle (different basis). † Opus authored the original oracle, so its precision is structurally inflated; compare recall.</p>
 
 <h2>DAG shapes we tried</h2>
-<div class="dag" id="dags"></div>
+<div class="dag">
 
-<h2>Response curves</h2>
-<p class="sub">Quality (REAL-set F2) vs cost. Cost shown two ways: individual LLM calls, and total tokens for a full 20×3 sweep (input-dominated — each node re-sends the file, ~15.7k tokens/call). Square points are non-directed topologies at the same node count, showing <b>shape matters more than size</b>.</p>
-<div class="grid">
-  <figure class="card"><canvas id="callsChart" height="240"></canvas><figcaption>Individual LLM calls → REAL F2 (directed family + topology variants)</figcaption></figure>
-  <figure class="card"><canvas id="tokChart" height="240"></canvas><figcaption>Total tokens (full 20×3 sweep) → REAL F2</figcaption></figure>
+<div class="dagcard"><h4>Single review · 1 node (floor)</h4><p>REAL F2 0.19</p>
+<pre class="mermaid">
+flowchart LR
+  C([code]) --> R[review]
+  R --> F([findings])
+  classDef code fill:#eef2f8,stroke:#9aa7bd
+  classDef lens fill:#e8eefc,stroke:#9aa7bd
+  classDef out fill:#eaf7ee,stroke:#9aa7bd
+  class C code
+  class R lens
+  class F out
+</pre></div>
+
+<div class="dagcard"><h4>5-lens union · 5 nodes (recall engine)</h4><p>REAL F2 0.41</p>
+<pre class="mermaid">
+flowchart LR
+  C([code]) --> S[security]
+  C --> K[correctness]
+  C --> N[concurrency]
+  C --> V[validation]
+  C --> E[edge-cases]
+  S --> U{{union}}
+  K --> U
+  N --> U
+  V --> U
+  E --> U
+  U --> F([findings])
+  classDef code fill:#eef2f8,stroke:#9aa7bd
+  classDef out fill:#eaf7ee,stroke:#9aa7bd
+  class C code
+  class U out
+  class F out
+</pre></div>
+
+<div class="dagcard"><h4>Judge · 4 lenses → filter <span class="tag t-bad">failed</span></h4><p>filtering deletes recall (REAL F2 0.13–0.24)</p>
+<pre class="mermaid">
+flowchart LR
+  C([code]) --> S[security]
+  C --> K[correctness]
+  C --> N[concurrency]
+  C --> V[validation]
+  S --> J[judge filter]
+  K --> J
+  N --> J
+  V --> J
+  J --> F([findings])
+  classDef code fill:#eef2f8,stroke:#9aa7bd
+  classDef out fill:#eaf7ee,stroke:#9aa7bd
+  classDef bad fill:#fde7e7,stroke:#d62728
+  class C code
+  class F out
+  class J bad
+</pre></div>
+
+<div class="dagcard"><h4>Proof-obligation · 5 lenses + repro/test</h4><p>best precision, recall collapses (REAL F2 0.20)</p>
+<pre class="mermaid">
+flowchart LR
+  C([code]) --> L["5 lenses each finding needs repro + failing test"]
+  L --> U{{union}}
+  U --> F([findings])
+  classDef code fill:#eef2f8,stroke:#9aa7bd
+  classDef out fill:#eaf7ee,stroke:#9aa7bd
+  classDef acc fill:#efe7f7,stroke:#9467bd
+  class C code
+  class U out
+  class F out
+  class L acc
+</pre></div>
+
+<div class="dagcard"><h4>5×3 independent · 15 nodes (resampling)</h4><p>REAL F2 0.52</p>
+<pre class="mermaid">
+flowchart LR
+  C([code]) --> P1["5 lenses pass 1"]
+  C --> P2["5 lenses pass 2"]
+  C --> P3["5 lenses pass 3"]
+  P1 --> U{{union}}
+  P2 --> U
+  P3 --> U
+  U --> F([findings])
+  classDef code fill:#eef2f8,stroke:#9aa7bd
+  classDef out fill:#eaf7ee,stroke:#9aa7bd
+  class C code
+  class U out
+  class F out
+</pre></div>
+
+<div class="dagcard"><h4>5×3 DIRECTED · 15 nodes <span class="tag t-acc">winner ★</span></h4><p>REAL F2 0.58 · recall 0.82</p>
+<pre class="mermaid">
+flowchart LR
+  C([code]) --> R1["round 1: 5 lenses"]
+  R1 --> R2["round 2: 5 lenses see r1, look elsewhere"]
+  R2 --> R3["round 3: 5 lenses see r1+r2"]
+  R1 --> U{{union}}
+  R2 --> U
+  R3 --> U
+  U --> F([findings])
+  classDef code fill:#eef2f8,stroke:#9aa7bd
+  classDef lens fill:#e8eefc,stroke:#9aa7bd
+  classDef acc fill:#efe7f7,stroke:#9467bd
+  classDef win fill:#d8f0df,stroke:#2ca02c,stroke-width:2px
+  class C code
+  class R1 lens
+  class R2 acc
+  class R3 acc
+  class U win
+  class F win
+</pre></div>
+
+<div class="dagcard"><h4>KG-prefetch · script node (free, no AI budget)</h4><p>marginal precision lever</p>
+<pre class="mermaid">
+flowchart LR
+  C([code]) --> KG[KG script: callers / impact / co-changes]
+  KG --> L["5 lenses + KG context"]
+  L --> U{{union}}
+  U --> F([findings])
+  classDef code fill:#eef2f8,stroke:#9aa7bd
+  classDef lens fill:#e8eefc,stroke:#9aa7bd
+  classDef out fill:#eaf7ee,stroke:#9aa7bd
+  classDef kg fill:#fff3e0,stroke:#ff7f0e
+  class C code
+  class KG kg
+  class L lens
+  class U out
+  class F out
+</pre></div>
+
 </div>
-<p class="note">Diminishing returns: F2/node falls 0.090 → 0.013 as nodes grow. <b>N=10 directed</b> captures 89% of the 15-node F2 at ⅔ the cost; <b>N=5 union</b> is the budget option (71% at ⅓). No hard saturation within 15.</p>
+
+<h2>Response curve — quality</h2>
+<p class="sub">REAL-set F2 vs LLM calls. Purple line = the gemma DAG scaling up (1→15 calls). Gold ★ = <b>single passes of other models</b> at x=1 — at one call, model quality spans a wide band, and the cheap-gemma DAG <b>climbs past a Haiku single pass and toward Opus</b> just by adding local calls. Grey squares = weaker gemma topologies at the same node count (shape &gt; size).</p>
+<figure class="card"><canvas id="callsChart" height="200"></canvas><figcaption>Individual LLM calls → REAL F2</figcaption></figure>
+<p class="note">Single-pass model ★ at 1 call: gemma 0.19, Haiku 4.5 0.29, GLM 4.7 <span id="glmnote">(running)</span>, Opus 0.57 (precision circular). Diminishing returns on the gemma line: F2/node 0.090→0.013. <b>N=10 directed</b> = 89% of max at ⅔ cost.</p>
+
+<h2>Cost structure — by topology size</h2>
+<p class="sub">Per-review cost as a function of DAG size (AI nodes). Input dominates — each node re-sends the file (~15.7k input, ~0.12k output per call) — so both scale linearly with nodes. Cost assumes <b>Vertex AI Flash-class token rates: $0.15 / 1M input, $0.60 / 1M output</b> (locally it's $0; this is the hypothetical cloud cost of the shape). Pick the topology against this.</p>
+<div class="grid">
+  <figure class="card"><canvas id="tokChart" height="240"></canvas><figcaption>AI nodes → total tokens per review</figcaption></figure>
+  <figure class="card"><canvas id="costChart" height="240"></canvas><figcaption>AI nodes → cost per review (Vertex AI, USD)</figcaption></figure>
+</div>
+<p class="note">Per review at the recommended shapes: <b>5-lens union (5 nodes)</b> ≈ 79k tok / $0.012 · <b>directed R2 (10)</b> ≈ 157k tok / $0.024 · <b>directed R3 (15)</b> ≈ 236k tok / $0.036. Prompt-caching the code prefix would cut the input term ~N× — the single biggest efficiency lever.</p>
 
 <h2>What worked / what didn't</h2>
 <div class="grid">
@@ -101,45 +234,43 @@
 <p><b>Ship the directed-resampling panel</b> (5 lenses × directed rounds). Pick the point on the curve by budget: <b>R3 / 15 calls</b> for max recall, <b>R2 / 10 calls</b> for the best cost-quality, <b>5-lens union</b> when calls are scarce. For precision, pair it with a strong-model or <b>test-execution verifier</b> — the one lever that could cut false positives without losing recall, unblocked only on a <b>buildable, runnable repo</b> (the current isolated-snippet benchmark can't compile/run tests).</p>
 </div>
 
-<p class="note">Generated from cr-skill-workflow experiments E-001…E-014 + model baselines. Numbers are micro-averaged; gemma curve points are single-rep real-bug-subset probes (±0.03 variance).</p>
+<p class="note">Generated from cr-skill-workflow experiments E-001…E-014 + model baselines. Numbers micro-averaged; gemma curve points are single-rep real-bug-subset probes (±0.03 variance).</p>
 </div>
 
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({startOnLoad:true, theme:'neutral', flowchart:{htmlLabels:true, curve:'basis'}});
+</script>
 <script>
-const C={code:'#eef2f8',lens:'#e8eefc',out:'#eaf7ee',bad:'#fde7e7',acc:'#efe7f7',kg:'#fff3e0',line:'#9aa7bd',ink:'#1a2233'};
-function box(x,y,w,h,fill,label,fs){return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${fill}" stroke="${C.line}"/><text x="${x+w/2}" y="${y+h/2+4}" font-size="${fs||11}" text-anchor="middle" fill="${C.ink}">${label}</text>`;}
-function arr(x1,y1,x2,y2){return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${C.line}" stroke-width="1.5" marker-end="url(#a)"/>`;}
-const defs=`<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="${C.line}"/></marker></defs>`;
-function svg(inner,h){return `<svg viewBox="0 0 260 ${h}" xmlns="http://www.w3.org/2000/svg">${defs}${inner}</svg>`;}
-const dags=[
- {t:"Single review",n:"1 node · floor",d:()=>svg(box(10,40,70,28,C.code,"code")+arr(80,54,110,54)+box(110,40,60,28,C.lens,"review")+arr(170,54,200,54)+box(200,40,52,28,C.out,"find",10),108)},
- {t:"5-lens union",n:"5 nodes · recall engine",d:()=>{let s=box(8,52,46,24,C.code,"code",10);const ys=[8,32,56,80,104];const nm=["security","correct.","concur.","validat.","edge"];ys.forEach((y,i)=>{s+=arr(54,64,86,y+12);s+=box(86,y,90,24,C.lens,nm[i],10);s+=arr(176,y+12,206,64);});s+=box(206,52,46,24,C.out,"union",10);return svg(s,128)}},
- {t:"Judge (FAILED)",n:"4 lenses → judge",d:()=>{let s=box(8,40,42,24,C.code,"code",10);const nm=["sec","corr","conc","valid"];[8,34,60,86].forEach((y,i)=>{s+=arr(50,52,80,y+10);s+=box(80,y,70,20,C.lens,nm[i],10);s+=arr(150,y+10,176,52);});s+=box(176,40,46,24,C.bad,"judge",10);s+=arr(222,52,240,52)+box(240,40,16,24,C.out,"",10);return svg(s,116)}},
- {t:"Proof-obligation",n:"5 lenses + repro/test",d:()=>{let s=box(8,52,46,24,C.code,"code",10);[8,32,56,80,104].forEach((y)=>{s+=arr(54,64,86,y+12);s+=box(86,y,96,24,C.acc,"lens +proof",10);s+=arr(182,y+12,206,64);});s+=box(206,52,46,24,C.out,"union",10);return svg(s,128)}},
- {t:"5×3 independent",n:"15 nodes · resampling",d:()=>{let s=box(6,52,40,24,C.code,"code",10);for(let r=0;r<3;r++){for(let i=0;i<5;i++){const y=4+i*24;s+=box(60+r*54,y,50,20,C.lens,"L"+(i+1),9);}}[60,114,168].forEach(x=>s+=arr(46,64,x,64));s+=arr(218,64,236,64)+box(236,52,20,24,C.out,"∪",11);return svg(s,128)}},
- {t:"5×3 DIRECTED ★",n:"15 nodes · winner",d:()=>{let s=box(4,52,38,24,C.code,"code",9);s+=arr(42,64,58,64);
-   s+=box(58,40,46,20,C.lens,"round1",9);s+=box(58,66,46,20,C.lens,"5 lens",9);
-   s+=arr(104,60,120,60)+box(120,40,52,20,C.acc,"round2",9)+box(120,66,52,20,C.acc,"see r1",9);
-   s+=arr(172,60,186,60)+box(186,40,52,20,C.acc,"round3",9)+box(186,66,52,20,C.acc,"see r1,2",9);
-   s+=arr(212,86,212,100)+box(150,100,70,22,C.out,"union all",10);return svg(s,132)}},
- {t:"KG-prefetch",n:"script node (free)",d:()=>{let s=box(6,40,40,24,C.code,"code",10)+arr(46,52,66,52)+box(66,40,64,24,C.kg,"KG script",10)+arr(130,52,150,52);
-   [30,56,82].forEach(y=>s+=box(150,y-12,80,20,C.lens,"lens+ctx",9));s+=arr(230,52,244,52)+box(244,40,12,24,C.out,"",10);return svg(s,112)}},
-];
-document.getElementById("dags").insertAdjacentHTML("beforeend",dags.map(g=>`<div class="dagcard"><h4>${g.t}</h4><p>${g.n}</p><figure>${g.d()}</figure></div>`).join(""));
-
+// ---- quality curve: calls -> F2 ----
 const directed=[{x:1,y:0.192},{x:3,y:0.372},{x:5,y:0.414},{x:10,y:0.516},{x:15,y:0.581}];
 const others=[{x:5,y:0.198,e:"proof-oblig"},{x:10,y:0.407,e:"10-lens"},{x:15,y:0.420,e:"15-lens"},{x:15,y:0.523,e:"5×3 indep"}];
-const TOK=15700*60;
-const mkTok=a=>a.map(p=>({x:+(p.x*TOK/1e6).toFixed(2),y:p.y,e:p.e}));
-function chart(id,xlabel,dir,oth){
- new Chart(document.getElementById(id),{data:{datasets:[
-   {type:"line",label:"directed family (best per node)",data:dir,borderColor:"#9467bd",backgroundColor:"#9467bd",tension:.25,pointRadius:5,fill:false},
-   {type:"scatter",label:"other topologies (same size, worse)",data:oth,borderColor:"#888",backgroundColor:"#bbb",pointRadius:5,pointStyle:"rectRot"}
+const models=[{x:1,y:0.286,e:"Haiku 4.5"},{x:1,y:0.565,e:"Opus (circular P)"}]; // GLM appended when ready
+new Chart(document.getElementById("callsChart"),{data:{datasets:[
+   {type:"line",label:"gemma DAG (best per node)",data:directed,borderColor:"#9467bd",backgroundColor:"#9467bd",tension:.25,pointRadius:5,fill:false},
+   {type:"scatter",label:"single-pass other models ★",data:models,borderColor:"#b8860b",backgroundColor:"#ffd24d",pointRadius:9,pointStyle:"star"},
+   {type:"scatter",label:"weaker gemma topologies",data:others,borderColor:"#888",backgroundColor:"#bbb",pointRadius:6,pointStyle:"rectRot"}
  ]},options:{responsive:true,plugins:{legend:{labels:{font:{size:11}}},
-   tooltip:{callbacks:{label:c=>`${c.raw.e?c.raw.e+": ":""}F2=${c.raw.y} @ ${c.raw.x} ${xlabel.indexOf("token")>=0?"M tok":"calls"}`}}},
-   scales:{x:{type:"linear",title:{display:true,text:xlabel}},y:{title:{display:true,text:"REAL-set F2"},min:0.15,max:0.62}}}});
+   tooltip:{callbacks:{label:c=>`${c.raw.e?c.raw.e+": ":""}F2=${c.raw.y} @ ${c.raw.x} calls`}}},
+   scales:{x:{type:"linear",title:{display:true,text:"individual LLM calls (AI nodes)"}},y:{title:{display:true,text:"REAL-set F2"},min:0.15,max:0.62}}}});
+
+// ---- cost structure: nodes -> tokens/review and -> $/review (Vertex AI assumption) ----
+const IN_PER=15700, OUT_PER=120;            // tokens per node per review (input-dominated)
+const P_IN=0.15/1e6, P_OUT=0.60/1e6;        // Vertex AI Flash-class $/token (stated assumption)
+const NODES=[1,3,5,10,15];
+const F2AT={1:0.192,3:0.372,5:0.414,10:0.516,15:0.581}; // directed-family F2 for tooltip
+const tokRev=NODES.map(n=>({x:n,y:Math.round(n*(IN_PER+OUT_PER)/1000)}));   // k tokens/review
+const costRev=NODES.map(n=>({x:n,y:+(n*(IN_PER*P_IN+OUT_PER*P_OUT)).toFixed(4)})); // $/review
+function costChart(id,data,ylabel,unit){
+ new Chart(document.getElementById(id),{data:{datasets:[
+   {type:"line",label:ylabel,data:data,borderColor:"#1f77b4",backgroundColor:"#1f77b4",tension:.15,pointRadius:5,fill:false}
+ ]},options:{responsive:true,plugins:{legend:{display:false},
+   tooltip:{callbacks:{label:c=>`${c.raw.y}${unit} @ ${c.raw.x} nodes  (F2≈${F2AT[c.raw.x]??"?"})`}}},
+   scales:{x:{type:"linear",title:{display:true,text:"AI nodes (DAG size)"},ticks:{stepSize:5}},
+           y:{title:{display:true,text:ylabel},beginAtZero:true}}}});
 }
-chart("callsChart","individual LLM calls (AI nodes)",directed,others);
-chart("tokChart","total tokens, millions (full 20×3 sweep)",mkTok(directed),mkTok(others));
+costChart("tokChart",tokRev,"tokens per review (k)","k");
+costChart("costChart",costRev,"cost per review (USD)","$");
 </script>
 </body>
 </html>
