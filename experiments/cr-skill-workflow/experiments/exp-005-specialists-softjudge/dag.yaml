@@ -1,0 +1,25 @@
+id: exp-005-specialists-softjudge
+hypothesis: "Same 4 specialists + a SOFT judge that drops only confident false-positives, cosmetics, and duplicates (keep-by-default). exp-004's strict judge over-filtered (real R 0.49→0.08). Aim: cut FP enough to lift real-set precision while keeping most real-bug recall. AI nodes = 5; output = judge."
+reps: 3
+nodes:
+  security:
+    prompt: prompts/security.md
+    inputs: [code]
+    outputs: [findings]
+  correctness:
+    prompt: prompts/correctness.md
+    inputs: [code]
+    outputs: [findings]
+  concurrency:
+    prompt: prompts/concurrency.md
+    inputs: [code]
+    outputs: [findings]
+  validation:
+    prompt: prompts/validation.md
+    inputs: [code]
+    outputs: [findings]
+  judge:
+    prompt: prompts/judge.md
+    inputs: [code, security.findings, correctness.findings, concurrency.findings, validation.findings]
+    outputs: [findings]
+output: judge

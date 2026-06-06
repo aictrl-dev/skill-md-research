@@ -93,6 +93,23 @@ Reviewed all 100 original TRUE entries + 80 exp-003 novels by reading source.
 - probe-tasks.txt switched to real-bug-rich {105,113,201,204,205} so the real-set metric
   is measurable on the probe.
 
+## Static analysis assessed — NOT tractable here
+The natural precision lever (deterministic prefilter) does not apply to THIS benchmark:
+`task-files` is 28 isolated snippets (no package.json/tsconfig/node_modules → tsc/eslint
+can't resolve imports); semgrep runs but catches syntactic anti-patterns while the oracle's
+real bugs are semantic/logic (TOCTOU, state machines, authz scoping, wrong queries). On a
+buildable repo this lever would likely help a lot. The one tractable external signal on
+these snippets is the pre-built KG → a deterministic KG-prefetch *script* node (inject
+callers/impact) is the recommended next experiment.
+
+## STATUS: research plan complete (see FINDINGS.md)
+- Winner: **exp-003 5-specialist union** — FULL per-run F1 0.439 / union-3 0.493 (≫ 0.355 goal).
+- REAL-set F1 plateaus ~0.30 (recall-strong 0.49 / precision-weak 0.21); every model-side
+  precision lever (judge, confidence, pruning, union) fails or hurts.
+- Results + hypotheses synced to the Google Sheet (E-003/E-003r/E-003u/E-003ur, E-004, E-005;
+  H-008 confirmed, H-009 refuted, H-010 confirmed).
+- Open next step (not yet run): KG-prefetch script node for precision.
+
 ## Notes
 - novels (findings matching no oracle entry) are NOT scored as FP under relaxed F1, but a
   high novel count = lots of unverified output. Track it; if recall stalls while novels

@@ -1,0 +1,26 @@
+id: exp-004-specialists-judge
+hypothesis: "4 specialists (security/correctness/concurrency/validation) feed a 5th JUDGE node that keeps only real, user-impacting defects (real/theoretical rubric) and drops FP+theoretical. Targets REAL-set precision (exp-003 P=0.21) without losing the strong recall. AI nodes = 5; output is the judge, not the union (union hurts the real set)."
+reps: 3
+nodes:
+  security:
+    prompt: prompts/security.md
+    inputs: [code]
+    outputs: [findings]
+  correctness:
+    prompt: prompts/correctness.md
+    inputs: [code]
+    outputs: [findings]
+  concurrency:
+    prompt: prompts/concurrency.md
+    inputs: [code]
+    outputs: [findings]
+  validation:
+    prompt: prompts/validation.md
+    inputs: [code]
+    outputs: [findings]
+  judge:
+    prompt: prompts/judge.md
+    inputs: [code, security.findings, correctness.findings, concurrency.findings, validation.findings]
+    outputs: [findings]
+# Judge emits the final filtered set — NOT a union.
+output: judge
