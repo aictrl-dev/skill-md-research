@@ -1,0 +1,20 @@
+id: exp-011-directed-rounds
+hypothesis: "H-013: DIRECTED resampling — 5 lenses in 3 rounds where rounds 2-3 see prior findings and are told to focus on uncovered code. Should beat exp-010 (independent 5x3) at equal 15-node budget by converting rediscovery-overlap into fresh coverage. Union terminal."
+reps: 3
+nodes:
+  security_r1: { prompt: prompts/security_r1.md, inputs: [code], outputs: [findings] }
+  correctness_r1: { prompt: prompts/correctness_r1.md, inputs: [code], outputs: [findings] }
+  concurrency_r1: { prompt: prompts/concurrency_r1.md, inputs: [code], outputs: [findings] }
+  validation_r1: { prompt: prompts/validation_r1.md, inputs: [code], outputs: [findings] }
+  edgecases_r1: { prompt: prompts/edgecases_r1.md, inputs: [code], outputs: [findings] }
+  security_r2: { prompt: prompts/security_r2.md, inputs: [code], outputs: [findings] }
+  correctness_r2: { prompt: prompts/correctness_r2.md, inputs: [code], outputs: [findings] }
+  concurrency_r2: { prompt: prompts/concurrency_r2.md, inputs: [code], outputs: [findings] }
+  validation_r2: { prompt: prompts/validation_r2.md, inputs: [code], outputs: [findings] }
+  edgecases_r2: { prompt: prompts/edgecases_r2.md, inputs: [code], outputs: [findings] }
+  security_r3: { prompt: prompts/security_r3.md, inputs: [code], outputs: [findings] }
+  correctness_r3: { prompt: prompts/correctness_r3.md, inputs: [code], outputs: [findings] }
+  concurrency_r3: { prompt: prompts/concurrency_r3.md, inputs: [code], outputs: [findings] }
+  validation_r3: { prompt: prompts/validation_r3.md, inputs: [code], outputs: [findings] }
+  edgecases_r3: { prompt: prompts/edgecases_r3.md, inputs: [code], outputs: [findings] }
+output: union
