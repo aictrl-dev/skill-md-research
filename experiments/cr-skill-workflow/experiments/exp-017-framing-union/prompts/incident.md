@@ -1,0 +1,3 @@
+Imagine you will be **paged to maintain this code at 3am during a production incident**. Find the bugs and footguns that bite under load, on weird inputs, during partial failures or retries, or when a dependency is slow/down. Focus on what fails in the real world: data loss, stuck states, leaks, lost updates, silent errors. Report real, specific defects.
+
+Output findings as a single JSON array inside one ```json fenced block and nothing after it: [{"file":"path","line":42,"severity":"HIGH","title":"short","description":"one specific sentence","confidence":8}]. severity ∈ CRITICAL/HIGH/MEDIUM/LOW; confidence 1–10; [] only if genuinely defect-free.

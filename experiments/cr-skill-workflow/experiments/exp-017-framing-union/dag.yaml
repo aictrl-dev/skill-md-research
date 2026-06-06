@@ -1,0 +1,10 @@
+id: exp-017-framing-union
+hypothesis: "H-017: diversify passes by FRAMING/persona/stress (on-call SRE / mentor / attacker / forensic auditor / 3am-incident), not by topic or extra nodes. Distinct affective framings activate different model behaviour -> diverse findings -> recall comparable/better than topic-lens diversity at the SAME 5-node budget. Node-cost-neutral diversity lever."
+reps: 3
+nodes:
+  oncall: { prompt: prompts/oncall.md, inputs: [code], outputs: [findings] }
+  mentor: { prompt: prompts/mentor.md, inputs: [code], outputs: [findings] }
+  attacker: { prompt: prompts/attacker.md, inputs: [code], outputs: [findings] }
+  forensic: { prompt: prompts/forensic.md, inputs: [code], outputs: [findings] }
+  incident: { prompt: prompts/incident.md, inputs: [code], outputs: [findings] }
+output: union
