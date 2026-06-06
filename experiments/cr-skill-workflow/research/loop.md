@@ -10,9 +10,20 @@ Maximise per-run F1 for Gemma 4 (gemma4:12b-cr) on the 20-task benchmark.
 ## What you control
 Edit files in `current/` only:
 - `current/skills/code-review/SKILL.md` — for type-1 experiments (single session workflow)
+- `current/prompt.md` — the task instruction for type-1 (optional; defaults to a generic review prompt)
 - `current/dag.yaml` + `current/prompts/*.md.j2` — for type-2 experiments (chained calls)
 
 Never modify: `answer-key.json`, task files, scoring scripts, or any file outside `current/`.
+
+## Knowledge graph (KG)
+`explore-context` is loaded for every experiment from `base-skills/` (shared
+infrastructure), and the remote `aictrl` MCP provides the `query_context` tool.
+**But gemma only actually calls `query_context` when the task prompt tells it to**
+— the skill file alone is not enough for a 12B model. Put the KG instruction in
+`prompt.md` (type 1) or the node prompt (type 2). Even then, calls are stochastic
+(~1 review in 3 makes a call; this matches the proven cr-local-kg treatment,
+which averaged 3.53 calls/review with many 0-call reviews). To raise KG usage,
+make the prompt's KG step more forceful or move enrichment into its own DAG node.
 
 ## Iteration protocol
 1. Read `research/results.tsv` to see what has been tried and what worked.

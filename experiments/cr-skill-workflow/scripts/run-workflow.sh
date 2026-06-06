@@ -28,11 +28,17 @@ EXP_PATH="$EXP_DIR/experiments/$EXP_ID"
 PIN_DIR="$(npx tsx -e 'console.log(JSON.parse(require("fs").readFileSync(process.argv[1])).pinDir)' \
   "$EXP_DIR/tasks/tasks.json")"
 
-# Generate per-experiment aictrl config (substitute __SKILLS_PATH__)
+# Generate the aictrl config: the per-experiment skills dir holds the candidate
+# being varied (code-review), while base-skills holds shared infrastructure
+# (explore-context — the skill that actually drives query_context / KG usage).
+# Both are loaded so every experiment can reach the knowledge graph.
 SKILLS_PATH="$EXP_PATH/skills"
+BASE_SKILLS_PATH="$EXP_DIR/base-skills"
 TMP_CONFIG=$(mktemp /tmp/aictrl-wf-XXXXXX.jsonc)
 trap 'rm -f "$TMP_CONFIG"' EXIT
-sed "s|__SKILLS_PATH__|$SKILLS_PATH|g" "$EXP_DIR/aictrl-workflow.jsonc" > "$TMP_CONFIG"
+sed -e "s|__BASE_SKILLS_PATH__|$BASE_SKILLS_PATH|g" \
+    -e "s|__SKILLS_PATH__|$SKILLS_PATH|g" \
+    "$EXP_DIR/aictrl-workflow.jsonc" > "$TMP_CONFIG"
 export AICTRL_CONFIG="$TMP_CONFIG"
 
 # --- TYPE DETECTION ---
@@ -190,11 +196,21 @@ for line in "${TASK_LINES[@]}"; do
   FIND="$OUT_DIR/PR-${ID}.findings.json"
   LOG="$OUT_DIR/PR-${ID}.log"
 
-  PROMPT="$(npx tsx -e '
+  # Instruction line: an experiment may override the default via prompt.md.
+  # This is where KG-nudging lives — gemma reliably calls query_context only
+  # when the task prompt tells it to (the skill file alone is not enough for a
+  # 12B model), so a KG experiment ships a prompt.md that names the protocol.
+  DEFAULT_INSTRUCTION="Use your code-review skill to review the following source file(s) for real defects. Output findings as a JSON array."
+  if [[ -f "$EXP_PATH/prompt.md" ]]; then
+    INSTRUCTION="$(cat "$EXP_PATH/prompt.md")"
+  else
+    INSTRUCTION="$DEFAULT_INSTRUCTION"
+  fi
+  PROMPT="$(INSTRUCTION="$INSTRUCTION" npx tsx -e '
     const fs=require("fs");
     const repo=process.argv[1], paths=process.argv[2].split(",");
     const blocks=paths.map(p=>`\n--- FILE: ${p} ---\n\`\`\`\n${fs.readFileSync(repo+"/"+p,"utf8")}\n\`\`\`\n`).join("\n");
-    process.stdout.write("Use your code-review skill to review the following source file(s) for real defects. Output findings as a JSON array.\n"+blocks);
+    process.stdout.write(process.env.INSTRUCTION+"\n"+blocks);
   ' "$PIN_DIR" "$PATHS")"
   [[ -z "$PROMPT" ]] && { echo "[$(date +%H:%M:%S)] SKIP task $ID — empty prompt"; continue; }
 

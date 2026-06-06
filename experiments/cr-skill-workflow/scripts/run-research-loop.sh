@@ -62,6 +62,7 @@ stage_experiment() {
   mkdir -p "$dest"
   if [[ $CURRENT_TYPE -eq 1 ]]; then
     cp -r "$CURRENT_EXP/skills" "$dest/"
+    [[ -f "$CURRENT_EXP/prompt.md" ]] && cp "$CURRENT_EXP/prompt.md" "$dest/"
   else
     cp "$CURRENT_EXP/dag.yaml" "$dest/"
     [[ -d "$CURRENT_EXP/prompts" ]] && cp -r "$CURRENT_EXP/prompts" "$dest/"
