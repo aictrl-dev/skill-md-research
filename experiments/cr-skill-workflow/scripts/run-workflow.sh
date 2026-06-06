@@ -101,6 +101,27 @@ if [[ -f "$EXP_PATH/dag.yaml" ]]; then
         const dag=JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));
         process.stdout.write(JSON.stringify(dag.nodes['$NODE']));
       ")"
+      NODE_TYPE="$(echo "$NODE_CONFIG" | npx tsx -e "
+        process.stdout.write(JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).type || 'model');
+      ")"
+
+      # --- SCRIPT node: deterministic, no AI budget. Runs an executable that
+      # emits a context string on stdout; exposed downstream as {{NODE.context}}.
+      # Produces NO findings (not unioned). run path is relative to the workflow root.
+      if [[ "$NODE_TYPE" == "script" ]]; then
+        RUN_REL="$(echo "$NODE_CONFIG" | npx tsx -e "process.stdout.write(JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).run);")"
+        ART_FILE="$(mktemp "$TASK_SCRATCH/artefacts-${NODE}-XXXXXX.json")"; printf '%s' "$ARTEFACTS_JSON" > "$ART_FILE"
+        CTX_FILE="$TASK_SCRATCH/context-${NODE}.txt"
+        echo "[$(date +%H:%M:%S)] task $ID node $NODE (script: $RUN_REL)"
+        npx tsx "$EXP_DIR/$RUN_REL" --pr "$ID" --paths "$PATHS" --pindir "$PIN_DIR" \
+          --artefacts "$ART_FILE" >"$CTX_FILE" 2>"$TASK_SCRATCH/log-${NODE}.txt" || true
+        ARTEFACTS_JSON="$(CTX="$(cat "$CTX_FILE")" npx tsx -e "
+          const a=JSON.parse(process.argv[1]); a['$NODE']={context: process.env.CTX || ''};
+          process.stdout.write(JSON.stringify(a));
+        " "$ARTEFACTS_JSON")"
+        continue
+      fi
+
       PROMPT_FILE="$(echo "$NODE_CONFIG" | npx tsx -e "
         process.stdout.write(JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).prompt);
       ")"
