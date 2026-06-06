@@ -234,6 +234,11 @@ flowchart LR
 </div>
 <p class="note">gemma DAG per review: <b>5-lens (5)</b> ≈ 79k tok / $0.012 · <b>directed R2 (10)</b> ≈ 157k tok / $0.024 · <b>directed R3 (15)</b> ≈ 236k tok / $0.036 (Vertex Flash rate). Single-pass cloud baselines (★, 1 review): <b>Haiku 4.5</b> ≈ 3.6k tok / <b>$0.0052</b> · <b>GLM 4.7</b> ≈ 5.6k tok / <b>$0.0067</b> at token rate (on the Z.AI Coding Plan it's a flat subscription, ~$0 marginal). Note the gemma DAG re-sends the file <i>and the explore-context skill</i> on every call, so its per-call tokens (~15.7k) are ~4× the single-pass models (~3.6k) — dropping the barely-used skill is a free ~4× input cut, and prompt-caching the code prefix would cut it further.</p>
 
+<h2>Cost-effectiveness frontier — the key chart</h2>
+<p class="sub">REAL-set F2 vs <b>$ per review</b> (log scale). The purple gemma-DAG line is <b>Pareto-dominant</b>: at equal cost it beats the single-pass cloud models, and at ~⅓ of Opus's price it reaches Opus-class F2. gemma priced at Vertex Flash (locally it's <b>$0</b> — even more dominant); cloud models at their own API rates.</p>
+<figure class="card"><canvas id="frontier" height="240"></canvas><figcaption>Cost per review (USD, log scale) → REAL F2</figcaption></figure>
+<p class="note">Read: gemma DAG @ <b>$0.007 (N=3)</b> already beats GLM 4.7 / Haiku 4.5 single-pass at equal cost (F2 0.37 vs 0.28); @ <b>$0.036 (N=15)</b> it matches <b>Opus 4.8</b> (F2 0.58 vs 0.57) at ~⅓ of Opus's ~$0.10/review — and on local hardware it costs nothing. Opus precision is circular (its true F2 is lower), so it's even less cost-effective than plotted. Cloud rates per 1M in/out: Haiku $1/$5, GLM $0.6/$2.2, Opus $15/$75; Opus token use is estimated (not directly measured).</p>
+
 <h2>What worked / what didn't</h2>
 <div class="grid">
 <div class="card"><h3>Levers that help</h3>
@@ -293,6 +298,18 @@ function costChart(id,line,mod,ylabel,unit){
 }
 costChart("tokChart",tokRev,modelTok,"tokens per review (k)","k");
 costChart("costChart",costRev,modelCost,"cost per review (USD)","$");
+
+// ---- graph 4: cost-effectiveness frontier ($/review log -> F2) ----
+const frG=[{x:0.0024,y:0.192,e:"gemma N=1"},{x:0.0072,y:0.372,e:"gemma N=3"},{x:0.012,y:0.414,e:"gemma N=5"},{x:0.024,y:0.516,e:"gemma N=10"},{x:0.036,y:0.581,e:"gemma N=15 (winner)"}];
+const frM=[{x:0.0052,y:0.286,e:"Haiku 4.5"},{x:0.0067,y:0.280,e:"GLM 4.7"},{x:0.0975,y:0.565,e:"Opus 4.8 (circular P)"}];
+new Chart(document.getElementById("frontier"),{data:{datasets:[
+   {type:"line",label:"gemma DAG (N=1→15, Vertex Flash; local=$0)",data:frG,borderColor:"#9467bd",backgroundColor:"#9467bd",tension:.2,pointRadius:6,fill:false},
+   {type:"scatter",label:"single-pass cloud models ★",data:frM,borderColor:"#b8860b",backgroundColor:"#ffd24d",pointRadius:10,pointStyle:"star"}
+ ]},options:{responsive:true,plugins:{legend:{labels:{font:{size:11}}},
+   tooltip:{callbacks:{label:c=>`${c.raw.e}: F2=${c.raw.y} @ $${c.raw.x}/review`}}},
+   scales:{x:{type:"logarithmic",title:{display:true,text:"$ per review (log scale)"},
+     ticks:{callback:v=>"$"+v}},
+     y:{title:{display:true,text:"REAL-set F2"},min:0.15,max:0.62}}}});
 </script>
 </body>
 </html>
