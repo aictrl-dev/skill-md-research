@@ -79,8 +79,12 @@ for line in "${TASK_LINES[@]}"; do
   npx tsx "$PARSE_SESSION" --session "$SESSION" --pr "$ID" --out "$FIND" 2>/dev/null \
     || printf '{"prNumber":%s,"findings":[]}\n' "$ID" > "$FIND"
 
-  KG=$(grep -c 'permission=aictrl_query_context' "$LOG" 2>/dev/null || echo 0)
+  # grep -c prints "0" AND exits non-zero on zero matches; capture, then sanitise
+  # (a bare `|| echo 0` would append a second line and corrupt the JSON below).
+  KG=$(grep -c 'permission=aictrl_query_context' "$LOG" 2>/dev/null) || true
+  [[ "$KG" =~ ^[0-9]+$ ]] || KG=0
   N=$(npx tsx -e 'try{console.log(JSON.parse(require("fs").readFileSync(process.argv[1])).findings.length)}catch{console.log(0)}' "$FIND" 2>/dev/null || echo 0)
+  [[ "$N" =~ ^[0-9]+$ ]] || N=0
   printf '{"prNumber":%s,"condition":"treatment","rep":%s,"class":"%s","durationSeconds":%s,"queryContextCalls":%s,"findings":%s}\n' \
     "$ID" "$REP" "$CLASS" "$DUR" "$KG" "$N" > "$OUT_DIR/PR-${ID}.meta.json"
 
