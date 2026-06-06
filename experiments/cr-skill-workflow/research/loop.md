@@ -119,6 +119,20 @@ callers/impact) is the recommended next experiment.
   findings whose test genuinely fails — ground-truth FP removal. Needs a buildable+runnable
   repo (same prerequisite as static-analysis nodes); impossible on isolated snippets.
 
+## Budget-scaling series (5 → 10 → 15 AI nodes) — resampling beats breadth
+Probed on the real-bug-rich subset (rep-1; note 5-task probes are noisy ±0.03):
+- 5 distinct lenses (exp-003):  REAL F2 0.433
+- 10 distinct lenses (exp-008): REAL F2 0.41–0.46 (two probes straddle 5-lens → no real gain)
+- 15 distinct lenses (exp-009): REAL F2 0.420  → **distinct-lens breadth SATURATES at ~5**
+- **5 lenses ×3 instances unioned (exp-010): REAL F2 0.586, recall 0.79 (19/24 real bugs)**
+  → and it BEATS exp-003 union-of-3-reps on the same subset (F2 0.497, recall 0.68) at equal
+  FP and equal 15-sample budget — i.e. in-process resampling ≥ cross-rep union.
+
+**Finding: spend node budget on RESAMPLING the proven 5 lenses (×N, unioned), not on more
+distinct lenses.** gemma is stochastic, so repeating a lens surfaces different real bugs each
+run; union captures them. More distinct lenses just rediscover the same set. exp-010 is the
+strongest config found; full 3-rep sweep running for the headline number.
+
 ## Standing recommendation
 Future benchmark should pin a **buildable, runnable repo** (deps + test runner). That single
 change unblocks the two strongest precision levers — static-analysis nodes AND test execution
