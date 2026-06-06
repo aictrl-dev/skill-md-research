@@ -35,7 +35,10 @@ if (!expId) { console.error('Usage: score.ts --exp <exp-id>'); process.exit(1); 
 const AK_PATH = path.join(EXP_DIR, 'answer-key.json');
 const ak: Record<string, AKEntry[]> = JSON.parse(fs.readFileSync(AK_PATH, 'utf8'));
 
-interface AKEntry { verdict: string; action: string; file: string; line: string; }
+interface AKEntry { verdict: string; action: string; file: string; line: string; impact?: string }
+// A TRUE entry counts toward the REAL set unless explicitly tagged theoretical.
+// (Untagged TRUE defaults to real, so real-set == full-set until tagging lands.)
+const isRealTrue = (lbl: AKEntry) => lbl.verdict === 'TRUE' && (lbl.impact ?? 'real') === 'real';
 interface Finding { file: string; line?: number | string; confidence?: number }
 
 /** Apply the --min-confidence gate. Missing confidence ⇒ kept. */
@@ -56,6 +59,9 @@ function overlap(a: ReturnType<typeof parseLine>, b: ReturnType<typeof parseLine
 }
 interface Agg { tp: number; fp: number; fn: number; novels: number; n: number; }
 const blank = (): Agg => ({ tp: 0, fp: 0, fn: 0, novels: 0, n: 0 });
+// Each scored unit yields two aggregates: full (all TRUE) and real (impact:real only).
+interface Pair { full: Agg; real: Agg }
+const blankPair = (): Pair => ({ full: blank(), real: blank() });
 function prf(g: Agg) {
   const p = g.tp + g.fp === 0 ? 0 : g.tp / (g.tp + g.fp);
   const r = g.tp + g.fn === 0 ? 0 : g.tp / (g.tp + g.fn);
@@ -63,10 +69,13 @@ function prf(g: Agg) {
 }
 const r3 = (n: number) => (Math.round(n * 1000) / 1000).toFixed(3);
 
-function scoreFile(fullPath: string, into: Agg) {
-  const data = JSON.parse(fs.readFileSync(fullPath, 'utf8')) as { prNumber?: number; findings?: Finding[] };
-  const pr = String(data.prNumber ?? fullPath.match(/PR-(\d+)/)?.[1]);
-  const findings: Finding[] = (data.findings ?? []).filter(passesConf);
+// Score one findings file against the oracle, updating BOTH aggregates.
+// full set: TRUE→TP, FALSE→FP, UNCERTAIN→0.5TP; missed TRUE→FN.
+// real set: only impact:real TRUE count (TP / FN); FALSE still →FP; matches to
+//   theoretical/UNCERTAIN entries are excluded entirely (don't-care).
+function scoreInto(prRaw: string, rawFindings: Finding[], into: Pair) {
+  const pr = prRaw;
+  const findings: Finding[] = rawFindings.filter(passesConf);
   const labels = ak[pr] ?? [];
   const usedAK = new Set<number>(), usedF = new Set<number>();
   findings.forEach((sf, i) => {
@@ -75,35 +84,42 @@ function scoreFile(fullPath: string, into: Agg) {
     if (idx === -1) return;
     usedAK.add(idx); usedF.add(i);
   });
-  let tp = 0, fp = 0;
+  // matched entries
   for (const j of usedAK) {
-    const v = labels[j].verdict;
-    if (v === 'TRUE') tp += 1; else if (v === 'FALSE') fp += 1; else if (v === 'UNCERTAIN') tp += 0.5;
+    const lbl = labels[j];
+    if (lbl.verdict === 'TRUE') { into.full.tp += 1; if (isRealTrue(lbl)) into.real.tp += 1; }
+    else if (lbl.verdict === 'FALSE') { into.full.fp += 1; into.real.fp += 1; }
+    else if (lbl.verdict === 'UNCERTAIN') { into.full.tp += 0.5; /* excluded from real */ }
   }
-  let fn = 0;
+  // missed TRUE entries → FN
   for (let j = 0; j < labels.length; j++) {
     if (usedAK.has(j)) continue;
     const lbl = labels[j];
     if (lbl.verdict !== 'TRUE') continue;
-    fn += lbl.action === 'FIX' ? 1 : 0.5;
+    const w = lbl.action === 'FIX' ? 1 : 0.5;
+    into.full.fn += w;
+    if (isRealTrue(lbl)) into.real.fn += w;
   }
-  // novels = findings that matched no answer-key entry at all. They are NOT
-  // counted as FP (FP = matched-but-verdict-FALSE only), mirroring
-  // score-relaxed.ts so the baseline comparison stays apples-to-apples. We track
-  // them so the research loop can spot a prompt that games low FP by
-  // hallucinating findings outside the answer-key's line ranges.
+  // novels = findings matching nothing (same for both sets). Not scored as FP.
   const novels = findings.filter((_, i) => !usedF.has(i)).length;
-  into.tp += tp; into.fp += fp; into.fn += fn; into.novels += novels; into.n += 1;
+  into.full.novels += novels; into.real.novels += novels;
+  into.full.n += 1; into.real.n += 1;
 }
 
-function scoreDir(dir: string, into: Agg) {
+function scoreFileInto(fullPath: string, into: Pair) {
+  const data = JSON.parse(fs.readFileSync(fullPath, 'utf8')) as { prNumber?: number; findings?: Finding[] };
+  const pr = String(data.prNumber ?? fullPath.match(/PR-(\d+)/)?.[1]);
+  scoreInto(pr, data.findings ?? [], into);
+}
+
+function scoreDir(dir: string, into: Pair) {
   if (!fs.existsSync(dir)) return;
   for (const f of fs.readdirSync(dir)) {
-    if (/^PR-\d+\.findings\.json$/.test(f)) scoreFile(path.join(dir, f), into);
+    if (/^PR-\d+\.findings\.json$/.test(f)) scoreFileInto(path.join(dir, f), into);
   }
 }
 
-const overall = blank(), byScope: Record<string, Agg> = { file: blank(), module: blank() };
+const overall = blankPair(), byScope: Record<string, Pair> = { file: blankPair(), module: blankPair() };
 for (const rep of reps) {
   for (const [scope, sub] of [['file','files'],['module','modules']] as const) {
     const dir = path.join(resultsBase, expId, `rep-${rep}`, 'treatment', sub);
@@ -111,19 +127,18 @@ for (const rep of reps) {
     scoreDir(dir, byScope[scope]);
   }
 }
-const o = prf(overall);
+const oFull = prf(overall.full), oReal = prf(overall.real);
 console.log(`\n=== ${expId} ===`);
-console.log(`  overall: P=${r3(o.p)} R=${r3(o.r)} F1=${r3(o.f1)} | TP=${overall.tp} FP=${overall.fp} FN=${overall.fn} novels=${overall.novels} n=${overall.n}`);
+console.log(`  FULL  per-run: P=${r3(oFull.p)} R=${r3(oFull.r)} F1=${r3(oFull.f1)} | TP=${overall.full.tp} FP=${overall.full.fp} FN=${overall.full.fn} novels=${overall.full.novels} n=${overall.full.n}`);
+console.log(`  REAL  per-run: P=${r3(oReal.p)} R=${r3(oReal.r)} F1=${r3(oReal.f1)} | TP=${overall.real.tp} FP=${overall.real.fp} FN=${overall.real.fn}`);
 for (const s of ['file','module']) {
-  const c = prf(byScope[s]); console.log(`  ${s}: F1=${r3(c.f1)} (n=${byScope[s].n})`);
+  console.log(`  ${s}: full F1=${r3(prf(byScope[s].full).f1)}  real F1=${r3(prf(byScope[s].real).f1)} (n=${byScope[s].full.n})`);
 }
 
 // ── Union-of-reps F1 ──
 // For each PR, pool findings across ALL reps, dedup on file+line overlap, score
-// once. This is the apples-to-apples comparison against the 0.355 union-of-3
-// baseline: it answers "if you ran the process N times and merged, how good?".
-// The per-run number above is the stricter "single execution" metric.
-function unionScore(): Agg {
+// once. Apples-to-apples comparison against the 0.355 union-of-3 baseline.
+function unionScore(): Pair {
   const byPR: Record<string, Finding[]> = {};
   for (const rep of reps) {
     for (const sub of ['files', 'modules']) {
@@ -141,25 +156,22 @@ function unionScore(): Agg {
       }
     }
   }
-  const agg = blank();
-  for (const [pr, findings] of Object.entries(byPR)) {
-    const tmp = path.join(resultsBase, `.union-${pr}.json`);
-    fs.writeFileSync(tmp, JSON.stringify({ prNumber: Number(pr), findings }));
-    scoreFile(tmp, agg);
-    fs.unlinkSync(tmp);
-  }
+  const agg = blankPair();
+  for (const [pr, findings] of Object.entries(byPR)) scoreInto(pr, findings, agg);
   return agg;
 }
 const u = unionScore();
-const up = prf(u);
-console.log(`  union-of-${reps.length}: P=${r3(up.p)} R=${r3(up.r)} F1=${r3(up.f1)} | TP=${u.tp} FP=${u.fp} FN=${u.fn} novels=${u.novels} n=${u.n}`);
+const uFull = prf(u.full), uReal = prf(u.real);
+console.log(`  FULL  union-of-${reps.length}: P=${r3(uFull.p)} R=${r3(uFull.r)} F1=${r3(uFull.f1)} | TP=${u.full.tp} FP=${u.full.fp} FN=${u.full.fn}`);
+console.log(`  REAL  union-of-${reps.length}: P=${r3(uReal.p)} R=${r3(uReal.r)} F1=${r3(uReal.f1)} | TP=${u.real.tp} FP=${u.real.fp} FN=${u.real.fn}`);
 
 // Write scores.json
+const withPrf = (g: Agg) => ({ ...prf(g), ...g });
 const scoresPath = path.join(resultsBase, expId, 'scores.json');
 fs.writeFileSync(scoresPath, JSON.stringify({
   expId, reps,
-  overall: { ...o, ...overall },
-  byScope: Object.fromEntries(Object.entries(byScope).map(([k,v])=>[k,{...prf(v),...v}])),
-  union: { ...up, ...u },
+  overall: { full: withPrf(overall.full), real: withPrf(overall.real) },
+  byScope: Object.fromEntries(Object.entries(byScope).map(([k,v])=>[k,{ full: withPrf(v.full), real: withPrf(v.real) }])),
+  union: { full: withPrf(u.full), real: withPrf(u.real) },
 }, null, 2));
 console.log(`\nscores.json → ${scoresPath}`);

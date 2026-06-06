@@ -90,7 +90,7 @@ done < "$PROBE_TASKS_FILE"
 
 PROBE_F1="0"
 if npx tsx "$SCRIPT_DIR/score.ts" --exp "$PROBE_ID" --reps 1 2>/dev/null; then
-  PROBE_F1="$(read_score "$EXP_DIR/results/$PROBE_ID/scores.json" "overall.f1")"
+  PROBE_F1="$(read_score "$EXP_DIR/results/$PROBE_ID/scores.json" "overall.real.f1")"
 fi
 echo "Probe F1: $PROBE_F1  (baseline: $BASELINE_F1)"
 
@@ -124,12 +124,12 @@ done
 
 npx tsx "$SCRIPT_DIR/score.ts" --exp "$FULL_ID" --reps 1,2,3
 SCORES_JSON="$EXP_DIR/results/$FULL_ID/scores.json"
-FULL_F1="$(read_score "$SCORES_JSON" "overall.f1")"
-FILE_F1="$(read_score "$SCORES_JSON" "byScope.file.f1")"
-MOD_F1="$(read_score "$SCORES_JSON" "byScope.module.f1")"
-TP="$(read_score "$SCORES_JSON" "overall.tp")"
-FP="$(read_score "$SCORES_JSON" "overall.fp")"
-FN="$(read_score "$SCORES_JSON" "overall.fn")"
+FULL_F1="$(read_score "$SCORES_JSON" "overall.real.f1")"
+FILE_F1="$(read_score "$SCORES_JSON" "byScope.file.real.f1")"
+MOD_F1="$(read_score "$SCORES_JSON" "byScope.module.real.f1")"
+TP="$(read_score "$SCORES_JSON" "overall.real.tp")"
+FP="$(read_score "$SCORES_JSON" "overall.real.fp")"
+FN="$(read_score "$SCORES_JSON" "overall.real.fn")"
 
 echo "Full sweep F1: $FULL_F1  (baseline: $BASELINE_F1, min-improvement: $MIN_IMPROVEMENT)"
 

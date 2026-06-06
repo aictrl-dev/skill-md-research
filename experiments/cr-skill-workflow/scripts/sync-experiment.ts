@@ -44,22 +44,24 @@ if (fs.existsSync(dagPath)) {
   if (m) hypothesis = m[1].trim();
 }
 
-const f1 = (scores.overall.f1 as number).toFixed(3);
-const deltaF1 = (scores.overall.f1 - BASELINE_F1).toFixed(3);
-const fileF1 = (scores.byScope.file?.f1 ?? 0).toFixed(3);
-const modF1 = (scores.byScope.module?.f1 ?? 0).toFixed(3);
+// scores.json now carries both full-set and real-set aggregates. The REAL set
+// (user-impacting bugs only) is the headline metric; full-set is recorded too.
+const realF1 = (scores.overall.real.f1 as number).toFixed(3);
+const fullF1 = (scores.overall.full.f1 as number).toFixed(3);
+const deltaReal = (scores.overall.real.f1 - BASELINE_F1).toFixed(3);
+const unionRealF1 = (scores.union?.real?.f1 ?? 0).toFixed(3);
 
 const row = [
   expId,
   hypothesis,
-  f1,
-  fileF1,
-  modF1,
-  deltaF1,
-  String(scores.overall.tp ?? ''),
-  String(scores.overall.fp ?? ''),
-  String(scores.overall.fn ?? ''),
-  String(scores.overall.n ?? ''),
+  realF1,         // headline: per-run real-set F1
+  fullF1,         // per-run full-set F1
+  unionRealF1,    // union-of-reps real-set F1
+  deltaReal,      // ΔF1 vs 0.204 baseline (real-set)
+  String(scores.overall.real.tp ?? ''),
+  String(scores.overall.real.fp ?? ''),
+  String(scores.overall.real.fn ?? ''),
+  String(scores.overall.real.n ?? ''),
   '',
 ];
 
