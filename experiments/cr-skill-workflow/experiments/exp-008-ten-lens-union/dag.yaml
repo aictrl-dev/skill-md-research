@@ -1,0 +1,15 @@
+id: exp-008-ten-lens-union
+hypothesis: "Doubling the AI-node budget to 10 fine-grained parallel lenses (authz/injection/secrets/nullsafety/logic/concurrency/resources/validation/errors/boundary), unioned, increases recall (and thus F1/F2) over the 5-lens union — IF finer lenses surface distinct true bugs rather than rediscovering the same with more FP. Pure breadth; union terminal (judge transition failed). AI nodes = 10."
+reps: 3
+nodes:
+  authz:        { prompt: prompts/authz.md,        inputs: [code], outputs: [findings] }
+  injection:    { prompt: prompts/injection.md,    inputs: [code], outputs: [findings] }
+  secrets:      { prompt: prompts/secrets.md,       inputs: [code], outputs: [findings] }
+  nullsafety:   { prompt: prompts/nullsafety.md,    inputs: [code], outputs: [findings] }
+  logic:        { prompt: prompts/logic.md,         inputs: [code], outputs: [findings] }
+  concurrency:  { prompt: prompts/concurrency.md,   inputs: [code], outputs: [findings] }
+  resources:    { prompt: prompts/resources.md,     inputs: [code], outputs: [findings] }
+  validation:   { prompt: prompts/validation.md,    inputs: [code], outputs: [findings] }
+  errors:       { prompt: prompts/errors.md,        inputs: [code], outputs: [findings] }
+  boundary:     { prompt: prompts/boundary.md,      inputs: [code], outputs: [findings] }
+output: union
