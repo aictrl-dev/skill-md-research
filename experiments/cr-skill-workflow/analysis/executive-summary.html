@@ -206,7 +206,7 @@ flowchart LR
 <h2>Response curve — quality</h2>
 <p class="sub">REAL-set F2 vs LLM calls. Purple line = the gemma DAG scaling up (1→15 calls). Gold ★ = <b>single passes of other models</b> at x=1 — at one call, model quality spans a wide band, and the cheap-gemma DAG <b>climbs past a Haiku single pass and toward Opus</b> just by adding local calls. Grey squares = weaker gemma topologies at the same node count (shape &gt; size).</p>
 <figure class="card"><canvas id="callsChart" height="200"></canvas><figcaption>Individual LLM calls → REAL F2</figcaption></figure>
-<p class="note">Single-pass model ★ at 1 call: gemma 0.19, Haiku 4.5 0.29, GLM 4.7 <span id="glmnote">(running)</span>, Opus 0.57 (precision circular). Diminishing returns on the gemma line: F2/node 0.090→0.013. <b>N=10 directed</b> = 89% of max at ⅔ cost.</p>
+<p class="note">Single-pass model ★ at 1 call: gemma 0.19, Haiku 4.5 0.29, GLM 4.7 0.28, Opus 0.57 (precision circular). Diminishing returns on the gemma line: F2/node 0.090→0.013. <b>N=10 directed</b> = 89% of max at ⅔ cost.</p>
 
 <h2>Cost structure — by topology size</h2>
 <p class="sub">Per-review cost as a function of DAG size (AI nodes). Input dominates — each node re-sends the file (~15.7k input, ~0.12k output per call) — so both scale linearly with nodes. Cost assumes <b>Vertex AI Flash-class token rates: $0.15 / 1M input, $0.60 / 1M output</b> (locally it's $0; this is the hypothetical cloud cost of the shape). Pick the topology against this.</p>
@@ -245,7 +245,7 @@ mermaid.initialize({startOnLoad:true, theme:'neutral', flowchart:{htmlLabels:tru
 // ---- quality curve: calls -> F2 ----
 const directed=[{x:1,y:0.192},{x:3,y:0.372},{x:5,y:0.414},{x:10,y:0.516},{x:15,y:0.581}];
 const others=[{x:5,y:0.198,e:"proof-oblig"},{x:10,y:0.407,e:"10-lens"},{x:15,y:0.420,e:"15-lens"},{x:15,y:0.523,e:"5×3 indep"}];
-const models=[{x:1,y:0.286,e:"Haiku 4.5"},{x:1,y:0.565,e:"Opus (circular P)"}]; // GLM appended when ready
+const models=[{x:1,y:0.286,e:"Haiku 4.5"},{x:1,y:0.280,e:"GLM 4.7"},{x:1,y:0.565,e:"Opus (circular P)"}];
 new Chart(document.getElementById("callsChart"),{data:{datasets:[
    {type:"line",label:"gemma DAG (best per node)",data:directed,borderColor:"#9467bd",backgroundColor:"#9467bd",tension:.25,pointRadius:5,fill:false},
    {type:"scatter",label:"single-pass other models ★",data:models,borderColor:"#b8860b",backgroundColor:"#ffd24d",pointRadius:9,pointStyle:"star"},
