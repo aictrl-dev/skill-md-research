@@ -30,6 +30,9 @@ const reps = get('--reps', '1,2,3').split(',').map(s => s.trim());
 // finding with no confidence field is kept (treated as 10) so absence never
 // silently filters it. Lets us precision-tune verbose panels for free.
 const minConf = Number(get('--min-confidence', '0'));
+// --tasks 105,201,... restricts scoring to those PR ids (for probe-subset reads).
+const taskFilter = new Set(get('--tasks', '').split(',').map(s => s.trim()).filter(Boolean));
+const prAllowed = (pr: string) => taskFilter.size === 0 || taskFilter.has(pr);
 if (!expId) { console.error('Usage: score.ts --exp <exp-id>'); process.exit(1); }
 
 const AK_PATH = path.join(EXP_DIR, 'answer-key.json');
@@ -115,7 +118,8 @@ function scoreFileInto(fullPath: string, into: Pair) {
 function scoreDir(dir: string, into: Pair) {
   if (!fs.existsSync(dir)) return;
   for (const f of fs.readdirSync(dir)) {
-    if (/^PR-\d+\.findings\.json$/.test(f)) scoreFileInto(path.join(dir, f), into);
+    const m = f.match(/^PR-(\d+)\.findings\.json$/);
+    if (m && prAllowed(m[1])) scoreFileInto(path.join(dir, f), into);
   }
 }
 
@@ -148,6 +152,7 @@ function unionScore(): Pair {
         if (!/^PR-\d+\.findings\.json$/.test(f)) continue;
         const data = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')) as { prNumber?: number; findings?: Finding[] };
         const pr = String(data.prNumber ?? f.match(/PR-(\d+)/)?.[1]);
+        if (!prAllowed(pr)) continue;
         (byPR[pr] ??= []);
         for (const sf of (data.findings ?? []).filter(passesConf)) {
           const dup = byPR[pr].some(ex => ex.file === sf.file && overlap(parseLine(ex.line), parseLine(sf.line)));

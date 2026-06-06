@@ -79,6 +79,20 @@ Reviewed all 100 original TRUE entries + 80 exp-003 novels by reading source.
   script node (dead-code drop), fewer sharper specialists, severity-gating to real-bug
   classes, or a final "is this user-impacting?" gate matching our real/theoretical rubric.
 
+## Negative results (precision phase)
+- **Judge/filter node fails for gemma** (both variants, real-bug-rich probe):
+  - exp-004 STRICT judge: real F1 0.133 (P .50 / R .08) — deletes almost everything.
+  - exp-005 SOFT judge ("keep by default"): real F1 0.241 (P .28 / R .21) — still drops
+    recall (0.48→0.21) far more than it lifts precision. gemma-as-list-reviewer just
+    removes volume; it cannot reliably tell real from FP. Abandon judge nodes.
+- **exp-003 union remains best real-set** (per-run real F1 = 0.295 over 20 tasks;
+  0.386 on real-bug-rich subset). Full-set per-run 0.439 / union-3 0.493 (≫ 0.35 goal).
+- **Precision sink = "trap tasks"** (e.g. 101/103/104/112: many FALSE entries, ~0 real
+  bugs). Any finding there is pure FP. Real-set precision is gated by the model being
+  noisy on bug-free code, not by judging individual findings.
+- probe-tasks.txt switched to real-bug-rich {105,113,201,204,205} so the real-set metric
+  is measurable on the probe.
+
 ## Notes
 - novels (findings matching no oracle entry) are NOT scored as FP under relaxed F1, but a
   high novel count = lots of unverified output. Track it; if recall stalls while novels
