@@ -89,6 +89,47 @@ impact) would be the way to use it reliably, and is the one external-signal leve
   can break — and the only tractable external signal on this snippet benchmark is the
   pre-built KG (a prefetch script node), the recommended next experiment.
 
+## Precision phase — complete (with F2)
+
+We added **F2** (recall-weighted, β=2) because in code-review triage a missed real bug
+usually costs more than a false positive. F2 is the decision metric; it also **flips the
+optimal strategy**: under F1, union-of-reps hurts the real set, but under F2 the recall-max
+union-of-3 is clearly best.
+
+**Winner (exp-003, 5-specialist union), both metrics:**
+
+| | F1 | F2 |
+|---|---|---|
+| FULL per-run | 0.439 | 0.446 |
+| FULL union-of-3 | 0.493 | **0.571** |
+| REAL per-run | 0.295 | 0.387 |
+| REAL union-of-3 | 0.277 | **0.425** |
+
+**Every model-side precision lever was tried and none beats recall-max on F1 or F2:**
+
+| lever (REAL-set) | F1 | F2 | precision | recall | novels | verdict |
+|---|---|---|---|---|---|---|
+| exp-003 union (recall-max) | **0.295** | **0.387** | 0.21 | 0.49 | 103 | best F1/F2 |
+| exp-003 union-of-3 | 0.277 | **0.425** | 0.18 | 0.66 | — | best F2 |
+| judge node (exp-004/005) | 0.13–0.24 | lower | high | ↓↓↓ | — | fails |
+| confidence gate | ↓ | ↓ | flat | ↓ | — | useless |
+| KG-prefetch (exp-006) | ~neutral | ~neutral | +.01 | ↓ | — | marginal |
+| proof-obligation (exp-007) | 0.211 | 0.181 | **0.29** | 0.17 | **25** | best precision, worst recall |
+
+**Final conclusion:** For Gemma-4-12B on this benchmark, **F1 and F2 are both maximised by
+maximising recall** (exp-003 5-specialist union, merged over 3 runs). Every precision
+intervention — filtering, confidence, KG context, proof-of-bug — trades away more recall
+than it buys. The model's "is this real?" judgment is lossy in every form. **The proof
+obligation (repro + failing test) is the standout for a different objective:** it cuts
+hallucinations 4× (novels 103→25) and gives the best precision (0.29 real / 0.55 full), so
+it is the config of choice if the goal is *"don't spam developers with false positives"*
+rather than *"catch the most bugs."*
+
+The only lever that could plausibly beat recall-max on F1 is **objective test execution
+(H-012)** — replacing lossy model judgment with ground truth — which is runtime-blocked on
+this isolated-snippet benchmark. **Top recommendation: re-run on a buildable, runnable repo**,
+which unblocks both static-analysis nodes and test execution.
+
 ## Honesty caveats
 - 5 of the 43 real-bug oracle entries were contributed by exp-003 itself (confirmed via
   independent code reading). exp-003's real recall is therefore mildly self-favorable;
