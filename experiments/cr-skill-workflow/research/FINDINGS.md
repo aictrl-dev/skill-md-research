@@ -130,6 +130,30 @@ The only lever that could plausibly beat recall-max on F1 is **objective test ex
 this isolated-snippet benchmark. **Top recommendation: re-run on a buildable, runnable repo**,
 which unblocks both static-analysis nodes and test execution.
 
+## Model baselines (single pass, vs full expanded oracle)
+
+| model (1 review pass) | REAL F1 | REAL F2 | REAL P | REAL R (of 43) | FULL F1 | novels |
+|---|---|---|---|---|---|---|
+| Opus (precision circular*) | 0.730 | 0.665 | 0.87* | 0.628 (27) | 0.573 | 0 |
+| Haiku 4.5 (honest) | 0.354 | 0.333 | 0.394 | 0.321 (13) | 0.381 | 12 |
+| gemma-12B exp-003 union (5 calls) | 0.295 | 0.387 | 0.21 | 0.49 | 0.439 | 103 |
+| gemma-12B exp-011 directed ×3 (15 calls, subset) | ~0.41 | ~0.58 | 0.27 | 0.82 | — | high |
+
+*Opus's findings ARE the original oracle, so it structurally has ~no false positives —
+precision is upper-bound, recall is the fair metric. Haiku 4.5 is the honest frontier-tier
+reference (run as session subagents, did not define the oracle).
+
+**Reads:**
+- A single review pass — even by a strong model — catches only ~⅓ of the real bugs (Haiku
+  13/43, recall 0.32; Opus 27/43 circular-favorable). One pass has a hard recall ceiling.
+- Model strength shows up as **precision/cleanliness**: Haiku REAL P 0.39 / 12 novels vs
+  gemma 0.21 / 103 novels. Stronger model ⇒ more trustworthy per finding.
+- **On recall the cheap local ensemble competes/wins**: gemma 5-lens union ≈ Haiku single-pass
+  on REAL F1 (0.30 vs 0.35) at $0; gemma directed-resampling (exp-011) far exceeds Haiku's
+  single-pass recall (0.82 vs 0.32) — at 15× calls and low precision.
+- **Implied best pipeline:** gemma directed-resampling panel as a high-recall generator →
+  Haiku/Opus (or test execution) as the precision verifier. Cheap-generator + strong-verifier.
+
 ## Honesty caveats
 - 5 of the 43 real-bug oracle entries were contributed by exp-003 itself (confirmed via
   independent code reading). exp-003's real recall is therefore mildly self-favorable;
