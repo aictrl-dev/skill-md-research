@@ -74,7 +74,11 @@ const blankPair = (): Pair => ({ full: blank(), real: blank() });
 function prf(g: Agg) {
   const p = g.tp + g.fp === 0 ? 0 : g.tp / (g.tp + g.fp);
   const r = g.tp + g.fn === 0 ? 0 : g.tp / (g.tp + g.fn);
-  return { p, r, f1: p + r === 0 ? 0 : (2 * p * r) / (p + r) };
+  const f1 = p + r === 0 ? 0 : (2 * p * r) / (p + r);
+  // F2 weights recall 2× precision (β=2) — for code review a missed real bug
+  // usually costs more than a false positive, so F2 is the decision metric.
+  const f2 = (4 * p + r) === 0 ? 0 : (5 * p * r) / (4 * p + r);
+  return { p, r, f1, f2 };
 }
 const r3 = (n: number) => (Math.round(n * 1000) / 1000).toFixed(3);
 
@@ -139,8 +143,8 @@ for (const rep of reps) {
 }
 const oFull = prf(overall.full), oReal = prf(overall.real);
 console.log(`\n=== ${expId} ===`);
-console.log(`  FULL  per-run: P=${r3(oFull.p)} R=${r3(oFull.r)} F1=${r3(oFull.f1)} | TP=${overall.full.tp} FP=${overall.full.fp} FN=${overall.full.fn} novels=${overall.full.novels} n=${overall.full.n}`);
-console.log(`  REAL  per-run: P=${r3(oReal.p)} R=${r3(oReal.r)} F1=${r3(oReal.f1)} | TP=${overall.real.tp} FP=${overall.real.fp} FN=${overall.real.fn}`);
+console.log(`  FULL  per-run: P=${r3(oFull.p)} R=${r3(oFull.r)} F1=${r3(oFull.f1)} F2=${r3(oFull.f2)} | TP=${overall.full.tp} FP=${overall.full.fp} FN=${overall.full.fn} novels=${overall.full.novels} n=${overall.full.n}`);
+console.log(`  REAL  per-run: P=${r3(oReal.p)} R=${r3(oReal.r)} F1=${r3(oReal.f1)} F2=${r3(oReal.f2)} | TP=${overall.real.tp} FP=${overall.real.fp} FN=${overall.real.fn}`);
 for (const s of ['file','module']) {
   console.log(`  ${s}: full F1=${r3(prf(byScope[s].full).f1)}  real F1=${r3(prf(byScope[s].real).f1)} (n=${byScope[s].full.n})`);
 }
@@ -173,8 +177,8 @@ function unionScore(): Pair {
 }
 const u = unionScore();
 const uFull = prf(u.full), uReal = prf(u.real);
-console.log(`  FULL  union-of-${reps.length}: P=${r3(uFull.p)} R=${r3(uFull.r)} F1=${r3(uFull.f1)} | TP=${u.full.tp} FP=${u.full.fp} FN=${u.full.fn}`);
-console.log(`  REAL  union-of-${reps.length}: P=${r3(uReal.p)} R=${r3(uReal.r)} F1=${r3(uReal.f1)} | TP=${u.real.tp} FP=${u.real.fp} FN=${u.real.fn}`);
+console.log(`  FULL  union-of-${reps.length}: P=${r3(uFull.p)} R=${r3(uFull.r)} F1=${r3(uFull.f1)} F2=${r3(uFull.f2)} | TP=${u.full.tp} FP=${u.full.fp} FN=${u.full.fn}`);
+console.log(`  REAL  union-of-${reps.length}: P=${r3(uReal.p)} R=${r3(uReal.r)} F1=${r3(uReal.f1)} F2=${r3(uReal.f2)} | TP=${u.real.tp} FP=${u.real.fp} FN=${u.real.fn}`);
 
 // Write scores.json
 const withPrf = (g: Agg) => ({ ...prf(g), ...g });
