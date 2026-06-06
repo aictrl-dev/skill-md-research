@@ -46,6 +46,15 @@ fi
 # Temporary experiment ID for this run
 PROBE_ID="probe-$(date +%Y%m%d-%H%M%S)"
 FULL_ID="run-$(date +%Y%m%d-%H%M%S)"
+# The probe-*/run-* experiment dirs are throwaway copies that live under
+# experiments/ (NOT gitignored). A keeper is archived separately as exp-NNN and
+# committed before we get here, so these two are always safe to delete. Cleaning
+# up on EXIT means a SIGINT/OOM mid-sweep never strands stray dirs in a tracked
+# path (which a later `git add` could accidentally stage).
+cleanup() {
+  rm -rf "$EXP_DIR/experiments/$PROBE_ID" "$EXP_DIR/experiments/$FULL_ID" 2>/dev/null || true
+}
+trap cleanup EXIT
 
 # Stage the current/ candidate into a named experiment dir the harness can run.
 stage_experiment() {

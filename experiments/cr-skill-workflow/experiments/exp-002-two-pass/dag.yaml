@@ -10,4 +10,6 @@ nodes:
     prompt: prompts/pass2.md.j2
     inputs: [code, pass1.findings]
     outputs: [findings]
-output: pass2
+# pass2 emits only the findings pass1 missed, so the result must UNION both
+# nodes' findings — naming pass2 alone would drop pass1's true positives.
+output: union

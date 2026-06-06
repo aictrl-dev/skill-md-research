@@ -45,8 +45,8 @@ function overlap(a: ReturnType<typeof parseLine>, b: ReturnType<typeof parseLine
   return Math.abs(a.start - b.start) <= LINE_TOL ||
     (a.start <= b.end + LINE_TOL && a.end + LINE_TOL >= b.start);
 }
-interface Agg { tp: number; fp: number; fn: number; n: number; }
-const blank = (): Agg => ({ tp: 0, fp: 0, fn: 0, n: 0 });
+interface Agg { tp: number; fp: number; fn: number; novels: number; n: number; }
+const blank = (): Agg => ({ tp: 0, fp: 0, fn: 0, novels: 0, n: 0 });
 function prf(g: Agg) {
   const p = g.tp + g.fp === 0 ? 0 : g.tp / (g.tp + g.fp);
   const r = g.tp + g.fn === 0 ? 0 : g.tp / (g.tp + g.fn);
@@ -78,7 +78,13 @@ function scoreFile(fullPath: string, into: Agg) {
     if (lbl.verdict !== 'TRUE') continue;
     fn += lbl.action === 'FIX' ? 1 : 0.5;
   }
-  into.tp += tp; into.fp += fp; into.fn += fn; into.n += 1;
+  // novels = findings that matched no answer-key entry at all. They are NOT
+  // counted as FP (FP = matched-but-verdict-FALSE only), mirroring
+  // score-relaxed.ts so the baseline comparison stays apples-to-apples. We track
+  // them so the research loop can spot a prompt that games low FP by
+  // hallucinating findings outside the answer-key's line ranges.
+  const novels = findings.filter((_, i) => !usedF.has(i)).length;
+  into.tp += tp; into.fp += fp; into.fn += fn; into.novels += novels; into.n += 1;
 }
 
 function scoreDir(dir: string, into: Agg) {
@@ -98,7 +104,7 @@ for (const rep of reps) {
 }
 const o = prf(overall);
 console.log(`\n=== ${expId} ===`);
-console.log(`  overall: P=${r3(o.p)} R=${r3(o.r)} F1=${r3(o.f1)} | TP=${overall.tp} FP=${overall.fp} FN=${overall.fn} n=${overall.n}`);
+console.log(`  overall: P=${r3(o.p)} R=${r3(o.r)} F1=${r3(o.f1)} | TP=${overall.tp} FP=${overall.fp} FN=${overall.fn} novels=${overall.novels} n=${overall.n}`);
 for (const s of ['file','module']) {
   const c = prf(byScope[s]); console.log(`  ${s}: F1=${r3(c.f1)} (n=${byScope[s].n})`);
 }

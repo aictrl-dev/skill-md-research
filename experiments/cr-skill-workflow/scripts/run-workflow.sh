@@ -63,10 +63,10 @@ if [[ -f "$EXP_PATH/dag.yaml" ]]; then
     IFS=$'\t' read -r ID CLASS PATHS <<< "$line"
     [[ -n "$ONLY" && "$ID" != "$ONLY" ]] && continue
 
-    miss=""
+    miss=()
     IFS=',' read -ra PARR <<< "$PATHS"
-    for p in "${PARR[@]}"; do [[ -f "$PIN_DIR/$p" ]] || miss="$p"; done
-    [[ -n "$miss" ]] && { echo "[$(date +%H:%M:%S)] SKIP task $ID — missing $miss"; continue; }
+    for p in "${PARR[@]}"; do [[ -f "$PIN_DIR/$p" ]] || miss+=("$p"); done
+    [[ ${#miss[@]} -gt 0 ]] && { echo "[$(date +%H:%M:%S)] SKIP task $ID — missing ${miss[*]}"; continue; }
 
     # Build code blocks for this task
     CODE_BLOCKS="$(npx tsx -e '
@@ -136,10 +136,29 @@ if [[ -f "$EXP_PATH/dag.yaml" ]]; then
 
     DUR_TASK=$(($(date +%s)-START_TASK))
 
-    # Copy output node's findings to results
+    # Write the final result. output: "union" merges every node's findings
+    # (dedup on file+line) — required when later nodes emit only INCREMENTAL
+    # findings (e.g. a two-pass chain where pass2 reports "what pass1 missed";
+    # copying pass2 alone would silently drop pass1's true positives). Any other
+    # value names a single node whose findings.json is copied verbatim (use this
+    # for replace/filter passes that re-emit the full set).
     OUT_DIR="$EXP_DIR/results/$EXP_ID/rep-${REP}/treatment/${CLASS}s"; mkdir -p "$OUT_DIR"
     FIND="$OUT_DIR/PR-${ID}.findings.json"
-    cp "$TASK_SCRATCH/findings-${OUTPUT_NODE}.json" "$FIND"
+    if [[ "$OUTPUT_NODE" == "union" ]]; then
+      FIND="$FIND" npx tsx -e '
+        const fs=require("fs");
+        const pr=parseInt(process.argv[1]); const seen=new Set(); const all=[];
+        for (const f of process.argv.slice(2)) {
+          for (const x of (JSON.parse(fs.readFileSync(f,"utf8")).findings ?? [])) {
+            const k=`${x.file}:${x.line}`;
+            if (!seen.has(k)) { seen.add(k); all.push(x); }
+          }
+        }
+        fs.writeFileSync(process.env.FIND, JSON.stringify({prNumber:pr, findings:all}, null, 2));
+      ' "$ID" "$TASK_SCRATCH"/findings-*.json
+    else
+      cp "$TASK_SCRATCH/findings-${OUTPUT_NODE}.json" "$FIND"
+    fi
 
     N=$(npx tsx -e 'try{console.log(JSON.parse(require("fs").readFileSync(process.argv[1])).findings.length)}catch{console.log(0)}' "$FIND" 2>/dev/null || echo 0)
     [[ "$N" =~ ^[0-9]+$ ]] || N=0
@@ -161,10 +180,10 @@ for line in "${TASK_LINES[@]}"; do
   IFS=$'\t' read -r ID CLASS PATHS <<< "$line"
   [[ -n "$ONLY" && "$ID" != "$ONLY" ]] && continue
 
-  miss=""
+  miss=()
   IFS=',' read -ra PARR <<< "$PATHS"
-  for p in "${PARR[@]}"; do [[ -f "$PIN_DIR/$p" ]] || miss="$p"; done
-  if [[ -n "$miss" ]]; then echo "[$(date +%H:%M:%S)] SKIP task $ID — missing $miss"; continue; fi
+  for p in "${PARR[@]}"; do [[ -f "$PIN_DIR/$p" ]] || miss+=("$p"); done
+  if [[ ${#miss[@]} -gt 0 ]]; then echo "[$(date +%H:%M:%S)] SKIP task $ID — missing ${miss[*]}"; continue; fi
 
   OUT_DIR="$EXP_DIR/results/$EXP_ID/rep-${REP}/treatment/${CLASS}s"; mkdir -p "$OUT_DIR"
   SESSION="$OUT_DIR/PR-${ID}.session.json"
