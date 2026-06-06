@@ -33,6 +33,12 @@ const minConf = Number(get('--min-confidence', '0'));
 // --tasks 105,201,... restricts scoring to those PR ids (for probe-subset reads).
 const taskFilter = new Set(get('--tasks', '').split(',').map(s => s.trim()).filter(Boolean));
 const prAllowed = (pr: string) => taskFilter.size === 0 || taskFilter.has(pr);
+// --node <name> scores per-node files PR-<id>.<node>.findings.json (ablation);
+// default scores the final result PR-<id>.findings.json.
+const nodeName = get('--node', '');
+const fileRe = nodeName
+  ? new RegExp(`^PR-(\\d+)\\.${nodeName}\\.findings\\.json$`)
+  : /^PR-(\d+)\.findings\.json$/;
 if (!expId) { console.error('Usage: score.ts --exp <exp-id>'); process.exit(1); }
 
 const AK_PATH = path.join(EXP_DIR, 'answer-key.json');
@@ -118,7 +124,7 @@ function scoreFileInto(fullPath: string, into: Pair) {
 function scoreDir(dir: string, into: Pair) {
   if (!fs.existsSync(dir)) return;
   for (const f of fs.readdirSync(dir)) {
-    const m = f.match(/^PR-(\d+)\.findings\.json$/);
+    const m = f.match(fileRe);
     if (m && prAllowed(m[1])) scoreFileInto(path.join(dir, f), into);
   }
 }

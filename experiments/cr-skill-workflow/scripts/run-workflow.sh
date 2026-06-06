@@ -166,6 +166,14 @@ if [[ -f "$EXP_PATH/dag.yaml" ]]; then
       cp "$TASK_SCRATCH/findings-${OUTPUT_NODE}.json" "$FIND"
     fi
 
+    # Persist each node's findings too (enables per-lens ablation: score one node
+    # in isolation via score.ts --node). Named PR-<id>.<node>.findings.json so the
+    # PR-<id>.findings.json glob for the final result still matches only the result.
+    for NF in "$TASK_SCRATCH"/findings-*.json; do
+      NODE_OF="$(basename "$NF" .json)"; NODE_OF="${NODE_OF#findings-}"
+      cp "$NF" "$OUT_DIR/PR-${ID}.${NODE_OF}.findings.json"
+    done
+
     N=$(npx tsx -e 'try{console.log(JSON.parse(require("fs").readFileSync(process.argv[1])).findings.length)}catch{console.log(0)}' "$FIND" 2>/dev/null || echo 0)
     [[ "$N" =~ ^[0-9]+$ ]] || N=0
     printf '{"prNumber":%s,"condition":"treatment","rep":%s,"class":"%s","durationSeconds":%s,"findings":%s}\n' \
