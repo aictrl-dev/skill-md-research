@@ -61,6 +61,24 @@ make the prompt's KG step more forceful or move enrichment into its own DAG node
   gate on self-reported confidence. Precision must come from INDEPENDENT signals:
   judge node, KG-verify (callers=0), or cross-specialist vote count (≥2 lenses agree).
 
+## Oracle upgrade (2026-06-06) + REAL-set reframing
+Reviewed all 100 original TRUE entries + 80 exp-003 novels by reading source.
+- Original oracle: only **38/100 TRUE are real** user-impacting bugs; 62 are theoretical
+  (audit-text, dead defensive code, naming). Novels: 5 real, 32 theoretical, 43 not-a-bug.
+- Oracle now: **137 TRUE (43 real / 94 theoretical) + 246 FALSE** (the 43 confirmed
+  not-a-bug novels became FALSE so hallucinations now cost precision).
+- **exp-003 under upgraded oracle:** FULL per-run F1=0.439 (R .45/P .43); union-3=0.493.
+  **REAL per-run F1=0.295 (R .49 / P .21)**; union-3 REAL=0.277 (WORSE — union piles on FP).
+
+### Reframed target & lever
+- **Optimize REAL-set per-run F1** (currently 0.295). Recall is already strong (0.49);
+  **precision (0.21) is the bottleneck** — too many FP + theoretical findings.
+- Union-of-reps HURTS the real set → a single precise execution beats merging. Drop the
+  union-maximisation instinct; pursue precision.
+- Precision levers (confidence is useless — see below): judge/filter node, KG-verify
+  script node (dead-code drop), fewer sharper specialists, severity-gating to real-bug
+  classes, or a final "is this user-impacting?" gate matching our real/theoretical rubric.
+
 ## Notes
 - novels (findings matching no oracle entry) are NOT scored as FP under relaxed F1, but a
   high novel count = lots of unverified output. Track it; if recall stalls while novels
