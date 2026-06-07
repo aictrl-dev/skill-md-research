@@ -1,0 +1,26 @@
+id: exp-019-temp-cold
+hypothesis: "5 diverse specialist passes (security, correctness, concurrency/resources, validation/contracts, edge-cases) reviewed independently and UNIONed cover more distinct true defects than 3 identical reps — beating the 0.355 union-of-3 with a single process. AI node budget = 5."
+reps: 3
+nodes:
+  security:
+    prompt: prompts/security.md
+    inputs: [code]
+    outputs: [findings]
+  correctness:
+    prompt: prompts/correctness.md
+    inputs: [code]
+    outputs: [findings]
+  concurrency:
+    prompt: prompts/concurrency.md
+    inputs: [code]
+    outputs: [findings]
+  validation:
+    prompt: prompts/validation.md
+    inputs: [code]
+    outputs: [findings]
+  edgecases:
+    prompt: prompts/edgecases.md
+    inputs: [code]
+    outputs: [findings]
+# Union every specialist's findings (dedup file:line) — coverage is the goal.
+output: union

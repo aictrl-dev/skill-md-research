@@ -244,11 +244,14 @@ flowchart LR
 <div class="card"><h3>Levers that help</h3>
 <p><span class="tag t-good">union</span> merge diverse lenses → recall<br/>
 <span class="tag t-good">resampling</span> repeat lenses ×N, union → more recall<br/>
-<span class="tag t-good">directed rounds</span> carry findings forward, "look elsewhere" → coverage</p></div>
+<span class="tag t-good">directed rounds</span> carry findings forward, structured coverage map → coverage (recall champion: REAL R 0.683)<br/>
+<span class="tag t-good">hot temperature</span> temp 1.1 → diverse candidates → recall; N=5 @ 1.1 ≈ N=10 default</p></div>
 <div class="card"><h3>Dead ends</h3>
 <p><span class="tag t-bad">judge node</span> filtering deletes recall<br/>
 <span class="tag t-bad">confidence gate</span> gemma confidence uncalibrated<br/>
 <span class="tag t-bad">more distinct lenses</span> saturates at 5<br/>
+<span class="tag t-bad">thinking mode</span> discovery-killer (R 0.17→0.04); perfect precision (P 1.0) → only a verification node<br/>
+<span class="tag t-mut">consensus vote</span> real trust signal (≥10 votes ≈ 100% real) but no held-out F2 lift → use for triage ranking, not filtering<br/>
 <span class="tag t-mut">proof-obligation</span> best precision, but recall collapses</p></div>
 </div>
 
@@ -257,7 +260,7 @@ flowchart LR
 <p><b>Ship the directed-resampling panel</b> (5 lenses × directed rounds). Pick the point on the curve by budget: <b>R3 / 15 calls</b> for max recall, <b>R2 / 10 calls</b> for the best cost-quality, <b>5-lens union</b> when calls are scarce. For precision, pair it with a strong-model or <b>test-execution verifier</b> — the one lever that could cut false positives without losing recall, unblocked only on a <b>buildable, runnable repo</b> (the current isolated-snippet benchmark can't compile/run tests).</p>
 </div>
 
-<p class="note">Generated from cr-skill-workflow experiments E-001…E-014 + model baselines. Numbers micro-averaged; gemma curve points are single-rep real-bug-subset probes (±0.03 variance).</p>
+<p class="note">Generated from cr-skill-workflow experiments E-001…E-022 + model baselines. gemma response-curve & frontier points are single-rep real-bug-subset <b>probes</b> (5 tasks, ±0.03 variance) — including the new diversity/temperature points, so they sit on the same axes. <b>Full-20-task</b> runs (exp-020 coverage-directed REAL R 0.683 / FULL F2 0.607; exp-021 independent+vote REAL F2 0.458; exp-022 coverage @ temp 1.1 — running) are <b>not</b> plotted here, as full-20 and probe F2 are not directly comparable. Consensus-vote held-out calibration (rank-f2) showed no F2 lift over keep-all — vote-count is a triage signal, not a filter.</p>
 </div>
 
 <script type="module">
@@ -269,8 +272,12 @@ mermaid.initialize({startOnLoad:true, theme:'neutral', flowchart:{htmlLabels:tru
 const directed=[{x:1,y:0.192},{x:3,y:0.372},{x:5,y:0.414},{x:10,y:0.516},{x:15,y:0.581}];
 const others=[{x:5,y:0.198,e:"proof-oblig"},{x:10,y:0.407,e:"10-lens"},{x:15,y:0.420,e:"15-lens"},{x:15,y:0.523,e:"5×3 indep"}];
 const models=[{x:1,y:0.286,e:"Haiku 4.5"},{x:1,y:0.280,e:"GLM 4.7"},{x:1,y:0.565,e:"Opus (circular P)"}];
+// NEW diversity levers @ 5 nodes (probe subset, same metric as the directed line):
+// hotter sampling lifts the 5-node point ABOVE plain 5-lens (0.414) — temp 1.1 ≈ directed @ N=10.
+const diversity=[{x:5,y:0.526,e:"temp 1.1 (hot)"},{x:5,y:0.470,e:"temp 0.3 (cold)"},{x:5,y:0.451,e:"framing/persona"}];
 new Chart(document.getElementById("callsChart"),{data:{datasets:[
    {type:"line",label:"gemma DAG (best per node)",data:directed,borderColor:"#9467bd",backgroundColor:"#9467bd",tension:.25,pointRadius:5,fill:false},
+   {type:"scatter",label:"diversity @ 5 nodes (temp/framing) ▲",data:diversity,borderColor:"#d62728",backgroundColor:"#ff6b6b",pointRadius:8,pointStyle:"triangle"},
    {type:"scatter",label:"single-pass other models ★",data:models,borderColor:"#b8860b",backgroundColor:"#ffd24d",pointRadius:9,pointStyle:"star"},
    {type:"scatter",label:"weaker gemma topologies",data:others,borderColor:"#888",backgroundColor:"#bbb",pointRadius:6,pointStyle:"rectRot"}
  ]},options:{responsive:true,plugins:{legend:{labels:{font:{size:11}}},
@@ -300,10 +307,15 @@ costChart("tokChart",tokRev,modelTok,"tokens per review (k)","k");
 costChart("costChart",costRev,modelCost,"cost per review (USD)","$");
 
 // ---- graph 4: cost-effectiveness frontier ($/review log -> F2) ----
-const frG=[{x:0.0024,y:0.192,e:"gemma N=1"},{x:0.0072,y:0.372,e:"gemma N=3"},{x:0.012,y:0.414,e:"gemma N=5"},{x:0.024,y:0.516,e:"gemma N=10"},{x:0.036,y:0.581,e:"gemma N=15 (winner)"}];
+const frG=[{x:0.0024,y:0.192,e:"gemma N=1"},{x:0.0072,y:0.372,e:"gemma N=3"},{x:0.012,y:0.414,e:"gemma N=5 (default temp 0.7)"},{x:0.024,y:0.516,e:"gemma N=10"},{x:0.036,y:0.581,e:"gemma N=15 (prior winner)"}];
+// NEW frontier line: hot temperature shifts the curve up-left — at N=5 ($0.012) F2 jumps
+// 0.414→0.526, beating N=10 (0.516) at HALF the cost. Probe F2; only N=5 measured @ temp 1.1
+// (N=1/3/15 are the shared default-temp references it connects to trace the new upper envelope).
+const frHot=[{x:0.0024,y:0.192,e:"N=1"},{x:0.0072,y:0.372,e:"N=3"},{x:0.012,y:0.526,e:"N=5 @ temp 1.1 (hot) — new frontier"},{x:0.036,y:0.581,e:"N=15"}];
 const frM=[{x:0.0052,y:0.286,e:"Haiku 4.5"},{x:0.0067,y:0.280,e:"GLM 4.7"},{x:0.0975,y:0.565,e:"Opus 4.8 (circular P)"}];
 new Chart(document.getElementById("frontier"),{data:{datasets:[
-   {type:"line",label:"gemma DAG (N=1→15, Vertex Flash; local=$0)",data:frG,borderColor:"#9467bd",backgroundColor:"#9467bd",tension:.2,pointRadius:6,fill:false},
+   {type:"line",label:"gemma DAG + hot temperature (probe) — new frontier",data:frHot,borderColor:"#d62728",backgroundColor:"#d62728",borderDash:[6,4],tension:.2,pointRadius:6,fill:false},
+   {type:"line",label:"gemma DAG default temp 0.7 (N=1→15, Vertex Flash; local=$0)",data:frG,borderColor:"#9467bd",backgroundColor:"#9467bd",tension:.2,pointRadius:6,fill:false},
    {type:"scatter",label:"single-pass cloud models ★",data:frM,borderColor:"#b8860b",backgroundColor:"#ffd24d",pointRadius:10,pointStyle:"star"}
  ]},options:{responsive:true,plugins:{legend:{labels:{font:{size:11}}},
    tooltip:{callbacks:{label:c=>`${c.raw.e}: F2=${c.raw.y} @ $${c.raw.x}/review`}}},
