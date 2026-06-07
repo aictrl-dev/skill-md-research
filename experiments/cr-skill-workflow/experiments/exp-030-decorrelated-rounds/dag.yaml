@@ -1,0 +1,34 @@
+id: exp-030-decorrelated-rounds
+hypothesis: "Stack the two recall wins: coverage-directed resampling (exp-020, REAL R 0.683 / FULL F2 0.607 — best recall) generated at HOT temperature 1.1 (exp-018 probe, best diversity REAL F2 0.526 / R 0.667). Hotter sampling => more diverse candidates; structured coverage map => those candidates target uncovered cells. Hypothesis: REAL recall pushes past 0.70 and FULL F2 past 0.61 on the full 20 tasks. output=vote (votes kept for triage ranking, not as an F2 filter). AI nodes = 15; temp 1.1."
+reps: 3
+nodes:
+  security_r1:    { prompt: prompts/security_r1.md,    inputs: [code], outputs: [findings] }
+  correctness_r1: { prompt: prompts/correctness_r1.md, inputs: [code], outputs: [findings] }
+  concurrency_r1: { prompt: prompts/concurrency_r1.md, inputs: [code], outputs: [findings] }
+  validation_r1:  { prompt: prompts/validation_r1.md,  inputs: [code], outputs: [findings] }
+  edgecases_r1:   { prompt: prompts/edgecases_r1.md,   inputs: [code], outputs: [findings] }
+
+  coverage_r2:
+    type: script
+    run: scripts/coverage-map.ts
+    inputs: [code, security_r1.findings, correctness_r1.findings, concurrency_r1.findings, validation_r1.findings, edgecases_r1.findings]
+    outputs: [context]
+
+  security_r2:    { prompt: prompts/security_r2.md,    inputs: [code, coverage_r2.context], outputs: [findings] }
+  correctness_r2: { prompt: prompts/correctness_r2.md, inputs: [code, coverage_r2.context], outputs: [findings] }
+  concurrency_r2: { prompt: prompts/concurrency_r2.md, inputs: [code, coverage_r2.context], outputs: [findings] }
+  validation_r2:  { prompt: prompts/validation_r2.md,  inputs: [code, coverage_r2.context], outputs: [findings] }
+  edgecases_r2:   { prompt: prompts/edgecases_r2.md,   inputs: [code, coverage_r2.context], outputs: [findings] }
+
+  coverage_r3:
+    type: script
+    run: scripts/coverage-map.ts
+    inputs: [code, security_r2.findings, correctness_r2.findings, concurrency_r2.findings, validation_r2.findings, edgecases_r2.findings]
+    outputs: [context]
+
+  security_r3:    { prompt: prompts/security_r3.md,    inputs: [code, coverage_r3.context], outputs: [findings] }
+  correctness_r3: { prompt: prompts/correctness_r3.md, inputs: [code, coverage_r3.context], outputs: [findings] }
+  concurrency_r3: { prompt: prompts/concurrency_r3.md, inputs: [code, coverage_r3.context], outputs: [findings] }
+  validation_r3:  { prompt: prompts/validation_r3.md,  inputs: [code, coverage_r3.context], outputs: [findings] }
+  edgecases_r3:   { prompt: prompts/edgecases_r3.md,   inputs: [code, coverage_r3.context], outputs: [findings] }
+output: vote

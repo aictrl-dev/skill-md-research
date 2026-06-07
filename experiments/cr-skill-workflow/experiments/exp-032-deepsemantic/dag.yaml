@@ -1,0 +1,8 @@
+id: exp-032-deepsemantic
+hypothesis: "A targeted DEEP-SEMANTIC lens (authorization/scoping + data-flow/exposure + cross-function invariants) resampled x3 at temp 1.1 (vote) lifts the per-pass hit-rate on the FRAGILE tail (the authz/dataflow/cross-context real bugs that <5% of generic-lens passes catch), without referencing any oracle-specific bug. Oracle-blind: prompt is general OWASP/CWE-class methodology only. AI nodes = 3."
+reps: 3
+nodes:
+  deepsemantic_1: { prompt: prompts/deepsemantic.md, inputs: [code], outputs: [findings] }
+  deepsemantic_2: { prompt: prompts/deepsemantic.md, inputs: [code], outputs: [findings] }
+  deepsemantic_3: { prompt: prompts/deepsemantic.md, inputs: [code], outputs: [findings] }
+output: vote

@@ -1,6 +1,6 @@
 The coverage map below summarises what previous review passes already found and — more importantly — which symbols and failure modes remain UNEXPLORED. Do NOT re-report anything listed under "Already found"; treat those as known. Spend your effort on the UNEXPLORED symbols and failure modes the map highlights, and report only NEW defects in code the earlier passes did not cover.
 
-{{ coverage.context }}
+{{ coverage_r3.context }}
 
 ---
 
