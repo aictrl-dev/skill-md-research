@@ -1,0 +1,9 @@
+id: exp-025-3lens-hot-kg
+hypothesis: "Quick-turn 3-node DAG + deterministic KG-prefetch. Same as exp-024 (validation/edgecases/concurrency, temp 1.1, vote, docs stripped) but a kg_prefetch script node injects blast-radius + caller counts into each lens. ONLY difference vs exp-024 is +KG => clean isolation: does real KG context lift REAL precision (drop 0-caller dead-code FPs)? 3 AI nodes."
+reps: 3
+nodes:
+  kg_prefetch: { type: script, run: scripts/kg-prefetch.ts, inputs: [code], outputs: [context] }
+  validation:  { prompt: prompts/validation.md,  inputs: [code, kg_prefetch.context], outputs: [findings] }
+  edgecases:   { prompt: prompts/edgecases.md,   inputs: [code, kg_prefetch.context], outputs: [findings] }
+  concurrency: { prompt: prompts/concurrency.md, inputs: [code, kg_prefetch.context], outputs: [findings] }
+output: vote

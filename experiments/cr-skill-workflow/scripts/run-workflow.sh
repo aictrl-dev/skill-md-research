@@ -87,11 +87,18 @@ if [[ -f "$EXP_PATH/dag.yaml" ]]; then
     ' "$PIN_DIR" "$PATHS")"
 
     TASK_SCRATCH="$SCRATCH/task-${ID}-rep-${REP}"
+    # CRITICAL: wipe per-task scratch first. The scratch path is shared across
+    # experiments (keyed only by task+rep), and the union/vote merge globs
+    # findings-*.json — so stale node files from a PRIOR experiment would be
+    # merged in, corrupting findings + vote counts. Clean slate per task.
+    rm -rf "$TASK_SCRATCH"
     mkdir -p "$TASK_SCRATCH"
 
     # Execute each node in declaration order
     # Collect artefacts as we go: ARTEFACTS_JSON is a JSON object {"nodeName":{"findings":[...]}}
     ARTEFACTS_JSON="{}"
+    TASK_FAILED=0   # set if a SCRIPT node fails → exclude task (don't emit a result
+                    # that silently ran without its KG/coverage treatment)
 
     # Iterate over node names in dag.yaml order
     mapfile -t NODE_NAMES < <(echo "$DAG_JSON" | npx tsx -e '
@@ -117,8 +124,18 @@ if [[ -f "$EXP_PATH/dag.yaml" ]]; then
         ART_FILE="$(mktemp "$TASK_SCRATCH/artefacts-${NODE}-XXXXXX.json")"; printf '%s' "$ARTEFACTS_JSON" > "$ART_FILE"
         CTX_FILE="$TASK_SCRATCH/context-${NODE}.txt"
         echo "[$(date +%H:%M:%S)] task $ID node $NODE (script: $RUN_REL)"
-        npx tsx "$EXP_DIR/$RUN_REL" --pr "$ID" --paths "$PATHS" --pindir "$PIN_DIR" \
-          --artefacts "$ART_FILE" >"$CTX_FILE" 2>"$TASK_SCRATCH/log-${NODE}.txt" || true
+        # A script node IS the treatment (KG prefetch, coverage map). If it fails
+        # or yields empty context, the experiment would silently run WITHOUT that
+        # treatment — so exclude the whole task instead of pretending it succeeded.
+        if ! npx tsx "$EXP_DIR/$RUN_REL" --pr "$ID" --paths "$PATHS" --pindir "$PIN_DIR" \
+             --artefacts "$ART_FILE" >"$CTX_FILE" 2>"$TASK_SCRATCH/log-${NODE}.txt"; then
+          echo "   !! task $ID: script node $NODE ($RUN_REL) FAILED — excluding task (see log-${NODE}.txt)"
+          TASK_FAILED=1; break
+        fi
+        if [[ ! -s "$CTX_FILE" ]]; then
+          echo "   !! task $ID: script node $NODE ($RUN_REL) produced EMPTY context — excluding task"
+          TASK_FAILED=1; break
+        fi
         ARTEFACTS_JSON="$(CTX="$(cat "$CTX_FILE")" npx tsx -e "
           const a=JSON.parse(process.argv[1]); a['$NODE']={context: process.env.CTX || ''};
           process.stdout.write(JSON.stringify(a));
@@ -164,6 +181,17 @@ if [[ -f "$EXP_PATH/dag.yaml" ]]; then
         process.stdout.write(JSON.stringify(a));
       " "$ARTEFACTS_JSON" "$FINDINGS")"
     done
+
+    # If a script-node treatment failed, do NOT write a result — record a failure
+    # marker and skip so the task is excluded from scoring rather than scored as if
+    # it had run with the (missing) KG/coverage treatment.
+    if [[ "$TASK_FAILED" == "1" ]]; then
+      OUT_DIR="$EXP_DIR/results/$EXP_ID/rep-${REP}/treatment/${CLASS}s"; mkdir -p "$OUT_DIR"
+      printf '{"prNumber":%s,"failed":true,"reason":"script node failed/empty"}\n' "$ID" > "$OUT_DIR/PR-${ID}.failed.json"
+      rm -f "$OUT_DIR/PR-${ID}.findings.json" 2>/dev/null || true
+      echo "   -> task $ID EXCLUDED (script-node failure)"
+      continue
+    fi
 
     DUR_TASK=$(($(date +%s)-START_TASK))
 

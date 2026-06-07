@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aictrl.dev/config.json",
+  "provider": { "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": { "baseURL": "http://localhost:11434/v1" },
+      "models": { "gemma4:12b-cr": {
+          "name": "Gemma4 12B (review)", "tools": true,
+          "options": { "temperature": 1.1, "reasoningEffort": "none" } } } } },
+  "mcp": { "aictrl": { "type": "remote", "url": "https://aictrl.dev/aictrl/mcp", "enabled": false, "headers": { "X-API-Key": "{env:AICTRL_MCP_TOKEN}" } } },
+  "skills": { "paths": [] }
+}

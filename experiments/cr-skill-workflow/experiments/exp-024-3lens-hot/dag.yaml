@@ -1,0 +1,8 @@
+id: exp-024-3lens-hot
+hypothesis: "Quick-turn 3-node DAG (validation/edgecases/concurrency, top-3 by unique TP) @ temp 1.1, output vote, MCP+skill stripped. NO-KG control for the fast KG isolation vs exp-025. 3 AI nodes => ~5x faster iteration than the 15-node configs."
+reps: 3
+nodes:
+  validation:  { prompt: prompts/validation.md,  inputs: [code], outputs: [findings] }
+  edgecases:   { prompt: prompts/edgecases.md,   inputs: [code], outputs: [findings] }
+  concurrency: { prompt: prompts/concurrency.md, inputs: [code], outputs: [findings] }
+output: vote

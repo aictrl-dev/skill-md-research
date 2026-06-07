@@ -1,0 +1,34 @@
+id: exp-029-coverage-hot-nodocs
+hypothesis: "Isolate the DEAD-DOC cost: exp-022 (coverage-directed @ temp 1.1, the current full-20 winner: REAL F2 0.509 / R 0.795) carries ~2.5-3k tokens of UNUSED context per node — the explore-context skill (212 lines) + 6 MCP tool schemas the model never calls (0/655 tool calls). This twin is byte-identical EXCEPT the dead docs are stripped (MCP disabled, skills []). Question: does removing the unused tool/skill docs improve review quality (attention not diluted), or is it neutral (pure context/cost saving)? AI nodes = 15; temp 1.1; vote."
+reps: 3
+nodes:
+  security_r1:    { prompt: prompts/security_r1.md,    inputs: [code], outputs: [findings] }
+  correctness_r1: { prompt: prompts/correctness_r1.md, inputs: [code], outputs: [findings] }
+  concurrency_r1: { prompt: prompts/concurrency_r1.md, inputs: [code], outputs: [findings] }
+  validation_r1:  { prompt: prompts/validation_r1.md,  inputs: [code], outputs: [findings] }
+  edgecases_r1:   { prompt: prompts/edgecases_r1.md,   inputs: [code], outputs: [findings] }
+
+  coverage_r2:
+    type: script
+    run: scripts/coverage-map.ts
+    inputs: [code, security_r1.findings, correctness_r1.findings, concurrency_r1.findings, validation_r1.findings, edgecases_r1.findings]
+    outputs: [context]
+
+  security_r2:    { prompt: prompts/security_r2.md,    inputs: [code, coverage_r2.context], outputs: [findings] }
+  correctness_r2: { prompt: prompts/correctness_r2.md, inputs: [code, coverage_r2.context], outputs: [findings] }
+  concurrency_r2: { prompt: prompts/concurrency_r2.md, inputs: [code, coverage_r2.context], outputs: [findings] }
+  validation_r2:  { prompt: prompts/validation_r2.md,  inputs: [code, coverage_r2.context], outputs: [findings] }
+  edgecases_r2:   { prompt: prompts/edgecases_r2.md,   inputs: [code, coverage_r2.context], outputs: [findings] }
+
+  coverage_r3:
+    type: script
+    run: scripts/coverage-map.ts
+    inputs: [code, security_r2.findings, correctness_r2.findings, concurrency_r2.findings, validation_r2.findings, edgecases_r2.findings]
+    outputs: [context]
+
+  security_r3:    { prompt: prompts/security_r3.md,    inputs: [code, coverage_r3.context], outputs: [findings] }
+  correctness_r3: { prompt: prompts/correctness_r3.md, inputs: [code, coverage_r3.context], outputs: [findings] }
+  concurrency_r3: { prompt: prompts/concurrency_r3.md, inputs: [code, coverage_r3.context], outputs: [findings] }
+  validation_r3:  { prompt: prompts/validation_r3.md,  inputs: [code, coverage_r3.context], outputs: [findings] }
+  edgecases_r3:   { prompt: prompts/edgecases_r3.md,   inputs: [code, coverage_r3.context], outputs: [findings] }
+output: vote

@@ -36,7 +36,9 @@ function parseLine(l: string | number | undefined) {
   return { start: parseInt(m[1]), end: m[2] ? parseInt(m[2]) : parseInt(m[1]) };
 }
 function overlap(a: ReturnType<typeof parseLine>, b: ReturnType<typeof parseLine>) {
-  if (!a || !b) return true;
+  // null/unparsable line must NOT match (else a line-less or comma-list finding
+  // would match any oracle entry in the file). Require a real overlap.
+  if (!a || !b) return false;
   return Math.abs(a.start - b.start) <= LINE_TOL || (a.start <= b.end + LINE_TOL && a.end + LINE_TOL >= b.start);
 }
 const matchesOracle = (pr: string, f: Finding) =>

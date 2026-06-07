@@ -66,7 +66,12 @@ stage_experiment() {
   else
     cp "$CURRENT_EXP/dag.yaml" "$dest/"
     [[ -d "$CURRENT_EXP/prompts" ]] && cp -r "$CURRENT_EXP/prompts" "$dest/"
+    [[ -d "$CURRENT_EXP/skills" ]] && cp -r "$CURRENT_EXP/skills" "$dest/"
   fi
+  # Always carry the per-experiment aictrl.jsonc (temperature / thinking / MCP /
+  # skills overrides). Dropping it would silently evaluate the candidate under the
+  # wrong model config.
+  [[ -f "$CURRENT_EXP/aictrl.jsonc" ]] && cp "$CURRENT_EXP/aictrl.jsonc" "$dest/"
 }
 
 # Read a numeric field out of a scores.json (echoes 0 on any failure).

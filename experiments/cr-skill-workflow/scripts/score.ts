@@ -67,7 +67,10 @@ function parseLine(l: string | number | undefined) {
   return { start: parseInt(m[1]), end: m[2] ? parseInt(m[2]) : parseInt(m[1]) };
 }
 function overlap(a: ReturnType<typeof parseLine>, b: ReturnType<typeof parseLine>) {
-  if (!a || !b) return true;
+  // A null/unparsable line (e.g. a finding with no line, or a comma-list like
+  // "51, 106, 142") must NOT match — otherwise such a finding would be awarded
+  // a TP/FP against ANY oracle entry in the same file. Require a real overlap.
+  if (!a || !b) return false;
   return Math.abs(a.start - b.start) <= LINE_TOL ||
     (a.start <= b.end + LINE_TOL && a.end + LINE_TOL >= b.start);
 }

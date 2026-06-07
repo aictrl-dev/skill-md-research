@@ -1,0 +1,8 @@
+id: exp-026-3lens-hot-kgtool
+hypothesis: "PRODUCTION-FAITHFUL model-driven KG. Ports the cr-local-kg code-review + explore-context skills (the code-review skill MANDATES query_context, the real driver gemma responds to) and uses the exact prod prompt. 3 resample nodes (skill-driven comprehensive review, temp 1.1, vote) — model calls query_context itself, as in production. Tests the REAL pipeline's KG behaviour inside our DAG/scoring framework, comparable to exp-024 (no KG) and exp-025 (deterministic prefetch). AI nodes = 3."
+reps: 3
+nodes:
+  review_1: { prompt: prompts/review_1.md, inputs: [code], outputs: [findings] }
+  review_2: { prompt: prompts/review_2.md, inputs: [code], outputs: [findings] }
+  review_3: { prompt: prompts/review_3.md, inputs: [code], outputs: [findings] }
+output: vote
