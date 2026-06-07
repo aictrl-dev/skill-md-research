@@ -1,0 +1,6 @@
+id: exp-016b-think-single
+hypothesis: "Isolate THINKING from panel size: exp-014's single comprehensive review prompt, run as ONE node with thinking ENABLED (aictrl.jsonc), vs exp-014 single-pass NO-thinking (REAL P=0.40 R=0.17 F2=0.192). Clean A/B — same prompt, same 1 node, only thinking toggled. Tests whether thinking trades recall for precision on a single pass (early signal: ~12x slower, lower volume), which would make thinking a candidate VERIFICATION node rather than a discovery panel. AI nodes = 1."
+reps: 3
+nodes:
+  review: { prompt: prompts/review.md, inputs: [code], outputs: [findings] }
+output: review

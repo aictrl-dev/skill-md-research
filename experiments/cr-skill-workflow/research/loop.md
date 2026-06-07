@@ -171,6 +171,38 @@ known findings) → kills the vote signal. So the two ideas need separate config
 - **exp-021-consensus-vote** (output:vote, 5 lenses × 3 INDEPENDENT) = the PRECISION/consensus
   experiment; votes are informative here. Both ready; need a full-20-task GPU run when free.
 
+## RESULTS (2026-06-07): thinking / temperature / consensus / coverage
+
+**1. Thinking — discovery-killer, perfect confirmer (exp-016b vs exp-014, single pass, 5 probe tasks).**
+Thinking ON: REAL P=1.000 R=0.043 F2=0.054 (1 real bug, 0 FP, 2 findings total / 5 tasks).
+Thinking OFF: REAL P=0.400 R=0.170 F2=0.192. ⇒ Thinking makes gemma extremely conservative —
+useless for discovery, but ZERO false positives. Only viable as a **verification node** fed
+candidates ("is THIS finding real?"), never as a review/discovery pass. Confirms both lit reviews.
+
+**2. Temperature — hot is a cheap recall win (probe subset, REAL F2).**
+framing/persona (exp-017) 0.451 (R .55) | temp-cold 0.3 (exp-019) 0.470 (R .60) |
+**temp-hot 1.1 (exp-018) 0.526 (R .667)** — best. Hotter sampling = more diverse candidates =
+more recall, at ~flat precision. Free lever (config value, no nodes). (Probe-only; confirm on 20.)
+
+**3. Consensus vote — real trustworthiness signal, but NOT an F2 lever (HONEST CORRECTION).**
+The probe-only read (precision→0.80 at high votes, exp-010) DID NOT generalise. On the full 20
+tasks (exp-021, 5 lenses ×3 independent, output:vote), `rank-f2` held-out calibration returns
+the cut = **keep-all** (votes≥1), held-out lift = **0.000**. Vote-threshold curve (REAL F2):
+votes≥1 0.458 → ≥3 0.344 → ≥4 0.284. Precision DOES rise with votes (0.21→0.34, and ≥10 votes ≈
+100% real) — so vote-count is a genuine **triage/ranking** signal (surface high-vote first) and
+helps an F1/precision objective — but F2's recall weighting punishes the recall lost to
+thresholding, so it does NOT beat keep-all on F2. The held-out guard caught the probe overfit.
+
+**4. Coverage-directed — recall champion (exp-020, full 20).** Structured coverage-map script
+node (already_found / unexplored_symbols / unexplored_failure_modes) replacing free-text "look
+elsewhere": REAL R **0.683** (28/41, highest), FULL F2 **0.607** (highest), REAL F2 0.440.
+Head-to-head full-20: exp-020 (R .683, FULL F2 .607) > exp-021 independent+vote (R .651, FULL F2 .562).
+
+**Takeaway: the F2 needle is moved by RECALL levers (coverage-direction, hot temperature), not by
+the vote filter.** Next: exp-022 = coverage-directed @ temp 1.1 (stack both recall wins). Consensus
+vote → keep as output ranking; thinking → optional high-precision verification node.
+NB: probe (5-task) and full-20 numbers are NOT directly comparable; only exp-020/021/022 (all full-20) are.
+
 ## Standing recommendation
 Future benchmark should pin a **buildable, runnable repo** (deps + test runner). That single
 change unblocks the two strongest precision levers — static-analysis nodes AND test execution
