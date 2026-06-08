@@ -821,61 +821,25 @@
       "bot": "claude-oracle",
       "severity": "HIGH",
       "file": "server/services/graph-build-service.ts",
-      "line": "88-96",
-      "description": "Because hasActiveJob counts 'queued' as active and cleanupStaleJobs never clears 'queued' jobs, a single stuck queued job makes hasActiveJob return true indefinitely, so the repo can never start another build (409 forever) and it permanently consumes a slot in countActiveJobs against the org concurrency limit.",
+      "line": "88-113",
+      "description": "hasActiveJob and countActiveJobs count 'queued' jobs as active, but cleanupStaleJobs excludes 'queued', so a job that is created and never picked up by the executor stays queued forever, permanently blocking repo builds and consuming org concurrency.",
       "verdict": "TRUE",
       "action": "FIX",
-      "reason": "hasActiveJob includes 'queued' (line 91) and both triggers early-return on it (kg-routes.ts:658 returns 409, github-app-routes.ts:1541 skips), while countActiveJobs also counts 'queued' (line 100); combined with cleanup never clearing 'queued' (line 112), one orphaned queued job blocks the repo and consumes an org slot permanently.",
+      "reason": "hasActiveJob includes 'queued' (line 91) and countActiveJobs also counts 'queued' (line 100), while cleanupStaleJobs omits 'queued' from its cleanup query (line 112). A job can remain queued if the executor is never invoked after createJob.",
       "impact": "real",
-      "impactReason": "hasActiveJob includes 'queued' in its active-status set (line 91) but cleanupStaleJobs excludes 'queued' from its cleanup query (line 112). A job stuck in 'queued' (e.g. message broker failure before pickup) is never cleaned, so hasActiveJob returns true forever and the repo can never start another build (permanent 409)."
-    },
-    {
-      "bot": "claude-oracle",
-      "severity": "HIGH",
-      "file": "server/services/graph-build-service.ts",
-      "line": "106-113",
-      "description": "cleanupStaleJobs only queries status in ['cloning','building','syncing_issues'] and excludes 'queued', so a job that is created but never picked up by the executor (e.g. Pub/Sub publish failed before fallback, or process crashed before updateJobStatus) stays 'queued' forever and is never failed/cleaned.",
-      "verdict": "TRUE",
-      "action": "FIX",
-      "reason": "Line 112 omits 'queued' from the cleanup query, and a job stays 'queued' until the executor's first call updateJobStatus(...,'cloning') at executor.ts:179, so a Pub/Sub message lost after createJob or a crash before execute leaves an un-cleanable queued job.",
-      "impact": "real",
-      "impactReason": "cleanupStaleJobs queries status in ['cloning','building','syncing_issues'] (line 112) and never includes 'queued'. A queued job whose executor was never invoked stays 'queued' indefinitely, permanently blocks hasActiveJob, and counts against countActiveJobs — no recovery path exists in the code."
+      "impactReason": "A job stuck in 'queued' is never cleaned, so hasActiveJob returns true indefinitely and countActiveJobs continues consuming a concurrency slot. There is no recovery path in the service."
     },
     {
       "bot": "human-review-2026-06-06",
       "severity": "LOW",
       "file": "server/services/graph-build-service.ts",
-      "line": "119-134",
+      "line": "119-133",
       "description": "TP: stale cleanup reads active jobs and later updates them without checking the status is still active, so a concurrently completed job can be marked failed.",
       "verdict": "TRUE",
       "action": "FIX",
       "reason": "Novel finding confirmed as real bug in human review",
       "impact": "real",
       "impactReason": "cleanupStaleJobs reads all matching docs and then updates each without re-checking the current status. A job that transitions to 'completed' or 'failed' between the snapshot and the .update() call is incorrectly overwritten with status='failed', corrupting an already-terminal record."
-    },
-    {
-      "bot": "human-review-2026-06-06",
-      "severity": "MEDIUM",
-      "file": "server/services/graph-build-service.ts",
-      "line": "119",
-      "description": "TP: stale cleanup reads active jobs and later updates them without checking the status is still active, so a concurrently completed job can be marked failed.",
-      "verdict": "TRUE",
-      "action": "FIX",
-      "reason": "Novel finding confirmed as real bug in human review",
-      "impact": "real",
-      "impactReason": "Same TOCTOU as 119-134 — unconditional doc.ref.update() at line 121 lacks a precondition on current status; a concurrently-completed job is silently re-marked failed."
-    },
-    {
-      "bot": "human-review-2026-06-06",
-      "severity": "MEDIUM",
-      "file": "server/services/graph-build-service.ts",
-      "line": "134",
-      "description": "TP: stale cleanup reads active jobs and later updates them without checking the status is still active, so a concurrently completed job can be marked failed.",
-      "verdict": "TRUE",
-      "action": "FIX",
-      "reason": "Novel finding confirmed as real bug in human review",
-      "impact": "real",
-      "impactReason": "Same TOCTOU as 119-134; line 134 is beyond the file (file ends at 133) so the line reference is wrong, but the underlying finding — unconditional update clobbering a concurrently-completed job — is real and reproducible."
     },
     {
       "bot": "human-review-2026-06-06",
@@ -888,18 +852,6 @@
       "reason": "Novel finding confirmed as real bug in human review",
       "impact": "theoretical",
       "impactReason": "These line numbers do not exist in the file (file ends at line 133). The actual concern — cleanupStaleJobs fetches all active jobs with no .limit() (line 112) and filters in memory — is a performance/cost concern for large orgs, not a crash or data corruption. No user-visible wrong result or broken contract."
-    },
-    {
-      "bot": "human-review-2026-06-06",
-      "severity": "MEDIUM",
-      "file": "server/services/graph-build-service.ts",
-      "line": "156",
-      "description": "TP: stale cleanup reads active jobs and later updates them without checking the status is still active, so a concurrently completed job can be marked failed.",
-      "verdict": "TRUE",
-      "action": "FIX",
-      "reason": "Novel finding confirmed as real bug in human review",
-      "impact": "real",
-      "impactReason": "Line 156 does not exist in the file (133 lines total); line reference is factually wrong. The described finding (concurrent cleanup clobbering a completed job) is the same real TOCTOU already present at lines 119-134 and is real, but the line echo is incorrect."
     },
     {
       "bot": "human-review-2026-06-06",
@@ -1791,13 +1743,13 @@
       "bot": "human-review-2026-06-06",
       "severity": "HIGH",
       "file": "server/api/workflow-run-routes.ts",
-      "line": "144",
+      "line": "145",
       "description": "TP: workflow-run detail/cancel/restart fetch by run id before authorization, creating a 404-vs-403 existence oracle for cross-org run ids.",
       "verdict": "TRUE",
       "action": "FIX",
       "reason": "Novel finding confirmed as real bug in human review",
       "impact": "real",
-      "impactReason": "Line 144: `const run = await wfManager.getWorkflowRun(runId)` executes before auth (checkOrgMember is at line 153). A cross-org attacker probing arbitrary run IDs gets 404 (not found) vs 200/403 (found), leaking cross-org run existence. Concrete reproducible path: GET /api/workflow-runs/<victim-run-id> with a valid but different-org session."
+      "impactReason": "Line 145: `const run = await wfManager.getWorkflowRun(runId)` executes before auth (checkOrgMember is at line 153). A cross-org attacker probing arbitrary run IDs gets 404 (not found) vs 200/403 (found), leaking cross-org run existence. Concrete reproducible path: GET /api/workflow-runs/<victim-run-id> with a valid but different-org session."
     },
     {
       "bot": "human-review-2026-06-06",
@@ -1839,13 +1791,13 @@
       "bot": "human-review-2026-06-06",
       "severity": "HIGH",
       "file": "server/api/workflow-run-routes.ts",
-      "line": "182",
+      "line": "177",
       "description": "TP: workflow-run detail/cancel/restart fetch by run id before authorization, creating a 404-vs-403 existence oracle for cross-org run ids.",
       "verdict": "TRUE",
       "action": "FIX",
       "reason": "Novel finding confirmed as real bug in human review",
       "impact": "real",
-      "impactReason": "Line 182 is `const wfManager = getWorkflowManager()` — not a fetch. However, the existence-oracle pattern in the cancel route is real: line 177 fetches the run, line 179 returns 404 if absent, and auth is checked at lines 185-191. A cross-org user can enumerate cancel-route IDs identically to the GET route. Misidentified specific line, but the oracle issue is concretely reproducible in this route."
+      "impactReason": "Line 177 fetches the run before the route checks owner/admin authorization at lines 185-191. A cross-org user can enumerate cancel-route IDs by observing 404 for absent runs versus 403 for existing runs they cannot cancel."
     },
     {
       "bot": "human-review-2026-06-06",
@@ -2660,6 +2612,18 @@
       "impactReason": "Hardcoding 's' (dotAll) changes semantics for rule authors who write ^/$ with multiline intent, but it is a predictable, documented flag — not a crash or data loss. Rule authors can work around it; no caller breaks silently in a catastrophic way."
     },
     {
+      "bot": "oracle-review-2026-06-08",
+      "severity": "HIGH",
+      "file": "server/services/validation-checks/deterministic.ts",
+      "line": "42-55",
+      "description": "runRegexCheck compiles validation-rule regex patterns from skill YAML with new RegExp(pattern, 's') and runs them against execution output without any timeout, length guard, or regex-complexity guard, so a malicious or pathological rule pattern can block the Node event loop during validation.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "The validation rule source is skill-authored YAML and the target text can be large execution output. JavaScript regex execution is synchronous; a catastrophic-backtracking pattern at line 54 can hang the validation pipeline and process event loop.",
+      "impact": "real",
+      "impactReason": "A crafted skill validation regex can produce a reproducible denial-of-service path during validation, affecting real executions rather than only developer ergonomics."
+    },
+    {
       "bot": "human-review-2026-06-06",
       "severity": "MEDIUM",
       "file": "server/services/validation-checks/deterministic.ts",
@@ -2678,10 +2642,10 @@
       "line": "85",
       "description": "TP: LLM grading call has no explicit timeout, so a hung provider call can stall validation.",
       "verdict": "TRUE",
-      "action": "FIX",
-      "reason": "Novel finding confirmed as real bug in human review",
-      "impact": "real",
-      "impactReason": "No timeout on the OpenAI/Zhipu API call. A hung provider connection stalls the async function indefinitely, accumulating unreleased Promise chains on a long-running server — a reproducible resource leak / reliability failure."
+      "action": "DEFER",
+      "reason": "No application-specific timeout is configured on the grading call, but the underlying OpenAI-compatible SDK normally applies a transport timeout, so the original indefinite-hang framing is overstated.",
+      "impact": "theoretical",
+      "impactReason": "Lack of an app-level timeout is a real operational hardening gap, but the code does not demonstrate an unbounded hang path. Treat as theoretical rather than a confirmed reliability failure."
     },
     {
       "bot": "human-review-2026-06-06",
@@ -2710,10 +2674,10 @@
     {
       "bot": "panel-review-2026-06-06",
       "severity": "MEDIUM",
-      "file": "server/services/validation-runner.ts",
-      "line": "125",
+      "file": "server/services/validation-checks/llm-grader.ts",
+      "line": "55-56",
       "description": "The executionOutput and originalPrompt are concatenated into a single prompt without sanitization, which could allow an attacker to inject instructions into the LLM grader's system context.",
-      "reason": "Prompt injection: execution.artifact.content (attacker-controlled AI output) is concatenated verbatim into the grader prompt. An adversary can append instructions that flip pass/fail verdicts for the quality gate. Reproducible; the grader is a security boundary and the boundary is not defended.",
+      "reason": "buildUserPrompt interpolates originalPrompt, executionOutput, and criteria directly into the grader user message. executionOutput is attacker-controlled AI output, so an adversary can append instructions that influence the quality gate. Reproducible; the grader is a security boundary and the boundary is not defended.",
       "verdict": "TRUE",
       "action": "FIX",
       "impact": "real"
@@ -2733,25 +2697,13 @@
       "bot": "claude-oracle",
       "severity": "HIGH",
       "file": "server/services/validation-runner.ts",
-      "line": "141-142",
+      "line": "68-73",
       "description": "loadValidationRules only verifies that parsed.name and parsed.type exist, so a definition with type:'llm' lacking a criteria array (or type:'deterministic' lacking rules) passes the filter, then countTotalChecks reads rule.criteria.length / rule.rules.length and throws a TypeError, aborting the entire pipeline into the catch block (error status, totalChecks:0) instead of producing a per-file error entry.",
       "verdict": "TRUE",
       "action": "FIX",
       "reason": "loadValidationRules (lines 68-73) only checks parsed.name/parsed.type before casting to ValidationDefinition with no criteria/rules validation, and countTotalChecks (lines 227,229) unconditionally reads (rule).rules.length / (rule).criteria.length, so a typed-but-incomplete YAML throws a TypeError caught by the outer try/catch (line 196) producing status:'error', totalChecks:0 for the whole run.",
       "impact": "real",
       "impactReason": "loadValidationRules only checks name+type; a YAML with type:'llm' but no criteria array passes through. countTotalChecks then dereferences undefined.length, throwing TypeError and aborting the whole pipeline to error status. Reproducible with any malformed-but-type-present YAML."
-    },
-    {
-      "bot": "claude-oracle",
-      "severity": "MEDIUM",
-      "file": "server/services/validation-runner.ts",
-      "line": "146-152",
-      "description": "For a deterministic definition that parsed but has no rules array, def.rules is undefined and runDeterministicChecks(def.rules, ...) calls rules.map on undefined, throwing and sending the whole run to the error branch rather than degrading gracefully.",
-      "verdict": "TRUE",
-      "action": "FIX",
-      "reason": "runDeterministicChecks (deterministic.ts line 241) does rules.map(...), so a deterministic def with undefined rules throws; in practice countTotalChecks at line 227 reaches def.rules.length first, but either way the missing-rules case crashes into the catch block (line 196) instead of yielding a per-file error entry.",
-      "impact": "real",
-      "impactReason": "Same root cause: a deterministic definition without a rules array passes validation, then runDeterministicChecks(def.rules, ...) calls undefined.map, throwing and collapsing the pipeline to error status instead of a per-file error entry."
     },
     {
       "bot": "claude-oracle",
@@ -2811,6 +2763,18 @@
       "reason": "Novel finding confirmed as real bug in human review",
       "impact": "theoretical",
       "impactReason": "All LLM calls fan out concurrently with no cap. Rate-limit 429 responses are caught and reported as per-check failures; no crash or data corruption. A real operational concern but with graceful degradation."
+    },
+    {
+      "bot": "oracle-review-2026-06-08",
+      "severity": "HIGH",
+      "file": "server/services/validation-runner.ts",
+      "line": "244-253",
+      "description": "runLlmChecks serializes execution.inputs into originalPrompt and sends it to the external LLM grader via gradeByCriteria without redaction, so task inputs containing API keys, credentials, tokens, or other secrets are disclosed to the grading provider.",
+      "verdict": "TRUE",
+      "action": "FIX",
+      "reason": "validation-runner.ts:244-246 JSON.stringify's execution.inputs, then line 253 passes that string into gradeByCriteria. llm-grader.ts builds the user prompt from originalPrompt and sends it to the configured OpenAI-compatible Zhipu endpoint.",
+      "impact": "real",
+      "impactReason": "Execution inputs are a realistic place for credentials in automation tasks, and this code sends them verbatim to an external service."
     },
     {
       "bot": "claude-oracle",
@@ -3041,23 +3005,13 @@
       "bot": "panel-review-2026-06-06",
       "severity": "LOW",
       "file": "server/state/integration-manager.ts",
-      "line": "105",
-      "description": "The updateIntegration method will perform a database write even if the provided input object has no modified fields (except for updatedAt).",
-      "reason": "Duplicate of existingTrue line 159-161 masking bug (novel describes the same val.length > 8 threshold exposing short credentials). Confirmed real — same code path.",
-      "verdict": "TRUE",
-      "action": "FIX",
-      "impact": "real"
-    },
-    {
-      "bot": "panel-review-2026-06-06",
-      "severity": "HIGH",
-      "file": "server/state/integration-manager.ts",
       "line": "114",
-      "description": "The updateIntegration method performs a getIntegration followed by an update without any transaction or atomic operation, leading to a race condition where concurrent updates can result in lost data.",
-      "reason": "Non-atomic read-then-update in updateIntegration: concurrent PATCHes on the same integration can interleave (read-A → read-B → write-A → write-B), causing write-A's changes to be silently overwritten. Real lost-update under concurrent load.",
+      "description": "The updateIntegration method performs a getIntegration followed by an update without a transaction; concurrent updates can return stale merged objects and same-field writes are last-writer-wins.",
+      "reason": "Firestore .update(updates) is field-level, so different-field concurrent updates are not generally lost. Same-field last-writer-wins and stale return values are possible, but the concrete data-loss path for credentials is captured separately at line 123.",
       "verdict": "TRUE",
-      "action": "FIX",
-      "impact": "real"
+      "action": "IGNORE",
+      "impact": "theoretical",
+      "impactReason": "The generic read-then-update concern is a theoretical concurrency caveat. The confirmed real bug is the whole-map credentials replacement at line 123."
     },
     {
       "bot": "claude-oracle",
@@ -3468,27 +3422,16 @@
       "impactReason": "installationId is interpolated raw into the URL path (unlike getInstallationDetails which uses encodeURIComponent). However installationId is always a numeric string from GitHub webhook payloads, making a malformed URL practically impossible. Inconsistency is real but impact is not reachable."
     },
     {
-      "bot": "human-review-2026-06-06",
-      "severity": "MEDIUM",
-      "file": "server/mcp/tools/kg.ts",
-      "line": "146",
-      "description": "TP: KG file lookup matches only org_id+path with LIMIT 1, so identical paths in multiple repos can select the wrong repo nondeterministically.",
-      "verdict": "TRUE",
-      "action": "FIX",
-      "reason": "Novel finding confirmed as real bug in human review",
-      "impact": "real",
-      "impactReason": "Duplicate of finding at 89-94: LIMIT 1 on (org_id, path) without repo_id disambiguation picks an arbitrary repo when paths collide across repos. Real and reproducible."
-    },
-    {
       "bot": "panel-review-2026-06-06",
       "severity": "MEDIUM",
       "file": "server/services/repo-connection-service.ts",
-      "line": "146",
-      "description": "The check for `githubRepoId` existence happens before the document is created; while it's a service check, it doesn't use a transaction or unique constraint to prevent concurrent requests from creating duplicate IDs.",
-      "reason": "Race condition in createConnection uniqueness check: get-then-set without a transaction lets concurrent creates both pass the duplicate check. Same as existingTrue '276-282'. Real and reproducible.",
+      "line": "129-157",
+      "description": "createConnection checks for an existing active connection by githubRepoId and then writes a new random document without a transaction or unique constraint, so concurrent create requests can both pass the duplicate check and create duplicate active connections for the same repository.",
+      "reason": "Race condition in createConnection uniqueness check: line 130 reads existing connections, then lines 137-157 create and write a new random doc separately. Without a transaction or uniqueness constraint, concurrent requests can interleave read-read-write-write.",
       "verdict": "TRUE",
       "action": "FIX",
-      "impact": "real"
+      "impact": "real",
+      "impactReason": "Concurrent createConnection calls can both pass the duplicate check and insert active repo-connections for the same githubRepoId, breaking the one-connection-per-repo invariant."
     },
     {
       "bot": "panel-review-2026-06-06",
@@ -3534,18 +3477,6 @@
       "reason": "Novel finding confirmed as real bug in human review",
       "impact": "real",
       "impactReason": "Number('   ') === 0, not NaN, so a whitespace-only query string passes the isNaN guard and coerces to 0. Issue 0 does not exist in Neo4j; the query silently returns empty results instead of an error. Reproducible with any whitespace query."
-    },
-    {
-      "bot": "human-review-2026-06-06",
-      "severity": "MEDIUM",
-      "file": "server/services/repo-connection-service.ts",
-      "line": "276-282",
-      "description": "TP: repo connection duplicate check is read-then-write without a transaction or unique constraint, so concurrent creates can duplicate a repo connection.",
-      "verdict": "TRUE",
-      "action": "FIX",
-      "reason": "Novel finding confirmed as real bug in human review",
-      "impact": "real",
-      "impactReason": "createConnection performs getConnectionByRepo then doc.set with no Firestore transaction. Two concurrent requests for the same repo both pass the duplicate check and both write, creating two active connections for the same repo. Reproducible under concurrent load."
     },
     {
       "bot": "panel-review-2026-06-06",
@@ -3789,29 +3720,6 @@
       "reason": "Novel finding confirmed as real bug in human review",
       "impact": "theoretical",
       "impactReason": "Same as line 283 — line 290 is not in checkOrgAdminBySession in the actual file. The bug is real but this citation does not match the source."
-    },
-    {
-      "bot": "panel-review-2026-06-06",
-      "severity": "LOW",
-      "file": "server/lib/authorization.ts",
-      "line": "297",
-      "description": "If session.organizationId is missing, the system defaults to authorized: true (legacy behavior), which could allow unauthorized access if an ID was expected but not provided.",
-      "reason": "Duplicate of the existingTrue finding at lines 410-413 in authorization.ts. Line 297 of auth-guards.ts is inside checkOrgSuspension, not the session function — but the described behavior (implicit permit on missing orgId in session) maps to the same real bypass in checkOrgAdminBySession. If line 297 of auth-guards.ts is the intended target (checkOrgSuspension early-return on missing orgId), that is a separate theoretical issue — see line 174 entry.",
-      "verdict": "TRUE",
-      "action": "FIX",
-      "impact": "real"
-    },
-    {
-      "bot": "human-review-2026-06-06",
-      "severity": "MEDIUM",
-      "file": "server/lib/authorization.ts",
-      "line": "402",
-      "description": "TP: checkOrgAdminBySession returns authorized=true when a session has no organizationId, which can bypass org-admin checks for legacy/malformed sessions.",
-      "verdict": "TRUE",
-      "action": "FIX",
-      "reason": "Novel finding confirmed as real bug in human review",
-      "impact": "real",
-      "impactReason": "checkOrgAdminBySession function start at line 402 is correctly cited. The logic at lines 410-413 unconditionally returns { authorized: true } when session.organizationId is absent. Any authenticated user on a route protected solely by this function passes the org-admin check for sessions with no org context — a concrete privilege escalation on real routes (e.g. reflections approve/reject)."
     },
     {
       "bot": "claude-oracle",
