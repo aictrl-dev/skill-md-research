@@ -50,8 +50,9 @@ if (!['fp', 'ignore'].includes(novelPolicy)) {
   process.exit(1);
 }
 const countNovelsAsFp = novelPolicy === 'fp';
+const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const fileRe = nodeName
-  ? new RegExp(`^PR-(\\d+)\\.${nodeName}\\.findings\\.json$`)
+  ? new RegExp(`^PR-(\\d+)\\.${escapeRegExp(nodeName)}\\.findings\\.json$`)
   : /^PR-(\d+)\.findings\.json$/;
 if (!expId) { console.error('Usage: score.ts --exp <exp-id>'); process.exit(1); }
 
