@@ -13,7 +13,8 @@
  * held-out TEST F2 at that cut vs the votes>=1 (keep-all) baseline. A real lift on
  * held-out test is the bar; a lift only on train is overfitting.
  *
- * Matching mirrors score.ts exactly: file + line +/-5, REAL set (impact:real TRUE).
+ * Matching mirrors score.ts exactly: file + line +/-5, REAL set (impact:real TRUE),
+ * with unmatched novel findings counted as FP until they are merged into the oracle.
  *
  * Usage: rank-f2.ts --exp <exp-id> [--reps 1,2,3] [--split odd-even|half]
  *                   [--max-votes 7] [--tasks 105,201,...]
@@ -79,16 +80,18 @@ function f2Real(prSet: string[], minVotes: number, minLenses: number) {
     const findings = (byPR[pr] ?? []).filter(x => (x.votes ?? Infinity) >= minVotes && (x.nLenses ?? Infinity) >= minLenses);
     const labels = ak[pr] ?? [];
     const usedAK = new Set<number>();
-    for (const sf of findings) {
+    const usedF = new Set<number>();
+    findings.forEach((sf, i) => {
       const sfLine = parseLine(sf.line);
       const idx = labels.findIndex((lbl, j) => !usedAK.has(j) && sf.file === lbl.file && overlap(sfLine, parseLine(lbl.line)));
-      if (idx !== -1) usedAK.add(idx);
-    }
+      if (idx !== -1) { usedAK.add(idx); usedF.add(i); }
+    });
     for (const j of usedAK) {
       const lbl = labels[j];
       if (lbl.verdict === 'TRUE') { if (isRealTrue(lbl)) tp += 1; }
       else if (lbl.verdict === 'FALSE') fp += 1;
     }
+    fp += findings.filter((_, i) => !usedF.has(i)).length;
     for (let j = 0; j < labels.length; j++) {
       if (usedAK.has(j)) continue;
       const lbl = labels[j];

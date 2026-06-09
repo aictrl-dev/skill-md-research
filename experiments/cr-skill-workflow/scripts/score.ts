@@ -41,6 +41,15 @@ const prAllowed = (pr: string) => taskFilter.size === 0 || taskFilter.has(pr);
 // --node <name> scores per-node files PR-<id>.<node>.findings.json (ablation);
 // default scores the final result PR-<id>.findings.json.
 const nodeName = get('--node', '');
+// --novel-policy fp|ignore controls unmatched findings. The default is fp
+// because precision should degrade when a workflow generates unadjudicated noise.
+// Use "ignore" only to reproduce older oracle-only numbers.
+const novelPolicy = get('--novel-policy', 'fp');
+if (!['fp', 'ignore'].includes(novelPolicy)) {
+  console.error('--novel-policy must be fp or ignore');
+  process.exit(1);
+}
+const countNovelsAsFp = novelPolicy === 'fp';
 const fileRe = nodeName
   ? new RegExp(`^PR-(\\d+)\\.${nodeName}\\.findings\\.json$`)
   : /^PR-(\d+)\.findings\.json$/;
@@ -121,8 +130,11 @@ function scoreInto(prRaw: string, rawFindings: Finding[], into: Pair) {
     into.full.fn += w;
     if (isRealTrue(lbl)) into.real.fn += w;
   }
-  // novels = findings matching nothing (same for both sets). Not scored as FP.
+  // novels = findings matching nothing (same for both sets). In the default
+  // strict-precision policy they count as FP; the raw count is still reported so
+  // independently adjudicated novel TPs can later be merged into the oracle.
   const novels = findings.filter((_, i) => !usedF.has(i)).length;
+  if (countNovelsAsFp) { into.full.fp += novels; into.real.fp += novels; }
   into.full.novels += novels; into.real.novels += novels;
   into.full.n += 1; into.real.n += 1;
 }
@@ -151,6 +163,7 @@ for (const rep of reps) {
 }
 const oFull = prf(overall.full), oReal = prf(overall.real);
 console.log(`\n=== ${expId} ===`);
+console.log(`  novel policy: ${novelPolicy === 'fp' ? 'count as FP' : 'ignore in precision'}`);
 console.log(`  FULL  per-run: P=${r3(oFull.p)} R=${r3(oFull.r)} F1=${r3(oFull.f1)} F2=${r3(oFull.f2)} | TP=${overall.full.tp} FP=${overall.full.fp} FN=${overall.full.fn} novels=${overall.full.novels} n=${overall.full.n}`);
 console.log(`  REAL  per-run: P=${r3(oReal.p)} R=${r3(oReal.r)} F1=${r3(oReal.f1)} F2=${r3(oReal.f2)} | TP=${overall.real.tp} FP=${overall.real.fp} FN=${overall.real.fn}`);
 for (const s of ['file','module']) {
@@ -192,7 +205,7 @@ console.log(`  REAL  union-of-${reps.length}: P=${r3(uReal.p)} R=${r3(uReal.r)} 
 const withPrf = (g: Agg) => ({ ...prf(g), ...g });
 const scoresPath = path.join(resultsBase, expId, 'scores.json');
 fs.writeFileSync(scoresPath, JSON.stringify({
-  expId, reps,
+  expId, reps, novelPolicy,
   overall: { full: withPrf(overall.full), real: withPrf(overall.real) },
   byScope: Object.fromEntries(Object.entries(byScope).map(([k,v])=>[k,{ full: withPrf(v.full), real: withPrf(v.real) }])),
   union: { full: withPrf(u.full), real: withPrf(u.real) },

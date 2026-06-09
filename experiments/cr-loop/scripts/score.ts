@@ -19,9 +19,9 @@
  *       FALSE + FIX   → False Positive
  *       UNCERTAIN/*   → counted half-credit
  *   - Labelled entry NOT matched in skill output → False Negative (missed)
- *   - Skill finding NOT matched in answer key → Novel finding (unscored —
- *     could be a new TP or new FP, needs separate grading; tracked separately
- *     so the metric is conservative).
+ *   - Skill finding NOT matched in answer key → Novel finding. By default this
+ *     remains unscored for backwards compatibility; callers that need strict
+ *     precision should pass countNovelFindingsAsFalsePositives.
  *
  * F1 metric:
  *   precision = TP / (TP + FP)        — does the skill avoid false alarms?
@@ -92,6 +92,21 @@ export interface ScoreResult {
   };
 }
 
+export interface ScoreOptions {
+  /**
+   * Count answer-key misses as false negatives as before, and also count every
+   * unmatched model finding as a false positive. This is the conservative
+   * precision estimate when novel findings have not been independently graded.
+   */
+  countNovelFindingsAsFalsePositives?: boolean;
+  /**
+   * Require severity-family equality in addition to file+line. Defect identity is
+   * usually file+line in the code-review experiments because severity is a model
+   * label, not the bug itself.
+   */
+  requireSeverityMatch?: boolean;
+}
+
 function parseLineRange(line: string | number | undefined): { start: number; end: number } | null {
   if (line === undefined || line === null || line === '') return null;
   const s = String(line);
@@ -104,7 +119,7 @@ function parseLineRange(line: string | number | undefined): { start: number; end
 }
 
 function linesIntersect(a: { start: number; end: number } | null, b: { start: number; end: number } | null): boolean {
-  if (!a || !b) return true; // file-level findings (no line) match by file alone
+  if (!a || !b) return false;
   return Math.abs(a.start - b.start) <= LINE_TOLERANCE || (a.start <= b.end + LINE_TOLERANCE && a.end + LINE_TOLERANCE >= b.start);
 }
 
@@ -122,9 +137,9 @@ function severitiesMatch(a: string, b: string): boolean {
   return norm(a) === norm(b);
 }
 
-function matchesAnswerKey(skill: SkillFinding, ak: AnswerKeyEntry): boolean {
+function matchesAnswerKey(skill: SkillFinding, ak: AnswerKeyEntry, opts: ScoreOptions): boolean {
   if (skill.file !== ak.file) return false;
-  if (!severitiesMatch(skill.severity, ak.severity)) return false;
+  if (opts.requireSeverityMatch !== false && !severitiesMatch(skill.severity, ak.severity)) return false;
   return linesIntersect(parseLineRange(skill.line), parseLineRange(ak.line));
 }
 
@@ -132,6 +147,7 @@ export function score(
   prNumber: number,
   skillFindings: SkillFinding[],
   answerKeyPath: string = ANSWER_KEY_PATH,
+  opts: ScoreOptions = {},
 ): ScoreResult {
   const answerKey = JSON.parse(fs.readFileSync(answerKeyPath, 'utf8')) as Record<string, AnswerKeyEntry[]>;
   const labels = answerKey[String(prNumber)] ?? [];
@@ -142,7 +158,7 @@ export function score(
 
   // For each skill finding, find its match (if any) in the answer key
   skillFindings.forEach((sf, i) => {
-    const matchIdx = labels.findIndex((ak, j) => !matchedAnswerKey.has(j) && matchesAnswerKey(sf, ak));
+    const matchIdx = labels.findIndex((ak, j) => !matchedAnswerKey.has(j) && matchesAnswerKey(sf, ak, opts));
     if (matchIdx === -1) return;
     matchedAnswerKey.add(matchIdx);
     matchedSkill.add(i);
@@ -177,9 +193,11 @@ export function score(
     else fn += 0.5;
   }
 
-  // Novel = skill findings with no answer-key match. Not penalised here
-  // (could be a new TP), but reported for downstream grading.
+  // Novel = skill findings with no answer-key match. Not penalised here unless
+  // countNovelFindingsAsFalsePositives is enabled (could be a new TP), but
+  // always reported for downstream grading.
   const novel = skillFindings.filter((_, i) => !matchedSkill.has(i));
+  if (opts.countNovelFindingsAsFalsePositives) fp += novel.length;
 
   const precision = tp + fp === 0 ? 0 : tp / (tp + fp);
   const recall = tp + fn === 0 ? 0 : tp / (tp + fn);

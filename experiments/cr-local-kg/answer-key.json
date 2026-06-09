@@ -892,16 +892,6 @@
       "verdict": "FALSE",
       "action": "IGNORE",
       "reason": "Novel finding classified as false positive in human review"
-    },
-    {
-      "bot": "claude-oracle",
-      "severity": "MEDIUM",
-      "file": "server/services/graph-build-service.ts",
-      "line": "53-65",
-      "description": "updateJobStatus uses Firestore .update() which rejects if the document does not exist; if a job doc was deleted (or never persisted) the executor's status writes throw an unhandled error instead of failing gracefully, unlike .set({merge:true}).",
-      "verdict": "UNCERTAIN",
-      "action": "DEFER",
-      "reason": "The factual claim is correct (line 64 uses .update() which Firestore rejects on missing docs), but no code path deletes graph-build-jobs docs (grep found none) and createJob awaits .set() (line 48) before the executor is ever called, so the missing-doc trigger is not demonstrated in this codebase."
     }
   ],
   "106": [
@@ -2817,16 +2807,6 @@
       "line": "67",
       "description": "If both deterministicRules and llmRules are empty (e.g., valid but empty ruleset), the flow continues to report results without specific data.",
       "reason": "Every parsed rule has type 'deterministic' or 'llm'; after filtering the two lists are exhaustive. An empty-both-lists state after a non-empty rules array is impossible, so the claimed edge case cannot occur.",
-      "verdict": "FALSE",
-      "action": "IGNORE"
-    },
-    {
-      "bot": "panel-review-2026-06-06",
-      "severity": "LOW",
-      "file": "server/services/validation-runner.ts",
-      "line": "67",
-      "description": "If both deterministicRules and llmRules are empty (e.g., valid but empty ruleset), the flow continues to report results without specific data.",
-      "reason": "Second novel at this line (weak regex validation): the try-catch in runRegexCheck correctly handles any pattern that throws during construction. If a pattern compiles it is by definition a valid RegExp — no additional validation is needed.",
       "verdict": "FALSE",
       "action": "IGNORE"
     },

@@ -10,6 +10,8 @@
  * votes (# distinct nodes) and nLenses (# distinct lenses = node minus _r<round>),
  * classifies each cluster against the oracle as realTP / theoTP / FP(matched a
  * FALSE entry) / novel, and prints the vote distribution + precision-by-threshold.
+ * For strict precision, novel clusters count as FP unless they are independently
+ * validated and merged into answer-key.json.
  *
  * Usage: vote-analyze.ts --exp <exp-id> [--reps 1,2,3] [--tasks 105,201,...]
  */
@@ -108,25 +110,26 @@ const prsSeen = [...new Set(all.map(a => a.pr))].sort((a, b) => +a - +b);
 console.log(`\n=== vote-analyze: ${expId} (reps ${reps.join(',')}, ${prsSeen.length} PRs, ${all.length} findings, max ${maxVotes} voters) ===`);
 
 // Distribution: at EXACTLY v votes, how do findings break down?
-console.log(`\n  votes | realTP theoTP  FP  novel | "good%" (realTP / (realTP+FP))`);
+console.log(`\n  votes | realTP theoTP  FP  novel | strict precision (realTP / (realTP+FP+novel))`);
 for (let v = 1; v <= maxVotes; v++) {
   const at = all.filter(a => a.votes === v);
   if (!at.length) continue;
   const c = (k: Klass) => at.filter(a => a.k === k).length;
   const rtp = c('realTP'), ttp = c('theoTP'), fp = c('FP'), nov = c('novel');
-  const good = rtp + fp === 0 ? NaN : rtp / (rtp + fp);
+  const good = rtp + fp + nov === 0 ? NaN : rtp / (rtp + fp + nov);
   console.log(`   =${v}  |  ${String(rtp).padStart(4)}  ${String(ttp).padStart(5)} ${String(fp).padStart(4)} ${String(nov).padStart(5)}  |  ${isNaN(good) ? '  -  ' : r3(good)}`);
 }
 
 // Threshold view: at votes>=v, REAL precision (vs FALSE-trap FPs) and recall retained.
 const totalRealTP = all.filter(a => a.k === 'realTP').length;
-console.log(`\n  votes>=v | realTP  FP  | REAL precision* | realTP retained`);
+console.log(`\n  votes>=v | realTP  FP  novel | strict precision* | realTP retained`);
 for (let v = 1; v <= maxVotes; v++) {
   const at = all.filter(a => a.votes >= v);
   const rtp = at.filter(a => a.k === 'realTP').length;
   const fp = at.filter(a => a.k === 'FP').length;
-  const prec = rtp + fp === 0 ? NaN : rtp / (rtp + fp);
-  console.log(`   >=${v}     |  ${String(rtp).padStart(4)} ${String(fp).padStart(4)}  |     ${isNaN(prec) ? '  -  ' : r3(prec)}     |  ${r3(rtp / (totalRealTP || 1))} (${rtp}/${totalRealTP})`);
+  const nov = at.filter(a => a.k === 'novel').length;
+  const prec = rtp + fp + nov === 0 ? NaN : rtp / (rtp + fp + nov);
+  console.log(`   >=${v}     |  ${String(rtp).padStart(4)} ${String(fp).padStart(4)} ${String(nov).padStart(6)}  |     ${isNaN(prec) ? '  -  ' : r3(prec)}      |  ${r3(rtp / (totalRealTP || 1))} (${rtp}/${totalRealTP})`);
 }
-console.log(`\n  *precision here = realTP / (realTP + FALSE-trap FP); novels/theoretical excluded (matches REAL-set scorer).`);
-console.log(`  Hypothesis holds if "good%" rises with votes and high-v retains most realTP.`);
+console.log(`\n  *precision here = realTP / (realTP + FALSE-trap FP + novel); theoretical excluded.`);
+console.log(`  Hypothesis holds if strict precision rises with votes and high-v retains most realTP.`);

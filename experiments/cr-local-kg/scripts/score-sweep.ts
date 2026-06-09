@@ -1,8 +1,9 @@
 #!/usr/bin/env npx tsx
 /**
- * Score the cr-local-kg sweep: micro-average precision/recall/F1 per condition
+ * Score the cr-local-kg sweep: micro-average precision/recall/F1/F2 per condition
  * (and per task-class) against the frozen gold answer-key, reusing cr-loop's
- * score(). Also surfaces KG-usage + time-per-review from results/timing.csv.
+ * score() with strict precision (novels as FP, severity ignored). Also surfaces
+ * KG-usage + time-per-review from results/timing.csv.
  *
  * Usage: score-sweep.ts [--reps 1,2,3]
  */
@@ -14,6 +15,10 @@ import { score, type SkillFinding } from '../../cr-loop/scripts/score.ts';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EXP = path.resolve(HERE, '..');
 const AK = path.join(EXP, 'answer-key.json');
+const SCORE_OPTIONS = {
+  countNovelFindingsAsFalsePositives: true,
+  requireSeverityMatch: false,
+} as const;
 
 const a: Record<string, string> = {};
 const argv = process.argv.slice(2);
@@ -26,7 +31,8 @@ function prf(g: Agg) {
   const p = g.tp + g.fp === 0 ? 0 : g.tp / (g.tp + g.fp);
   const r = g.tp + g.fn === 0 ? 0 : g.tp / (g.tp + g.fn);
   const f1 = p + r === 0 ? 0 : (2 * p * r) / (p + r);
-  return { p, r, f1 };
+  const f2 = 4 * p + r === 0 ? 0 : (5 * p * r) / (4 * p + r);
+  return { p, r, f1, f2 };
 }
 const r3 = (n: number) => Math.round(n * 1000) / 1000;
 
@@ -35,7 +41,7 @@ function scoreDir(dir: string, into: Agg): void {
   for (const f of fs.readdirSync(dir).filter((x) => /^PR-\d+\.findings\.json$/.test(x))) {
     const data = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')) as { prNumber?: number; findings?: SkillFinding[] };
     const pr = data.prNumber ?? Number(f.match(/^PR-(\d+)\./)?.[1]);
-    const res = score(pr, data.findings ?? [], AK);
+    const res = score(pr, data.findings ?? [], AK, SCORE_OPTIONS);
     into.tp += res.totals.truePositives; into.fp += res.totals.falsePositives;
     into.fn += res.totals.falseNegatives; into.novels += res.totals.novelFindings; into.n += 1;
   }
@@ -62,10 +68,10 @@ for (const cond of ['control', 'treatment']) {
   const kg = t.map((r) => Number(r[5]));
   const avg = (v: number[]) => (v.length ? v.reduce((x, y) => x + y, 0) / v.length : 0);
   console.log(`== ${cond.toUpperCase()} ==  (n=${overall.n} reviews)`);
-  console.log(`   P=${r3(o.p)} R=${r3(o.r)} F1=${r3(o.f1)}  | TP=${overall.tp} FP=${overall.fp} FN=${overall.fn} novels=${overall.novels}`);
+  console.log(`   P=${r3(o.p)} R=${r3(o.r)} F1=${r3(o.f1)} F2=${r3(o.f2)}  | TP=${overall.tp} FP=${overall.fp} FN=${overall.fn} novels=${overall.novels}`);
   for (const cls of ['file', 'module']) {
     const c = prf(byClass[cls]);
-    console.log(`   ${cls}: F1=${r3(c.f1)} (P=${r3(c.p)} R=${r3(c.r)}, n=${byClass[cls].n})`);
+    console.log(`   ${cls}: F1=${r3(c.f1)} F2=${r3(c.f2)} (P=${r3(c.p)} R=${r3(c.r)}, n=${byClass[cls].n})`);
   }
   if (t.length) console.log(`   time/review: avg ${avg(secs).toFixed(0)}s | KG: used ${kg.filter((x) => x > 0).length}/${t.length} reviews, avg ${avg(kg).toFixed(1)} calls`);
   console.log('');

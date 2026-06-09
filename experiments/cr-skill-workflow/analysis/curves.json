@@ -1,0 +1,690 @@
+{
+  "generated": "bootstrap-curves.ts",
+  "poolPassesTotal": 4820,
+  "poolPerPR": {
+    "101": 191,
+    "102": 189,
+    "103": 191,
+    "104": 189,
+    "105": 413,
+    "106": 189,
+    "107": 184,
+    "108": 184,
+    "109": 184,
+    "110": 193,
+    "111": 184,
+    "112": 184,
+    "113": 403,
+    "114": 184,
+    "115": 183,
+    "201": 403,
+    "202": 183,
+    "203": 183,
+    "204": 403,
+    "205": 403
+  },
+  "realBugCount": 33,
+  "strictPrecision": {
+    "novelPolicy": "unmatched findings count as FP until independently validated and merged into answer-key.json",
+    "falseTrapCount": 245,
+    "novelClusterCount": 490
+  },
+  "maxPoolForEmpirical": 183,
+  "longTail": [
+    {
+      "pr": "105",
+      "file": "graph-build-service.ts",
+      "line": "88-113",
+      "rate": 0.6271,
+      "passes": 413,
+      "reason": "hasActiveJob includes 'queued' (line 91) and countActiveJobs also counts 'queued' (line 10"
+    },
+    {
+      "pr": "115",
+      "file": "cache.ts",
+      "line": "58-71",
+      "rate": 0.5191,
+      "passes": 183,
+      "reason": "Lines 59-70 do get -> on miss await loader() -> set(), with no in-flight promise map, and "
+    },
+    {
+      "pr": "203",
+      "file": "finding-fingerprint.ts",
+      "line": "37-44",
+      "rate": 0.4809,
+      "passes": 183,
+      "reason": "Postgres findings table has partial UNIQUE (organization_id, fingerprint) (schema/code-rev"
+    },
+    {
+      "pr": "105",
+      "file": "graph-build-service.ts",
+      "line": "119-133",
+      "rate": 0.339,
+      "passes": 413,
+      "reason": "Novel finding confirmed as real bug in human review"
+    },
+    {
+      "pr": "105",
+      "file": "graph-build-service.ts",
+      "line": "25-51",
+      "rate": 0.2978,
+      "passes": 413,
+      "reason": "createJob does an unconditional .set(job) with a random UUID and no transaction/uniqueness"
+    },
+    {
+      "pr": "111",
+      "file": "workflow-run-routes.ts",
+      "line": "145",
+      "rate": 0.2935,
+      "passes": 184,
+      "reason": "Novel finding confirmed as real bug in human review"
+    },
+    {
+      "pr": "105",
+      "file": "graph-build-service.ts",
+      "line": "53-65",
+      "rate": 0.2833,
+      "passes": 413,
+      "reason": "updateJobStatus does an unconditional .update(update) (line 64) with no terminal-state gua"
+    },
+    {
+      "pr": "107",
+      "file": "lifecycle-event-validator.ts",
+      "line": "77-79",
+      "rate": 0.2011,
+      "passes": 184,
+      "reason": "Line 77 uses isNaN(Date.parse(event.event_timestamp)) whose error message even claims 'mus"
+    },
+    {
+      "pr": "202",
+      "file": "integration-routes.ts",
+      "line": "159-161",
+      "rate": 0.1967,
+      "passes": 183,
+      "reason": "Lines 159-161 use `val.length > 8 ? val.slice(0,4)+'****'+val.slice(-4)` so a 9-char secre"
+    },
+    {
+      "pr": "110",
+      "file": "db.ts",
+      "line": "82-83",
+      "rate": 0.1917,
+      "passes": 193,
+      "reason": "Lines 82-83 call readNumber without the third allowZero arg (unlike DB_POOL_MIN on line 80"
+    },
+    {
+      "pr": "204",
+      "file": "repo-connection-service.ts",
+      "line": "129-157",
+      "rate": 0.1911,
+      "passes": 403,
+      "reason": "Race condition in createConnection uniqueness check: line 130 reads existing connections, "
+    },
+    {
+      "pr": "109",
+      "file": "billing-routes.ts",
+      "line": "97",
+      "rate": 0.163,
+      "passes": 184,
+      "reason": "billing-routes.ts:97 only checks `typeof seats !== 'number' || seats < 1 || seats > 500`, "
+    },
+    {
+      "pr": "113",
+      "file": "api-key-store.ts",
+      "line": "118-128",
+      "rate": 0.1563,
+      "passes": 403,
+      "reason": "Confirmed: createApiKey (lines 118-128) inserts harnessId (data.harnessId ?? null) with no"
+    },
+    {
+      "pr": "102",
+      "file": "oauth-store.ts",
+      "line": "243-249",
+      "rate": 0.1534,
+      "passes": 189,
+      "reason": "oauth-store.ts:243-249 awaits the update with no try/catch, while the port doc (ports/oaut"
+    },
+    {
+      "pr": "201",
+      "file": "deterministic.ts",
+      "line": "42-55",
+      "rate": 0.1489,
+      "passes": 403,
+      "reason": "The validation rule source is skill-authored YAML and the target text can be large executi"
+    },
+    {
+      "pr": "204",
+      "file": "kg.ts",
+      "line": "105",
+      "rate": 0.1439,
+      "passes": 403,
+      "reason": "github-app-service.ts:135-145 throws an Error on any non-ok access_tokens response; that t"
+    },
+    {
+      "pr": "108",
+      "file": "code-review-routes.ts",
+      "line": "169-177",
+      "rate": 0.1413,
+      "passes": 184,
+      "reason": "ISO_8601_RE=/^\\d{4}-\\d{2}-\\d{2}/ (line 76) accepts date-only strings, until is passed verb"
+    },
+    {
+      "pr": "111",
+      "file": "workflow-run-routes.ts",
+      "line": "215-233",
+      "rate": 0.1304,
+      "passes": 184,
+      "reason": "Restart route (lines 229-236) gates only on checkOrgMember, while cancel (lines 185-188) r"
+    },
+    {
+      "pr": "202",
+      "file": "integration-manager.ts",
+      "line": "123",
+      "rate": 0.1257,
+      "passes": 183,
+      "reason": "Line 123 does `updates.credentials = input.credentials` (whole-object assign) and line 131"
+    },
+    {
+      "pr": "204",
+      "file": "kg.ts",
+      "line": "110",
+      "rate": 0.1241,
+      "passes": 403,
+      "reason": "kg.ts:110 interpolates `?ref=${connection.defaultBranch}` raw while the path segments on l"
+    },
+    {
+      "pr": "111",
+      "file": "workflow-run-routes.ts",
+      "line": "177",
+      "rate": 0.087,
+      "passes": 184,
+      "reason": "Novel finding confirmed as real bug in human review"
+    },
+    {
+      "pr": "203",
+      "file": "finding-snippet-locator.ts",
+      "line": "31-34",
+      "rate": 0.082,
+      "passes": 183,
+      "reason": "Confirmed by running the match logic: snippet '}' equals any normalized '}' line elsewhere"
+    },
+    {
+      "pr": "204",
+      "file": "kg.ts",
+      "line": "258",
+      "rate": 0.067,
+      "passes": 403,
+      "reason": "Novel finding confirmed as real bug in human review"
+    },
+    {
+      "pr": "201",
+      "file": "validation-runner.ts",
+      "line": "244-253",
+      "rate": 0.0546,
+      "passes": 403,
+      "reason": "validation-runner.ts:244-246 JSON.stringify's execution.inputs, then line 253 passes that "
+    },
+    {
+      "pr": "202",
+      "file": "integration-routes.ts",
+      "line": "44-46",
+      "rate": 0.0546,
+      "passes": 183,
+      "reason": "Lines 44-46 expose status/lastTestedAt/lastError in UpdateApiIntegrationBodySchema and the"
+    },
+    {
+      "pr": "204",
+      "file": "kg.ts",
+      "line": "89-94",
+      "rate": 0.0422,
+      "passes": 403,
+      "reason": "init-schema.ts:18 enforces uniqueness on (org_id, repo_id, path) and notes the old (org_id"
+    },
+    {
+      "pr": "202",
+      "file": "integration-routes.ts",
+      "line": "78-83",
+      "rate": 0.0164,
+      "passes": 183,
+      "reason": "checkAccess (line 78) calls only checkOrgMember which authorizes any role (authorization.t"
+    },
+    {
+      "pr": "202",
+      "file": "integration-routes.ts",
+      "line": "265-269",
+      "rate": 0.0164,
+      "passes": 183,
+      "reason": "Test passes lastError: testError(=undefined) at line 268; updateIntegration line 127 skips"
+    },
+    {
+      "pr": "201",
+      "file": "validation-runner.ts",
+      "line": "68-73",
+      "rate": 0.0124,
+      "passes": 403,
+      "reason": "loadValidationRules (lines 68-73) only checks parsed.name/parsed.type before casting to Va"
+    },
+    {
+      "pr": "201",
+      "file": "validation-runner.ts",
+      "line": "256-264",
+      "rate": 0.0124,
+      "passes": 403,
+      "reason": "totalChecks comes from countTotalChecks summing criteria.length (line 229), while the per-"
+    },
+    {
+      "pr": "205",
+      "file": "authorization.ts",
+      "line": "410-413",
+      "rate": 0.0124,
+      "passes": 403,
+      "reason": "authorization.ts:410-413 returns {authorized:true} when session.organizationId is falsy, a"
+    },
+    {
+      "pr": "201",
+      "file": "llm-grader.ts",
+      "line": "55-56",
+      "rate": 0.005,
+      "passes": 403,
+      "reason": "buildUserPrompt interpolates originalPrompt, executionOutput, and criteria directly into t"
+    },
+    {
+      "pr": "201",
+      "file": "validation-runner.ts",
+      "line": "269-275",
+      "rate": 0.0025,
+      "passes": 403,
+      "reason": "The catch at lines 269-275 returns exactly one failed ValidationCheckResult per failed Llm"
+    }
+  ],
+  "empirical": [
+    {
+      "k": 1,
+      "recall": 0.1612,
+      "precision": 0.1333,
+      "f2": 0.153,
+      "recall_p025": 0.0606,
+      "recall_p975": 0.303,
+      "recall_p10": 0.0909,
+      "recall_p90": 0.2424,
+      "f2_p025": 0.0581,
+      "f2_p975": 0.2778,
+      "f2_p10": 0.0862,
+      "f2_p90": 0.226
+    },
+    {
+      "k": 2,
+      "recall": 0.2725,
+      "precision": 0.1198,
+      "f2": 0.2159,
+      "recall_p025": 0.1212,
+      "recall_p975": 0.3939,
+      "recall_p10": 0.1818,
+      "recall_p90": 0.3636,
+      "f2_p025": 0.1026,
+      "f2_p975": 0.3266,
+      "f2_p10": 0.1478,
+      "f2_p90": 0.285
+    },
+    {
+      "k": 3,
+      "recall": 0.3544,
+      "precision": 0.1153,
+      "f2": 0.2493,
+      "recall_p025": 0.2121,
+      "recall_p975": 0.5152,
+      "recall_p10": 0.2727,
+      "recall_p90": 0.4545,
+      "f2_p025": 0.1522,
+      "f2_p975": 0.362,
+      "f2_p10": 0.1844,
+      "f2_p90": 0.3139
+    },
+    {
+      "k": 5,
+      "recall": 0.4722,
+      "precision": 0.106,
+      "f2": 0.2786,
+      "recall_p025": 0.3333,
+      "recall_p975": 0.6364,
+      "recall_p10": 0.3939,
+      "recall_p90": 0.5758,
+      "f2_p025": 0.1993,
+      "f2_p975": 0.371,
+      "f2_p10": 0.2234,
+      "f2_p90": 0.3356
+    },
+    {
+      "k": 8,
+      "recall": 0.5727,
+      "precision": 0.0955,
+      "f2": 0.2861,
+      "recall_p025": 0.4545,
+      "recall_p975": 0.7273,
+      "recall_p10": 0.4848,
+      "recall_p90": 0.6667,
+      "f2_p025": 0.2212,
+      "f2_p975": 0.3549,
+      "f2_p10": 0.2457,
+      "f2_p90": 0.3284
+    },
+    {
+      "k": 10,
+      "recall": 0.6152,
+      "precision": 0.0905,
+      "f2": 0.2846,
+      "recall_p025": 0.4848,
+      "recall_p975": 0.7576,
+      "recall_p10": 0.5455,
+      "recall_p90": 0.697,
+      "f2_p025": 0.2202,
+      "f2_p975": 0.3448,
+      "f2_p10": 0.2486,
+      "f2_p90": 0.3258
+    },
+    {
+      "k": 13,
+      "recall": 0.6692,
+      "precision": 0.0863,
+      "f2": 0.2844,
+      "recall_p025": 0.5455,
+      "recall_p975": 0.7879,
+      "recall_p10": 0.5758,
+      "recall_p90": 0.7576,
+      "f2_p025": 0.2317,
+      "f2_p975": 0.3439,
+      "f2_p10": 0.2488,
+      "f2_p90": 0.3222
+    },
+    {
+      "k": 15,
+      "recall": 0.6982,
+      "precision": 0.084,
+      "f2": 0.2835,
+      "recall_p025": 0.5758,
+      "recall_p975": 0.8182,
+      "recall_p10": 0.6364,
+      "recall_p90": 0.7576,
+      "f2_p025": 0.2342,
+      "f2_p975": 0.3293,
+      "f2_p10": 0.2519,
+      "f2_p90": 0.3141
+    },
+    {
+      "k": 21,
+      "recall": 0.7489,
+      "precision": 0.0776,
+      "f2": 0.2743,
+      "recall_p025": 0.6364,
+      "recall_p975": 0.8485,
+      "recall_p10": 0.6667,
+      "recall_p90": 0.8182,
+      "f2_p025": 0.2344,
+      "f2_p975": 0.3118,
+      "f2_p10": 0.2488,
+      "f2_p90": 0.2998
+    },
+    {
+      "k": 34,
+      "recall": 0.8137,
+      "precision": 0.0703,
+      "f2": 0.2611,
+      "recall_p025": 0.7273,
+      "recall_p975": 0.9091,
+      "recall_p10": 0.7576,
+      "recall_p90": 0.8788,
+      "f2_p025": 0.2249,
+      "f2_p975": 0.2935,
+      "f2_p10": 0.2404,
+      "f2_p90": 0.2808
+    },
+    {
+      "k": 55,
+      "recall": 0.8619,
+      "precision": 0.0637,
+      "f2": 0.2459,
+      "recall_p025": 0.7576,
+      "recall_p975": 0.9394,
+      "recall_p10": 0.7879,
+      "recall_p90": 0.9091,
+      "f2_p025": 0.2201,
+      "f2_p975": 0.2693,
+      "f2_p10": 0.2284,
+      "f2_p90": 0.2622
+    },
+    {
+      "k": 89,
+      "recall": 0.9065,
+      "precision": 0.0581,
+      "f2": 0.2313,
+      "recall_p025": 0.8182,
+      "recall_p975": 0.9697,
+      "recall_p10": 0.8485,
+      "recall_p90": 0.9697,
+      "f2_p025": 0.21,
+      "f2_p975": 0.2508,
+      "f2_p10": 0.2177,
+      "f2_p90": 0.2445
+    },
+    {
+      "k": 144,
+      "recall": 0.9478,
+      "precision": 0.0532,
+      "f2": 0.2171,
+      "recall_p025": 0.8788,
+      "recall_p975": 1,
+      "recall_p10": 0.9091,
+      "recall_p90": 1,
+      "f2_p025": 0.2019,
+      "f2_p975": 0.2314,
+      "f2_p10": 0.2072,
+      "f2_p90": 0.2273
+    }
+  ],
+  "analytic": [
+    {
+      "k": 1,
+      "recall": 0.1628,
+      "precision": 0.111,
+      "f2": 0.1489
+    },
+    {
+      "k": 2,
+      "recall": 0.2763,
+      "precision": 0.1029,
+      "f2": 0.2067
+    },
+    {
+      "k": 3,
+      "recall": 0.3606,
+      "precision": 0.097,
+      "f2": 0.2336
+    },
+    {
+      "k": 5,
+      "recall": 0.4792,
+      "precision": 0.0888,
+      "f2": 0.255
+    },
+    {
+      "k": 8,
+      "recall": 0.59,
+      "precision": 0.0812,
+      "f2": 0.2619
+    },
+    {
+      "k": 13,
+      "recall": 0.6923,
+      "precision": 0.0737,
+      "f2": 0.2585
+    },
+    {
+      "k": 21,
+      "recall": 0.7712,
+      "precision": 0.067,
+      "f2": 0.2485
+    },
+    {
+      "k": 34,
+      "recall": 0.829,
+      "precision": 0.0612,
+      "f2": 0.2363
+    },
+    {
+      "k": 55,
+      "recall": 0.8736,
+      "precision": 0.0567,
+      "f2": 0.225
+    },
+    {
+      "k": 89,
+      "recall": 0.9113,
+      "precision": 0.0531,
+      "f2": 0.2154
+    },
+    {
+      "k": 144,
+      "recall": 0.9434,
+      "precision": 0.0503,
+      "f2": 0.2073
+    },
+    {
+      "k": 233,
+      "recall": 0.9674,
+      "precision": 0.0479,
+      "f2": 0.2001
+    },
+    {
+      "k": 377,
+      "recall": 0.9827,
+      "precision": 0.046,
+      "f2": 0.1938
+    },
+    {
+      "k": 610,
+      "recall": 0.9919,
+      "precision": 0.0447,
+      "f2": 0.1894
+    },
+    {
+      "k": 1000,
+      "recall": 0.9973,
+      "precision": 0.044,
+      "f2": 0.187
+    },
+    {
+      "k": 1597,
+      "recall": 0.9994,
+      "precision": 0.0437,
+      "f2": 0.1861
+    },
+    {
+      "k": 2584,
+      "recall": 1,
+      "precision": 0.0437,
+      "f2": 0.1858
+    }
+  ],
+  "baselines": [
+    {
+      "name": "Haiku 4.5",
+      "cost": 0.0052,
+      "f2": 0.316,
+      "recall": 0.394,
+      "precision": 0.176
+    },
+    {
+      "name": "GLM 4.7",
+      "cost": 0.0067,
+      "f2": 0.198,
+      "recall": 0.212,
+      "precision": 0.156
+    },
+    {
+      "name": "Opus 4.8 (circular P)",
+      "cost": 0.0975,
+      "f2": 0.793,
+      "recall": 0.788,
+      "precision": 0.813
+    }
+  ],
+  "frontier": {
+    "costPerCall": 0.0024,
+    "gemma": [
+      {
+        "k": 1,
+        "cost": 0.0024,
+        "f2": 0.153,
+        "f2_p10": 0.0862,
+        "f2_p90": 0.226
+      },
+      {
+        "k": 3,
+        "cost": 0.0072,
+        "f2": 0.2493,
+        "f2_p10": 0.1844,
+        "f2_p90": 0.3139
+      },
+      {
+        "k": 5,
+        "cost": 0.012,
+        "f2": 0.2786,
+        "f2_p10": 0.2234,
+        "f2_p90": 0.3356
+      },
+      {
+        "k": 10,
+        "cost": 0.024,
+        "f2": 0.2846,
+        "f2_p10": 0.2486,
+        "f2_p90": 0.3258
+      },
+      {
+        "k": 15,
+        "cost": 0.036,
+        "f2": 0.2835,
+        "f2_p10": 0.2519,
+        "f2_p90": 0.3141
+      }
+    ],
+    "baselines": [
+      {
+        "name": "Haiku 4.5",
+        "cost": 0.0052,
+        "f2": 0.316,
+        "recall": 0.394,
+        "precision": 0.176
+      },
+      {
+        "name": "GLM 4.7",
+        "cost": 0.0067,
+        "f2": 0.198,
+        "recall": 0.212,
+        "precision": 0.156
+      },
+      {
+        "name": "Opus 4.8 (circular P)",
+        "cost": 0.0975,
+        "f2": 0.793,
+        "recall": 0.788,
+        "precision": 0.813
+      }
+    ]
+  },
+  "bootstrapReps": 300,
+  "summary": {
+    "rarestBug": {
+      "pr": "201",
+      "file": "validation-runner.ts",
+      "line": "269-275",
+      "rate": 0.0025,
+      "reason": "The catch at lines 269-275 returns exactly one failed ValidationCheckResult per failed Llm"
+    },
+    "k95_catch_rarest": 1197,
+    "k_for_recall_90": 77,
+    "k_for_recall_95": 162,
+    "k_for_recall_99": 540,
+    "k_for_recall_100": 1376,
+    "bugsBelow5pct": 8,
+    "bugsAbove50pct": 2
+  }
+}

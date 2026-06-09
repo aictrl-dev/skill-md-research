@@ -4,13 +4,14 @@
  *
  * Aggregates the sweep's raw per-review artefacts into a single, deterministic
  * summary (structured JSON + a printed markdown report). Reuses cr-loop's
- * score() so the precision/recall/F1 definition stays identical across
- * experiments.
+ * score(), configured for strict precision: file+line±5 matching, no severity
+ * gate, and unmatched findings counted as false positives while still reported
+ * separately as novels.
  *
  * For each condition (control, treatment), OVERALL and per task-class
  * (file, module), across the requested reps, it computes:
- *   - micro-averaged precision / recall / F1 (sum TP/FP/FN over reviews first),
- *     plus raw TP/FP/FN/novels totals and the review count n.
+ *   - micro-averaged precision / recall / F1 / F2 (sum TP/FP/FN over reviews
+ *     first), plus raw TP/FP/FN/novels totals and the review count n.
  *   - KG usage: # reviews with >=1 query_context call, % of reviews, avg
  *     calls/review, and a histogram by KG action (callers/impact/search/...)
  *     parsed from the session.json tool-call args.
@@ -47,6 +48,10 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EXP = path.resolve(HERE, '..');
 const DEFAULT_ANSWER_KEY = path.join(EXP, 'answer-key.json');
 const DEFAULT_BASE = path.join(EXP, 'results', 'raw');
+const SCORE_OPTIONS = {
+  countNovelFindingsAsFalsePositives: true,
+  requireSeverityMatch: false,
+} as const;
 
 export const CONDITIONS = ['control', 'treatment'] as const;
 export type Condition = (typeof CONDITIONS)[number];
@@ -191,11 +196,12 @@ export function parseSession(raw: string): SessionStats {
 // ---------------------------------------------------------------------------
 // Aggregation
 // ---------------------------------------------------------------------------
-function prf(tp: number, fp: number, fn: number): { precision: number; recall: number; f1: number } {
+function prf(tp: number, fp: number, fn: number): { precision: number; recall: number; f1: number; f2: number } {
   const precision = tp + fp === 0 ? 0 : tp / (tp + fp);
   const recall = tp + fn === 0 ? 0 : tp / (tp + fn);
   const f1 = precision + recall === 0 ? 0 : (2 * precision * recall) / (precision + recall);
-  return { precision, recall, f1 };
+  const f2 = 4 * precision + recall === 0 ? 0 : (5 * precision * recall) / (4 * precision + recall);
+  return { precision, recall, f1, f2 };
 }
 
 function median(xs: number[]): number {
@@ -226,6 +232,7 @@ interface ScoredCell {
   precision: number;
   recall: number;
   f1: number;
+  f2: number;
   kg: {
     reviewsWithCalls: number;
     pctReviewsWithCalls: number;
@@ -257,7 +264,7 @@ function orderActions(h: Record<string, number>): Record<string, number> {
 }
 
 function finalizeCell(c: Cell): ScoredCell {
-  const { precision, recall, f1 } = prf(c.tp, c.fp, c.fn);
+  const { precision, recall, f1, f2 } = prf(c.tp, c.fp, c.fn);
   return {
     n: c.n,
     expected: c.expected,
@@ -270,6 +277,7 @@ function finalizeCell(c: Cell): ScoredCell {
     precision: r3(precision),
     recall: r3(recall),
     f1: r3(f1),
+    f2: r3(f2),
     kg: {
       reviewsWithCalls: c.kgReviews,
       pctReviewsWithCalls: c.n === 0 ? 0 : r3((100 * c.kgReviews) / c.n),
@@ -311,10 +319,17 @@ export interface Summary {
   baseDir: string;
   conditions: { control: ConditionSummary; treatment: ConditionSummary };
   deltas: {
-    f1Overall: number;
-    f1File: number;
-    f1Module: number;
+    // null when the bucket is not comparable (control or treatment coverage < 100%).
+    // A partial sweep scored against full expectations reads missing reviews as F1=0,
+    // so a delta over unequal coverage is a data-completeness artifact, not a result.
+    f1Overall: number | null;
+    f1File: number | null;
+    f1Module: number | null;
+    f2Overall: number | null;
+    f2File: number | null;
+    f2Module: number | null;
   };
+  deltasNote?: string;
 }
 
 export function aggregate(opts: AggregateOptions): Summary {
@@ -352,7 +367,7 @@ export function aggregate(opts: AggregateOptions): Summary {
           const prNumber = data.prNumber ?? pr;
           let res;
           try {
-            res = score(prNumber, data.findings, answerKeyPath);
+            res = score(prNumber, data.findings, answerKeyPath, SCORE_OPTIONS);
           } catch {
             overall.skipped += 1;
             byClass[label].skipped += 1;
@@ -409,17 +424,42 @@ export function aggregate(opts: AggregateOptions): Summary {
     };
   }
 
+  // Only emit a ΔF1 when BOTH conditions fully cover the bucket. Otherwise a partial
+  // treatment sweep (e.g. module n=0 scored as F1=0) would publish a phantom negative.
+  const cmpDelta = (t: ScoredCell, c: ScoredCell): number | null =>
+    t.coverage === 1 && c.coverage === 1 ? r3(t.f1 - c.f1) : null;
+  const deltas = {
+    f1Overall: cmpDelta(result.treatment.overall, result.control.overall),
+    f1File: cmpDelta(result.treatment.byClass.file, result.control.byClass.file),
+    f1Module: cmpDelta(result.treatment.byClass.module, result.control.byClass.module),
+    f2Overall:
+      result.treatment.overall.coverage === 1 && result.control.overall.coverage === 1
+        ? r3(result.treatment.overall.f2 - result.control.overall.f2)
+        : null,
+    f2File:
+      result.treatment.byClass.file.coverage === 1 && result.control.byClass.file.coverage === 1
+        ? r3(result.treatment.byClass.file.f2 - result.control.byClass.file.f2)
+        : null,
+    f2Module:
+      result.treatment.byClass.module.coverage === 1 && result.control.byClass.module.coverage === 1
+        ? r3(result.treatment.byClass.module.f2 - result.control.byClass.module.f2)
+        : null,
+  };
+  const suppressed = Object.values(deltas).some((v) => v === null);
+
   return {
     generatedAt: new Date().toISOString(),
     reps,
     answerKeyPath,
     baseDir,
     conditions: result,
-    deltas: {
-      f1Overall: r3(result.treatment.overall.f1 - result.control.overall.f1),
-      f1File: r3(result.treatment.byClass.file.f1 - result.control.byClass.file.f1),
-      f1Module: r3(result.treatment.byClass.module.f1 - result.control.byClass.module.f1),
-    },
+    deltas,
+    ...(suppressed
+      ? {
+          deltasNote:
+            'Some delta values are null: control and treatment coverage differ for those buckets, so the comparison is not apples-to-apples (a partial sweep is scored against full expectations, reading missing reviews as F1/F2=0). Complete the treatment sweep to obtain comparable deltas.',
+        }
+      : {}),
   };
 }
 
@@ -436,6 +476,7 @@ function cellRow(label: string, c: ScoredCell): string {
     c.precision.toFixed(3),
     c.recall.toFixed(3),
     c.f1.toFixed(3),
+    c.f2.toFixed(3),
     `${c.truePositives}/${c.falsePositives}/${c.falseNegatives}`,
     c.novelFindings,
     `${c.kg.reviewsWithCalls} (${c.kg.pctReviewsWithCalls}%)`,
@@ -455,13 +496,14 @@ export function renderReport(s: Summary): string {
   L.push(`- reps: ${s.reps.join(', ') || '(none)'}`);
   L.push(`- answer-key: ${s.answerKeyPath}`);
   L.push(`- generated: ${s.generatedAt}`);
+  L.push(`- scoring: file+line±5, severity ignored, novel/unmatched findings counted as FP`);
   L.push('');
   L.push(`> Token "input (cumulative)" is omitted from the table because it re-counts re-sent`);
   L.push(`> context across steps and is not unique usage; see summary.json for the raw figure.`);
   L.push('');
 
   const header =
-    'scope | n/exp | P | R | F1 | TP/FP/FN | novels | KG reviews | KG/rev | out tok/rev | steps/rev | avg s | med s | KG actions';
+    'scope | n/exp | P | R | F1 | F2 | TP/FP/FN | novels | KG reviews | KG/rev | out tok/rev | steps/rev | avg s | med s | KG actions';
   const divider = header
     .split('|')
     .map(() => '---')
@@ -482,14 +524,20 @@ export function renderReport(s: Summary): string {
     L.push('');
   }
 
-  L.push(`## Treatment − Control (ΔF1)`);
+  L.push(`## Treatment − Control`);
   L.push('');
-  L.push('scope | ΔF1');
-  L.push('--- | ---');
-  L.push(`overall | ${s.deltas.f1Overall >= 0 ? '+' : ''}${s.deltas.f1Overall.toFixed(3)}`);
-  L.push(`file | ${s.deltas.f1File >= 0 ? '+' : ''}${s.deltas.f1File.toFixed(3)}`);
-  L.push(`module | ${s.deltas.f1Module >= 0 ? '+' : ''}${s.deltas.f1Module.toFixed(3)}`);
+  L.push('scope | ΔF1 | ΔF2');
+  L.push('--- | --- | ---');
+  const fmtD = (v: number | null): string =>
+    v === null ? 'n/a (coverage <100%)' : `${v >= 0 ? '+' : ''}${v.toFixed(3)}`;
+  L.push(`overall | ${fmtD(s.deltas.f1Overall)} | ${fmtD(s.deltas.f2Overall)}`);
+  L.push(`file | ${fmtD(s.deltas.f1File)} | ${fmtD(s.deltas.f2File)}`);
+  L.push(`module | ${fmtD(s.deltas.f1Module)} | ${fmtD(s.deltas.f2Module)}`);
   L.push('');
+  if (s.deltasNote) {
+    L.push(`> ${s.deltasNote}`);
+    L.push('');
+  }
 
   return L.join('\n');
 }
@@ -497,7 +545,7 @@ export function renderReport(s: Summary): string {
 // ---------------------------------------------------------------------------
 // CLI
 // ---------------------------------------------------------------------------
-function parseArgs(argv: string[]): { reps: number[]; out?: string } {
+function parseArgs(argv: string[]): { reps: number[]; out?: string; baseDir?: string } {
   const a: Record<string, string> = {};
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i].startsWith('--')) {
@@ -509,12 +557,12 @@ function parseArgs(argv: string[]): { reps: number[]; out?: string } {
     .split(',')
     .map((x) => Number(x.trim()))
     .filter((x) => Number.isFinite(x));
-  return { reps, out: a.out };
+  return { reps, out: a.out, baseDir: a['base-dir'] };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const { reps, out } = parseArgs(process.argv.slice(2));
-  const summary = aggregate({ reps });
+  const { reps, out, baseDir } = parseArgs(process.argv.slice(2));
+  const summary = aggregate({ reps, ...(baseDir ? { baseDir: path.resolve(EXP, baseDir) } : {}) });
   const outPath = out ? path.resolve(EXP, out) : path.join(EXP, 'results', 'summary.json');
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, `${JSON.stringify(summary, null, 2)}\n`);

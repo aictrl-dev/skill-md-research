@@ -56,7 +56,8 @@ function kgToolUse(action: string): string {
 }
 
 /**
- * A tiny answer key. cr-loop's matcher needs (file, severity-family, line ±5).
+ * A tiny answer key. cr-local-kg scores by file + line±5 and counts unmatched
+ * findings as FP while also reporting them as novels.
  * PR 1 (file class): two TRUE/FIX entries -> hard recall targets.
  * PR 2 (module class): one TRUE/FIX entry.
  */
@@ -121,17 +122,18 @@ test('micro-average math: hand-computed TP/FP/FN and F1', () => {
   const s = aggregate({ reps: [1], answerKeyPath: akPath, baseDir: base });
   const o = s.conditions.control.overall;
 
-  // Hand-computed: TP=2 (A + M), FP=0, FN=1 (B missed, TRUE/FIX), novels=1.
+  // Hand-computed: TP=2 (A + M), FP=1 (novel counted as FP), FN=1 (B missed, TRUE/FIX), novels=1.
   assert.equal(o.truePositives, 2);
-  assert.equal(o.falsePositives, 0);
+  assert.equal(o.falsePositives, 1);
   assert.equal(o.falseNegatives, 1);
   assert.equal(o.novelFindings, 1);
   assert.equal(o.n, 2);
 
-  // precision = 2/2 = 1, recall = 2/3 = 0.667, F1 = 2*1*0.667/(1+0.667) = 0.8.
-  assert.equal(o.precision, 1);
+  // precision = 2/3 = 0.667, recall = 2/3 = 0.667, F1/F2 = 0.667.
+  assert.equal(o.precision, 0.667);
   assert.equal(o.recall, 0.667);
-  assert.equal(o.f1, 0.8);
+  assert.equal(o.f1, 0.667);
+  assert.equal(o.f2, 0.667);
 });
 
 // ---------------------------------------------------------------------------
