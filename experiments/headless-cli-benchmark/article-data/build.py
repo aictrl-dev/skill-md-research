@@ -22,8 +22,8 @@ ROOT = Path(__file__).resolve().parent
 # OpenCode 1.19.3 (v1) is still measured by the campaign but left out of the article: upstream development is v2-only.
 NAMES = {
     "codex": "Codex 0.163.0",
-    "pi-1.3-node22": "pi 1.3.0 (Node 22)",
-    "aictrl-npm-0.5.4": "aictrl 0.5.4 (npm)",
+    "pi-1.3-node22": "pi 1.3.0",
+    "aictrl-npm-0.5.4": "aictrl 0.5.4",
     "opencode-v2": "OpenCode 2.1.0",
     "hermes": "Hermes 0.22.2",
     "goose": "Goose 1.55.0",
@@ -274,24 +274,26 @@ def charts(data):
         median, p90 = quantile(values, 0.5), quantile(values, 0.9)
         color = rank_color(y)
         ax.plot([median, p90], [y, y], color=color, linewidth=3, alpha=0.5)
-        ax.scatter([median], [y], s=75, color=color, zorder=3)
-        ax.scatter([p90], [y], s=75, edgecolors=color, facecolors="white", zorder=3)
+        ax.scatter([median], [y], s=60, color=color, zorder=4)
+        ax.scatter([p90], [y], s=110, edgecolors=color, facecolors="white", linewidths=1.6, zorder=3)
         ax.annotate(f"{median:.0f} / {p90:.0f}", (p90 + upper * 0.02, y), va="center", fontsize=11)
     save(fig, "01-first-response", f"Sorted by median, lowest first; gold and silver mark first and second place. Solid: median. Hollow: p90, not a confidence interval.\nSource: aictrl measurements, {DATE_LABEL}, sources/measurements.json. Cached images; 50 ms scripted model.")
 
-    memory = sorted(harnesses, key=lambda h: quantile([r["peakCgroupMiB"] for r in h["scenarios"]["long"]], 0.5))
+    # A harness that cuts tool output holds a different context, so it is listed last without a medal.
+    cut = lambda h: any(r.get("fixture", {}).get("contentClass") == "truncated-or-pruned" for r in h["scenarios"]["long"])
+    memory = sorted(harnesses, key=lambda h: (cut(h), quantile([r["peakCgroupMiB"] for r in h["scenarios"]["long"]], 0.5)))
     upper = max(quantile([r["peakCgroupMiB"] for r in h["scenarios"]["long"]], 0.9) for h in memory) * 1.3
     steps = data["configuration"]["LONG_STEPS"]
-    fig, ax = figure(f"Peak container memory over {steps} tool steps", "Cgroup memory.peak (MiB)", [h["label"] + (" *" if any(r.get("fixture", {}).get("contentClass") == "truncated-or-pruned" for r in h["scenarios"]["long"]) else "") for h in memory], (0, upper))
+    fig, ax = figure(f"Peak container memory over {steps} tool steps", "Cgroup memory.peak (MiB)", [h["label"] + (" *" if cut(h) else "") for h in memory], (0, upper))
     for y, harness in enumerate(memory):
         values = [r["peakCgroupMiB"] for r in harness["scenarios"]["long"]]
         median, p90 = quantile(values, 0.5), quantile(values, 0.9)
-        color = rank_color(y)
+        color = "#b3b3b3" if cut(harness) else rank_color(y)
         ax.plot([median, p90], [y, y], color=color, linewidth=3, alpha=0.5)
-        ax.scatter([median], [y], s=75, color=color, zorder=3)
-        ax.scatter([p90], [y], s=75, edgecolors=color, facecolors="white", zorder=3)
+        ax.scatter([median], [y], s=60, color=color, zorder=4)
+        ax.scatter([p90], [y], s=110, edgecolors=color, facecolors="white", linewidths=1.6, zorder=3)
         ax.annotate(f"{median:.0f} / {p90:.0f}", (p90 + upper * 0.02, y), va="center", fontsize=11)
-    save(fig, "02-long-run-memory", f"Lowest observed median first; gold and silver mark first and second place. * Shortened tool output retained. Cgroup is not RSS.\nCompleted runs only; completion counts in summary.csv. Hollow: p90 (= maximum at n=5). Source: aictrl measurements, {DATE_LABEL}, sources/measurements.json.")
+    save(fig, "02-long-run-memory", f"Lowest observed median first; gold and silver mark first and second place. * Not ranked: cuts each 48 KB read to its first and last ~80 lines. Cgroup is not RSS.\nCompleted runs only; completion counts in summary.csv. Hollow: p90 (= maximum at n=5). Source: aictrl measurements, {DATE_LABEL}, sources/measurements.json.")
 
     footprint = sorted(harnesses, key=lambda h: h["footprint"]["imageDeltaMiB"])
     upper = max(h["footprint"]["imageDeltaMiB"] for h in footprint) * 1.2
@@ -325,8 +327,8 @@ def session_chart(session):
         median, p90 = quantile(values, .5), quantile(values, .9)
         color = rank_color(y)
         ax.plot([median, p90], [y, y], color=color, linewidth=3, alpha=.5)
-        ax.scatter([median], [y], s=75, color=color, zorder=3)
-        ax.scatter([p90], [y], s=75, edgecolors=color, facecolors="white", zorder=3)
+        ax.scatter([median], [y], s=60, color=color, zorder=4)
+        ax.scatter([p90], [y], s=110, edgecolors=color, facecolors="white", linewidths=1.6, zorder=3)
         ax.annotate(f"{median:.2f} / {p90:.2f}", (p90 + upper * .02, y), va="center", fontsize=11)
     save(fig, "05-session-time", f"Solid: median. Hollow: p90 (= max at n=5). 51 scripted main calls; Hermes and OpenCode add one auxiliary call.\nFixed 50 ms local model per call; retained context differs. Source: aictrl, {DATE_LABEL}, sources/session-metrics.json.")
 
@@ -397,6 +399,41 @@ def ingest_tokens(path, names=NAMES, output="token-estimates.json"):
     (ROOT / "sources" / output).write_text(json.dumps(out, indent=2) + "\n")
 
 
+SHORT_VARIANTS = {"aictrl-0.5.4-minimal": "aictrl, pi's 4 tools"}
+
+
+def ingest_short(paths):
+    """Whole-task totals for the short scenario (three 340-byte reads, four main calls), every call counted."""
+    out = {"scenario": "short: read notes-0..2 (340 bytes each) once each, then reply", "encoding": "o200k_base", "sources": [], "harnesses": {}}
+    for path in paths:
+        raw = json.loads(path.read_text())
+        out["sources"].append({"path": f"benchmark/results/{path.name}", "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
+        for name, scenarios in raw["harnesses"].items():
+            if name not in NAMES and name not in SHORT_VARIANTS:
+                continue
+            short = scenarios["short"]
+            if short["completed"] != short["attempted"]:
+                raise ValueError(f"Incomplete short captures: {name}")
+            out["harnesses"][name] = {"label": NAMES.get(name) or SHORT_VARIANTS[name], "completed": short["completed"], **short["median"]}
+    (ROOT / "sources" / "token-estimates-short.json").write_text(json.dumps(out, indent=2) + "\n")
+
+
+def ingest_per_read(path):
+    """History growth per 48 KB read in the 50-read session: next main input minus this main input, over steps 5-44.
+    Includes the model's tool call and the wrapped tool result; every capture must agree within 10 tokens."""
+    raw = json.loads(path.read_text())
+    out = {"definition": ingest_per_read.__doc__.strip(), "encoding": "o200k_base", "source": f"benchmark/results/{path.name}", "source_sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "harnesses": {}}
+    for name in NAMES:
+        growth = []
+        for session in raw["harnesses"][name]["long"]["sessions"]:
+            main = [r["input_tokens_estimate"] for r in session["requests"] if r["kind"] == "main"]
+            growth += [b - a for a, b in zip(main[5:45], main[6:46])]
+        if max(growth) - min(growth) > 10:
+            raise ValueError(f"Per-read growth varies: {name}")
+        out["harnesses"][name] = {"label": NAMES[name], "tokens_per_read_median": quantile(growth, .5), "min": min(growth), "max": max(growth)}
+    (ROOT / "sources" / "token-estimates-per-read.json").write_text(json.dumps(out, indent=2) + "\n")
+
+
 def token_charts(tokens, data):
     pruned = {name for name, h in data["harnesses"].items() if any(r.get("fixture", {}).get("contentClass") == "truncated-or-pruned" for r in h["scenarios"]["long"])}
     first = sorted(tokens["harnesses"].items(), key=lambda pair: pair[1]["trivial"]["median"]["first_main_input_tokens_estimate"])
@@ -414,14 +451,21 @@ def token_charts(tokens, data):
     ax.set_title(ax.get_title("left"), loc="left", fontsize=16, pad=40, weight="bold")
     save(fig, "04-request-tokens", f"Smallest total first. One tokenizer (o200k_base) for every harness; not provider-reported usage, which adds model-specific framing.\nSource: aictrl token capture, {DATE_LABEL}, sources/token-estimates.json. Median of 5 captures; prompts and tools identical in all.")
 
-    session = sorted(tokens["harnesses"].items(), key=lambda pair: pair[1]["long"]["median"]["session_input_tokens_estimate"])
-    upper = max(h["long"]["median"]["session_input_tokens_estimate"] for _, h in session) / 1e6 * 1.25
-    fig, ax = figure("Input tokens sent over the 50-read session", "Million tokens, all calls summed (o200k_base reference estimate)", [NAMES[name] + (" *" if name in pruned else "") for name, _ in session], (0, upper))
-    for y, (_, h) in enumerate(session):
-        value = h["long"]["median"]["session_input_tokens_estimate"] / 1e6
-        ax.barh(y, value, color=rank_color(y), alpha=0.85, height=0.5)
-        ax.text(value + upper * 0.02, y, f"{value:.2f}", va="center", fontsize=11)
-    save(fig, "07-session-tokens", f"Lowest first; gold and silver mark first and second. * Keeps shortened tool output. Full history counted on every call; no cache discount.\nSource: aictrl token capture, {DATE_LABEL}, sources/token-estimates.json. Reference estimate, not provider-reported usage.")
+    short = json.loads((ROOT / "sources" / "token-estimates-short.json").read_text())["harnesses"]
+    ranked = sorted(short.items(), key=lambda pair: pair[1]["session_total_tokens_estimate"])
+    upper = max(h["session_total_tokens_estimate"] for _, h in ranked) / 1000 * 1.2
+    fig, ax = figure("Tokens for a short task: three small files, four model calls", "Thousand tokens, input and output of every call (o200k_base reference estimate)", [h["label"] for _, h in ranked], (0, upper))
+    medal = 0
+    for y, (name, h) in enumerate(ranked):
+        value = h["session_total_tokens_estimate"] / 1000
+        variant = name in SHORT_VARIANTS
+        ax.barh(y, value, color="#d9d9d9" if variant else rank_color(medal), alpha=0.85, height=0.5, hatch="//" if variant else None, edgecolor="#9a9a9a" if variant else None, linewidth=0)
+        ax.text(value + upper * 0.02, y, f"{value:.1f}k", va="center", fontsize=11)
+        if variant:
+            ax.get_yticklabels()[y].set_style("italic")
+        else:
+            medal += 1
+    save(fig, "07-short-task-tokens", f"Lowest first; gold and silver mark first and second. Hatched: aictrl with pi's four tools, a configuration variant, not ranked. Each call resends prompt, tools and history.\nSource: aictrl token capture, {DATE_LABEL}, sources/token-estimates-short.json. Median of 3 captures; reference estimate, not provider-reported usage.")
 
 
 def summary(data):
@@ -456,6 +500,7 @@ if __name__ == "__main__":
     args.add_argument("--campaign", type=Path, help="single protocol-3 campaign for every scenario")
     args.add_argument("--tokens", type=Path, help="count_tokens.py output for the matching token-capture campaign")
     args.add_argument("--tokens-minimal", type=Path, help="count_tokens.py output for aictrl with pi's four tools")
+    args.add_argument("--tokens-short", type=Path, nargs="+", help="count_tokens.py outputs for the short-task captures")
     options = args.parse_args()
     if options.source_dir:
         ingest(options.source_dir, options.memory_campaign, options.campaign)
@@ -463,6 +508,10 @@ if __name__ == "__main__":
         ingest_tokens(options.tokens)
     if options.tokens_minimal:
         ingest_tokens(options.tokens_minimal, ["aictrl-0.5.4-minimal"], "token-estimates-aictrl-minimal.json")
+    if options.tokens:
+        ingest_per_read(options.tokens)
+    if options.tokens_short:
+        ingest_short(options.tokens_short)
     data = json.loads((ROOT / "sources" / "measurements.json").read_text())
     charts(data)
     summary(data)

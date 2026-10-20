@@ -74,6 +74,14 @@ Components are medians taken separately, so their sum approximates rather than e
 
 The first-request breakdown splits the first main request of each single-response capture into the system prompt (text of system/developer messages and any `instructions` field), tool definitions (canonical JSON of the `tools` array) and the remainder of the canonical count: task message, injected context (for example Codex's environment context) and JSON framing. System prompt and tool definitions were identical in all five captures for every harness. Codex's total varied by a few tokens through its environment context, so the remainder uses the median total.
 
+**Short-task tokens** (`sources/token-estimates-short.json`, Figure 7). A second capture ran the short scenario: read `notes-0..2` (340 bytes each) once each, then reply, four main calls. Three measured sessions per harness after one discarded warmup, 0 failures (`results/token-capture-0.5.4-short.json`; aictrl with pi's four tools in `token-capture-0.5.4-minimal-short.json`). The totals sum input and output of every call, auxiliary calls included. They did not vary between captures except Codex, by up to 51 tokens of injected environment context; the source keeps the median. The files are small enough that no harness shortens them, so every harness is comparable here.
+
+**Tokens per read** (`sources/token-estimates-per-read.json`). From the 50-read token capture: the growth of the main-request input from one step to the next over steps 5–44, which is the model's tool call plus the wrapped 48 KB result. It varied by at most 10 tokens within a harness. aictrl, OpenCode and Hermes prefix each returned line with its number; pi returns the raw file, and Goose and Codex read with a shell `cat`. Codex's shell tool keeps the first and last part of long output (lines 1–84 and 718–800 of each file, with a note that 38,000 characters were removed), so its per-read value, memory and 50-read totals are not comparable and take no medal.
+
+**Event coverage** (`results/event-coverage-0.5.4.json`, `harness/event_coverage.py`). The short-task captures are scored against the stub's request log, which records every model call (arrival and response times, the reply sent, the usage reported: 100 input and 10 output tokens) and every tool call it issued (call ID, tool, file). The checklist was fixed before scoring and follows the OpenTelemetry GenAI attributes: per run, session ID, model, a successful run-end event, token totals equal to 400/40 (stated, or summed from per-call values) and the final answer; per model call, its tokens and a timestamp inside that call's window; per tool call, the tool and file, the oracle's call ID, the complete 20-line result and start/end time or duration. 25 facts per run; a fact counts only when the stream states it and the value matches. One normalizer per CLI maps its event fields to the facts. Every run of a CLI scored the same. The JSON stream alone is scored; OpenTelemetry exports are reported separately.
+
+**OpenTelemetry export** (`results/otlp-probe-0.5.4.jsonl`, receiver `harness/otlp-receiver.ts`). One short task per CLI with `OTEL_EXPORTER_OTLP_ENDPOINT` pointing at a local OTLP/HTTP receiver (`OTEL_EXPORTER_OTLP_PROTOCOL=http/json`, traces, logs and metrics exporters set to `otlp`), plus Codex's `[otel]` section in `config.toml` and `experimental.openTelemetry: true` for aictrl and OpenCode. Variants `*-otel` in `harness/token-capture-v054-minimal.ts`. Goose (protobuf) and Codex sent spans with `gen_ai.usage.*` attributes; OpenCode sent internal spans without token or model attributes; aictrl, pi and Hermes sent nothing (Hermes' `otlp` extra was not installed).
+
 These are reference-token estimates, not provider-reported input/output usage. API-specific framing, a different model tokenizer, prompt caching and reasoning change billing. Scripted output does not represent model-generated coding answers. Ground-truth usage, natural turn counts and task success require the same real model behind a logging proxy, preserving each request/response and its usage report, including cache and reasoning breakdowns. See [OpenAI's token-counting definitions](https://developers.openai.com/api/docs/guides/token-counting).
 
 ## Reproduction
@@ -83,7 +91,8 @@ After the campaign completes:
 ```bash
 python3 build.py --source-dir .. --campaign ../results/seven-way-0.5.4.json \
   --tokens ../results/token-accounting-0.5.4.json \
-  --tokens-minimal ../results/token-accounting-0.5.4-minimal.json
+  --tokens-minimal ../results/token-accounting-0.5.4-minimal.json \
+  --tokens-short ../results/token-accounting-0.5.4-short.json ../results/token-accounting-0.5.4-minimal-short.json
 ```
 
 The token inputs come from:
@@ -92,6 +101,11 @@ The token inputs come from:
 HARNESSES=aictrl-npm-0.5.4,pi-1.3-node22,codex,opencode-v2,hermes,goose WARMUP=0 ONLY=trivial,long LONG_STEPS=50 \
   bun harness/token-capture-v054.ts results/token-capture-0.5.4.json 5 5 50
 python3 harness/count_tokens.py results/token-capture-0.5.4.json results/token-accounting-0.5.4.json
+ONLY=short REPS=3 WARMUP=1 bun harness/token-capture-v054.ts results/token-capture-0.5.4-short.json
+HARNESSES=aictrl-0.5.4-minimal,opencode-v2-deny ONLY=short REPS=3 WARMUP=1 \
+  bun harness/token-capture-v054-minimal.ts results/token-capture-0.5.4-minimal-short.json
+python3 harness/count_tokens.py results/token-capture-0.5.4-short.json results/token-accounting-0.5.4-short.json
+python3 harness/count_tokens.py results/token-capture-0.5.4-minimal-short.json results/token-accounting-0.5.4-minimal-short.json
 ```
 
 The import step also reads the raw per-run logs, published as release archives; extract them into `results/` first. Subsequent `python3 build.py` rebuilds the chart PNG/SVG pairs, CSV and HTML from the saved numeric extract without containers or model calls. Requires matplotlib and Python-Markdown; `--tokens` also needs tiktoken. The folder README covers image builds and experiment commands.

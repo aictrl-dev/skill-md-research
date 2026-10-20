@@ -1,0 +1,1097 @@
+{
+  "measurement_type": "offline reference-token estimates; not provider-reported usage",
+  "encoding": "o200k_base",
+  "tiktoken_version": "0.12.0",
+  "input_definition": "Tokenize canonical sorted compact JSON of instructions/messages/input/tools/response_format/text; omit absent fields and all transport controls",
+  "output_definition": "Tokenize returned text, or canonical JSON of generated tool name and arguments; exclude event framing and call IDs",
+  "session_definition": "Sum each request input and response output including auxiliary calls and any retries; repeated history counted again each call",
+  "limitations": [
+    "API-specific model framing and tokenizer differences are unmeasured",
+    "No cache discounts or cache-hit data",
+    "No model-generated reasoning tokens",
+    "Scripted output and 51 main calls; not natural task efficiency",
+    "Stub usage counters are artificial and never used"
+  ],
+  "campaign": "results/token-capture-0.5.4-short.json",
+  "campaign_sha256": "b5cc5e4f31841bc4dc33bbef65725cf8f9b122b09e288a4ea560150285334dbc",
+  "harnesses": {
+    "aictrl-npm-0.5.4": {
+      "short": {
+        "attempted": 3,
+        "completed": 3,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 3459,
+          "main_calls": 4,
+          "all_calls": 4,
+          "session_input_tokens_estimate": 15150,
+          "session_output_tokens_estimate": 59,
+          "session_total_tokens_estimate": 15209
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 3459,
+          "main_calls": 4,
+          "all_calls": 4,
+          "session_input_tokens_estimate": 15150,
+          "session_output_tokens_estimate": 59,
+          "session_total_tokens_estimate": 15209
+        },
+        "sessions": [
+          {
+            "runId": "00008-aictrl-npm-0.5.4-short",
+            "capture_sha256": "0f6d5f3655d05c26b2b7faabc867c289acdd3ae859af32a62065a8b0785b7196",
+            "first_main_input_tokens_estimate": 3459,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 15150,
+            "session_output_tokens_estimate": 59,
+            "session_total_tokens_estimate": 15209,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "315df5b5633ef91742db4df40799e535637f2070711ba595e461847190e4a214",
+                "input_tokens_estimate": 3459,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "62a753b04a24e2367ca4f2c3444f84061cb8a9315fb089d73101dcfa6c0b08e0",
+                "input_tokens_estimate": 3678,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "753dd938ce6bddbad012729de3db3e9c22198f494a63829f3fcb9dd3e6313bef",
+                "input_tokens_estimate": 3897,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "e81c1d2940e499aaa1004209a92a5dadd721f96f7d1c5ac349a9fb2b2577152a",
+                "input_tokens_estimate": 4116,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00021-aictrl-npm-0.5.4-short",
+            "capture_sha256": "798e4241976e127b2c072de57733ecc2f25de68f6837d92f31d8ea29474f1ba0",
+            "first_main_input_tokens_estimate": 3459,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 15150,
+            "session_output_tokens_estimate": 59,
+            "session_total_tokens_estimate": 15209,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "315df5b5633ef91742db4df40799e535637f2070711ba595e461847190e4a214",
+                "input_tokens_estimate": 3459,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "62a753b04a24e2367ca4f2c3444f84061cb8a9315fb089d73101dcfa6c0b08e0",
+                "input_tokens_estimate": 3678,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "753dd938ce6bddbad012729de3db3e9c22198f494a63829f3fcb9dd3e6313bef",
+                "input_tokens_estimate": 3897,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "e81c1d2940e499aaa1004209a92a5dadd721f96f7d1c5ac349a9fb2b2577152a",
+                "input_tokens_estimate": 4116,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00022-aictrl-npm-0.5.4-short",
+            "capture_sha256": "090dbbf40270497bf61c9369ef301fba19a649d59e193e84f8871b1fdb7c1787",
+            "first_main_input_tokens_estimate": 3459,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 15150,
+            "session_output_tokens_estimate": 59,
+            "session_total_tokens_estimate": 15209,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "315df5b5633ef91742db4df40799e535637f2070711ba595e461847190e4a214",
+                "input_tokens_estimate": 3459,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "62a753b04a24e2367ca4f2c3444f84061cb8a9315fb089d73101dcfa6c0b08e0",
+                "input_tokens_estimate": 3678,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "753dd938ce6bddbad012729de3db3e9c22198f494a63829f3fcb9dd3e6313bef",
+                "input_tokens_estimate": 3897,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "e81c1d2940e499aaa1004209a92a5dadd721f96f7d1c5ac349a9fb2b2577152a",
+                "input_tokens_estimate": 4116,
+                "output_tokens_estimate": 2
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "pi-1.3-node22": {
+      "short": {
+        "attempted": 3,
+        "completed": 3,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 1293,
+          "main_calls": 4,
+          "all_calls": 4,
+          "session_input_tokens_estimate": 6018,
+          "session_output_tokens_estimate": 56,
+          "session_total_tokens_estimate": 6074
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 1293,
+          "main_calls": 4,
+          "all_calls": 4,
+          "session_input_tokens_estimate": 6018,
+          "session_output_tokens_estimate": 56,
+          "session_total_tokens_estimate": 6074
+        },
+        "sessions": [
+          {
+            "runId": "00009-pi-1.3-node22-short",
+            "capture_sha256": "3c1d47ee9a158ef87cf23be3d1d4cc8767b12b3d8ab969750331a59a880cb7f3",
+            "first_main_input_tokens_estimate": 1293,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 6018,
+            "session_output_tokens_estimate": 56,
+            "session_total_tokens_estimate": 6074,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "65cf418fd7c49d027c26e2abcca98ffe75cb1129c6d5b27e3255d00d659cda0b",
+                "input_tokens_estimate": 1293,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "0823fd7a0d07e55845266561b3fcd5c2fa856f36fe776590bd4cc7be8940b32e",
+                "input_tokens_estimate": 1434,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "51fc9b188604a887ad4a58ebf98bcd9efb4340502fa9865728de0ce32e33b81d",
+                "input_tokens_estimate": 1575,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "383c1dd335ad3510bc17d4269304f3a691bc0d72d1f83d9ea7b77ede2079ba02",
+                "input_tokens_estimate": 1716,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00020-pi-1.3-node22-short",
+            "capture_sha256": "835d4565b9dc5fd84ad15efcf34ec15cc5607586490aad8d3ed33e8f24a1216a",
+            "first_main_input_tokens_estimate": 1293,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 6018,
+            "session_output_tokens_estimate": 56,
+            "session_total_tokens_estimate": 6074,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "65cf418fd7c49d027c26e2abcca98ffe75cb1129c6d5b27e3255d00d659cda0b",
+                "input_tokens_estimate": 1293,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "0823fd7a0d07e55845266561b3fcd5c2fa856f36fe776590bd4cc7be8940b32e",
+                "input_tokens_estimate": 1434,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "51fc9b188604a887ad4a58ebf98bcd9efb4340502fa9865728de0ce32e33b81d",
+                "input_tokens_estimate": 1575,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "383c1dd335ad3510bc17d4269304f3a691bc0d72d1f83d9ea7b77ede2079ba02",
+                "input_tokens_estimate": 1716,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00023-pi-1.3-node22-short",
+            "capture_sha256": "b157a8a7653b9b5f456f55a42d5b56b61d9b71fcaff5e88c6c0437042993854b",
+            "first_main_input_tokens_estimate": 1293,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 6018,
+            "session_output_tokens_estimate": 56,
+            "session_total_tokens_estimate": 6074,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "65cf418fd7c49d027c26e2abcca98ffe75cb1129c6d5b27e3255d00d659cda0b",
+                "input_tokens_estimate": 1293,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "0823fd7a0d07e55845266561b3fcd5c2fa856f36fe776590bd4cc7be8940b32e",
+                "input_tokens_estimate": 1434,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "51fc9b188604a887ad4a58ebf98bcd9efb4340502fa9865728de0ce32e33b81d",
+                "input_tokens_estimate": 1575,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "383c1dd335ad3510bc17d4269304f3a691bc0d72d1f83d9ea7b77ede2079ba02",
+                "input_tokens_estimate": 1716,
+                "output_tokens_estimate": 2
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "codex": {
+      "short": {
+        "attempted": 3,
+        "completed": 3,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 8194,
+          "main_calls": 4,
+          "all_calls": 4,
+          "session_input_tokens_estimate": 34016,
+          "session_output_tokens_estimate": 62,
+          "session_total_tokens_estimate": 34078
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 8199,
+          "main_calls": 4,
+          "all_calls": 4,
+          "session_input_tokens_estimate": 34028,
+          "session_output_tokens_estimate": 62,
+          "session_total_tokens_estimate": 34090
+        },
+        "sessions": [
+          {
+            "runId": "00010-codex-short",
+            "capture_sha256": "14cb2b6089c146bb260feb6bcc5fd7438c44e1618682f4f0f6a4b919a7acccee",
+            "first_main_input_tokens_estimate": 8194,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 34016,
+            "session_output_tokens_estimate": 62,
+            "session_total_tokens_estimate": 34078,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "618393a3bf2160fcfffbe9ec543ff52d7af637ccbc50965b9c8b1e8fc717cf38",
+                "input_tokens_estimate": 8194,
+                "output_tokens_estimate": 20
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "262c5da0723390d1fa12266f85c8a9c96ed006653b945c697f9d70910d7fe6bd",
+                "input_tokens_estimate": 8401,
+                "output_tokens_estimate": 20
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "ed2658d6afb171a32195592f9809c820318e668a8f705b3f3682469bf29382ca",
+                "input_tokens_estimate": 8607,
+                "output_tokens_estimate": 20
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "e389990b91a70236656feb237a174706eeb9bfd22b25a73e1f10a2fb042d222a",
+                "input_tokens_estimate": 8814,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00019-codex-short",
+            "capture_sha256": "003ec1bd4f187d195f3c8ffe532889b14318fb3a25c8b5bef797df68a345dd84",
+            "first_main_input_tokens_estimate": 8186,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 33977,
+            "session_output_tokens_estimate": 62,
+            "session_total_tokens_estimate": 34039,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "9aeab1651869618bd04f21b82e86c9cb4cb35e47ec6b8acc05eca02df1246be3",
+                "input_tokens_estimate": 8186,
+                "output_tokens_estimate": 20
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "a758051b47c10913d0eac7bf0c08683ad975808f87d5e3b2f509ebafe66e71e5",
+                "input_tokens_estimate": 8393,
+                "output_tokens_estimate": 20
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "9f9c34f47b222e9bd6ad82838661c442decdca0e566575786377cf9d207defea",
+                "input_tokens_estimate": 8597,
+                "output_tokens_estimate": 20
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "7b3018eaff9246ddc0d84350e8cb3fe9791505266c705c590e5594a37d54ac01",
+                "input_tokens_estimate": 8801,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00024-codex-short",
+            "capture_sha256": "a1fe8538915837a2fa04d5ae976a9f83684dcf4a32cbdb10106c610d19f241df",
+            "first_main_input_tokens_estimate": 8199,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 34028,
+            "session_output_tokens_estimate": 62,
+            "session_total_tokens_estimate": 34090,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "69e5176adf9c97d050d5864b8c9a558777c414d50cf1d21c0c97382f56ae3911",
+                "input_tokens_estimate": 8199,
+                "output_tokens_estimate": 20
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "7e90c51a810775710420938dadff297bbc7a7a5bfb07e8b578b4e5f7c1f09a26",
+                "input_tokens_estimate": 8403,
+                "output_tokens_estimate": 20
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "a9b457eafb64de87de257e495a4e85f80e10e80de4fa3a0543896050cfa2e381",
+                "input_tokens_estimate": 8611,
+                "output_tokens_estimate": 20
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "360f6c87bc587fe28867df378858a88a6831a775bf21cebadbb034dacbe02302",
+                "input_tokens_estimate": 8815,
+                "output_tokens_estimate": 2
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "opencode": {
+      "short": {
+        "attempted": 3,
+        "completed": 3,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 6848,
+          "main_calls": 4,
+          "all_calls": 5,
+          "session_input_tokens_estimate": 29302,
+          "session_output_tokens_estimate": 61,
+          "session_total_tokens_estimate": 29363
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 6848,
+          "main_calls": 4,
+          "all_calls": 5,
+          "session_input_tokens_estimate": 29302,
+          "session_output_tokens_estimate": 61,
+          "session_total_tokens_estimate": 29363
+        },
+        "sessions": [
+          {
+            "runId": "00011-opencode-short",
+            "capture_sha256": "a6236efbf47f046fb6820a029fc7c34e99745a1130ae9351c58ab057b331fd00",
+            "first_main_input_tokens_estimate": 6848,
+            "main_calls": 4,
+            "all_calls": 5,
+            "session_input_tokens_estimate": 29302,
+            "session_output_tokens_estimate": 61,
+            "session_total_tokens_estimate": 29363,
+            "requests": [
+              {
+                "kind": "aux",
+                "step": 0,
+                "request_sha256": "ed32620c1597f3494b2d3b1f1e358e7d1b079adab22733fbcd57e6dfe8ff3992",
+                "input_tokens_estimate": 590,
+                "output_tokens_estimate": 2
+              },
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "2d7b127493a38ac56d0eeb9b3705fd583d74e54f31bd3b0b83351e6cdadac222",
+                "input_tokens_estimate": 6848,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "7500bae82788d7fcf413141f162b750826fb926960f731958372945a4f22a215",
+                "input_tokens_estimate": 7068,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "8e3c65b00c63a376b8dbe6344525b9a273628066f975280f212282d028102324",
+                "input_tokens_estimate": 7288,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "d6134c37fb61ff8640d2aa14b4f6148eeaca2856deda5258e8bde8b6e5ed1ab6",
+                "input_tokens_estimate": 7508,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00018-opencode-short",
+            "capture_sha256": "42187beff98c48aaf5c5112510c93e3dfe1854e230a8745c7ddfbe9fd8f73bc2",
+            "first_main_input_tokens_estimate": 6848,
+            "main_calls": 4,
+            "all_calls": 5,
+            "session_input_tokens_estimate": 29302,
+            "session_output_tokens_estimate": 61,
+            "session_total_tokens_estimate": 29363,
+            "requests": [
+              {
+                "kind": "aux",
+                "step": 0,
+                "request_sha256": "ed32620c1597f3494b2d3b1f1e358e7d1b079adab22733fbcd57e6dfe8ff3992",
+                "input_tokens_estimate": 590,
+                "output_tokens_estimate": 2
+              },
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "2d7b127493a38ac56d0eeb9b3705fd583d74e54f31bd3b0b83351e6cdadac222",
+                "input_tokens_estimate": 6848,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "7500bae82788d7fcf413141f162b750826fb926960f731958372945a4f22a215",
+                "input_tokens_estimate": 7068,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "8e3c65b00c63a376b8dbe6344525b9a273628066f975280f212282d028102324",
+                "input_tokens_estimate": 7288,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "d6134c37fb61ff8640d2aa14b4f6148eeaca2856deda5258e8bde8b6e5ed1ab6",
+                "input_tokens_estimate": 7508,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00025-opencode-short",
+            "capture_sha256": "d9c141b8eb62eae79278d7977401ac66a000b4cc3f8d831d44b83e440855e7ad",
+            "first_main_input_tokens_estimate": 6848,
+            "main_calls": 4,
+            "all_calls": 5,
+            "session_input_tokens_estimate": 29302,
+            "session_output_tokens_estimate": 61,
+            "session_total_tokens_estimate": 29363,
+            "requests": [
+              {
+                "kind": "aux",
+                "step": 0,
+                "request_sha256": "ed32620c1597f3494b2d3b1f1e358e7d1b079adab22733fbcd57e6dfe8ff3992",
+                "input_tokens_estimate": 590,
+                "output_tokens_estimate": 2
+              },
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "2d7b127493a38ac56d0eeb9b3705fd583d74e54f31bd3b0b83351e6cdadac222",
+                "input_tokens_estimate": 6848,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "7500bae82788d7fcf413141f162b750826fb926960f731958372945a4f22a215",
+                "input_tokens_estimate": 7068,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "8e3c65b00c63a376b8dbe6344525b9a273628066f975280f212282d028102324",
+                "input_tokens_estimate": 7288,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "d6134c37fb61ff8640d2aa14b4f6148eeaca2856deda5258e8bde8b6e5ed1ab6",
+                "input_tokens_estimate": 7508,
+                "output_tokens_estimate": 2
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "opencode-v2": {
+      "short": {
+        "attempted": 3,
+        "completed": 3,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 4920,
+          "main_calls": 4,
+          "all_calls": 5,
+          "session_input_tokens_estimate": 21431,
+          "session_output_tokens_estimate": 58,
+          "session_total_tokens_estimate": 21489
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 4920,
+          "main_calls": 4,
+          "all_calls": 5,
+          "session_input_tokens_estimate": 21431,
+          "session_output_tokens_estimate": 58,
+          "session_total_tokens_estimate": 21489
+        },
+        "sessions": [
+          {
+            "runId": "00012-opencode-v2-short",
+            "capture_sha256": "0608ad6375cffec4f9ae1fb0ab69eaffa6b1ef6cee3c868a2bd22f3fcee75526",
+            "first_main_input_tokens_estimate": 4920,
+            "main_calls": 4,
+            "all_calls": 5,
+            "session_input_tokens_estimate": 21431,
+            "session_output_tokens_estimate": 58,
+            "session_total_tokens_estimate": 21489,
+            "requests": [
+              {
+                "kind": "aux",
+                "step": 0,
+                "request_sha256": "fad84be56d00d1ad1a39ee907bfdcf80268128df7c636c8240067f45d88066c1",
+                "input_tokens_estimate": 575,
+                "output_tokens_estimate": 2
+              },
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "d8228b672f1330237725921de789478e5c3200c647092a7dddc7df7b37b9ec36",
+                "input_tokens_estimate": 4920,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "827d85f23475da0bf8bdf4bb889542db39f404ee9ea1d0892aeb6dab5889bdf6",
+                "input_tokens_estimate": 5116,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "85bd77ec969f9bd2467c600a6938fe997557b5a5dcf4f584f881501b135ace3f",
+                "input_tokens_estimate": 5312,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "3c6ad8edba42dedaaea07f5667ae63e7a9ae3ef02c39998821aeef2331e78df9",
+                "input_tokens_estimate": 5508,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00017-opencode-v2-short",
+            "capture_sha256": "bf8a35c1889d4cb67bc8463c43c2c3e69d6f69bb015e50179252b595192b007f",
+            "first_main_input_tokens_estimate": 4920,
+            "main_calls": 4,
+            "all_calls": 5,
+            "session_input_tokens_estimate": 21431,
+            "session_output_tokens_estimate": 58,
+            "session_total_tokens_estimate": 21489,
+            "requests": [
+              {
+                "kind": "aux",
+                "step": 0,
+                "request_sha256": "fad84be56d00d1ad1a39ee907bfdcf80268128df7c636c8240067f45d88066c1",
+                "input_tokens_estimate": 575,
+                "output_tokens_estimate": 2
+              },
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "d8228b672f1330237725921de789478e5c3200c647092a7dddc7df7b37b9ec36",
+                "input_tokens_estimate": 4920,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "827d85f23475da0bf8bdf4bb889542db39f404ee9ea1d0892aeb6dab5889bdf6",
+                "input_tokens_estimate": 5116,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "85bd77ec969f9bd2467c600a6938fe997557b5a5dcf4f584f881501b135ace3f",
+                "input_tokens_estimate": 5312,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "3c6ad8edba42dedaaea07f5667ae63e7a9ae3ef02c39998821aeef2331e78df9",
+                "input_tokens_estimate": 5508,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00026-opencode-v2-short",
+            "capture_sha256": "4af7f44c82a38e48e157b453ae43f623632b0ef94b4be8bbfe447797ad425022",
+            "first_main_input_tokens_estimate": 4920,
+            "main_calls": 4,
+            "all_calls": 5,
+            "session_input_tokens_estimate": 21431,
+            "session_output_tokens_estimate": 58,
+            "session_total_tokens_estimate": 21489,
+            "requests": [
+              {
+                "kind": "aux",
+                "step": 0,
+                "request_sha256": "fad84be56d00d1ad1a39ee907bfdcf80268128df7c636c8240067f45d88066c1",
+                "input_tokens_estimate": 575,
+                "output_tokens_estimate": 2
+              },
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "d8228b672f1330237725921de789478e5c3200c647092a7dddc7df7b37b9ec36",
+                "input_tokens_estimate": 4920,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "827d85f23475da0bf8bdf4bb889542db39f404ee9ea1d0892aeb6dab5889bdf6",
+                "input_tokens_estimate": 5116,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "85bd77ec969f9bd2467c600a6938fe997557b5a5dcf4f584f881501b135ace3f",
+                "input_tokens_estimate": 5312,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "3c6ad8edba42dedaaea07f5667ae63e7a9ae3ef02c39998821aeef2331e78df9",
+                "input_tokens_estimate": 5508,
+                "output_tokens_estimate": 2
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "hermes": {
+      "short": {
+        "attempted": 3,
+        "completed": 3,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 3408,
+          "main_calls": 4,
+          "all_calls": 5,
+          "session_input_tokens_estimate": 15474,
+          "session_output_tokens_estimate": 88,
+          "session_total_tokens_estimate": 15562
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 3408,
+          "main_calls": 4,
+          "all_calls": 5,
+          "session_input_tokens_estimate": 15474,
+          "session_output_tokens_estimate": 88,
+          "session_total_tokens_estimate": 15562
+        },
+        "sessions": [
+          {
+            "runId": "00013-hermes-short",
+            "capture_sha256": "757a181ca1a2946193b3e4bb7fa95d8707a4e2f9d421fd06c96ceabdd55a3703",
+            "first_main_input_tokens_estimate": 3408,
+            "main_calls": 4,
+            "all_calls": 5,
+            "session_input_tokens_estimate": 15474,
+            "session_output_tokens_estimate": 88,
+            "session_total_tokens_estimate": 15562,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "7b365f47b4bcd795759bda4c69eb7af62ec42faa80042f991b7bca891530d186",
+                "input_tokens_estimate": 3408,
+                "output_tokens_estimate": 28
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "2aa0bf379e2530301a4259495524702c88dba42aae6936e2878c904f97f4a54a",
+                "input_tokens_estimate": 3658,
+                "output_tokens_estimate": 28
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "bc13da0744b9f8bb1f762427d46f5df4dd17b201c85071be3c5acca5bf2a5e68",
+                "input_tokens_estimate": 3908,
+                "output_tokens_estimate": 28
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "028e2f5f1ed3ecb8ce528591966cd52ef15777caea36d5f5445b8d14a24873f7",
+                "input_tokens_estimate": 4158,
+                "output_tokens_estimate": 2
+              },
+              {
+                "kind": "aux",
+                "step": 0,
+                "request_sha256": "9c90c8c9d376663edef36d86bf24df41afd487b7d1a9f663cdf9da928e03b06c",
+                "input_tokens_estimate": 342,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00016-hermes-short",
+            "capture_sha256": "8979bc8c5d2ef6dfa7937beaad9b2e7c0229a5dba7bba9c02f907d817137faac",
+            "first_main_input_tokens_estimate": 3408,
+            "main_calls": 4,
+            "all_calls": 5,
+            "session_input_tokens_estimate": 15474,
+            "session_output_tokens_estimate": 88,
+            "session_total_tokens_estimate": 15562,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "7b365f47b4bcd795759bda4c69eb7af62ec42faa80042f991b7bca891530d186",
+                "input_tokens_estimate": 3408,
+                "output_tokens_estimate": 28
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "2aa0bf379e2530301a4259495524702c88dba42aae6936e2878c904f97f4a54a",
+                "input_tokens_estimate": 3658,
+                "output_tokens_estimate": 28
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "bc13da0744b9f8bb1f762427d46f5df4dd17b201c85071be3c5acca5bf2a5e68",
+                "input_tokens_estimate": 3908,
+                "output_tokens_estimate": 28
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "028e2f5f1ed3ecb8ce528591966cd52ef15777caea36d5f5445b8d14a24873f7",
+                "input_tokens_estimate": 4158,
+                "output_tokens_estimate": 2
+              },
+              {
+                "kind": "aux",
+                "step": 0,
+                "request_sha256": "9c90c8c9d376663edef36d86bf24df41afd487b7d1a9f663cdf9da928e03b06c",
+                "input_tokens_estimate": 342,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00027-hermes-short",
+            "capture_sha256": "52958785b0f98d79d86a87e23d23aa38abcd27096b618641e8757eca1527d62c",
+            "first_main_input_tokens_estimate": 3408,
+            "main_calls": 4,
+            "all_calls": 5,
+            "session_input_tokens_estimate": 15474,
+            "session_output_tokens_estimate": 88,
+            "session_total_tokens_estimate": 15562,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "7b365f47b4bcd795759bda4c69eb7af62ec42faa80042f991b7bca891530d186",
+                "input_tokens_estimate": 3408,
+                "output_tokens_estimate": 28
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "2aa0bf379e2530301a4259495524702c88dba42aae6936e2878c904f97f4a54a",
+                "input_tokens_estimate": 3658,
+                "output_tokens_estimate": 28
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "bc13da0744b9f8bb1f762427d46f5df4dd17b201c85071be3c5acca5bf2a5e68",
+                "input_tokens_estimate": 3908,
+                "output_tokens_estimate": 28
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "028e2f5f1ed3ecb8ce528591966cd52ef15777caea36d5f5445b8d14a24873f7",
+                "input_tokens_estimate": 4158,
+                "output_tokens_estimate": 2
+              },
+              {
+                "kind": "aux",
+                "step": 0,
+                "request_sha256": "9c90c8c9d376663edef36d86bf24df41afd487b7d1a9f663cdf9da928e03b06c",
+                "input_tokens_estimate": 342,
+                "output_tokens_estimate": 2
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "goose": {
+      "short": {
+        "attempted": 3,
+        "completed": 3,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 1594,
+          "main_calls": 4,
+          "all_calls": 4,
+          "session_input_tokens_estimate": 7222,
+          "session_output_tokens_estimate": 59,
+          "session_total_tokens_estimate": 7281
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 1594,
+          "main_calls": 4,
+          "all_calls": 4,
+          "session_input_tokens_estimate": 7222,
+          "session_output_tokens_estimate": 59,
+          "session_total_tokens_estimate": 7281
+        },
+        "sessions": [
+          {
+            "runId": "00014-goose-short",
+            "capture_sha256": "76acba94164edf5bb3d460e45ea6b356247512b428eb79c053c28e02f306321a",
+            "first_main_input_tokens_estimate": 1594,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 7222,
+            "session_output_tokens_estimate": 59,
+            "session_total_tokens_estimate": 7281,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "d02790c43bf8df24e9735215780c7ab1e5a7314bece8fa7e0258addae4e61ad1",
+                "input_tokens_estimate": 1594,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "553bd40211cfc0cd2ca5161ccf2d861e70d6ab61c8be4cff7c3758e2a85ba6b7",
+                "input_tokens_estimate": 1735,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "70e571d6fc37a516d2d280bd0c162788417213a3cef665bb3d3212ceeab13d2f",
+                "input_tokens_estimate": 1876,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "61313b044ca8e6f09f1210bbbc4209aa800ca7c19e81350378eba02f3863a9b4",
+                "input_tokens_estimate": 2017,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00015-goose-short",
+            "capture_sha256": "fa27e7134814b4a355cf69885287ba5a63bf1a9e9489f59b3c266ba76399fa09",
+            "first_main_input_tokens_estimate": 1594,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 7222,
+            "session_output_tokens_estimate": 59,
+            "session_total_tokens_estimate": 7281,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "d02790c43bf8df24e9735215780c7ab1e5a7314bece8fa7e0258addae4e61ad1",
+                "input_tokens_estimate": 1594,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "553bd40211cfc0cd2ca5161ccf2d861e70d6ab61c8be4cff7c3758e2a85ba6b7",
+                "input_tokens_estimate": 1735,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "70e571d6fc37a516d2d280bd0c162788417213a3cef665bb3d3212ceeab13d2f",
+                "input_tokens_estimate": 1876,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "61313b044ca8e6f09f1210bbbc4209aa800ca7c19e81350378eba02f3863a9b4",
+                "input_tokens_estimate": 2017,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00028-goose-short",
+            "capture_sha256": "8145544a5b18d183c058889a04cc807f071ebd7d9a9b0fbde703c77d09ef5268",
+            "first_main_input_tokens_estimate": 1594,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 7222,
+            "session_output_tokens_estimate": 59,
+            "session_total_tokens_estimate": 7281,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "6d831449489ab5fd03955c7c3745734bc9e8f94ab582b7555538c9b133625018",
+                "input_tokens_estimate": 1594,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "c306aa771ea257dff3634ec651747a87dacd555233ba8b7c6516016f69425752",
+                "input_tokens_estimate": 1735,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "e810210bbd87302fea0f19ca98385ae409eb57c6ff71fc15ffee0f7174ce65bf",
+                "input_tokens_estimate": 1876,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "b42d3572c75f410ab5cc3bf106483111b8e4f4be75ced8a837b83492d418a775",
+                "input_tokens_estimate": 2017,
+                "output_tokens_estimate": 2
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
