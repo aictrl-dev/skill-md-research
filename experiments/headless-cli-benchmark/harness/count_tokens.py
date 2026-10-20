@@ -65,9 +65,9 @@ def analyze(campaign_path, output_path):
     }
     for name in campaign["HARNESSES"]:
         scenarios = {}
-        for kind in ("trivial", "long"):
+        for kind in [k for k in ("trivial", "short", "long") if campaign["raw"].get(k)]:
             attempts = campaign["raw"][kind][name]
-            expected = campaign["REPS"] if kind == "trivial" else campaign["LONG_REPS"]
+            expected = campaign["LONG_REPS"] if kind == "long" else campaign["REPS"]
             if len(attempts) != expected:
                 raise ValueError(f"Incomplete campaign: {name}/{kind}")
             sessions = []

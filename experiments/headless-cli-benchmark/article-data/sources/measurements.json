@@ -4712,7 +4712,7 @@
       }
     },
     "pi-1.3-node22": {
-      "label": "pi 1.3.0 (Node 22)",
+      "label": "pi 1.3.0",
       "scenarios": {
         "trivial": [
           {
@@ -9363,7 +9363,7 @@
       }
     },
     "aictrl-npm-0.5.4": {
-      "label": "aictrl 0.5.4 (npm)",
+      "label": "aictrl 0.5.4",
       "scenarios": {
         "trivial": [
           {
