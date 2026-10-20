@@ -1,0 +1,176 @@
+{
+  "measurement_type": "offline reference-token estimates; not provider-reported usage",
+  "encoding": "o200k_base",
+  "tiktoken_version": "0.12.0",
+  "input_definition": "Tokenize canonical sorted compact JSON of instructions/messages/input/tools/response_format/text; omit absent fields and all transport controls",
+  "output_definition": "Tokenize returned text, or canonical JSON of generated tool name and arguments; exclude event framing and call IDs",
+  "session_definition": "Sum each request input and response output including auxiliary calls and any retries; repeated history counted again each call",
+  "limitations": [
+    "API-specific model framing and tokenizer differences are unmeasured",
+    "No cache discounts or cache-hit data",
+    "No model-generated reasoning tokens",
+    "Scripted output and 51 main calls; not natural task efficiency",
+    "Stub usage counters are artificial and never used"
+  ],
+  "campaign": "results/token-capture-0.5.4-minimal.json",
+  "campaign_sha256": "ee9edfc1e8ddda3d552439afef3a1a1aa26dd14be322a4e4121bed3ec9aa2fef",
+  "source": "benchmark/results/token-accounting-0.5.4-minimal.json",
+  "source_sha256": "e810336e15f107fd92c483baa92b6ecfce305738432a906c347cd95564062a44",
+  "harnesses": {
+    "aictrl-0.5.4-minimal": {
+      "trivial": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 2091,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 2091,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 2093
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 2091,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 2091,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 2093
+        },
+        "sessions": [
+          {
+            "runId": "00001-aictrl-0.5.4-minimal-trivial",
+            "capture_sha256": "88a2ae326faec0afdd0ed6ad3601b039c199982df85bd4339a68b32ce9b84f8b",
+            "first_main_input_tokens_estimate": 2091,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 2091,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 2093
+          },
+          {
+            "runId": "00002-aictrl-0.5.4-minimal-trivial",
+            "capture_sha256": "7289b9ff40760dd6edf67fc241afbbe1722cd45795a52e8a947ca1db5be0e26a",
+            "first_main_input_tokens_estimate": 2091,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 2091,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 2093
+          },
+          {
+            "runId": "00003-aictrl-0.5.4-minimal-trivial",
+            "capture_sha256": "8f34365097dd678d304bccc544b469413400d3524f66b02d831b6f481b61f7e2",
+            "first_main_input_tokens_estimate": 2091,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 2091,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 2093
+          },
+          {
+            "runId": "00004-aictrl-0.5.4-minimal-trivial",
+            "capture_sha256": "6aa2afb68f29ed73d9107fa38ebdb46dbde791bd9ee341fcb75a61ff56967da1",
+            "first_main_input_tokens_estimate": 2091,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 2091,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 2093
+          },
+          {
+            "runId": "00005-aictrl-0.5.4-minimal-trivial",
+            "capture_sha256": "7cd780d856a377640b7b7338aa12b6c93a71699158703dd10d32d89e3f63ab19",
+            "first_main_input_tokens_estimate": 2091,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 2091,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 2093
+          }
+        ]
+      },
+      "long": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 2109,
+          "main_calls": 51,
+          "all_calls": 51,
+          "session_input_tokens_estimate": 14513784,
+          "session_output_tokens_estimate": 952,
+          "session_total_tokens_estimate": 14514736
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 2109,
+          "main_calls": 51,
+          "all_calls": 51,
+          "session_input_tokens_estimate": 14513784,
+          "session_output_tokens_estimate": 952,
+          "session_total_tokens_estimate": 14514736
+        },
+        "sessions": [
+          {
+            "runId": "00006-aictrl-0.5.4-minimal-long",
+            "capture_sha256": "0b093f6ed97f837040f2008e909ffac34773912e233f089f3be42e59220d1d85",
+            "first_main_input_tokens_estimate": 2109,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14513784,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14514736
+          },
+          {
+            "runId": "00007-aictrl-0.5.4-minimal-long",
+            "capture_sha256": "b9ffe464497fbf59351586d2b51ae2edb2e1339a72eb427272707db30dbec86d",
+            "first_main_input_tokens_estimate": 2109,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14513784,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14514736
+          },
+          {
+            "runId": "00008-aictrl-0.5.4-minimal-long",
+            "capture_sha256": "e0cf59e22ad955aaf0bba9650c25e94e70e576b0a2b1b8d1b758fcb3cb2a1d58",
+            "first_main_input_tokens_estimate": 2109,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14513784,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14514736
+          },
+          {
+            "runId": "00009-aictrl-0.5.4-minimal-long",
+            "capture_sha256": "c7de219e4f92c95b63ebba9c68329408d2137df56f0bd623c6f9490c5f333f60",
+            "first_main_input_tokens_estimate": 2109,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14513784,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14514736
+          },
+          {
+            "runId": "00010-aictrl-0.5.4-minimal-long",
+            "capture_sha256": "a57488bb52b53c200d0d1296ac3761444cfa270b490d2cdafe278f61f47724cd",
+            "first_main_input_tokens_estimate": 2109,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14513784,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14514736
+          }
+        ]
+      },
+      "first_request_parts": {
+        "system_prompt": 608,
+        "tool_definitions": 1421,
+        "tool_count": 4,
+        "task_and_framing": 62
+      }
+    }
+  },
+  "first_request_parts_definition": "Split the first request: system prompt (system/developer messages and `instructions`),\n    tool definitions (canonical JSON), and the remainder of the canonical input count\n    (task message, injected context and JSON framing)."
+}

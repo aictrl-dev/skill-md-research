@@ -1,0 +1,29 @@
+{
+  "capturedAtUtc": "2026-10-19T12:00:38.809578+00:00",
+  "hostKernel": "7.0.0-31-generic",
+  "hostArchitecture": "x86_64",
+  "cpu": {
+    "Model name": "AMD Ryzen 7 8700F 8-Core Processor",
+    "CPU(s)": "16",
+    "Socket(s)": "1",
+    "Core(s) per socket": "8",
+    "Thread(s) per core": "2"
+  },
+  "docker": {
+    "ServerVersion": "29.8.0",
+    "OperatingSystem": "Ubuntu 24.04.5 LTS",
+    "Architecture": "x86_64",
+    "KernelVersion": "7.0.0-31-generic",
+    "CgroupDriver": "cgroupfs",
+    "CgroupVersion": "2",
+    "NCPU": 16,
+    "MemTotal": 33291886592,
+    "Driver": "overlay2"
+  },
+  "filesystemFreeBytes": 6307098624,
+  "upstreamImages": {
+    "node:20-slim": "node@sha256:2cf067cfed83d5ea958367df9f966191a942351a2df77d6f0193e162b5febfc0",
+    "node:22-slim": "docker.io/library/node:22-slim@sha256:c3de60bf2f9dd0ac6370e6117950ff62d6e339527e7472301c9c78a017978392",
+    "python:3.14-slim": "docker.io/library/python:3.14-slim@sha256:a2b82f3c48559aa0a8446d9af49826b6e2b2016f4cd2afabfe6013ec53729170"
+  }
+}

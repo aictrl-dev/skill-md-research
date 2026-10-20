@@ -1,0 +1,162 @@
+{
+  "_id": "@aictrl/cli@0.5.4",
+  "_rev": "30-cae074ebfb076484e420b681f44c4114",
+  "name": "@aictrl/cli",
+  "dist-tags": {
+    "latest": "0.5.4"
+  },
+  "versions": [
+    "0.1.0",
+    "0.1.1",
+    "0.1.2",
+    "0.1.3",
+    "0.1.4",
+    "0.1.5",
+    "0.1.6",
+    "0.1.7",
+    "0.1.8",
+    "0.1.9",
+    "0.2.0",
+    "0.3.0",
+    "0.3.2",
+    "0.3.3",
+    "0.3.5",
+    "0.3.6",
+    "0.3.7",
+    "0.4.0",
+    "0.4.1",
+    "0.4.3",
+    "0.4.4",
+    "0.4.5",
+    "0.4.6",
+    "0.4.7",
+    "0.4.8",
+    "0.5.0",
+    "0.5.1",
+    "0.5.2",
+    "0.5.3",
+    "0.5.4"
+  ],
+  "time": {
+    "created": "2026-03-07T00:24:19.367Z",
+    "modified": "2026-10-19T22:43:25.403Z",
+    "0.1.0": "2026-03-07T00:24:19.735Z",
+    "0.1.1": "2026-03-07T17:27:44.119Z",
+    "0.1.2": "2026-03-07T17:54:51.155Z",
+    "0.1.3": "2026-03-07T20:34:34.030Z",
+    "0.1.4": "2026-03-07T22:27:14.373Z",
+    "0.1.5": "2026-03-07T22:41:49.574Z",
+    "0.1.6": "2026-03-07T22:45:59.065Z",
+    "0.1.7": "2026-03-07T22:51:58.217Z",
+    "0.1.8": "2026-03-07T23:10:13.924Z",
+    "0.1.9": "2026-03-07T23:17:33.780Z",
+    "0.2.0": "2026-03-10T12:01:04.504Z",
+    "0.3.0": "2026-03-27T22:50:18.495Z",
+    "0.3.2": "2026-04-11T21:25:39.219Z",
+    "0.3.3": "2026-04-23T20:12:26.022Z",
+    "0.3.5": "2026-05-21T22:02:57.988Z",
+    "0.3.6": "2026-06-10T14:39:50.542Z",
+    "0.3.7": "2026-06-13T06:57:51.148Z",
+    "0.4.0": "2026-06-22T11:42:27.450Z",
+    "0.4.1": "2026-07-21T11:04:03.659Z",
+    "0.4.3": "2026-08-20T11:21:56.869Z",
+    "0.4.4": "2026-09-30T14:55:55.002Z",
+    "0.4.5": "2026-10-06T10:32:24.379Z",
+    "0.4.6": "2026-10-07T13:02:38.080Z",
+    "0.4.7": "2026-10-07T15:32:14.582Z",
+    "0.4.8": "2026-10-10T14:25:20.396Z",
+    "0.5.0": "2026-10-18T17:37:34.794Z",
+    "0.5.1": "2026-10-18T21:48:35.663Z",
+    "0.5.2": "2026-10-19T12:41:12.938Z",
+    "0.5.3": "2026-10-19T13:41:33.103Z",
+    "0.5.4": "2026-10-19T22:43:24.990Z"
+  },
+  "bugs": {
+    "url": "https://github.com/aictrl-dev/cli/issues"
+  },
+  "license": "MIT",
+  "homepage": "https://aictrl.ai",
+  "repository": {
+    "url": "git+https://github.com/aictrl-dev/cli.git",
+    "type": "git"
+  },
+  "description": "Headless execution engine for AI agent skills",
+  "maintainers": [
+    "byapparov <bulat@aictrl.dev>"
+  ],
+  "readmeFilename": "README.md",
+  "_contentLength": 119919,
+  "bin": {
+    "aictrl": "bin/aictrl"
+  },
+  "dist": {
+    "shasum": "5fddd2d22a96cfa16f63a852df801f10c6fe34bb",
+    "tarball": "https://registry.npmjs.org/@aictrl/cli/-/cli-0.5.4.tgz",
+    "fileCount": 4,
+    "integrity": "sha512-fhWgMKwLYXYPtS5uZu6Yy1iPVkkhChdvI8vfUA26KsAfjNYV6+cLDXovSaWdFArS+mC+fHiJrHrkyZCx2kSBIg==",
+    "signatures": [
+      {
+        "sig": "MEUCIFWTziHYr1NByHaITSRWlCNhgZVkTiheo9IQ1xAbUKcpAiEAyBMnt9a6qYzfuQncL9N0Rvx9E8AsbW5VrT/cDuZOeYw=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+        "sig": "MEYCIQDHLEKg2kHClhzZkcIpx7Xn6dtSoZKa6O89b0eQDDo7QAIhAPqYT62GfXb3tKki6Fvk5qy2fB7WiO0x+J2hsZYskpkA"
+      }
+    ],
+    "attestations": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/@aictrl%2fcli@0.5.4",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "unpackedSize": 18304
+  },
+  "_from": "file:aictrl-cli-0.5.4.tgz",
+  "$schema": "https://json.schemastore.org/package.json",
+  "private": false,
+  "scripts": {
+    "db": "bun drizzle-kit",
+    "dev": "bun run --conditions=browser ./src/index.ts",
+    "docs": "echo 'Generating documentation...' && find src -name '*.ts' -exec echo 'Processing: {}' \\;",
+    "lint": "echo 'Running lint checks...' && bun test --coverage",
+    "test": "bun test --timeout 30000",
+    "build": "bun run script/build.ts --",
+    "clean": "echo 'Cleaning up...' && rm -rf node_modules dist",
+    "deploy": "echo 'Deploying application...' && bun run build && echo 'Deployment completed successfully'",
+    "format": "echo 'Formatting code...' && bun run --prettier --write src/**/*.ts",
+    "random": "echo 'Random script updated at $(date)' && echo 'Change queued successfully' && echo 'Another change made' && echo 'Yet another change' && echo 'One more change' && echo 'Final change' && echo 'Another final change' && echo 'Yet another final change'",
+    "typecheck": "tsc --noEmit"
+  },
+  "version": "0.5.4",
+  "_npmUser": {
+    "name": "GitHub Actions",
+    "email": "npm-oidc-no-reply@github.com",
+    "trustedPublisher": {
+      "id": "github",
+      "oidcConfigId": "b4918d9c-ea52-4008-b0c1-ba60b3f764b2"
+    }
+  },
+  "_resolved": "/home/runner/work/cli/cli/packages/cli/aictrl-cli-0.5.4.tgz",
+  "_integrity": "sha512-fhWgMKwLYXYPtS5uZu6Yy1iPVkkhChdvI8vfUA26KsAfjNYV6+cLDXovSaWdFArS+mC+fHiJrHrkyZCx2kSBIg==",
+  "_npmVersion": "11.10.1",
+  "directories": {},
+  "_nodeVersion": "22.23.3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "_hasShrinkwrap": false,
+  "optionalDependencies": {
+    "@aictrl/cli-linux-arm64": "0.5.4",
+    "@aictrl/cli-darwin-arm64": "0.5.4",
+    "@aictrl/cli-linux-arm64-musl": "0.5.4",
+    "@aictrl/cli-linux-x64-baseline": "0.5.4",
+    "@aictrl/cli-darwin-x64-baseline": "0.5.4",
+    "@aictrl/cli-windows-x64-baseline": "0.5.4",
+    "@aictrl/cli-linux-x64-baseline-musl": "0.5.4"
+  },
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages-npm-production",
+    "tmp": "tmp/cli_0.5.4_1792449804908_0.8909559619066942"
+  }
+}

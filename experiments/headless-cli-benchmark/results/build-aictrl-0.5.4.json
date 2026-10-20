@@ -1,0 +1,322 @@
+{
+  "capturedAtUtc": "2026-10-20T08:44:10.189292+00:00",
+  "tag": "aictrl-harness-bench:aictrl-npm-0.5.4",
+  "imageId": "sha256:4aaebaa6de0e949a73965185f4fc891149cbfd9db880281b37448ff6ba47cc87",
+  "matchingBase": "aictrl-harness-bench:base",
+  "matchingBaseId": "sha256:115e6dd65ebfb52349873367e6c80a3739e333314effc54293fb00a6b49e8978",
+  "matchingBaseBytes": 312337376,
+  "totalImageBytes": 431293017,
+  "imageDeltaBytes": 118955641,
+  "imageDeltaMiB": 113.44493961334229,
+  "installedTotalBytes": 118980217,
+  "installedPathsBytes": {
+    "/usr/local/lib/node_modules/@aictrl/cli": 118980217
+  },
+  "executionEngine": "bundled Bun native binary, npm Node launcher",
+  "containerNodeVersion": "v20.20.2",
+  "containerNpmVersion": "10.8.2",
+  "runtime": "v20.20.2",
+  "toolVersion": "0.5.4",
+  "frozenImageIdsUnchanged": {
+    "aictrl-npm": "sha256:239c2688ca4f4bdf631f710200c2df7b99e8aa79d5b1cf65fb366894e9e8c867",
+    "pi-1.3-node22": "sha256:7057a9118c8dae493b785c8b4b21f565e48817df8d18fea852195a5c4056d822",
+    "codex": "sha256:3ca4c3adf3d17cb8de50caf71fa368affb42971ad35b1ce70fbfe1e94d2baf94",
+    "opencode": "sha256:642adfb8d2a43d9431284942384541ea6a57693444a0f2d0957211c998030acf",
+    "hermes": "sha256:a8125d7ef078a126b282c140894ca3467ba0a060a2524eb6202977bbac26e9a3",
+    "goose": "sha256:2a1b12280d77e8e02cae3c17715b50d2493a4f9fe317706a9c80d1b9166956fb"
+  },
+  "npmWrapperVersion": "0.5.4",
+  "nativeGlibcBaselineVersion": "0.5.4",
+  "publishedPackage": {
+    "name": "@aictrl/cli",
+    "version": "0.5.4",
+    "dist": {
+      "shasum": "5fddd2d22a96cfa16f63a852df801f10c6fe34bb",
+      "tarball": "https://registry.npmjs.org/@aictrl/cli/-/cli-0.5.4.tgz",
+      "fileCount": 4,
+      "integrity": "sha512-fhWgMKwLYXYPtS5uZu6Yy1iPVkkhChdvI8vfUA26KsAfjNYV6+cLDXovSaWdFArS+mC+fHiJrHrkyZCx2kSBIg==",
+      "signatures": [
+        {
+          "sig": "MEUCIFWTziHYr1NByHaITSRWlCNhgZVkTiheo9IQ1xAbUKcpAiEAyBMnt9a6qYzfuQncL9N0Rvx9E8AsbW5VrT/cDuZOeYw=",
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEYCIQDHLEKg2kHClhzZkcIpx7Xn6dtSoZKa6O89b0eQDDo7QAIhAPqYT62GfXb3tKki6Fvk5qy2fB7WiO0x+J2hsZYskpkA"
+        }
+      ],
+      "attestations": {
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@aictrl%2fcli@0.5.4",
+        "provenance": {
+          "predicateType": "https://slsa.dev/provenance/v1"
+        }
+      },
+      "unpackedSize": 18304
+    },
+    "optionalDependencies": {
+      "@aictrl/cli-linux-arm64": "0.5.4",
+      "@aictrl/cli-darwin-arm64": "0.5.4",
+      "@aictrl/cli-linux-arm64-musl": "0.5.4",
+      "@aictrl/cli-linux-x64-baseline": "0.5.4",
+      "@aictrl/cli-darwin-x64-baseline": "0.5.4",
+      "@aictrl/cli-windows-x64-baseline": "0.5.4",
+      "@aictrl/cli-linux-x64-baseline-musl": "0.5.4"
+    }
+  },
+  "installedPackages": {
+    "main": {
+      "name": "@aictrl/cli",
+      "version": "0.5.4"
+    },
+    "platformPackages": [
+      {
+        "name": "@aictrl/cli-linux-x64-baseline",
+        "version": "0.5.4",
+        "os": [
+          "linux"
+        ],
+        "cpu": [
+          "x64"
+        ],
+        "libc": [
+          "glibc"
+        ],
+        "path": "/usr/local/lib/node_modules/@aictrl/cli/node_modules/@aictrl/cli-linux-x64-baseline",
+        "binaryPath": "/usr/local/lib/node_modules/@aictrl/cli/node_modules/@aictrl/cli-linux-x64-baseline/bin/aictrl",
+        "binaryBytes": 105301984,
+        "installedBytes": 118945529,
+        "binarySha256": "f12a54259ae0d77d85fd6d0cfefe1dcc742b95a617ca71e48f4fdfb2575182ee"
+      }
+    ]
+  },
+  "fixtureContract": {
+    "uid": 10001,
+    "homeEntries": [],
+    "fixtures": {
+      "notes.txt": {
+        "bytes": 340,
+        "sha256": "268a0ba51362b6181510ff8e8cea2804328d526cb07a97ce8fe56d995f5c64a0"
+      },
+      "big.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "notes-0.txt": {
+        "bytes": 340,
+        "sha256": "268a0ba51362b6181510ff8e8cea2804328d526cb07a97ce8fe56d995f5c64a0"
+      },
+      "notes-1.txt": {
+        "bytes": 340,
+        "sha256": "268a0ba51362b6181510ff8e8cea2804328d526cb07a97ce8fe56d995f5c64a0"
+      },
+      "notes-2.txt": {
+        "bytes": 340,
+        "sha256": "268a0ba51362b6181510ff8e8cea2804328d526cb07a97ce8fe56d995f5c64a0"
+      },
+      "big-0.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-1.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-2.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-3.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-4.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-5.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-6.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-7.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-8.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-9.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-10.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-11.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-12.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-13.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-14.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-15.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-16.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-17.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-18.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-19.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-20.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-21.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-22.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-23.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-24.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-25.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-26.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-27.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-28.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-29.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-30.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-31.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-32.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-33.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-34.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-35.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-36.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-37.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-38.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-39.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-40.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-41.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-42.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-43.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-44.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-45.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-46.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-47.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-48.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      },
+      "big-49.txt": {
+        "bytes": 48000,
+        "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+      }
+    }
+  },
+  "networkNoneSmokePassed": true,
+  "frozenMetadataSha256": "688d2ab3608ac0fde987c2b75a3fffdc697aa1b3c44e0930d3c094894f37b05d",
+  "npmDockerfileSha256": "50b0f2b438ac70abc38e574748b962cb77658f92c53d4f0194d46ed3fddc99bf",
+  "filesystemFreeBytes": 61341646848
+}

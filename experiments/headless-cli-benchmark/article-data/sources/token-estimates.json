@@ -1,0 +1,946 @@
+{
+  "measurement_type": "offline reference-token estimates; not provider-reported usage",
+  "encoding": "o200k_base",
+  "tiktoken_version": "0.12.0",
+  "input_definition": "Tokenize canonical sorted compact JSON of instructions/messages/input/tools/response_format/text; omit absent fields and all transport controls",
+  "output_definition": "Tokenize returned text, or canonical JSON of generated tool name and arguments; exclude event framing and call IDs",
+  "session_definition": "Sum each request input and response output including auxiliary calls and any retries; repeated history counted again each call",
+  "limitations": [
+    "API-specific model framing and tokenizer differences are unmeasured",
+    "No cache discounts or cache-hit data",
+    "No model-generated reasoning tokens",
+    "Scripted output and 51 main calls; not natural task efficiency",
+    "Stub usage counters are artificial and never used"
+  ],
+  "campaign": "results/token-capture-0.5.4.json",
+  "campaign_sha256": "35523a21cfa614a2b70f7a058aae28f2331f0d23b093944191ab2c19ebd86b16",
+  "source": "benchmark/results/token-accounting-0.5.4.json",
+  "source_sha256": "26a8e8af3c3382e1bd282878221e7f7763c26b004f0d68347cdd8ecac510723d",
+  "harnesses": {
+    "codex": {
+      "trivial": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 8178,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 8178,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 8180
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 8180,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 8180,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 8182
+        },
+        "sessions": [
+          {
+            "runId": "00003-codex-trivial",
+            "capture_sha256": "7869b6859deba97b45543ab4a483e42a5d59083c9eb3655ccf4b3144701bdd06",
+            "first_main_input_tokens_estimate": 8180,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 8180,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 8182
+          },
+          {
+            "runId": "00010-codex-trivial",
+            "capture_sha256": "49b848ad24f87a6fd4ae55dbc50ca4fdb14833719444243affe1430d50fc8849",
+            "first_main_input_tokens_estimate": 8176,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 8176,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 8178
+          },
+          {
+            "runId": "00015-codex-trivial",
+            "capture_sha256": "d41e4f72cee9dfaaa01de226d84479e83bc3f635d3779b17a6e2daa6f9affa3b",
+            "first_main_input_tokens_estimate": 8178,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 8178,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 8180
+          },
+          {
+            "runId": "00022-codex-trivial",
+            "capture_sha256": "1a6864642a1554140fb6ac1c97383a8f98ead9008ccd48023e28a445e9fcdf6b",
+            "first_main_input_tokens_estimate": 8179,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 8179,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 8181
+          },
+          {
+            "runId": "00027-codex-trivial",
+            "capture_sha256": "710620dec7f60eddfbcec1efb01a0b8546d0a09283bcc22b82c3e2ebac9ed1dc",
+            "first_main_input_tokens_estimate": 8175,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 8175,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 8177
+          }
+        ]
+      },
+      "long": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 8194,
+          "main_calls": 51,
+          "all_calls": 51,
+          "session_input_tokens_estimate": 3170152,
+          "session_output_tokens_estimate": 1002,
+          "session_total_tokens_estimate": 3171154
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 8200,
+          "main_calls": 51,
+          "all_calls": 51,
+          "session_input_tokens_estimate": 3172172,
+          "session_output_tokens_estimate": 1002,
+          "session_total_tokens_estimate": 3173174
+        },
+        "sessions": [
+          {
+            "runId": "00033-codex-long",
+            "capture_sha256": "1081b26d11fb311f3ad38763dd42d769f339871cc4bd33d2bf24d7f49edeca37",
+            "first_main_input_tokens_estimate": 8193,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 3170152,
+            "session_output_tokens_estimate": 1002,
+            "session_total_tokens_estimate": 3171154
+          },
+          {
+            "runId": "00040-codex-long",
+            "capture_sha256": "54f6f911a3addb2c85c5a7e1ea11077d64da42758d9acade73834ed7f9d49573",
+            "first_main_input_tokens_estimate": 8200,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 3170750,
+            "session_output_tokens_estimate": 1002,
+            "session_total_tokens_estimate": 3171752
+          },
+          {
+            "runId": "00045-codex-long",
+            "capture_sha256": "f5aa5ecbf3f8e283396a12a7798babf2c58d8ae3af63a7ceb9ea4f89ca66cd8d",
+            "first_main_input_tokens_estimate": 8195,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 3169393,
+            "session_output_tokens_estimate": 1002,
+            "session_total_tokens_estimate": 3170395
+          },
+          {
+            "runId": "00052-codex-long",
+            "capture_sha256": "ea04fd355f39418c7689c4f07f83aaf922d976b86a54800a3eab0b9dc52315e5",
+            "first_main_input_tokens_estimate": 8194,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 3169166,
+            "session_output_tokens_estimate": 1002,
+            "session_total_tokens_estimate": 3170168
+          },
+          {
+            "runId": "00057-codex-long",
+            "capture_sha256": "681d5d3ce9c110449110cb3a439cf4c35337faa5895633ee4b350e90e7b93b7a",
+            "first_main_input_tokens_estimate": 8193,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 3172172,
+            "session_output_tokens_estimate": 1002,
+            "session_total_tokens_estimate": 3173174
+          }
+        ]
+      },
+      "first_request_parts": {
+        "system_prompt": 4047,
+        "tool_definitions": 3614,
+        "tool_count": 9,
+        "task_and_framing": 517
+      }
+    },
+    "pi-1.3-node22": {
+      "trivial": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 1276,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 1276,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 1278
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 1276,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 1276,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 1278
+        },
+        "sessions": [
+          {
+            "runId": "00002-pi-1.3-node22-trivial",
+            "capture_sha256": "850af5efe574f9a695ba7565cd2b59a476da2ad5a92a1f1b81c6271bf4e82d89",
+            "first_main_input_tokens_estimate": 1276,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 1276,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 1278
+          },
+          {
+            "runId": "00011-pi-1.3-node22-trivial",
+            "capture_sha256": "a2a6ced3333a4153ff58dc292e221a5b0b03911fff13abca47a0aaeeaebdf8e6",
+            "first_main_input_tokens_estimate": 1276,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 1276,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 1278
+          },
+          {
+            "runId": "00014-pi-1.3-node22-trivial",
+            "capture_sha256": "08db4b147a26b3a80a72b705459e63616b2ad02833b1c8b1e14772d82bd7e4bd",
+            "first_main_input_tokens_estimate": 1276,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 1276,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 1278
+          },
+          {
+            "runId": "00023-pi-1.3-node22-trivial",
+            "capture_sha256": "a6535e6531de7cf3644dcbeffa26f31a0513b583ba332bbcf99d6a7c483495cf",
+            "first_main_input_tokens_estimate": 1276,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 1276,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 1278
+          },
+          {
+            "runId": "00026-pi-1.3-node22-trivial",
+            "capture_sha256": "610d1aa888bec3948c874b06ef6c91502f37b29e28f2dec2774dc8d0133a4240",
+            "first_main_input_tokens_estimate": 1276,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 1276,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 1278
+          }
+        ]
+      },
+      "long": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 1294,
+          "main_calls": 51,
+          "all_calls": 51,
+          "session_input_tokens_estimate": 12383769,
+          "session_output_tokens_estimate": 902,
+          "session_total_tokens_estimate": 12384671
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 1294,
+          "main_calls": 51,
+          "all_calls": 51,
+          "session_input_tokens_estimate": 12383769,
+          "session_output_tokens_estimate": 902,
+          "session_total_tokens_estimate": 12384671
+        },
+        "sessions": [
+          {
+            "runId": "00032-pi-1.3-node22-long",
+            "capture_sha256": "a110c260ea516f6f98275813854329c2fe58522b5d30792391ec79b3d214ccba",
+            "first_main_input_tokens_estimate": 1294,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 12383769,
+            "session_output_tokens_estimate": 902,
+            "session_total_tokens_estimate": 12384671
+          },
+          {
+            "runId": "00041-pi-1.3-node22-long",
+            "capture_sha256": "93cc46b598dcb8cd88ac6630db0f4fe6d6c081459f4e7f568b7c5f84969ac577",
+            "first_main_input_tokens_estimate": 1294,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 12383769,
+            "session_output_tokens_estimate": 902,
+            "session_total_tokens_estimate": 12384671
+          },
+          {
+            "runId": "00044-pi-1.3-node22-long",
+            "capture_sha256": "94e9f9ea8b2ca072016a3635ddfb339d5cb117102a91e3f2d26b9f11c8ec3068",
+            "first_main_input_tokens_estimate": 1294,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 12383769,
+            "session_output_tokens_estimate": 902,
+            "session_total_tokens_estimate": 12384671
+          },
+          {
+            "runId": "00053-pi-1.3-node22-long",
+            "capture_sha256": "600954b43d0cee5a1be9f8b5d8b0fe27997df12b9a8ce151add93343b103924b",
+            "first_main_input_tokens_estimate": 1294,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 12383769,
+            "session_output_tokens_estimate": 902,
+            "session_total_tokens_estimate": 12384671
+          },
+          {
+            "runId": "00056-pi-1.3-node22-long",
+            "capture_sha256": "41887ac8038dca6c29ea217cd227f74632958aa3245870b65ed0ccfeb776f9f3",
+            "first_main_input_tokens_estimate": 1294,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 12383769,
+            "session_output_tokens_estimate": 902,
+            "session_total_tokens_estimate": 12384671
+          }
+        ]
+      },
+      "first_request_parts": {
+        "system_prompt": 601,
+        "tool_definitions": 609,
+        "tool_count": 4,
+        "task_and_framing": 66
+      }
+    },
+    "aictrl-npm-0.5.4": {
+      "trivial": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 3442,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 3442,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 3444
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 3442,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 3442,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 3444
+        },
+        "sessions": [
+          {
+            "runId": "00001-aictrl-npm-0.5.4-trivial",
+            "capture_sha256": "eb3653bd3933124527c980e7f2bee3eb8342171c6ce5e8a8145043e2457393b9",
+            "first_main_input_tokens_estimate": 3442,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 3442,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 3444
+          },
+          {
+            "runId": "00012-aictrl-npm-0.5.4-trivial",
+            "capture_sha256": "86e97e97ca61d570c6be43916f1af065a0cf8e95a4bca4d8eec464835f7b2ca9",
+            "first_main_input_tokens_estimate": 3442,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 3442,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 3444
+          },
+          {
+            "runId": "00013-aictrl-npm-0.5.4-trivial",
+            "capture_sha256": "8315fc75c6501b80e16f4c158f2771515a5b8773e9ab9f3eae7b2dafed97230d",
+            "first_main_input_tokens_estimate": 3442,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 3442,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 3444
+          },
+          {
+            "runId": "00024-aictrl-npm-0.5.4-trivial",
+            "capture_sha256": "f503850f355967d7b2554c415e89f1f973e31088710f120534a3b35caeca3502",
+            "first_main_input_tokens_estimate": 3442,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 3442,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 3444
+          },
+          {
+            "runId": "00025-aictrl-npm-0.5.4-trivial",
+            "capture_sha256": "47d1d9db1dbdf82a89e24e6ff303f00b60cbab6b1d56e6c6f1f847d74ea8d7d4",
+            "first_main_input_tokens_estimate": 3442,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 3442,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 3444
+          }
+        ]
+      },
+      "long": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 3460,
+          "main_calls": 51,
+          "all_calls": 51,
+          "session_input_tokens_estimate": 14582685,
+          "session_output_tokens_estimate": 952,
+          "session_total_tokens_estimate": 14583637
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 3460,
+          "main_calls": 51,
+          "all_calls": 51,
+          "session_input_tokens_estimate": 14582685,
+          "session_output_tokens_estimate": 952,
+          "session_total_tokens_estimate": 14583637
+        },
+        "sessions": [
+          {
+            "runId": "00031-aictrl-npm-0.5.4-long",
+            "capture_sha256": "59595c5c19a9f695862ec71dd44fd77a6ff3c0ec24742f863c0478837056bccc",
+            "first_main_input_tokens_estimate": 3460,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14582685,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14583637
+          },
+          {
+            "runId": "00042-aictrl-npm-0.5.4-long",
+            "capture_sha256": "7c9a02d2991320deb8a197a9f38eb56242abefc804eaf1e2bbf8830ed73df184",
+            "first_main_input_tokens_estimate": 3460,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14582685,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14583637
+          },
+          {
+            "runId": "00043-aictrl-npm-0.5.4-long",
+            "capture_sha256": "1ce15095119d5063a0f80c576949d0a3fd793fd55d13165a272a7bbff5d77575",
+            "first_main_input_tokens_estimate": 3460,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14582685,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14583637
+          },
+          {
+            "runId": "00054-aictrl-npm-0.5.4-long",
+            "capture_sha256": "eca2f3ea381785f212e26ac547b0ddb505a63328ca46ae4e00f0c54274abb151",
+            "first_main_input_tokens_estimate": 3460,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14582685,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14583637
+          },
+          {
+            "runId": "00055-aictrl-npm-0.5.4-long",
+            "capture_sha256": "5f0b65a79018f0fc9deacf212a4669b5bc6a942ea9c62725dfadaee07bdaf6de",
+            "first_main_input_tokens_estimate": 3460,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14582685,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14583637
+          }
+        ]
+      },
+      "first_request_parts": {
+        "system_prompt": 608,
+        "tool_definitions": 2772,
+        "tool_count": 9,
+        "task_and_framing": 62
+      }
+    },
+    "opencode-v2": {
+      "trivial": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 4903,
+          "main_calls": 1,
+          "all_calls": 2,
+          "session_input_tokens_estimate": 5461,
+          "session_output_tokens_estimate": 4,
+          "session_total_tokens_estimate": 5465
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 4903,
+          "main_calls": 1,
+          "all_calls": 2,
+          "session_input_tokens_estimate": 5461,
+          "session_output_tokens_estimate": 4,
+          "session_total_tokens_estimate": 5465
+        },
+        "sessions": [
+          {
+            "runId": "00004-opencode-v2-trivial",
+            "capture_sha256": "e7d69fdac57b79f87710808422f144f59b902102513474371d90bad36f324eeb",
+            "first_main_input_tokens_estimate": 4903,
+            "main_calls": 1,
+            "all_calls": 2,
+            "session_input_tokens_estimate": 5461,
+            "session_output_tokens_estimate": 4,
+            "session_total_tokens_estimate": 5465
+          },
+          {
+            "runId": "00009-opencode-v2-trivial",
+            "capture_sha256": "851162ee09a83e6fff171a33914d5aba848acfbe564f06fb8ae438a9fb125da1",
+            "first_main_input_tokens_estimate": 4903,
+            "main_calls": 1,
+            "all_calls": 2,
+            "session_input_tokens_estimate": 5461,
+            "session_output_tokens_estimate": 4,
+            "session_total_tokens_estimate": 5465
+          },
+          {
+            "runId": "00016-opencode-v2-trivial",
+            "capture_sha256": "9a40a31d8b529b80db4e7c72cd0ab7b7c6bd458e4b92e06a2f3f43d34a70b97f",
+            "first_main_input_tokens_estimate": 4903,
+            "main_calls": 1,
+            "all_calls": 2,
+            "session_input_tokens_estimate": 5461,
+            "session_output_tokens_estimate": 4,
+            "session_total_tokens_estimate": 5465
+          },
+          {
+            "runId": "00021-opencode-v2-trivial",
+            "capture_sha256": "ff54893ad0da9e428ab5b04db99dd2a08cfd39747908adf6d2bc9c84d7c06891",
+            "first_main_input_tokens_estimate": 4903,
+            "main_calls": 1,
+            "all_calls": 2,
+            "session_input_tokens_estimate": 5461,
+            "session_output_tokens_estimate": 4,
+            "session_total_tokens_estimate": 5465
+          },
+          {
+            "runId": "00028-opencode-v2-trivial",
+            "capture_sha256": "e977eba936bbc8f7f82d4dd0b5f993c33e555cf067d86a247821244d8c2dbfec",
+            "first_main_input_tokens_estimate": 4903,
+            "main_calls": 1,
+            "all_calls": 2,
+            "session_input_tokens_estimate": 5461,
+            "session_output_tokens_estimate": 4,
+            "session_total_tokens_estimate": 5465
+          }
+        ]
+      },
+      "long": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 4921,
+          "main_calls": 51,
+          "all_calls": 52,
+          "session_input_tokens_estimate": 14628447,
+          "session_output_tokens_estimate": 904,
+          "session_total_tokens_estimate": 14629351
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 4921,
+          "main_calls": 51,
+          "all_calls": 52,
+          "session_input_tokens_estimate": 14628447,
+          "session_output_tokens_estimate": 904,
+          "session_total_tokens_estimate": 14629351
+        },
+        "sessions": [
+          {
+            "runId": "00034-opencode-v2-long",
+            "capture_sha256": "69e3c1bccaedb950b60df62b9c6bdfccf149e7a91b5c6544a3835ef06ac66ceb",
+            "first_main_input_tokens_estimate": 4921,
+            "main_calls": 51,
+            "all_calls": 52,
+            "session_input_tokens_estimate": 14628447,
+            "session_output_tokens_estimate": 904,
+            "session_total_tokens_estimate": 14629351
+          },
+          {
+            "runId": "00039-opencode-v2-long",
+            "capture_sha256": "0fbc84c2df542fcd075d26528a4595c1789b4b4ae6dd3fe8902e3bca43cd2778",
+            "first_main_input_tokens_estimate": 4921,
+            "main_calls": 51,
+            "all_calls": 52,
+            "session_input_tokens_estimate": 14628447,
+            "session_output_tokens_estimate": 904,
+            "session_total_tokens_estimate": 14629351
+          },
+          {
+            "runId": "00046-opencode-v2-long",
+            "capture_sha256": "75bbd56ee78049c8cf910989de31c8dfcd6ff7d0c84b5d8d30c1a9d0e42195ec",
+            "first_main_input_tokens_estimate": 4921,
+            "main_calls": 51,
+            "all_calls": 52,
+            "session_input_tokens_estimate": 14628447,
+            "session_output_tokens_estimate": 904,
+            "session_total_tokens_estimate": 14629351
+          },
+          {
+            "runId": "00051-opencode-v2-long",
+            "capture_sha256": "3bf0dc4222b2f045ebffd3e3c50aea614645b43ab1e24e731ce749a22487a0ec",
+            "first_main_input_tokens_estimate": 4921,
+            "main_calls": 51,
+            "all_calls": 52,
+            "session_input_tokens_estimate": 14628447,
+            "session_output_tokens_estimate": 904,
+            "session_total_tokens_estimate": 14629351
+          },
+          {
+            "runId": "00058-opencode-v2-long",
+            "capture_sha256": "09282405fde92017e32b187a7da24b787041b4442e52fcd95862e4c308994f28",
+            "first_main_input_tokens_estimate": 4921,
+            "main_calls": 51,
+            "all_calls": 52,
+            "session_input_tokens_estimate": 14628447,
+            "session_output_tokens_estimate": 904,
+            "session_total_tokens_estimate": 14629351
+          }
+        ]
+      },
+      "first_request_parts": {
+        "system_prompt": 1857,
+        "tool_definitions": 2799,
+        "tool_count": 12,
+        "task_and_framing": 247
+      }
+    },
+    "hermes": {
+      "trivial": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 3391,
+          "main_calls": 1,
+          "all_calls": 2,
+          "session_input_tokens_estimate": 3716,
+          "session_output_tokens_estimate": 4,
+          "session_total_tokens_estimate": 3720
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 3391,
+          "main_calls": 1,
+          "all_calls": 2,
+          "session_input_tokens_estimate": 3716,
+          "session_output_tokens_estimate": 4,
+          "session_total_tokens_estimate": 3720
+        },
+        "sessions": [
+          {
+            "runId": "00005-hermes-trivial",
+            "capture_sha256": "c8756fed200372d185ba7255a664cf7ddae4fb146e06a28080bc16df0cd64191",
+            "first_main_input_tokens_estimate": 3391,
+            "main_calls": 1,
+            "all_calls": 2,
+            "session_input_tokens_estimate": 3716,
+            "session_output_tokens_estimate": 4,
+            "session_total_tokens_estimate": 3720
+          },
+          {
+            "runId": "00008-hermes-trivial",
+            "capture_sha256": "f2210f2e3bb68168cb5aef520cd502dcf379e78829854c94afa9c37dc3df0048",
+            "first_main_input_tokens_estimate": 3391,
+            "main_calls": 1,
+            "all_calls": 2,
+            "session_input_tokens_estimate": 3716,
+            "session_output_tokens_estimate": 4,
+            "session_total_tokens_estimate": 3720
+          },
+          {
+            "runId": "00017-hermes-trivial",
+            "capture_sha256": "13cdfb19c5b16278fb303ace9545d4ad55b72eef170d7cd27a49754ef22caf97",
+            "first_main_input_tokens_estimate": 3391,
+            "main_calls": 1,
+            "all_calls": 2,
+            "session_input_tokens_estimate": 3716,
+            "session_output_tokens_estimate": 4,
+            "session_total_tokens_estimate": 3720
+          },
+          {
+            "runId": "00020-hermes-trivial",
+            "capture_sha256": "74e7414f3ea1a027a2eaa98e8096fe0da7316d28a78314c46720960580458417",
+            "first_main_input_tokens_estimate": 3391,
+            "main_calls": 1,
+            "all_calls": 2,
+            "session_input_tokens_estimate": 3716,
+            "session_output_tokens_estimate": 4,
+            "session_total_tokens_estimate": 3720
+          },
+          {
+            "runId": "00029-hermes-trivial",
+            "capture_sha256": "546b27201c1fb36e44060f6164da23e869761e772e4cf3b2aa32c00b6238e921",
+            "first_main_input_tokens_estimate": 3391,
+            "main_calls": 1,
+            "all_calls": 2,
+            "session_input_tokens_estimate": 3716,
+            "session_output_tokens_estimate": 4,
+            "session_total_tokens_estimate": 3720
+          }
+        ]
+      },
+      "long": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 3409,
+          "main_calls": 51,
+          "all_calls": 52,
+          "session_input_tokens_estimate": 15615727,
+          "session_output_tokens_estimate": 1404,
+          "session_total_tokens_estimate": 15617131
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 3409,
+          "main_calls": 51,
+          "all_calls": 52,
+          "session_input_tokens_estimate": 15615727,
+          "session_output_tokens_estimate": 1404,
+          "session_total_tokens_estimate": 15617131
+        },
+        "sessions": [
+          {
+            "runId": "00035-hermes-long",
+            "capture_sha256": "5900459cdcfc9b1f0b3f92dd9f18c27c2051d62239001d342fd3148b8ca79d41",
+            "first_main_input_tokens_estimate": 3409,
+            "main_calls": 51,
+            "all_calls": 52,
+            "session_input_tokens_estimate": 15615727,
+            "session_output_tokens_estimate": 1404,
+            "session_total_tokens_estimate": 15617131
+          },
+          {
+            "runId": "00038-hermes-long",
+            "capture_sha256": "9b8556439861d4f8943971737a82cc7ed23446417731ee07f9d97596114c21db",
+            "first_main_input_tokens_estimate": 3409,
+            "main_calls": 51,
+            "all_calls": 52,
+            "session_input_tokens_estimate": 15615727,
+            "session_output_tokens_estimate": 1404,
+            "session_total_tokens_estimate": 15617131
+          },
+          {
+            "runId": "00047-hermes-long",
+            "capture_sha256": "f09c6bc64a6fdbb9920a66722c3e846ad3fb126e67c7b5590afb5d7954797559",
+            "first_main_input_tokens_estimate": 3409,
+            "main_calls": 51,
+            "all_calls": 52,
+            "session_input_tokens_estimate": 15615727,
+            "session_output_tokens_estimate": 1404,
+            "session_total_tokens_estimate": 15617131
+          },
+          {
+            "runId": "00050-hermes-long",
+            "capture_sha256": "1b0e367435fd30d4f3ba7ba683398d1a4bbe495669967d49a845f8faa6c3e8d9",
+            "first_main_input_tokens_estimate": 3409,
+            "main_calls": 51,
+            "all_calls": 52,
+            "session_input_tokens_estimate": 15615727,
+            "session_output_tokens_estimate": 1404,
+            "session_total_tokens_estimate": 15617131
+          },
+          {
+            "runId": "00059-hermes-long",
+            "capture_sha256": "05b71db091c9413207534b00baf450d9175fe440c68433f1feff1e1f80286b1d",
+            "first_main_input_tokens_estimate": 3409,
+            "main_calls": 51,
+            "all_calls": 52,
+            "session_input_tokens_estimate": 15615727,
+            "session_output_tokens_estimate": 1404,
+            "session_total_tokens_estimate": 15617131
+          }
+        ]
+      },
+      "first_request_parts": {
+        "system_prompt": 1053,
+        "tool_definitions": 2279,
+        "tool_count": 8,
+        "task_and_framing": 59
+      }
+    },
+    "goose": {
+      "trivial": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 1577,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 1577,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 1579
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 1577,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 1577,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 1579
+        },
+        "sessions": [
+          {
+            "runId": "00006-goose-trivial",
+            "capture_sha256": "d57050fdbfaf0acd38c89a3877bcb095d354a970b2df581f2428086afd072ad6",
+            "first_main_input_tokens_estimate": 1577,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 1577,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 1579
+          },
+          {
+            "runId": "00007-goose-trivial",
+            "capture_sha256": "2f5375e09a77080294a871e01cd2eaaf72009b0db1b12e1e65ade9a4632e733c",
+            "first_main_input_tokens_estimate": 1577,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 1577,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 1579
+          },
+          {
+            "runId": "00018-goose-trivial",
+            "capture_sha256": "319515dce05f229b6699ae280154d66b12e9bed49e6487fd2f2b9f51f636a915",
+            "first_main_input_tokens_estimate": 1577,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 1577,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 1579
+          },
+          {
+            "runId": "00019-goose-trivial",
+            "capture_sha256": "7735a305f27b8c87517d300243e3d33e6959d9fdc3f1ffe4853655edb728031b",
+            "first_main_input_tokens_estimate": 1577,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 1577,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 1579
+          },
+          {
+            "runId": "00030-goose-trivial",
+            "capture_sha256": "9a51d681b8f1a26864bb40dedd24b49f03f143f13bdceb8eaa25b7a633577d6a",
+            "first_main_input_tokens_estimate": 1577,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 1577,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 1579
+          }
+        ]
+      },
+      "long": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 1595,
+          "main_calls": 51,
+          "all_calls": 51,
+          "session_input_tokens_estimate": 12399185,
+          "session_output_tokens_estimate": 952,
+          "session_total_tokens_estimate": 12400137
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 1595,
+          "main_calls": 51,
+          "all_calls": 51,
+          "session_input_tokens_estimate": 12399185,
+          "session_output_tokens_estimate": 952,
+          "session_total_tokens_estimate": 12400137
+        },
+        "sessions": [
+          {
+            "runId": "00036-goose-long",
+            "capture_sha256": "179d2e25a28be1ee14182d9192101bd97d50e36ac77bb32e75caac91d8c9ebd5",
+            "first_main_input_tokens_estimate": 1595,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 12399185,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 12400137
+          },
+          {
+            "runId": "00037-goose-long",
+            "capture_sha256": "4ad1c71b884485d19f93c206141b3002784128f124fa4e8792ceebb149dbc800",
+            "first_main_input_tokens_estimate": 1595,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 12399185,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 12400137
+          },
+          {
+            "runId": "00048-goose-long",
+            "capture_sha256": "eeed3538a6fbdcb12445465686208c67496bf6e0c3658e1a362576da103fed72",
+            "first_main_input_tokens_estimate": 1595,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 12399185,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 12400137
+          },
+          {
+            "runId": "00049-goose-long",
+            "capture_sha256": "d4dadfcd88cb55f890c30c3022bff781fa05df2c7d76f8cd9f3a70ad87241751",
+            "first_main_input_tokens_estimate": 1595,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 12399185,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 12400137
+          },
+          {
+            "runId": "00060-goose-long",
+            "capture_sha256": "f09798ed5b77c4a117c5f1b2a0569b94d05aa87933cab2b8808298010500d7fe",
+            "first_main_input_tokens_estimate": 1595,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 12399185,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 12400137
+          }
+        ]
+      },
+      "first_request_parts": {
+        "system_prompt": 563,
+        "tool_definitions": 897,
+        "tool_count": 6,
+        "task_and_framing": 117
+      }
+    }
+  },
+  "first_request_parts_definition": "Split the first request: system prompt (system/developer messages and `instructions`),\n    tool definitions (canonical JSON), and the remainder of the canonical input count\n    (task message, injected context and JSON framing)."
+}

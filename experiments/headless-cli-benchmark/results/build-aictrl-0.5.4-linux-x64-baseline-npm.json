@@ -1,0 +1,114 @@
+{
+  "_id": "@aictrl/cli-linux-x64-baseline@0.5.4",
+  "_rev": "18-4f5aa3a9ca6b71ebc1bf28674cc982ff",
+  "name": "@aictrl/cli-linux-x64-baseline",
+  "dist-tags": {
+    "latest": "0.5.4"
+  },
+  "versions": [
+    "0.3.3",
+    "0.3.4",
+    "0.3.5",
+    "0.3.6",
+    "0.3.7",
+    "0.4.0",
+    "0.4.1",
+    "0.4.3",
+    "0.4.4",
+    "0.4.5",
+    "0.4.6",
+    "0.4.7",
+    "0.4.8",
+    "0.5.0",
+    "0.5.1",
+    "0.5.2",
+    "0.5.3",
+    "0.5.4"
+  ],
+  "time": {
+    "created": "2026-04-23T18:29:52.333Z",
+    "modified": "2026-10-19T22:43:03.569Z",
+    "0.3.3": "2026-04-23T18:29:53.838Z",
+    "0.3.4": "2026-05-21T21:44:36.391Z",
+    "0.3.5": "2026-05-21T22:01:43.065Z",
+    "0.3.6": "2026-06-10T14:38:34.218Z",
+    "0.3.7": "2026-06-13T06:56:42.515Z",
+    "0.4.0": "2026-06-22T11:41:17.260Z",
+    "0.4.1": "2026-07-21T11:02:54.617Z",
+    "0.4.3": "2026-08-20T11:20:33.293Z",
+    "0.4.4": "2026-09-30T14:35:27.851Z",
+    "0.4.5": "2026-10-06T10:29:15.951Z",
+    "0.4.6": "2026-10-07T13:07:55.266Z",
+    "0.4.7": "2026-10-07T15:25:31.911Z",
+    "0.4.8": "2026-10-10T14:24:22.210Z",
+    "0.5.0": "2026-10-18T17:36:35.605Z",
+    "0.5.1": "2026-10-18T21:51:02.494Z",
+    "0.5.2": "2026-10-19T12:39:56.304Z",
+    "0.5.3": "2026-10-19T13:41:05.616Z",
+    "0.5.4": "2026-10-19T22:43:03.106Z"
+  },
+  "bugs": {
+    "url": "https://github.com/aictrl-dev/cli/issues"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/aictrl-dev/cli#readme",
+  "repository": {
+    "url": "git+https://github.com/aictrl-dev/cli.git",
+    "type": "git"
+  },
+  "maintainers": [
+    "byapparov <bulat@aictrl.dev>"
+  ],
+  "readmeFilename": "",
+  "_contentLength": 30270,
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "dist": {
+    "shasum": "e698888ade9ce0a7228423f25113f58b46b65739",
+    "tarball": "https://registry.npmjs.org/@aictrl/cli-linux-x64-baseline/-/cli-linux-x64-baseline-0.5.4.tgz",
+    "fileCount": 4,
+    "integrity": "sha512-YckvmwTV/+lJxB3wZMmXkroj6XWYqSS/PuNOAyD7RudiqSUV4zE5WuQJ6JKAUmQb7PzVmJpY22V/4WNYrl6ydA==",
+    "signatures": [
+      {
+        "sig": "MEUCICM+My0+A1nTyJlEGSqEmi5M8JizMEbQE78YmcCI0aMpAiEA9v7wFuTLTIOhQimDaMl31LFvn9DalIgdEfFhIfwjFdE=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+        "sig": "MEQCIHy6EXq322nlOlm/BeI2ucmMvuPUVfxQuLb5TaCpo2ZDAiAA4psucjdqE3S5kYowxeMr9LDtpSpFw76TLjeUGqlhUw=="
+      }
+    ],
+    "attestations": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/@aictrl%2fcli-linux-x64-baseline@0.5.4",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "unpackedSize": 118937337
+  },
+  "libc": [
+    "glibc"
+  ],
+  "gitHead": "6c661f4cf3e3d555a0f290bc22e071c6de4bd19b",
+  "version": "0.5.4",
+  "_npmUser": {
+    "name": "GitHub Actions",
+    "email": "npm-oidc-no-reply@github.com",
+    "trustedPublisher": {
+      "id": "github",
+      "oidcConfigId": "ca08ceba-bc8b-4c6e-8322-5db678a74c57"
+    }
+  },
+  "_npmVersion": "11.10.1",
+  "directories": {},
+  "_nodeVersion": "22.23.3",
+  "_hasShrinkwrap": false,
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages-npm-production",
+    "tmp": "tmp/cli-linux-x64-baseline_0.5.4_1792449782407_0.9357508226802214"
+  }
+}
