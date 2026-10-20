@@ -211,6 +211,47 @@ HARNESSES["opencode-v2-tools-off"] = {
   name: "opencode-v2-tools-off",
   env: { ...HARNESSES["opencode-v2"].env, OPENCODE_CONFIG_CONTENT: JSON.stringify({ ...opencodeStyleConfig, tools: Object.fromEntries(OPENCODE_V2_OFF.map((t) => [t, false])) }) },
 }
+// Feature-parity probes: switch on the subagent support pi and Goose ship but leave off in the benchmark profile.
+// pi's subagent tool is the example extension in its npm package; each subagent runs as a separate pi process.
+const PI_SUBAGENT = "/usr/local/lib/node_modules/@earendil-works/pi-coding-agent/examples/extensions/subagent/index.ts"
+HARNESSES["pi-1.3-subagent"] = {
+  ...HARNESSES["pi-1.3-node22"],
+  name: "pi-1.3-subagent",
+  argv: (prompt) => { const argv = HARNESSES["pi-1.3-node22"].argv(prompt); return [...argv.slice(0, -1), "-e", PI_SUBAGENT, argv[argv.length - 1]] },
+}
+// aictrl with pi's four tools plus its subagent tool (`task`), to compare with pi-1.3-subagent.
+HARNESSES["aictrl-0.5.4-subagent"] = {
+  ...aictrl("aictrl-npm-0.5.4"),
+  name: "aictrl-0.5.4-subagent",
+  env: { AICTRL_CONFIG_CONTENT: JSON.stringify({ ...opencodeStyleConfig, permission: { "*": "allow", ...Object.fromEntries(MINIMAL_OFF.filter((t) => t !== "task").map((t) => [t, "deny"])) } }) },
+}
+// Goose without --no-profile loads its default platform extensions (summon provides subagents) next to Developer.
+HARNESSES["goose-defaults"] = {
+  ...HARNESSES.goose,
+  name: "goose-defaults",
+  argv: (prompt) => HARNESSES.goose.argv(prompt).filter((a) => a !== "--no-profile"),
+}
+// OpenTelemetry export probe: every CLI gets the standard OTLP environment pointing at harness/otlp-receiver.ts
+// (127.0.0.1:14318, OTLP/HTTP JSON). Where a CLI needs its own switch, it is set too; nothing else changes.
+const OTLP_PORT = Number(process.env.OTLP_PORT ?? 14318)
+const otelEnv = (service: string) => ({
+  OTEL_EXPORTER_OTLP_ENDPOINT: `http://127.0.0.1:${OTLP_PORT}`, OTEL_EXPORTER_OTLP_PROTOCOL: "http/json",
+  OTEL_TRACES_EXPORTER: "otlp", OTEL_LOGS_EXPORTER: "otlp", OTEL_METRICS_EXPORTER: "otlp", OTEL_SERVICE_NAME: service,
+})
+const withOtel = (base: Harness, name: string, extra: Partial<Harness> = {}): Harness =>
+  ({ ...base, ...extra, name, env: { ...base.env, ...(extra.env ?? {}), ...otelEnv(name) } })
+// aictrl and OpenCode: the documented `experimental.openTelemetry` switch for AI SDK spans.
+const otelConfig = { ...opencodeStyleConfig, experimental: { openTelemetry: true } }
+HARNESSES["aictrl-otel"] = withOtel(aictrl("aictrl-npm-0.5.4"), "aictrl-otel", { env: { AICTRL_CONFIG_CONTENT: JSON.stringify(otelConfig) } })
+HARNESSES["opencode-v2-otel"] = withOtel(HARNESSES["opencode-v2"], "opencode-v2-otel", { env: { ...HARNESSES["opencode-v2"].env, OPENCODE_CONFIG_CONTENT: JSON.stringify(otelConfig) } })
+HARNESSES["pi-otel"] = withOtel(HARNESSES["pi-1.3-node22"], "pi-otel")
+HARNESSES["goose-otel"] = withOtel(HARNESSES.goose, "goose-otel")
+HARNESSES["hermes-otel"] = withOtel(HARNESSES.hermes, "hermes-otel")
+// Codex: the [otel] table in config.toml (log events and traces over OTLP/HTTP JSON).
+HARNESSES["codex-otel"] = withOtel(HARNESSES.codex, "codex-otel", { files: [{ path: "/home/runner/.codex/config.toml", content: codexConfig(true) + [
+  ``, `[otel]`, `environment = "probe"`, `log_user_prompt = false`,
+  `exporter = { otlp-http = { endpoint = "http://127.0.0.1:${OTLP_PORT}/v1/logs", protocol = "json" } }`,
+  `trace_exporter = { otlp-http = { endpoint = "http://127.0.0.1:${OTLP_PORT}/v1/traces", protocol = "json" } }`, ``].join("\n") }] })
 const NAMES = (process.env.HARNESSES ?? "aictrl-npm-0.5.4,pi-1.3-node22,codex,opencode,opencode-v2,hermes,goose").split(",")
 const SELECTED = NAMES.map((n) => HARNESSES[n] ?? (() => { throw new Error(`unknown harness ${n}`) })())
 

@@ -1,0 +1,469 @@
+{
+  "measurement_type": "offline reference-token estimates; not provider-reported usage",
+  "encoding": "o200k_base",
+  "tiktoken_version": "0.12.0",
+  "input_definition": "Tokenize canonical sorted compact JSON of instructions/messages/input/tools/response_format/text; omit absent fields and all transport controls",
+  "output_definition": "Tokenize returned text, or canonical JSON of generated tool name and arguments; exclude event framing and call IDs",
+  "session_definition": "Sum each request input and response output including auxiliary calls and any retries; repeated history counted again each call",
+  "limitations": [
+    "API-specific model framing and tokenizer differences are unmeasured",
+    "No cache discounts or cache-hit data",
+    "No model-generated reasoning tokens",
+    "Scripted output and 51 main calls; not natural task efficiency",
+    "Stub usage counters are artificial and never used"
+  ],
+  "campaign": "results/token-capture-0.5.4-parity.json",
+  "campaign_sha256": "b344fd2585e41498f77edd22922caed2edada1f57e1ed084dc9725c390cb4e42",
+  "harnesses": {
+    "pi-1.3-subagent": {
+      "trivial": {
+        "attempted": 3,
+        "completed": 3,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 1678,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 1678,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 1680
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 1678,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 1678,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 1680
+        },
+        "sessions": [
+          {
+            "runId": "00003-pi-1.3-subagent-trivial",
+            "capture_sha256": "cf521505a5431d958c0c818cf5239674555672d3853912caefe14dd1c838c174",
+            "first_main_input_tokens_estimate": 1678,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 1678,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 1680,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "3cce44ccb3ad004fb60d10bf306f18718f4f893298d4f8fd0dd5364de79f7919",
+                "input_tokens_estimate": 1678,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00006-pi-1.3-subagent-trivial",
+            "capture_sha256": "4313e76a535030ed724729adece3f150854e289540ed3e19f7bcc977a80ead69",
+            "first_main_input_tokens_estimate": 1678,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 1678,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 1680,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "3cce44ccb3ad004fb60d10bf306f18718f4f893298d4f8fd0dd5364de79f7919",
+                "input_tokens_estimate": 1678,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00007-pi-1.3-subagent-trivial",
+            "capture_sha256": "60b6e966179bd228acb26cad247fd1dd7814ab465d7e11cf6cd2d150a7f9fb95",
+            "first_main_input_tokens_estimate": 1678,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 1678,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 1680,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "3cce44ccb3ad004fb60d10bf306f18718f4f893298d4f8fd0dd5364de79f7919",
+                "input_tokens_estimate": 1678,
+                "output_tokens_estimate": 2
+              }
+            ]
+          }
+        ]
+      },
+      "short": {
+        "attempted": 3,
+        "completed": 3,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 1695,
+          "main_calls": 4,
+          "all_calls": 4,
+          "session_input_tokens_estimate": 7626,
+          "session_output_tokens_estimate": 56,
+          "session_total_tokens_estimate": 7682
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 1695,
+          "main_calls": 4,
+          "all_calls": 4,
+          "session_input_tokens_estimate": 7626,
+          "session_output_tokens_estimate": 56,
+          "session_total_tokens_estimate": 7682
+        },
+        "sessions": [
+          {
+            "runId": "00011-pi-1.3-subagent-short",
+            "capture_sha256": "d523a56d3f11d249157fb49ad2c11daa290b31ac3b3401f5b96b887da672eab8",
+            "first_main_input_tokens_estimate": 1695,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 7626,
+            "session_output_tokens_estimate": 56,
+            "session_total_tokens_estimate": 7682,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "24b6b8f49129c52f5807db06ad0aec853e109360f9c7760dc4801e426465dc61",
+                "input_tokens_estimate": 1695,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "b0dc17a8c0d19cd9cb385193027a4242654f37e2cc37a91b954db3b4ac65b6dc",
+                "input_tokens_estimate": 1836,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "1e241c66732d323f0f8b6f77308a42024f8ee598b282aaf2364204f14ad46ca8",
+                "input_tokens_estimate": 1977,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "d6143338af675ac1a8db64ee7aa69a6b3fbfe2f7097a26bb417ef4196d53ae61",
+                "input_tokens_estimate": 2118,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00014-pi-1.3-subagent-short",
+            "capture_sha256": "6f97e5df86fb2010b0fcba8a6a669be48b5102c495b327639b3661ec376bd6dd",
+            "first_main_input_tokens_estimate": 1695,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 7626,
+            "session_output_tokens_estimate": 56,
+            "session_total_tokens_estimate": 7682,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "24b6b8f49129c52f5807db06ad0aec853e109360f9c7760dc4801e426465dc61",
+                "input_tokens_estimate": 1695,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "b0dc17a8c0d19cd9cb385193027a4242654f37e2cc37a91b954db3b4ac65b6dc",
+                "input_tokens_estimate": 1836,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "1e241c66732d323f0f8b6f77308a42024f8ee598b282aaf2364204f14ad46ca8",
+                "input_tokens_estimate": 1977,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "d6143338af675ac1a8db64ee7aa69a6b3fbfe2f7097a26bb417ef4196d53ae61",
+                "input_tokens_estimate": 2118,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00015-pi-1.3-subagent-short",
+            "capture_sha256": "38cdd879e82a7ba037f16a26601ebb833b86e4b344371fd2162946df5a92305f",
+            "first_main_input_tokens_estimate": 1695,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 7626,
+            "session_output_tokens_estimate": 56,
+            "session_total_tokens_estimate": 7682,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "24b6b8f49129c52f5807db06ad0aec853e109360f9c7760dc4801e426465dc61",
+                "input_tokens_estimate": 1695,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "b0dc17a8c0d19cd9cb385193027a4242654f37e2cc37a91b954db3b4ac65b6dc",
+                "input_tokens_estimate": 1836,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "1e241c66732d323f0f8b6f77308a42024f8ee598b282aaf2364204f14ad46ca8",
+                "input_tokens_estimate": 1977,
+                "output_tokens_estimate": 18
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "d6143338af675ac1a8db64ee7aa69a6b3fbfe2f7097a26bb417ef4196d53ae61",
+                "input_tokens_estimate": 2118,
+                "output_tokens_estimate": 2
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "goose-defaults": {
+      "trivial": {
+        "attempted": 3,
+        "completed": 3,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 3674,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 3674,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 3676
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 3674,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 3674,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 3676
+        },
+        "sessions": [
+          {
+            "runId": "00004-goose-defaults-trivial",
+            "capture_sha256": "46f57e55d0de9aad6002160270f700c50ec343be9a3376a9461bd17aed50291e",
+            "first_main_input_tokens_estimate": 3673,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 3673,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 3675,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "59992910b9be39e5dce32a79b8a6e450903eb10fe18611def940475c67e37561",
+                "input_tokens_estimate": 3673,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00005-goose-defaults-trivial",
+            "capture_sha256": "0f7fdb1593d4b534be09d834bbd3b8009d96e693c43fd623ced4361963ebee0a",
+            "first_main_input_tokens_estimate": 3674,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 3674,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 3676,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "5fab3ec3f544ccc3fc39ba22a9da6c3773ebbd5f3b56ec7dc9a9d01b8346e240",
+                "input_tokens_estimate": 3674,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00008-goose-defaults-trivial",
+            "capture_sha256": "be5dfae4ec0a56acf5c7e33f876edb83143f789a7859215e9fd3a40a519cc247",
+            "first_main_input_tokens_estimate": 3674,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 3674,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 3676,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "b75071f3579e10e88b08f2923f9c253f917cc22f7c26944cdb7026e68a8a2784",
+                "input_tokens_estimate": 3674,
+                "output_tokens_estimate": 2
+              }
+            ]
+          }
+        ]
+      },
+      "short": {
+        "attempted": 3,
+        "completed": 3,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 3691,
+          "main_calls": 4,
+          "all_calls": 4,
+          "session_input_tokens_estimate": 15610,
+          "session_output_tokens_estimate": 59,
+          "session_total_tokens_estimate": 15669
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 3691,
+          "main_calls": 4,
+          "all_calls": 4,
+          "session_input_tokens_estimate": 15610,
+          "session_output_tokens_estimate": 59,
+          "session_total_tokens_estimate": 15669
+        },
+        "sessions": [
+          {
+            "runId": "00012-goose-defaults-short",
+            "capture_sha256": "1e381e0ff2b57b32eb9c518b3877320652cf7adfcd4ecb7ee028331013ba0a81",
+            "first_main_input_tokens_estimate": 3691,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 15610,
+            "session_output_tokens_estimate": 59,
+            "session_total_tokens_estimate": 15669,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "ac2a0917b3f7b0952af5602006bc132ad9a99bbddc00fca890b92417eaa404ef",
+                "input_tokens_estimate": 3691,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "0e866f573a6a237c47a116dba06fa5432a74f999075f50d9f27b1a64e0b2b320",
+                "input_tokens_estimate": 3832,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "9954214b037272a031d260752d07215787928f70c2663709a887b427d51bcca7",
+                "input_tokens_estimate": 3973,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "2e324711353dda340b01c8a53ac5f83636eca8c93b37661138dba4a9c7155db6",
+                "input_tokens_estimate": 4114,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00013-goose-defaults-short",
+            "capture_sha256": "c12a6bcad04f396d173115b46cbada50f116e9c61ce4618838c7178f6098a774",
+            "first_main_input_tokens_estimate": 3691,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 15610,
+            "session_output_tokens_estimate": 59,
+            "session_total_tokens_estimate": 15669,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "04c96740244496de5014a117a49b6172bd3af60a94abd27f8ac23b0f0215eaec",
+                "input_tokens_estimate": 3691,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "5f7b440aa379640750a1fa1b156cd5700a3a725639e7dba48f8aec58a6ebee56",
+                "input_tokens_estimate": 3832,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "ec13a151f9721275e8c8b009c7766b463811ea3d5701c53870c9086f727657fd",
+                "input_tokens_estimate": 3973,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "28fc73462e7b7e26d98ce04b27405b37985797f6972d5b0ed378d1605bd22cc2",
+                "input_tokens_estimate": 4114,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00016-goose-defaults-short",
+            "capture_sha256": "42322c96d4e1e6d30b70d4949770de63e781109ba16c2da04a17c1319ede9643",
+            "first_main_input_tokens_estimate": 3691,
+            "main_calls": 4,
+            "all_calls": 4,
+            "session_input_tokens_estimate": 15610,
+            "session_output_tokens_estimate": 59,
+            "session_total_tokens_estimate": 15669,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "0015b083c94b2902883da3a88079fc67cd172a089d8a68fb3953065546497a18",
+                "input_tokens_estimate": 3691,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "f755dc27a427d54f1e88ea6c5c6686c34e682f8df709c7d7a0684ea825185d18",
+                "input_tokens_estimate": 3832,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "deb599210478579f8c41d498f5e29cd581d9afda7323eaafc70f67e48b3a2f99",
+                "input_tokens_estimate": 3973,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "0de857e0b646308c9e08911025d65cb508d2b421ad771f7d309d6ff127570152",
+                "input_tokens_estimate": 4114,
+                "output_tokens_estimate": 2
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
