@@ -274,8 +274,8 @@ def charts(data):
         median, p90 = quantile(values, 0.5), quantile(values, 0.9)
         color = rank_color(y)
         ax.plot([median, p90], [y, y], color=color, linewidth=3, alpha=0.5)
-        ax.scatter([median], [y], s=75, color=color, zorder=3)
-        ax.scatter([p90], [y], s=75, edgecolors=color, facecolors="white", zorder=3)
+        ax.scatter([median], [y], s=60, color=color, zorder=4)
+        ax.scatter([p90], [y], s=110, edgecolors=color, facecolors="white", linewidths=1.6, zorder=3)
         ax.annotate(f"{median:.0f} / {p90:.0f}", (p90 + upper * 0.02, y), va="center", fontsize=11)
     save(fig, "01-first-response", f"Sorted by median, lowest first; gold and silver mark first and second place. Solid: median. Hollow: p90, not a confidence interval.\nSource: aictrl measurements, {DATE_LABEL}, sources/measurements.json. Cached images; 50 ms scripted model.")
 
@@ -290,8 +290,8 @@ def charts(data):
         median, p90 = quantile(values, 0.5), quantile(values, 0.9)
         color = "#b3b3b3" if cut(harness) else rank_color(y)
         ax.plot([median, p90], [y, y], color=color, linewidth=3, alpha=0.5)
-        ax.scatter([median], [y], s=75, color=color, zorder=3)
-        ax.scatter([p90], [y], s=75, edgecolors=color, facecolors="white", zorder=3)
+        ax.scatter([median], [y], s=60, color=color, zorder=4)
+        ax.scatter([p90], [y], s=110, edgecolors=color, facecolors="white", linewidths=1.6, zorder=3)
         ax.annotate(f"{median:.0f} / {p90:.0f}", (p90 + upper * 0.02, y), va="center", fontsize=11)
     save(fig, "02-long-run-memory", f"Lowest observed median first; gold and silver mark first and second place. * Not ranked: cuts each 48 KB read to its first and last ~80 lines. Cgroup is not RSS.\nCompleted runs only; completion counts in summary.csv. Hollow: p90 (= maximum at n=5). Source: aictrl measurements, {DATE_LABEL}, sources/measurements.json.")
 
@@ -327,8 +327,8 @@ def session_chart(session):
         median, p90 = quantile(values, .5), quantile(values, .9)
         color = rank_color(y)
         ax.plot([median, p90], [y, y], color=color, linewidth=3, alpha=.5)
-        ax.scatter([median], [y], s=75, color=color, zorder=3)
-        ax.scatter([p90], [y], s=75, edgecolors=color, facecolors="white", zorder=3)
+        ax.scatter([median], [y], s=60, color=color, zorder=4)
+        ax.scatter([p90], [y], s=110, edgecolors=color, facecolors="white", linewidths=1.6, zorder=3)
         ax.annotate(f"{median:.2f} / {p90:.2f}", (p90 + upper * .02, y), va="center", fontsize=11)
     save(fig, "05-session-time", f"Solid: median. Hollow: p90 (= max at n=5). 51 scripted main calls; Hermes and OpenCode add one auxiliary call.\nFixed 50 ms local model per call; retained context differs. Source: aictrl, {DATE_LABEL}, sources/session-metrics.json.")
 
