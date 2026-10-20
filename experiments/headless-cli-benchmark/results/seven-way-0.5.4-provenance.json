@@ -1,0 +1,203 @@
+{
+ "campaign": "hbench-2306409-1792485878403",
+ "protocolVersion": 3,
+ "startedAtUtc": "2026-10-20T08:44:38Z",
+ "endedAtUtc": "2026-10-20T09:02:30Z",
+ "processExitCode": 0,
+ "command": "WARMUP=2 ONLY=version,trivial,short,long LONG_STEPS=50 bun harness/compare-v054.ts results/seven-way-0.5.4.json 20 5 50",
+ "sourceArchive": "../aictrl-0.5.4-campaign-source",
+ "sources": {
+  "harness/compare-v054.ts": "8edbfd538d459e77827718234889f40d4708b0175791e886b6449693bf389df0",
+  "harness/stub.ts": "1c32c4db5513209080182106194931af22e27b21acfb25ec713f83a012ba2d8d",
+  "harness/build-aictrl-0.5.4.sh": "46f0d40d6a4aa02d44ffc9b912ec56fb138f38fa7900c7d372d0c4d613519d9a",
+  "docker/npm.Dockerfile": "50b0f2b438ac70abc38e574748b962cb77658f92c53d4f0194d46ed3fddc99bf"
+ },
+ "buildMetadata": {
+  "build-images.json": "688d2ab3608ac0fde987c2b75a3fffdc697aa1b3c44e0930d3c094894f37b05d",
+  "build-aictrl-0.5.4.json": "aea396f0bb8066801bce58391323f22aaf9097e2098b169a2bf115cf05cfccba",
+  "build-opencode-v2.json": "907732948e0b430ed59dda2416466336c7ac5b2580f5808a2a0a6391beeed71d"
+ },
+ "results": {
+  "path": "seven-way-0.5.4.json",
+  "sha256": "0ab505b768d0fed561fc8c4f13ab35f6f9ba415eec57b513fe1e6d164748108d"
+ },
+ "earlierFrozenResults": {
+  "compare.json": {
+   "sha256": "fd109d210afbcfb0d8c4ada4aac1bb70193fb5138789edd5268fca564461f875",
+   "unchanged": true
+  },
+  "memory-unique-ids.json": {
+   "sha256": "1db9dbe90012114cf9be63704a8381d57325227f6fc0fa4f38ea7e02dfc92370",
+   "unchanged": true
+  },
+  "aictrl-0.5.3-compare.json": {
+   "sha256": "7b4a774a419738ab017589b8bd5b1bc4f20fa2e5ffefd2f72b7f4d679293de63",
+   "unchanged": true
+  }
+ },
+ "articleScope": "OpenCode 1.19.3 (v1) is measured here but excluded from the article; upstream development is v2-only",
+ "failureCount": 0,
+ "summary": {
+  "aictrl-npm-0.5.4": {
+   "trivial": {
+    "attempted": 20,
+    "completed": 20,
+    "retention": {
+     "equivalent-content": 20
+    }
+   },
+   "short": {
+    "attempted": 20,
+    "completed": 20,
+    "retention": {
+     "equivalent-content": 20
+    }
+   },
+   "long": {
+    "attempted": 5,
+    "completed": 5,
+    "retention": {
+     "equivalent-content": 5
+    }
+   }
+  },
+  "pi-1.3-node22": {
+   "trivial": {
+    "attempted": 20,
+    "completed": 20,
+    "retention": {
+     "equivalent-content": 20
+    }
+   },
+   "short": {
+    "attempted": 20,
+    "completed": 20,
+    "retention": {
+     "equivalent-content": 20
+    }
+   },
+   "long": {
+    "attempted": 5,
+    "completed": 5,
+    "retention": {
+     "equivalent-content": 5
+    }
+   }
+  },
+  "codex": {
+   "trivial": {
+    "attempted": 20,
+    "completed": 20,
+    "retention": {
+     "equivalent-content": 20
+    }
+   },
+   "short": {
+    "attempted": 20,
+    "completed": 20,
+    "retention": {
+     "equivalent-content": 20
+    }
+   },
+   "long": {
+    "attempted": 5,
+    "completed": 5,
+    "retention": {
+     "truncated-or-pruned": 5
+    }
+   }
+  },
+  "opencode": {
+   "trivial": {
+    "attempted": 20,
+    "completed": 20,
+    "retention": {
+     "equivalent-content": 20
+    }
+   },
+   "short": {
+    "attempted": 20,
+    "completed": 20,
+    "retention": {
+     "equivalent-content": 20
+    }
+   },
+   "long": {
+    "attempted": 5,
+    "completed": 5,
+    "retention": {
+     "equivalent-content": 5
+    }
+   }
+  },
+  "opencode-v2": {
+   "trivial": {
+    "attempted": 20,
+    "completed": 20,
+    "retention": {
+     "equivalent-content": 20
+    }
+   },
+   "short": {
+    "attempted": 20,
+    "completed": 20,
+    "retention": {
+     "equivalent-content": 20
+    }
+   },
+   "long": {
+    "attempted": 5,
+    "completed": 5,
+    "retention": {
+     "equivalent-content": 5
+    }
+   }
+  },
+  "hermes": {
+   "trivial": {
+    "attempted": 20,
+    "completed": 20,
+    "retention": {
+     "equivalent-content": 20
+    }
+   },
+   "short": {
+    "attempted": 20,
+    "completed": 20,
+    "retention": {
+     "equivalent-content": 20
+    }
+   },
+   "long": {
+    "attempted": 5,
+    "completed": 5,
+    "retention": {
+     "equivalent-content": 5
+    }
+   }
+  },
+  "goose": {
+   "trivial": {
+    "attempted": 20,
+    "completed": 20,
+    "retention": {
+     "equivalent-content": 20
+    }
+   },
+   "short": {
+    "attempted": 20,
+    "completed": 20,
+    "retention": {
+     "equivalent-content": 20
+    }
+   },
+   "long": {
+    "attempted": 5,
+    "completed": 5,
+    "retention": {
+     "equivalent-content": 5
+    }
+   }
+  }
+ }
+}

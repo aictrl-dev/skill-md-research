@@ -1,0 +1,22 @@
+Commands:
+  aictrl completion          generate shell completion script
+  aictrl mcp                 manage MCP (Model Context Protocol) servers
+  aictrl run [message..]     run aictrl with a message
+  aictrl debug               debugging and troubleshooting tools
+  aictrl auth                manage credentials
+  aictrl agent               manage agents
+  aictrl upgrade [target]    upgrade aictrl to the latest or a specific version
+  aictrl uninstall           uninstall aictrl and remove all related files
+  aictrl models [provider]   list all available models
+  aictrl stats               show token usage and cost statistics
+  aictrl export [sessionID]  export session data as JSON
+  aictrl import <file>       import session data from a JSON file
+  aictrl session             manage sessions
+  aictrl db                  database tools
+  aictrl events              print the NDJSON event schema (EVENTS.md) bundled with this CLI
+
+Options:
+  -h, --help        show help                                                              [boolean]
+  -v, --version     show version number                                                    [boolean]
+      --print-logs  print logs to stderr                                                   [boolean]
+      --log-level   log level                   [string] [choices: "DEBUG", "INFO", "WARN", "ERROR"]

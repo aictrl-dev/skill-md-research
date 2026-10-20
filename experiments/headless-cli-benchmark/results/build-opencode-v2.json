@@ -1,0 +1,31 @@
+{
+  "capturedAtUtc": "2026-10-20T08:44:45.952358+00:00",
+  "tag": "aictrl-harness-bench:opencode-v2",
+  "package": "@opencode/cli@2.1.0",
+  "imageId": "sha256:706932fa400a35a26f9a8a6d1c1555228b5e70495172659d670e348d38ebc79f",
+  "matchingBaseId": "sha256:115e6dd65ebfb52349873367e6c80a3739e333314effc54293fb00a6b49e8978",
+  "imageDeltaBytes": 858038754,
+  "imageDeltaMiB": 818.2895221710205,
+  "opencodeV1ImageDeltaMiB": 354.8005142211914,
+  "frozenOpencodeV1ImageIdUnchanged": true,
+  "runArgs": "run --standalone --auto --format json --model fixture/fixture",
+  "versionOutput": "opencode v2.1.0",
+  "matchingBase": "aictrl-harness-bench:base",
+  "matchingBaseBytes": 312337376,
+  "totalImageBytes": 1170376130,
+  "installedTotalBytes": 852826866,
+  "installedPathsBytes": {
+    "/usr/local/lib/node_modules/@opencode/cli": 852826866
+  },
+  "installedPlatformPackages": {
+    "cli-linux-x64": 213554891,
+    "cli-linux-x64-baseline": 213554900,
+    "cli-linux-x64-baseline-musl": 212846377,
+    "cli-linux-x64-musl": 212846368
+  },
+  "platformPackageNote": "npm 10.8.2 installed all four linux-x64 variants (glibc/musl x regular/baseline); only one binary runs",
+  "executionEngine": "bundled Bun native binary, npm Node launcher",
+  "containerNodeVersion": "v20.20.2",
+  "containerNpmVersion": "10.8.2",
+  "toolVersion": "opencode v2.1.0"
+}

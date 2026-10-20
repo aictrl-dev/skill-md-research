@@ -1,0 +1,2007 @@
+{
+  "measurement_type": "offline reference-token estimates; not provider-reported usage",
+  "encoding": "o200k_base",
+  "tiktoken_version": "0.12.0",
+  "input_definition": "Tokenize canonical sorted compact JSON of instructions/messages/input/tools/response_format/text; omit absent fields and all transport controls",
+  "output_definition": "Tokenize returned text, or canonical JSON of generated tool name and arguments; exclude event framing and call IDs",
+  "session_definition": "Sum each request input and response output including auxiliary calls and any retries; repeated history counted again each call",
+  "limitations": [
+    "API-specific model framing and tokenizer differences are unmeasured",
+    "No cache discounts or cache-hit data",
+    "No model-generated reasoning tokens",
+    "Scripted output and 51 main calls; not natural task efficiency",
+    "Stub usage counters are artificial and never used"
+  ],
+  "campaign": "results/token-capture-0.5.4-minimal.json",
+  "campaign_sha256": "ee9edfc1e8ddda3d552439afef3a1a1aa26dd14be322a4e4121bed3ec9aa2fef",
+  "harnesses": {
+    "aictrl-0.5.4-minimal": {
+      "trivial": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 2091,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 2091,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 2093
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 2091,
+          "main_calls": 1,
+          "all_calls": 1,
+          "session_input_tokens_estimate": 2091,
+          "session_output_tokens_estimate": 2,
+          "session_total_tokens_estimate": 2093
+        },
+        "sessions": [
+          {
+            "runId": "00001-aictrl-0.5.4-minimal-trivial",
+            "capture_sha256": "88a2ae326faec0afdd0ed6ad3601b039c199982df85bd4339a68b32ce9b84f8b",
+            "first_main_input_tokens_estimate": 2091,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 2091,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 2093,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "ae5d4a7931ca3bd4c8c56eb4e8af6af3ea49297c0697119f4f84c71fcf553759",
+                "input_tokens_estimate": 2091,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00002-aictrl-0.5.4-minimal-trivial",
+            "capture_sha256": "7289b9ff40760dd6edf67fc241afbbe1722cd45795a52e8a947ca1db5be0e26a",
+            "first_main_input_tokens_estimate": 2091,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 2091,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 2093,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "ae5d4a7931ca3bd4c8c56eb4e8af6af3ea49297c0697119f4f84c71fcf553759",
+                "input_tokens_estimate": 2091,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00003-aictrl-0.5.4-minimal-trivial",
+            "capture_sha256": "8f34365097dd678d304bccc544b469413400d3524f66b02d831b6f481b61f7e2",
+            "first_main_input_tokens_estimate": 2091,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 2091,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 2093,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "ae5d4a7931ca3bd4c8c56eb4e8af6af3ea49297c0697119f4f84c71fcf553759",
+                "input_tokens_estimate": 2091,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00004-aictrl-0.5.4-minimal-trivial",
+            "capture_sha256": "6aa2afb68f29ed73d9107fa38ebdb46dbde791bd9ee341fcb75a61ff56967da1",
+            "first_main_input_tokens_estimate": 2091,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 2091,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 2093,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "ae5d4a7931ca3bd4c8c56eb4e8af6af3ea49297c0697119f4f84c71fcf553759",
+                "input_tokens_estimate": 2091,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00005-aictrl-0.5.4-minimal-trivial",
+            "capture_sha256": "7cd780d856a377640b7b7338aa12b6c93a71699158703dd10d32d89e3f63ab19",
+            "first_main_input_tokens_estimate": 2091,
+            "main_calls": 1,
+            "all_calls": 1,
+            "session_input_tokens_estimate": 2091,
+            "session_output_tokens_estimate": 2,
+            "session_total_tokens_estimate": 2093,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "ae5d4a7931ca3bd4c8c56eb4e8af6af3ea49297c0697119f4f84c71fcf553759",
+                "input_tokens_estimate": 2091,
+                "output_tokens_estimate": 2
+              }
+            ]
+          }
+        ]
+      },
+      "long": {
+        "attempted": 5,
+        "completed": 5,
+        "failed_run_ids": [],
+        "median": {
+          "first_main_input_tokens_estimate": 2109,
+          "main_calls": 51,
+          "all_calls": 51,
+          "session_input_tokens_estimate": 14513784,
+          "session_output_tokens_estimate": 952,
+          "session_total_tokens_estimate": 14514736
+        },
+        "p90": {
+          "first_main_input_tokens_estimate": 2109,
+          "main_calls": 51,
+          "all_calls": 51,
+          "session_input_tokens_estimate": 14513784,
+          "session_output_tokens_estimate": 952,
+          "session_total_tokens_estimate": 14514736
+        },
+        "sessions": [
+          {
+            "runId": "00006-aictrl-0.5.4-minimal-long",
+            "capture_sha256": "0b093f6ed97f837040f2008e909ffac34773912e233f089f3be42e59220d1d85",
+            "first_main_input_tokens_estimate": 2109,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14513784,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14514736,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "5a46fdcf8d8226ce015c7130cdcb3748ee7a13b2fe3c83b3485e716fb342d4ec",
+                "input_tokens_estimate": 2109,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "7e7f2e7fcbc52296dde2a32acce0947f98c2bf163b4fdf7915599e86c7444bd1",
+                "input_tokens_estimate": 13408,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "902b9894dfe8bf589c0c96dda3f0b1e14981c7aba4cc6ab94d455c15fd5ae48d",
+                "input_tokens_estimate": 24707,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "f98a04d03541842c7c3e6e8f86c5bb6befcbbcc3fceb261dbad3888a7026ee7b",
+                "input_tokens_estimate": 36006,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 4,
+                "request_sha256": "9d8980811da295922d27e99c7f496ea681b9dc6c324c1ab42bdb41b81ad21d56",
+                "input_tokens_estimate": 47305,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 5,
+                "request_sha256": "11387fcc4b74525e57c46c53c1108ee4a6d9b2e802e0701d5e947c790c61da73",
+                "input_tokens_estimate": 58604,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 6,
+                "request_sha256": "a961e62d92f6e1b632ca0d4d2850b67d7a2af8e3eb28b03040b0676b27a283ca",
+                "input_tokens_estimate": 69903,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 7,
+                "request_sha256": "49e7536d7e4068d00b007e41605eddf7ff20db240d033f43c1334c496751c0d1",
+                "input_tokens_estimate": 81202,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 8,
+                "request_sha256": "0aaa53ab8983b8cf01f6200a74c9da2095917cc24d7207eca523bc9276f6a00a",
+                "input_tokens_estimate": 92501,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 9,
+                "request_sha256": "ac83b609d16c85b7ef3156d72a88a26c5bb6e0db09191b14ad08e436cbbe2494",
+                "input_tokens_estimate": 103800,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 10,
+                "request_sha256": "a4d9788fd164a0606643de66229c9ee2ee49fe9cbc7970c9b113da92ea5ac48f",
+                "input_tokens_estimate": 115099,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 11,
+                "request_sha256": "ab1e65ae473de01eeb208bed4a434e46ec8ef7959c0909c1c3a99d5dfc01d3ff",
+                "input_tokens_estimate": 126398,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 12,
+                "request_sha256": "694617af13f265dec64282eafc1c2cd8d8e3a95bc9748c51a5469ce4af60aead",
+                "input_tokens_estimate": 137697,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 13,
+                "request_sha256": "96bc2078d125a1812b94b7bcd8a96dcf4a513ae5e57d5839d79c81f0a2233d70",
+                "input_tokens_estimate": 148996,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 14,
+                "request_sha256": "ac125ee598e4ce62b900afcc152e9fb4c06d643e14e4d4df1b13d4fd78c1ae2b",
+                "input_tokens_estimate": 160295,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 15,
+                "request_sha256": "e32812285bfd023bc1624ede187941a58dc35b94ba2a74bd4557a8b74e46b171",
+                "input_tokens_estimate": 171594,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 16,
+                "request_sha256": "f6e21ccc55ee02a7d485289c128b9ba50c1f744e1bd8cb05bb7dd7b76c4b0574",
+                "input_tokens_estimate": 182893,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 17,
+                "request_sha256": "289693384a6d8e143b800bd1d8cda06ed6c4322445ae578c61dd4ffeadf65de6",
+                "input_tokens_estimate": 194192,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 18,
+                "request_sha256": "d6e2b750a4882f1b76e7ecef70dc1d31dbba57779d6cb1cd3451aeed4c1c0541",
+                "input_tokens_estimate": 205491,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 19,
+                "request_sha256": "0982d0e439f03d5eb54c27c2e7b5a17bfe712891ad641423ebe432816ea51b45",
+                "input_tokens_estimate": 216790,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 20,
+                "request_sha256": "0556781e123a57a14e2053cdd52c9ff141d9df260eaaf6fa8ac7ca066d95cbc2",
+                "input_tokens_estimate": 228089,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 21,
+                "request_sha256": "a6cbefcd03b2858f700e872fcc9b4cae275b4f5652e59a0f22d54ddee88d8bda",
+                "input_tokens_estimate": 239388,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 22,
+                "request_sha256": "d84112eb9aa594414a130dcb49961304e8c0354769138bd62c050a052973b206",
+                "input_tokens_estimate": 250687,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 23,
+                "request_sha256": "0690f9cf37e5d20379d80ac40097cedae3046d48bb1221160c6bd4209a5beb95",
+                "input_tokens_estimate": 261986,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 24,
+                "request_sha256": "a51d7c7ffebeb87a1ab684ce2dc07105e2236eb59e8509ee6f1190e961ad33a5",
+                "input_tokens_estimate": 273285,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 25,
+                "request_sha256": "54ce79b305db466682c4045e407b248c8978f916b1ea611e837efa3a0d4db219",
+                "input_tokens_estimate": 284584,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 26,
+                "request_sha256": "c25124333eb25cfd719849bbe76499147668c60823b4a2c0418007b4c08b41f2",
+                "input_tokens_estimate": 295883,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 27,
+                "request_sha256": "79fa8dd81287dbefcfde0144083fcf18e584d8fdf491b3214b18636b04204345",
+                "input_tokens_estimate": 307182,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 28,
+                "request_sha256": "1f0f106793df47291eb92ef7decef814eb154bf0ad39a61a65d50cc074b2ee97",
+                "input_tokens_estimate": 318481,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 29,
+                "request_sha256": "231a021fe067cb956da21979f34013d099dda510eb8e36a9e260592b4c8205c0",
+                "input_tokens_estimate": 329780,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 30,
+                "request_sha256": "df42aa3dc549000529756b76f3983209cf0a9e2008b027762128a9662ce4d0c9",
+                "input_tokens_estimate": 341079,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 31,
+                "request_sha256": "ddb5c86672eddf7af61bc5ac9475a5ef528e78c3b2612324f78bfbf86f74d7f6",
+                "input_tokens_estimate": 352378,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 32,
+                "request_sha256": "7335747214422e61643e7e18af5dd30adbc80150f0717d3af2653a95e5a74e6f",
+                "input_tokens_estimate": 363677,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 33,
+                "request_sha256": "acad366dffc3003c7a679875f527ee091d6a864635255b2ee93a2fe8c4ef4e93",
+                "input_tokens_estimate": 374976,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 34,
+                "request_sha256": "9a4d1b054c6ece132641766a62193954c30986dff77b216fabe0cbde9a8bee90",
+                "input_tokens_estimate": 386275,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 35,
+                "request_sha256": "66b4660d5178ed487ae133169f964da6a74aa63e0341a99a3285e9fcbd5292ce",
+                "input_tokens_estimate": 397574,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 36,
+                "request_sha256": "cf0d39977644e192cca3c3f8326a405aaf7d05b54c9665d342c0133cb7fef016",
+                "input_tokens_estimate": 408873,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 37,
+                "request_sha256": "e9b56b2ab583e3b1a28675584740e659175533dc3a444aceadad9db9535bd140",
+                "input_tokens_estimate": 420172,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 38,
+                "request_sha256": "8979c20481aad9b1d9c798756204fd826a0fad7a634944e7abd61a038622c651",
+                "input_tokens_estimate": 431471,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 39,
+                "request_sha256": "cc99cb5ec2484a79c3daa193f0e5cfac0649e39debc403a703abad68ca7e0b0a",
+                "input_tokens_estimate": 442770,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 40,
+                "request_sha256": "43f23fc8984d2b906597b22be67a52e8ef37694a4b533da6b30a953e64528155",
+                "input_tokens_estimate": 454069,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 41,
+                "request_sha256": "3d074573485899d5369334edade8f99772d449297e0d1829019abb75576160ad",
+                "input_tokens_estimate": 465368,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 42,
+                "request_sha256": "c62bd43307b4ec82cd844a1e47e3d71f97a61e6b5b3e8d25069bfbd7f35f0ca7",
+                "input_tokens_estimate": 476667,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 43,
+                "request_sha256": "c14418514317e248d795c3b597eea0291cb18813fb323b13f96e26dfcb7037ce",
+                "input_tokens_estimate": 487966,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 44,
+                "request_sha256": "03d5478b82844a2d867262abe5d20719dbb03c3248250e16d4083cefc4aaa031",
+                "input_tokens_estimate": 499265,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 45,
+                "request_sha256": "9a3c4202aeafed5fc85ece0fe51bcbf1646b7db71efc669fe0a6580f10d4292b",
+                "input_tokens_estimate": 510564,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 46,
+                "request_sha256": "fea05940ac90099e264454a41b5038a4e9137c21d02c761107dfa85734d015e8",
+                "input_tokens_estimate": 521863,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 47,
+                "request_sha256": "5e4f17ee91afc24c2a205d98fe0d914186893cf75a5ae9472f87383366bcd641",
+                "input_tokens_estimate": 533162,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 48,
+                "request_sha256": "51acde04ef15f2f76a411b147b5f29a071cd7355d5035d2af7ffdb31cf1d8579",
+                "input_tokens_estimate": 544461,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 49,
+                "request_sha256": "a24f4468b1e9abc07c5c2a52274d9a088e79ee61bc2d33b7c0968c3be67c382b",
+                "input_tokens_estimate": 555760,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 50,
+                "request_sha256": "f2dcde9a647a06e4678320429e41673cfeeaeddf036150be0dc2e13120d26885",
+                "input_tokens_estimate": 567059,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00007-aictrl-0.5.4-minimal-long",
+            "capture_sha256": "b9ffe464497fbf59351586d2b51ae2edb2e1339a72eb427272707db30dbec86d",
+            "first_main_input_tokens_estimate": 2109,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14513784,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14514736,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "5a46fdcf8d8226ce015c7130cdcb3748ee7a13b2fe3c83b3485e716fb342d4ec",
+                "input_tokens_estimate": 2109,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "7e7f2e7fcbc52296dde2a32acce0947f98c2bf163b4fdf7915599e86c7444bd1",
+                "input_tokens_estimate": 13408,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "902b9894dfe8bf589c0c96dda3f0b1e14981c7aba4cc6ab94d455c15fd5ae48d",
+                "input_tokens_estimate": 24707,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "f98a04d03541842c7c3e6e8f86c5bb6befcbbcc3fceb261dbad3888a7026ee7b",
+                "input_tokens_estimate": 36006,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 4,
+                "request_sha256": "9d8980811da295922d27e99c7f496ea681b9dc6c324c1ab42bdb41b81ad21d56",
+                "input_tokens_estimate": 47305,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 5,
+                "request_sha256": "11387fcc4b74525e57c46c53c1108ee4a6d9b2e802e0701d5e947c790c61da73",
+                "input_tokens_estimate": 58604,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 6,
+                "request_sha256": "a961e62d92f6e1b632ca0d4d2850b67d7a2af8e3eb28b03040b0676b27a283ca",
+                "input_tokens_estimate": 69903,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 7,
+                "request_sha256": "49e7536d7e4068d00b007e41605eddf7ff20db240d033f43c1334c496751c0d1",
+                "input_tokens_estimate": 81202,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 8,
+                "request_sha256": "0aaa53ab8983b8cf01f6200a74c9da2095917cc24d7207eca523bc9276f6a00a",
+                "input_tokens_estimate": 92501,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 9,
+                "request_sha256": "ac83b609d16c85b7ef3156d72a88a26c5bb6e0db09191b14ad08e436cbbe2494",
+                "input_tokens_estimate": 103800,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 10,
+                "request_sha256": "a4d9788fd164a0606643de66229c9ee2ee49fe9cbc7970c9b113da92ea5ac48f",
+                "input_tokens_estimate": 115099,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 11,
+                "request_sha256": "ab1e65ae473de01eeb208bed4a434e46ec8ef7959c0909c1c3a99d5dfc01d3ff",
+                "input_tokens_estimate": 126398,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 12,
+                "request_sha256": "694617af13f265dec64282eafc1c2cd8d8e3a95bc9748c51a5469ce4af60aead",
+                "input_tokens_estimate": 137697,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 13,
+                "request_sha256": "96bc2078d125a1812b94b7bcd8a96dcf4a513ae5e57d5839d79c81f0a2233d70",
+                "input_tokens_estimate": 148996,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 14,
+                "request_sha256": "ac125ee598e4ce62b900afcc152e9fb4c06d643e14e4d4df1b13d4fd78c1ae2b",
+                "input_tokens_estimate": 160295,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 15,
+                "request_sha256": "e32812285bfd023bc1624ede187941a58dc35b94ba2a74bd4557a8b74e46b171",
+                "input_tokens_estimate": 171594,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 16,
+                "request_sha256": "f6e21ccc55ee02a7d485289c128b9ba50c1f744e1bd8cb05bb7dd7b76c4b0574",
+                "input_tokens_estimate": 182893,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 17,
+                "request_sha256": "289693384a6d8e143b800bd1d8cda06ed6c4322445ae578c61dd4ffeadf65de6",
+                "input_tokens_estimate": 194192,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 18,
+                "request_sha256": "d6e2b750a4882f1b76e7ecef70dc1d31dbba57779d6cb1cd3451aeed4c1c0541",
+                "input_tokens_estimate": 205491,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 19,
+                "request_sha256": "0982d0e439f03d5eb54c27c2e7b5a17bfe712891ad641423ebe432816ea51b45",
+                "input_tokens_estimate": 216790,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 20,
+                "request_sha256": "0556781e123a57a14e2053cdd52c9ff141d9df260eaaf6fa8ac7ca066d95cbc2",
+                "input_tokens_estimate": 228089,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 21,
+                "request_sha256": "a6cbefcd03b2858f700e872fcc9b4cae275b4f5652e59a0f22d54ddee88d8bda",
+                "input_tokens_estimate": 239388,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 22,
+                "request_sha256": "d84112eb9aa594414a130dcb49961304e8c0354769138bd62c050a052973b206",
+                "input_tokens_estimate": 250687,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 23,
+                "request_sha256": "0690f9cf37e5d20379d80ac40097cedae3046d48bb1221160c6bd4209a5beb95",
+                "input_tokens_estimate": 261986,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 24,
+                "request_sha256": "a51d7c7ffebeb87a1ab684ce2dc07105e2236eb59e8509ee6f1190e961ad33a5",
+                "input_tokens_estimate": 273285,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 25,
+                "request_sha256": "54ce79b305db466682c4045e407b248c8978f916b1ea611e837efa3a0d4db219",
+                "input_tokens_estimate": 284584,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 26,
+                "request_sha256": "c25124333eb25cfd719849bbe76499147668c60823b4a2c0418007b4c08b41f2",
+                "input_tokens_estimate": 295883,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 27,
+                "request_sha256": "79fa8dd81287dbefcfde0144083fcf18e584d8fdf491b3214b18636b04204345",
+                "input_tokens_estimate": 307182,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 28,
+                "request_sha256": "1f0f106793df47291eb92ef7decef814eb154bf0ad39a61a65d50cc074b2ee97",
+                "input_tokens_estimate": 318481,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 29,
+                "request_sha256": "231a021fe067cb956da21979f34013d099dda510eb8e36a9e260592b4c8205c0",
+                "input_tokens_estimate": 329780,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 30,
+                "request_sha256": "df42aa3dc549000529756b76f3983209cf0a9e2008b027762128a9662ce4d0c9",
+                "input_tokens_estimate": 341079,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 31,
+                "request_sha256": "ddb5c86672eddf7af61bc5ac9475a5ef528e78c3b2612324f78bfbf86f74d7f6",
+                "input_tokens_estimate": 352378,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 32,
+                "request_sha256": "7335747214422e61643e7e18af5dd30adbc80150f0717d3af2653a95e5a74e6f",
+                "input_tokens_estimate": 363677,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 33,
+                "request_sha256": "acad366dffc3003c7a679875f527ee091d6a864635255b2ee93a2fe8c4ef4e93",
+                "input_tokens_estimate": 374976,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 34,
+                "request_sha256": "9a4d1b054c6ece132641766a62193954c30986dff77b216fabe0cbde9a8bee90",
+                "input_tokens_estimate": 386275,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 35,
+                "request_sha256": "66b4660d5178ed487ae133169f964da6a74aa63e0341a99a3285e9fcbd5292ce",
+                "input_tokens_estimate": 397574,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 36,
+                "request_sha256": "cf0d39977644e192cca3c3f8326a405aaf7d05b54c9665d342c0133cb7fef016",
+                "input_tokens_estimate": 408873,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 37,
+                "request_sha256": "e9b56b2ab583e3b1a28675584740e659175533dc3a444aceadad9db9535bd140",
+                "input_tokens_estimate": 420172,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 38,
+                "request_sha256": "8979c20481aad9b1d9c798756204fd826a0fad7a634944e7abd61a038622c651",
+                "input_tokens_estimate": 431471,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 39,
+                "request_sha256": "cc99cb5ec2484a79c3daa193f0e5cfac0649e39debc403a703abad68ca7e0b0a",
+                "input_tokens_estimate": 442770,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 40,
+                "request_sha256": "43f23fc8984d2b906597b22be67a52e8ef37694a4b533da6b30a953e64528155",
+                "input_tokens_estimate": 454069,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 41,
+                "request_sha256": "3d074573485899d5369334edade8f99772d449297e0d1829019abb75576160ad",
+                "input_tokens_estimate": 465368,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 42,
+                "request_sha256": "c62bd43307b4ec82cd844a1e47e3d71f97a61e6b5b3e8d25069bfbd7f35f0ca7",
+                "input_tokens_estimate": 476667,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 43,
+                "request_sha256": "c14418514317e248d795c3b597eea0291cb18813fb323b13f96e26dfcb7037ce",
+                "input_tokens_estimate": 487966,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 44,
+                "request_sha256": "03d5478b82844a2d867262abe5d20719dbb03c3248250e16d4083cefc4aaa031",
+                "input_tokens_estimate": 499265,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 45,
+                "request_sha256": "9a3c4202aeafed5fc85ece0fe51bcbf1646b7db71efc669fe0a6580f10d4292b",
+                "input_tokens_estimate": 510564,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 46,
+                "request_sha256": "fea05940ac90099e264454a41b5038a4e9137c21d02c761107dfa85734d015e8",
+                "input_tokens_estimate": 521863,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 47,
+                "request_sha256": "5e4f17ee91afc24c2a205d98fe0d914186893cf75a5ae9472f87383366bcd641",
+                "input_tokens_estimate": 533162,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 48,
+                "request_sha256": "51acde04ef15f2f76a411b147b5f29a071cd7355d5035d2af7ffdb31cf1d8579",
+                "input_tokens_estimate": 544461,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 49,
+                "request_sha256": "a24f4468b1e9abc07c5c2a52274d9a088e79ee61bc2d33b7c0968c3be67c382b",
+                "input_tokens_estimate": 555760,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 50,
+                "request_sha256": "f2dcde9a647a06e4678320429e41673cfeeaeddf036150be0dc2e13120d26885",
+                "input_tokens_estimate": 567059,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00008-aictrl-0.5.4-minimal-long",
+            "capture_sha256": "e0cf59e22ad955aaf0bba9650c25e94e70e576b0a2b1b8d1b758fcb3cb2a1d58",
+            "first_main_input_tokens_estimate": 2109,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14513784,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14514736,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "5a46fdcf8d8226ce015c7130cdcb3748ee7a13b2fe3c83b3485e716fb342d4ec",
+                "input_tokens_estimate": 2109,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "7e7f2e7fcbc52296dde2a32acce0947f98c2bf163b4fdf7915599e86c7444bd1",
+                "input_tokens_estimate": 13408,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "902b9894dfe8bf589c0c96dda3f0b1e14981c7aba4cc6ab94d455c15fd5ae48d",
+                "input_tokens_estimate": 24707,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "f98a04d03541842c7c3e6e8f86c5bb6befcbbcc3fceb261dbad3888a7026ee7b",
+                "input_tokens_estimate": 36006,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 4,
+                "request_sha256": "9d8980811da295922d27e99c7f496ea681b9dc6c324c1ab42bdb41b81ad21d56",
+                "input_tokens_estimate": 47305,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 5,
+                "request_sha256": "11387fcc4b74525e57c46c53c1108ee4a6d9b2e802e0701d5e947c790c61da73",
+                "input_tokens_estimate": 58604,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 6,
+                "request_sha256": "a961e62d92f6e1b632ca0d4d2850b67d7a2af8e3eb28b03040b0676b27a283ca",
+                "input_tokens_estimate": 69903,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 7,
+                "request_sha256": "49e7536d7e4068d00b007e41605eddf7ff20db240d033f43c1334c496751c0d1",
+                "input_tokens_estimate": 81202,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 8,
+                "request_sha256": "0aaa53ab8983b8cf01f6200a74c9da2095917cc24d7207eca523bc9276f6a00a",
+                "input_tokens_estimate": 92501,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 9,
+                "request_sha256": "ac83b609d16c85b7ef3156d72a88a26c5bb6e0db09191b14ad08e436cbbe2494",
+                "input_tokens_estimate": 103800,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 10,
+                "request_sha256": "a4d9788fd164a0606643de66229c9ee2ee49fe9cbc7970c9b113da92ea5ac48f",
+                "input_tokens_estimate": 115099,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 11,
+                "request_sha256": "ab1e65ae473de01eeb208bed4a434e46ec8ef7959c0909c1c3a99d5dfc01d3ff",
+                "input_tokens_estimate": 126398,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 12,
+                "request_sha256": "694617af13f265dec64282eafc1c2cd8d8e3a95bc9748c51a5469ce4af60aead",
+                "input_tokens_estimate": 137697,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 13,
+                "request_sha256": "96bc2078d125a1812b94b7bcd8a96dcf4a513ae5e57d5839d79c81f0a2233d70",
+                "input_tokens_estimate": 148996,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 14,
+                "request_sha256": "ac125ee598e4ce62b900afcc152e9fb4c06d643e14e4d4df1b13d4fd78c1ae2b",
+                "input_tokens_estimate": 160295,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 15,
+                "request_sha256": "e32812285bfd023bc1624ede187941a58dc35b94ba2a74bd4557a8b74e46b171",
+                "input_tokens_estimate": 171594,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 16,
+                "request_sha256": "f6e21ccc55ee02a7d485289c128b9ba50c1f744e1bd8cb05bb7dd7b76c4b0574",
+                "input_tokens_estimate": 182893,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 17,
+                "request_sha256": "289693384a6d8e143b800bd1d8cda06ed6c4322445ae578c61dd4ffeadf65de6",
+                "input_tokens_estimate": 194192,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 18,
+                "request_sha256": "d6e2b750a4882f1b76e7ecef70dc1d31dbba57779d6cb1cd3451aeed4c1c0541",
+                "input_tokens_estimate": 205491,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 19,
+                "request_sha256": "0982d0e439f03d5eb54c27c2e7b5a17bfe712891ad641423ebe432816ea51b45",
+                "input_tokens_estimate": 216790,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 20,
+                "request_sha256": "0556781e123a57a14e2053cdd52c9ff141d9df260eaaf6fa8ac7ca066d95cbc2",
+                "input_tokens_estimate": 228089,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 21,
+                "request_sha256": "a6cbefcd03b2858f700e872fcc9b4cae275b4f5652e59a0f22d54ddee88d8bda",
+                "input_tokens_estimate": 239388,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 22,
+                "request_sha256": "d84112eb9aa594414a130dcb49961304e8c0354769138bd62c050a052973b206",
+                "input_tokens_estimate": 250687,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 23,
+                "request_sha256": "0690f9cf37e5d20379d80ac40097cedae3046d48bb1221160c6bd4209a5beb95",
+                "input_tokens_estimate": 261986,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 24,
+                "request_sha256": "a51d7c7ffebeb87a1ab684ce2dc07105e2236eb59e8509ee6f1190e961ad33a5",
+                "input_tokens_estimate": 273285,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 25,
+                "request_sha256": "54ce79b305db466682c4045e407b248c8978f916b1ea611e837efa3a0d4db219",
+                "input_tokens_estimate": 284584,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 26,
+                "request_sha256": "c25124333eb25cfd719849bbe76499147668c60823b4a2c0418007b4c08b41f2",
+                "input_tokens_estimate": 295883,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 27,
+                "request_sha256": "79fa8dd81287dbefcfde0144083fcf18e584d8fdf491b3214b18636b04204345",
+                "input_tokens_estimate": 307182,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 28,
+                "request_sha256": "1f0f106793df47291eb92ef7decef814eb154bf0ad39a61a65d50cc074b2ee97",
+                "input_tokens_estimate": 318481,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 29,
+                "request_sha256": "231a021fe067cb956da21979f34013d099dda510eb8e36a9e260592b4c8205c0",
+                "input_tokens_estimate": 329780,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 30,
+                "request_sha256": "df42aa3dc549000529756b76f3983209cf0a9e2008b027762128a9662ce4d0c9",
+                "input_tokens_estimate": 341079,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 31,
+                "request_sha256": "ddb5c86672eddf7af61bc5ac9475a5ef528e78c3b2612324f78bfbf86f74d7f6",
+                "input_tokens_estimate": 352378,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 32,
+                "request_sha256": "7335747214422e61643e7e18af5dd30adbc80150f0717d3af2653a95e5a74e6f",
+                "input_tokens_estimate": 363677,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 33,
+                "request_sha256": "acad366dffc3003c7a679875f527ee091d6a864635255b2ee93a2fe8c4ef4e93",
+                "input_tokens_estimate": 374976,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 34,
+                "request_sha256": "9a4d1b054c6ece132641766a62193954c30986dff77b216fabe0cbde9a8bee90",
+                "input_tokens_estimate": 386275,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 35,
+                "request_sha256": "66b4660d5178ed487ae133169f964da6a74aa63e0341a99a3285e9fcbd5292ce",
+                "input_tokens_estimate": 397574,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 36,
+                "request_sha256": "cf0d39977644e192cca3c3f8326a405aaf7d05b54c9665d342c0133cb7fef016",
+                "input_tokens_estimate": 408873,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 37,
+                "request_sha256": "e9b56b2ab583e3b1a28675584740e659175533dc3a444aceadad9db9535bd140",
+                "input_tokens_estimate": 420172,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 38,
+                "request_sha256": "8979c20481aad9b1d9c798756204fd826a0fad7a634944e7abd61a038622c651",
+                "input_tokens_estimate": 431471,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 39,
+                "request_sha256": "cc99cb5ec2484a79c3daa193f0e5cfac0649e39debc403a703abad68ca7e0b0a",
+                "input_tokens_estimate": 442770,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 40,
+                "request_sha256": "43f23fc8984d2b906597b22be67a52e8ef37694a4b533da6b30a953e64528155",
+                "input_tokens_estimate": 454069,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 41,
+                "request_sha256": "3d074573485899d5369334edade8f99772d449297e0d1829019abb75576160ad",
+                "input_tokens_estimate": 465368,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 42,
+                "request_sha256": "c62bd43307b4ec82cd844a1e47e3d71f97a61e6b5b3e8d25069bfbd7f35f0ca7",
+                "input_tokens_estimate": 476667,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 43,
+                "request_sha256": "c14418514317e248d795c3b597eea0291cb18813fb323b13f96e26dfcb7037ce",
+                "input_tokens_estimate": 487966,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 44,
+                "request_sha256": "03d5478b82844a2d867262abe5d20719dbb03c3248250e16d4083cefc4aaa031",
+                "input_tokens_estimate": 499265,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 45,
+                "request_sha256": "9a3c4202aeafed5fc85ece0fe51bcbf1646b7db71efc669fe0a6580f10d4292b",
+                "input_tokens_estimate": 510564,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 46,
+                "request_sha256": "fea05940ac90099e264454a41b5038a4e9137c21d02c761107dfa85734d015e8",
+                "input_tokens_estimate": 521863,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 47,
+                "request_sha256": "5e4f17ee91afc24c2a205d98fe0d914186893cf75a5ae9472f87383366bcd641",
+                "input_tokens_estimate": 533162,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 48,
+                "request_sha256": "51acde04ef15f2f76a411b147b5f29a071cd7355d5035d2af7ffdb31cf1d8579",
+                "input_tokens_estimate": 544461,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 49,
+                "request_sha256": "a24f4468b1e9abc07c5c2a52274d9a088e79ee61bc2d33b7c0968c3be67c382b",
+                "input_tokens_estimate": 555760,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 50,
+                "request_sha256": "f2dcde9a647a06e4678320429e41673cfeeaeddf036150be0dc2e13120d26885",
+                "input_tokens_estimate": 567059,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00009-aictrl-0.5.4-minimal-long",
+            "capture_sha256": "c7de219e4f92c95b63ebba9c68329408d2137df56f0bd623c6f9490c5f333f60",
+            "first_main_input_tokens_estimate": 2109,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14513784,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14514736,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "5a46fdcf8d8226ce015c7130cdcb3748ee7a13b2fe3c83b3485e716fb342d4ec",
+                "input_tokens_estimate": 2109,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "7e7f2e7fcbc52296dde2a32acce0947f98c2bf163b4fdf7915599e86c7444bd1",
+                "input_tokens_estimate": 13408,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "902b9894dfe8bf589c0c96dda3f0b1e14981c7aba4cc6ab94d455c15fd5ae48d",
+                "input_tokens_estimate": 24707,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "f98a04d03541842c7c3e6e8f86c5bb6befcbbcc3fceb261dbad3888a7026ee7b",
+                "input_tokens_estimate": 36006,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 4,
+                "request_sha256": "9d8980811da295922d27e99c7f496ea681b9dc6c324c1ab42bdb41b81ad21d56",
+                "input_tokens_estimate": 47305,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 5,
+                "request_sha256": "11387fcc4b74525e57c46c53c1108ee4a6d9b2e802e0701d5e947c790c61da73",
+                "input_tokens_estimate": 58604,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 6,
+                "request_sha256": "a961e62d92f6e1b632ca0d4d2850b67d7a2af8e3eb28b03040b0676b27a283ca",
+                "input_tokens_estimate": 69903,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 7,
+                "request_sha256": "49e7536d7e4068d00b007e41605eddf7ff20db240d033f43c1334c496751c0d1",
+                "input_tokens_estimate": 81202,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 8,
+                "request_sha256": "0aaa53ab8983b8cf01f6200a74c9da2095917cc24d7207eca523bc9276f6a00a",
+                "input_tokens_estimate": 92501,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 9,
+                "request_sha256": "ac83b609d16c85b7ef3156d72a88a26c5bb6e0db09191b14ad08e436cbbe2494",
+                "input_tokens_estimate": 103800,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 10,
+                "request_sha256": "a4d9788fd164a0606643de66229c9ee2ee49fe9cbc7970c9b113da92ea5ac48f",
+                "input_tokens_estimate": 115099,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 11,
+                "request_sha256": "ab1e65ae473de01eeb208bed4a434e46ec8ef7959c0909c1c3a99d5dfc01d3ff",
+                "input_tokens_estimate": 126398,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 12,
+                "request_sha256": "694617af13f265dec64282eafc1c2cd8d8e3a95bc9748c51a5469ce4af60aead",
+                "input_tokens_estimate": 137697,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 13,
+                "request_sha256": "96bc2078d125a1812b94b7bcd8a96dcf4a513ae5e57d5839d79c81f0a2233d70",
+                "input_tokens_estimate": 148996,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 14,
+                "request_sha256": "ac125ee598e4ce62b900afcc152e9fb4c06d643e14e4d4df1b13d4fd78c1ae2b",
+                "input_tokens_estimate": 160295,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 15,
+                "request_sha256": "e32812285bfd023bc1624ede187941a58dc35b94ba2a74bd4557a8b74e46b171",
+                "input_tokens_estimate": 171594,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 16,
+                "request_sha256": "f6e21ccc55ee02a7d485289c128b9ba50c1f744e1bd8cb05bb7dd7b76c4b0574",
+                "input_tokens_estimate": 182893,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 17,
+                "request_sha256": "289693384a6d8e143b800bd1d8cda06ed6c4322445ae578c61dd4ffeadf65de6",
+                "input_tokens_estimate": 194192,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 18,
+                "request_sha256": "d6e2b750a4882f1b76e7ecef70dc1d31dbba57779d6cb1cd3451aeed4c1c0541",
+                "input_tokens_estimate": 205491,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 19,
+                "request_sha256": "0982d0e439f03d5eb54c27c2e7b5a17bfe712891ad641423ebe432816ea51b45",
+                "input_tokens_estimate": 216790,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 20,
+                "request_sha256": "0556781e123a57a14e2053cdd52c9ff141d9df260eaaf6fa8ac7ca066d95cbc2",
+                "input_tokens_estimate": 228089,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 21,
+                "request_sha256": "a6cbefcd03b2858f700e872fcc9b4cae275b4f5652e59a0f22d54ddee88d8bda",
+                "input_tokens_estimate": 239388,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 22,
+                "request_sha256": "d84112eb9aa594414a130dcb49961304e8c0354769138bd62c050a052973b206",
+                "input_tokens_estimate": 250687,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 23,
+                "request_sha256": "0690f9cf37e5d20379d80ac40097cedae3046d48bb1221160c6bd4209a5beb95",
+                "input_tokens_estimate": 261986,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 24,
+                "request_sha256": "a51d7c7ffebeb87a1ab684ce2dc07105e2236eb59e8509ee6f1190e961ad33a5",
+                "input_tokens_estimate": 273285,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 25,
+                "request_sha256": "54ce79b305db466682c4045e407b248c8978f916b1ea611e837efa3a0d4db219",
+                "input_tokens_estimate": 284584,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 26,
+                "request_sha256": "c25124333eb25cfd719849bbe76499147668c60823b4a2c0418007b4c08b41f2",
+                "input_tokens_estimate": 295883,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 27,
+                "request_sha256": "79fa8dd81287dbefcfde0144083fcf18e584d8fdf491b3214b18636b04204345",
+                "input_tokens_estimate": 307182,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 28,
+                "request_sha256": "1f0f106793df47291eb92ef7decef814eb154bf0ad39a61a65d50cc074b2ee97",
+                "input_tokens_estimate": 318481,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 29,
+                "request_sha256": "231a021fe067cb956da21979f34013d099dda510eb8e36a9e260592b4c8205c0",
+                "input_tokens_estimate": 329780,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 30,
+                "request_sha256": "df42aa3dc549000529756b76f3983209cf0a9e2008b027762128a9662ce4d0c9",
+                "input_tokens_estimate": 341079,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 31,
+                "request_sha256": "ddb5c86672eddf7af61bc5ac9475a5ef528e78c3b2612324f78bfbf86f74d7f6",
+                "input_tokens_estimate": 352378,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 32,
+                "request_sha256": "7335747214422e61643e7e18af5dd30adbc80150f0717d3af2653a95e5a74e6f",
+                "input_tokens_estimate": 363677,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 33,
+                "request_sha256": "acad366dffc3003c7a679875f527ee091d6a864635255b2ee93a2fe8c4ef4e93",
+                "input_tokens_estimate": 374976,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 34,
+                "request_sha256": "9a4d1b054c6ece132641766a62193954c30986dff77b216fabe0cbde9a8bee90",
+                "input_tokens_estimate": 386275,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 35,
+                "request_sha256": "66b4660d5178ed487ae133169f964da6a74aa63e0341a99a3285e9fcbd5292ce",
+                "input_tokens_estimate": 397574,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 36,
+                "request_sha256": "cf0d39977644e192cca3c3f8326a405aaf7d05b54c9665d342c0133cb7fef016",
+                "input_tokens_estimate": 408873,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 37,
+                "request_sha256": "e9b56b2ab583e3b1a28675584740e659175533dc3a444aceadad9db9535bd140",
+                "input_tokens_estimate": 420172,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 38,
+                "request_sha256": "8979c20481aad9b1d9c798756204fd826a0fad7a634944e7abd61a038622c651",
+                "input_tokens_estimate": 431471,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 39,
+                "request_sha256": "cc99cb5ec2484a79c3daa193f0e5cfac0649e39debc403a703abad68ca7e0b0a",
+                "input_tokens_estimate": 442770,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 40,
+                "request_sha256": "43f23fc8984d2b906597b22be67a52e8ef37694a4b533da6b30a953e64528155",
+                "input_tokens_estimate": 454069,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 41,
+                "request_sha256": "3d074573485899d5369334edade8f99772d449297e0d1829019abb75576160ad",
+                "input_tokens_estimate": 465368,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 42,
+                "request_sha256": "c62bd43307b4ec82cd844a1e47e3d71f97a61e6b5b3e8d25069bfbd7f35f0ca7",
+                "input_tokens_estimate": 476667,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 43,
+                "request_sha256": "c14418514317e248d795c3b597eea0291cb18813fb323b13f96e26dfcb7037ce",
+                "input_tokens_estimate": 487966,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 44,
+                "request_sha256": "03d5478b82844a2d867262abe5d20719dbb03c3248250e16d4083cefc4aaa031",
+                "input_tokens_estimate": 499265,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 45,
+                "request_sha256": "9a3c4202aeafed5fc85ece0fe51bcbf1646b7db71efc669fe0a6580f10d4292b",
+                "input_tokens_estimate": 510564,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 46,
+                "request_sha256": "fea05940ac90099e264454a41b5038a4e9137c21d02c761107dfa85734d015e8",
+                "input_tokens_estimate": 521863,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 47,
+                "request_sha256": "5e4f17ee91afc24c2a205d98fe0d914186893cf75a5ae9472f87383366bcd641",
+                "input_tokens_estimate": 533162,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 48,
+                "request_sha256": "51acde04ef15f2f76a411b147b5f29a071cd7355d5035d2af7ffdb31cf1d8579",
+                "input_tokens_estimate": 544461,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 49,
+                "request_sha256": "a24f4468b1e9abc07c5c2a52274d9a088e79ee61bc2d33b7c0968c3be67c382b",
+                "input_tokens_estimate": 555760,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 50,
+                "request_sha256": "f2dcde9a647a06e4678320429e41673cfeeaeddf036150be0dc2e13120d26885",
+                "input_tokens_estimate": 567059,
+                "output_tokens_estimate": 2
+              }
+            ]
+          },
+          {
+            "runId": "00010-aictrl-0.5.4-minimal-long",
+            "capture_sha256": "a57488bb52b53c200d0d1296ac3761444cfa270b490d2cdafe278f61f47724cd",
+            "first_main_input_tokens_estimate": 2109,
+            "main_calls": 51,
+            "all_calls": 51,
+            "session_input_tokens_estimate": 14513784,
+            "session_output_tokens_estimate": 952,
+            "session_total_tokens_estimate": 14514736,
+            "requests": [
+              {
+                "kind": "main",
+                "step": 0,
+                "request_sha256": "5a46fdcf8d8226ce015c7130cdcb3748ee7a13b2fe3c83b3485e716fb342d4ec",
+                "input_tokens_estimate": 2109,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 1,
+                "request_sha256": "7e7f2e7fcbc52296dde2a32acce0947f98c2bf163b4fdf7915599e86c7444bd1",
+                "input_tokens_estimate": 13408,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 2,
+                "request_sha256": "902b9894dfe8bf589c0c96dda3f0b1e14981c7aba4cc6ab94d455c15fd5ae48d",
+                "input_tokens_estimate": 24707,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 3,
+                "request_sha256": "f98a04d03541842c7c3e6e8f86c5bb6befcbbcc3fceb261dbad3888a7026ee7b",
+                "input_tokens_estimate": 36006,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 4,
+                "request_sha256": "9d8980811da295922d27e99c7f496ea681b9dc6c324c1ab42bdb41b81ad21d56",
+                "input_tokens_estimate": 47305,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 5,
+                "request_sha256": "11387fcc4b74525e57c46c53c1108ee4a6d9b2e802e0701d5e947c790c61da73",
+                "input_tokens_estimate": 58604,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 6,
+                "request_sha256": "a961e62d92f6e1b632ca0d4d2850b67d7a2af8e3eb28b03040b0676b27a283ca",
+                "input_tokens_estimate": 69903,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 7,
+                "request_sha256": "49e7536d7e4068d00b007e41605eddf7ff20db240d033f43c1334c496751c0d1",
+                "input_tokens_estimate": 81202,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 8,
+                "request_sha256": "0aaa53ab8983b8cf01f6200a74c9da2095917cc24d7207eca523bc9276f6a00a",
+                "input_tokens_estimate": 92501,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 9,
+                "request_sha256": "ac83b609d16c85b7ef3156d72a88a26c5bb6e0db09191b14ad08e436cbbe2494",
+                "input_tokens_estimate": 103800,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 10,
+                "request_sha256": "a4d9788fd164a0606643de66229c9ee2ee49fe9cbc7970c9b113da92ea5ac48f",
+                "input_tokens_estimate": 115099,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 11,
+                "request_sha256": "ab1e65ae473de01eeb208bed4a434e46ec8ef7959c0909c1c3a99d5dfc01d3ff",
+                "input_tokens_estimate": 126398,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 12,
+                "request_sha256": "694617af13f265dec64282eafc1c2cd8d8e3a95bc9748c51a5469ce4af60aead",
+                "input_tokens_estimate": 137697,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 13,
+                "request_sha256": "96bc2078d125a1812b94b7bcd8a96dcf4a513ae5e57d5839d79c81f0a2233d70",
+                "input_tokens_estimate": 148996,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 14,
+                "request_sha256": "ac125ee598e4ce62b900afcc152e9fb4c06d643e14e4d4df1b13d4fd78c1ae2b",
+                "input_tokens_estimate": 160295,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 15,
+                "request_sha256": "e32812285bfd023bc1624ede187941a58dc35b94ba2a74bd4557a8b74e46b171",
+                "input_tokens_estimate": 171594,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 16,
+                "request_sha256": "f6e21ccc55ee02a7d485289c128b9ba50c1f744e1bd8cb05bb7dd7b76c4b0574",
+                "input_tokens_estimate": 182893,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 17,
+                "request_sha256": "289693384a6d8e143b800bd1d8cda06ed6c4322445ae578c61dd4ffeadf65de6",
+                "input_tokens_estimate": 194192,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 18,
+                "request_sha256": "d6e2b750a4882f1b76e7ecef70dc1d31dbba57779d6cb1cd3451aeed4c1c0541",
+                "input_tokens_estimate": 205491,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 19,
+                "request_sha256": "0982d0e439f03d5eb54c27c2e7b5a17bfe712891ad641423ebe432816ea51b45",
+                "input_tokens_estimate": 216790,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 20,
+                "request_sha256": "0556781e123a57a14e2053cdd52c9ff141d9df260eaaf6fa8ac7ca066d95cbc2",
+                "input_tokens_estimate": 228089,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 21,
+                "request_sha256": "a6cbefcd03b2858f700e872fcc9b4cae275b4f5652e59a0f22d54ddee88d8bda",
+                "input_tokens_estimate": 239388,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 22,
+                "request_sha256": "d84112eb9aa594414a130dcb49961304e8c0354769138bd62c050a052973b206",
+                "input_tokens_estimate": 250687,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 23,
+                "request_sha256": "0690f9cf37e5d20379d80ac40097cedae3046d48bb1221160c6bd4209a5beb95",
+                "input_tokens_estimate": 261986,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 24,
+                "request_sha256": "a51d7c7ffebeb87a1ab684ce2dc07105e2236eb59e8509ee6f1190e961ad33a5",
+                "input_tokens_estimate": 273285,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 25,
+                "request_sha256": "54ce79b305db466682c4045e407b248c8978f916b1ea611e837efa3a0d4db219",
+                "input_tokens_estimate": 284584,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 26,
+                "request_sha256": "c25124333eb25cfd719849bbe76499147668c60823b4a2c0418007b4c08b41f2",
+                "input_tokens_estimate": 295883,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 27,
+                "request_sha256": "79fa8dd81287dbefcfde0144083fcf18e584d8fdf491b3214b18636b04204345",
+                "input_tokens_estimate": 307182,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 28,
+                "request_sha256": "1f0f106793df47291eb92ef7decef814eb154bf0ad39a61a65d50cc074b2ee97",
+                "input_tokens_estimate": 318481,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 29,
+                "request_sha256": "231a021fe067cb956da21979f34013d099dda510eb8e36a9e260592b4c8205c0",
+                "input_tokens_estimate": 329780,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 30,
+                "request_sha256": "df42aa3dc549000529756b76f3983209cf0a9e2008b027762128a9662ce4d0c9",
+                "input_tokens_estimate": 341079,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 31,
+                "request_sha256": "ddb5c86672eddf7af61bc5ac9475a5ef528e78c3b2612324f78bfbf86f74d7f6",
+                "input_tokens_estimate": 352378,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 32,
+                "request_sha256": "7335747214422e61643e7e18af5dd30adbc80150f0717d3af2653a95e5a74e6f",
+                "input_tokens_estimate": 363677,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 33,
+                "request_sha256": "acad366dffc3003c7a679875f527ee091d6a864635255b2ee93a2fe8c4ef4e93",
+                "input_tokens_estimate": 374976,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 34,
+                "request_sha256": "9a4d1b054c6ece132641766a62193954c30986dff77b216fabe0cbde9a8bee90",
+                "input_tokens_estimate": 386275,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 35,
+                "request_sha256": "66b4660d5178ed487ae133169f964da6a74aa63e0341a99a3285e9fcbd5292ce",
+                "input_tokens_estimate": 397574,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 36,
+                "request_sha256": "cf0d39977644e192cca3c3f8326a405aaf7d05b54c9665d342c0133cb7fef016",
+                "input_tokens_estimate": 408873,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 37,
+                "request_sha256": "e9b56b2ab583e3b1a28675584740e659175533dc3a444aceadad9db9535bd140",
+                "input_tokens_estimate": 420172,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 38,
+                "request_sha256": "8979c20481aad9b1d9c798756204fd826a0fad7a634944e7abd61a038622c651",
+                "input_tokens_estimate": 431471,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 39,
+                "request_sha256": "cc99cb5ec2484a79c3daa193f0e5cfac0649e39debc403a703abad68ca7e0b0a",
+                "input_tokens_estimate": 442770,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 40,
+                "request_sha256": "43f23fc8984d2b906597b22be67a52e8ef37694a4b533da6b30a953e64528155",
+                "input_tokens_estimate": 454069,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 41,
+                "request_sha256": "3d074573485899d5369334edade8f99772d449297e0d1829019abb75576160ad",
+                "input_tokens_estimate": 465368,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 42,
+                "request_sha256": "c62bd43307b4ec82cd844a1e47e3d71f97a61e6b5b3e8d25069bfbd7f35f0ca7",
+                "input_tokens_estimate": 476667,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 43,
+                "request_sha256": "c14418514317e248d795c3b597eea0291cb18813fb323b13f96e26dfcb7037ce",
+                "input_tokens_estimate": 487966,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 44,
+                "request_sha256": "03d5478b82844a2d867262abe5d20719dbb03c3248250e16d4083cefc4aaa031",
+                "input_tokens_estimate": 499265,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 45,
+                "request_sha256": "9a3c4202aeafed5fc85ece0fe51bcbf1646b7db71efc669fe0a6580f10d4292b",
+                "input_tokens_estimate": 510564,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 46,
+                "request_sha256": "fea05940ac90099e264454a41b5038a4e9137c21d02c761107dfa85734d015e8",
+                "input_tokens_estimate": 521863,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 47,
+                "request_sha256": "5e4f17ee91afc24c2a205d98fe0d914186893cf75a5ae9472f87383366bcd641",
+                "input_tokens_estimate": 533162,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 48,
+                "request_sha256": "51acde04ef15f2f76a411b147b5f29a071cd7355d5035d2af7ffdb31cf1d8579",
+                "input_tokens_estimate": 544461,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 49,
+                "request_sha256": "a24f4468b1e9abc07c5c2a52274d9a088e79ee61bc2d33b7c0968c3be67c382b",
+                "input_tokens_estimate": 555760,
+                "output_tokens_estimate": 19
+              },
+              {
+                "kind": "main",
+                "step": 50,
+                "request_sha256": "f2dcde9a647a06e4678320429e41673cfeeaeddf036150be0dc2e13120d26885",
+                "input_tokens_estimate": 567059,
+                "output_tokens_estimate": 2
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
