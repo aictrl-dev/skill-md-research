@@ -1,0 +1,191 @@
+{
+  "observed_at_utc": "2026-10-21T18:03:49.729597+00:00",
+  "checks": [
+    {
+      "path": "/signup",
+      "status": 200,
+      "final_url": "https://aictrl.dev/signup",
+      "redirects": [],
+      "canonical": "https://aictrl.dev/signup",
+      "title": "Create your account \u2014 aictrl.dev",
+      "contains_posthog": false,
+      "analytics_srcs": [],
+      "x_robots_tag": null,
+      "robots": "noindex"
+    },
+    {
+      "path": "/book-demo",
+      "status": 200,
+      "final_url": "https://app.aictrl.dev/book-demo",
+      "redirects": [
+        {
+          "status": 307,
+          "url": "https://aictrl.dev/book-demo"
+        }
+      ],
+      "canonical": null,
+      "title": "aictrl.dev",
+      "contains_posthog": false,
+      "analytics_srcs": [],
+      "x_robots_tag": null,
+      "robots": "noindex"
+    },
+    {
+      "path": "/Blog",
+      "status": 200,
+      "final_url": "https://aictrl.dev/Blog",
+      "redirects": [],
+      "canonical": "https://aictrl.dev/blog",
+      "title": "Blog \u2014 AI Engineering Insights | aictrl.dev",
+      "contains_posthog": false,
+      "analytics_srcs": [
+        "/analytics.js?v=2",
+        "/tracking.js?v=1"
+      ]
+    },
+    {
+      "path": "/blog/",
+      "status": 200,
+      "final_url": "https://aictrl.dev/blog",
+      "redirects": [
+        {
+          "status": 301,
+          "url": "https://aictrl.dev/blog/"
+        }
+      ],
+      "canonical": "https://aictrl.dev/blog",
+      "title": "Blog \u2014 AI Engineering Insights | aictrl.dev",
+      "contains_posthog": false,
+      "analytics_srcs": [
+        "/analytics.js?v=2",
+        "/tracking.js?v=1"
+      ]
+    },
+    {
+      "path": "/agent.html",
+      "status": 200,
+      "final_url": "https://aictrl.dev/agent",
+      "redirects": [
+        {
+          "status": 301,
+          "url": "https://aictrl.dev/agent.html"
+        }
+      ],
+      "canonical": "https://aictrl.dev/agent",
+      "title": "Headless Agent Harness for Workflow Automation | aictrl.dev",
+      "contains_posthog": false,
+      "analytics_srcs": [
+        "/analytics.js?v=2",
+        "/tracking.js?v=1"
+      ]
+    },
+    {
+      "path": "/agent/",
+      "status": 200,
+      "final_url": "https://aictrl.dev/agent",
+      "redirects": [
+        {
+          "status": 301,
+          "url": "https://aictrl.dev/agent/"
+        }
+      ],
+      "canonical": "https://aictrl.dev/agent",
+      "title": "Headless Agent Harness for Workflow Automation | aictrl.dev",
+      "contains_posthog": false,
+      "analytics_srcs": [
+        "/analytics.js?v=2",
+        "/tracking.js?v=1"
+      ]
+    },
+    {
+      "path": "/nonexistent-seo-audit-20261021",
+      "status": 200,
+      "final_url": "https://app.aictrl.dev/nonexistent-seo-audit-20261021",
+      "redirects": [
+        {
+          "status": 307,
+          "url": "https://aictrl.dev/nonexistent-seo-audit-20261021"
+        }
+      ],
+      "canonical": null,
+      "title": "aictrl.dev",
+      "contains_posthog": false,
+      "analytics_srcs": [],
+      "x_robots_tag": null,
+      "robots": "noindex"
+    },
+    {
+      "path": "/analytics.js?v=2",
+      "status": 200,
+      "final_url": "https://aictrl.dev/analytics.js?v=2",
+      "redirects": [],
+      "canonical": null,
+      "title": null,
+      "contains_posthog": true,
+      "analytics_srcs": [
+        "/blog/analytics.js",
+        "/analytics.js"
+      ],
+      "script": "// PostHog Analytics - Single Source of Truth\n// Include via: <script src=\"/blog/analytics.js\"></script>\n// Or for main app: <script src=\"/analytics.js\"></script>\n\n(function() {\n  // Prevent double-loading\n  if (window.posthog && window.posthog.__loaded) return;\n\n  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(\".\");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement(\"script\")).type=\"text/javascript\",p.crossOrigin=\"anonymous\",p.async=!0,p.src=s.api_host.replace(\".i.posthog.com\",\"-assets.i.posthog.com\")+\"/static/array.js\",(r=t.getElementsByTagName(\"script\")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a=\"posthog\",u.people=u.people||[],u.toString=function(t){var e=\"posthog\";return\"posthog\"!==a&&(e+=\".\"+a),t||(e+=\" (stub)\"),e},u.people.toString=function(){return u.toString(1)+\".people (stub)\"},o=\"init rs ls yi ns us ts ss capture calculateEventProperties vs register register_once register_for_session unregister unregister_for_session gs getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty fs ds createPersonProfile ps Qr opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing hs debug M cs getPageViewId captureTraceFeedback captureTraceMetric Kr\".split(\" \"),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);\n\n  // Drops the rejection Microsoft Outlook Safe Links' headless CefSharp scanner raises on every emailed\n  // link it opens (\"Object Not Found Matching Id:3, MethodName:update, ParamCount:4\") \u2014 never our code,\n  // no user behind it (#5342). Keep identical to the sibling copy in ui/public/blog/analytics.js and\n  // dropBotScannerExceptions() in ui/src/contexts/analyticsNoise.ts.\n  function dropBotScannerExceptions(event) {\n    if (!event || event.event !== '$exception') return event;\n    var exceptions = event.properties.$exception_list;\n    if (!Array.isArray(exceptions)) return event;\n    for (var i = 0; i < exceptions.length; i++) {\n      var value = String(exceptions[i] && exceptions[i].value);\n      if (/Object Not Found Matching Id:\\d+, MethodName:\\w+, ParamCount:\\d+/.test(value)) return null;\n    }\n    return event;\n  }\n\n  posthog.init('phc_pVy040CGxUF80B7JOwPdmWQEe5zmcGplel4PQtMbdcP', {\n    api_host: 'https://e.aictrl.dev', // PostHog-managed reverse proxy (CNAME -> cf-prod-eu-proxy.europehog.com)\n    ui_host: 'https://eu.posthog.com', // required with a proxy so toolbar/links resolve to the PostHog EU app\n    defaults: '2025-11-30',\n    person_profiles: 'identified_only',\n    before_send: dropBotScannerExceptions,\n  });\n\n  // Tags every event (incl. $pageview) with an env super-property so prod/sandbox/dev/other-project\n  // traffic can be split in PostHog queries. Keep this mapping identical to the sibling copy in\n  // ui/public/blog/analytics.js and resolveEnv() in ui/src/contexts/analyticsEnv.ts (#3621).\n  function resolveEnv(host) {\n    if (!host) return 'unknown';\n    if (host === 'aictrl.dev' || host === 'www.aictrl.dev' || host === 'app.aictrl.dev') return 'production';\n    if (host === 'sandbox.aictrl.dev' || host.endsWith('.sandbox.aictrl.dev')) return 'sandbox';\n    if (host === 'localhost' || host === '127.0.0.1' || host === '[::1]') return 'dev';\n    console.warn('[analytics] unrecognised host for env:', host);\n    return 'unknown';\n  }\n\n  posthog.register({ env: resolveEnv(window.location.hostname) });\n})();\n"
+    },
+    {
+      "path": "/tracking.js?v=1",
+      "status": 200,
+      "final_url": "https://aictrl.dev/tracking.js?v=1",
+      "redirects": [],
+      "canonical": null,
+      "title": null,
+      "contains_posthog": true,
+      "analytics_srcs": [
+        "/tracking.js"
+      ],
+      "script": "// Declarative CTA tracking via data-ph-capture attributes\n// Include via: <script src=\"/tracking.js\" defer></script>\n\ndocument.addEventListener('DOMContentLoaded', function() {\n  if (!window.posthog) return;\n\n  document.querySelectorAll('[data-ph-capture]').forEach(function(el) {\n    el.addEventListener('click', function() {\n      posthog.capture(el.dataset.phCapture, {\n        cta_text: el.textContent.trim(),\n        page: window.location.pathname,\n        location: el.dataset.phLocation || 'unknown'\n      });\n    });\n  });\n});\n"
+    },
+    {
+      "path": "/authors/bulat",
+      "status": 200,
+      "final_url": "https://aictrl.dev/authors/bulat",
+      "redirects": [],
+      "canonical": "https://aictrl.dev/authors/bulat",
+      "title": "Bulat Yapparov \u2014 Author | aictrl.dev",
+      "contains_posthog": false,
+      "analytics_srcs": [
+        "/tracking.js?v=1"
+      ]
+    },
+    {
+      "path": "/docs/delivery-analytics",
+      "status": 200,
+      "final_url": "https://aictrl.dev/docs/delivery-analytics",
+      "redirects": [],
+      "canonical": "https://aictrl.dev/docs/delivery-analytics",
+      "title": "Delivery Analytics Methodology - aictrl Documentation",
+      "contains_posthog": false,
+      "analytics_srcs": [
+        "/tracking.js?v=1"
+      ]
+    },
+    {
+      "path": "/docs/product-claims",
+      "status": 200,
+      "final_url": "https://aictrl.dev/docs/product-claims",
+      "redirects": [],
+      "canonical": "https://aictrl.dev/docs/product-claims",
+      "title": "Offer and example sources - aictrl",
+      "contains_posthog": false,
+      "analytics_srcs": [
+        "/tracking.js?v=1"
+      ]
+    },
+    {
+      "path": "/hush",
+      "status": 200,
+      "final_url": "https://aictrl.dev/hush",
+      "redirects": [],
+      "canonical": "https://aictrl.dev/hush",
+      "title": "hush \u2014 Plugin Gateway for Customer Data Protection",
+      "contains_posthog": false,
+      "analytics_srcs": []
+    }
+  ]
+}

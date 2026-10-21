@@ -1,0 +1,889 @@
+{
+  "captured_at_utc": "2026-10-21 19:47:27 UTC",
+  "project_id": 88595,
+  "project_timezone": "UTC",
+  "scope": "Latest complete UTC calendar day20Oct; event ingestion may still revise historical counts. Retain fixed GSC-aligned baseline separately; these windows differ from GSC Pacific days.",
+  "queries": [
+    {
+      "id": "current28-all",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-09-23",
+          "date_to": "2026-10-20"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ]
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22dateRange%22%3A%7B%22date_from%22%3A%222026-09-23%22%2C%22date_to%22%3A%222026-10-20%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22kind%22%3A%22WebOverviewQuery%22%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "dateRange": {
+              "date_from": "2026-09-23",
+              "date_to": "2026-10-20"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "kind": "WebOverviewQuery",
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "visitors",
+              "kind": "unit",
+              "previous": null,
+              "value": 427
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "views",
+              "kind": "unit",
+              "previous": null,
+              "value": 648
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "sessions",
+              "kind": "unit",
+              "previous": null,
+              "value": 489
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "session duration",
+              "kind": "duration_s",
+              "previous": null,
+              "value": 95.84867075664621
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": true,
+              "key": "bounce rate",
+              "kind": "percentage",
+              "previous": null,
+              "value": 61.145194274028626
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "current28-organic",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-09-23",
+          "date_to": "2026-10-20"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          },
+          {
+            "key": "$channel_type",
+            "type": "session",
+            "operator": "exact",
+            "value": [
+              "Organic Search"
+            ]
+          }
+        ]
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22dateRange%22%3A%7B%22date_from%22%3A%222026-09-23%22%2C%22date_to%22%3A%222026-10-20%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22kind%22%3A%22WebOverviewQuery%22%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%2C%7B%22key%22%3A%22%24channel_type%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22session%22%2C%22value%22%3A%5B%22Organic%20Search%22%5D%7D%5D%7D%7D",
+          "query": {
+            "dateRange": {
+              "date_from": "2026-09-23",
+              "date_to": "2026-10-20"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "kind": "WebOverviewQuery",
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              },
+              {
+                "key": "$channel_type",
+                "operator": "exact",
+                "type": "session",
+                "value": [
+                  "Organic Search"
+                ]
+              }
+            ]
+          },
+          "results": [
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "visitors",
+              "kind": "unit",
+              "previous": null,
+              "value": 106
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "views",
+              "kind": "unit",
+              "previous": null,
+              "value": 131
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "sessions",
+              "kind": "unit",
+              "previous": null,
+              "value": 108
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "session duration",
+              "kind": "duration_s",
+              "previous": null,
+              "value": 83.96296296296296
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": true,
+              "key": "bounce rate",
+              "kind": "percentage",
+              "previous": null,
+              "value": 70.37037037037037
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "previous28-all",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-08-26",
+          "date_to": "2026-09-22"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ]
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22dateRange%22%3A%7B%22date_from%22%3A%222026-08-26%22%2C%22date_to%22%3A%222026-09-22%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22kind%22%3A%22WebOverviewQuery%22%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "dateRange": {
+              "date_from": "2026-08-26",
+              "date_to": "2026-09-22"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "kind": "WebOverviewQuery",
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "visitors",
+              "kind": "unit",
+              "previous": null,
+              "value": 262
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "views",
+              "kind": "unit",
+              "previous": null,
+              "value": 561
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "sessions",
+              "kind": "unit",
+              "previous": null,
+              "value": 312
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "session duration",
+              "kind": "duration_s",
+              "previous": null,
+              "value": 125.58653846153847
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": true,
+              "key": "bounce rate",
+              "kind": "percentage",
+              "previous": null,
+              "value": 52.56410256410257
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "previous28-organic",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-08-26",
+          "date_to": "2026-09-22"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          },
+          {
+            "key": "$channel_type",
+            "type": "session",
+            "operator": "exact",
+            "value": [
+              "Organic Search"
+            ]
+          }
+        ]
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22dateRange%22%3A%7B%22date_from%22%3A%222026-08-26%22%2C%22date_to%22%3A%222026-09-22%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22kind%22%3A%22WebOverviewQuery%22%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%2C%7B%22key%22%3A%22%24channel_type%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22session%22%2C%22value%22%3A%5B%22Organic%20Search%22%5D%7D%5D%7D%7D",
+          "query": {
+            "dateRange": {
+              "date_from": "2026-08-26",
+              "date_to": "2026-09-22"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "kind": "WebOverviewQuery",
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              },
+              {
+                "key": "$channel_type",
+                "operator": "exact",
+                "type": "session",
+                "value": [
+                  "Organic Search"
+                ]
+              }
+            ]
+          },
+          "results": [
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "visitors",
+              "kind": "unit",
+              "previous": null,
+              "value": 48
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "views",
+              "kind": "unit",
+              "previous": null,
+              "value": 58
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "sessions",
+              "kind": "unit",
+              "previous": null,
+              "value": 49
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "session duration",
+              "kind": "duration_s",
+              "previous": null,
+              "value": 103
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": true,
+              "key": "bounce rate",
+              "kind": "percentage",
+              "previous": null,
+              "value": 32.6530612244898
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "current14-all",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-10-07",
+          "date_to": "2026-10-20"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ]
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22dateRange%22%3A%7B%22date_from%22%3A%222026-10-07%22%2C%22date_to%22%3A%222026-10-20%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22kind%22%3A%22WebOverviewQuery%22%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "dateRange": {
+              "date_from": "2026-10-07",
+              "date_to": "2026-10-20"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "kind": "WebOverviewQuery",
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "visitors",
+              "kind": "unit",
+              "previous": null,
+              "value": 257
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "views",
+              "kind": "unit",
+              "previous": null,
+              "value": 395
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "sessions",
+              "kind": "unit",
+              "previous": null,
+              "value": 292
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "session duration",
+              "kind": "duration_s",
+              "previous": null,
+              "value": 96.93835616438356
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": true,
+              "key": "bounce rate",
+              "kind": "percentage",
+              "previous": null,
+              "value": 62.328767123287676
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "current14-organic",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-10-07",
+          "date_to": "2026-10-20"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          },
+          {
+            "key": "$channel_type",
+            "type": "session",
+            "operator": "exact",
+            "value": [
+              "Organic Search"
+            ]
+          }
+        ]
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22dateRange%22%3A%7B%22date_from%22%3A%222026-10-07%22%2C%22date_to%22%3A%222026-10-20%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22kind%22%3A%22WebOverviewQuery%22%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%2C%7B%22key%22%3A%22%24channel_type%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22session%22%2C%22value%22%3A%5B%22Organic%20Search%22%5D%7D%5D%7D%7D",
+          "query": {
+            "dateRange": {
+              "date_from": "2026-10-07",
+              "date_to": "2026-10-20"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "kind": "WebOverviewQuery",
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              },
+              {
+                "key": "$channel_type",
+                "operator": "exact",
+                "type": "session",
+                "value": [
+                  "Organic Search"
+                ]
+              }
+            ]
+          },
+          "results": [
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "visitors",
+              "kind": "unit",
+              "previous": null,
+              "value": 82
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "views",
+              "kind": "unit",
+              "previous": null,
+              "value": 91
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "sessions",
+              "kind": "unit",
+              "previous": null,
+              "value": 82
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "session duration",
+              "kind": "duration_s",
+              "previous": null,
+              "value": 44.80487804878049
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": true,
+              "key": "bounce rate",
+              "kind": "percentage",
+              "previous": null,
+              "value": 81.70731707317073
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "previous14-all",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-09-23",
+          "date_to": "2026-10-06"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ]
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22dateRange%22%3A%7B%22date_from%22%3A%222026-09-23%22%2C%22date_to%22%3A%222026-10-06%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22kind%22%3A%22WebOverviewQuery%22%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "dateRange": {
+              "date_from": "2026-09-23",
+              "date_to": "2026-10-06"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "kind": "WebOverviewQuery",
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "visitors",
+              "kind": "unit",
+              "previous": null,
+              "value": 173
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "views",
+              "kind": "unit",
+              "previous": null,
+              "value": 253
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "sessions",
+              "kind": "unit",
+              "previous": null,
+              "value": 197
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "session duration",
+              "kind": "duration_s",
+              "previous": null,
+              "value": 94.23350253807106
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": true,
+              "key": "bounce rate",
+              "kind": "percentage",
+              "previous": null,
+              "value": 59.390862944162436
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "previous14-organic",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-09-23",
+          "date_to": "2026-10-06"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          },
+          {
+            "key": "$channel_type",
+            "type": "session",
+            "operator": "exact",
+            "value": [
+              "Organic Search"
+            ]
+          }
+        ]
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22dateRange%22%3A%7B%22date_from%22%3A%222026-09-23%22%2C%22date_to%22%3A%222026-10-06%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22kind%22%3A%22WebOverviewQuery%22%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%2C%7B%22key%22%3A%22%24channel_type%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22session%22%2C%22value%22%3A%5B%22Organic%20Search%22%5D%7D%5D%7D%7D",
+          "query": {
+            "dateRange": {
+              "date_from": "2026-09-23",
+              "date_to": "2026-10-06"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "kind": "WebOverviewQuery",
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              },
+              {
+                "key": "$channel_type",
+                "operator": "exact",
+                "type": "session",
+                "value": [
+                  "Organic Search"
+                ]
+              }
+            ]
+          },
+          "results": [
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "visitors",
+              "kind": "unit",
+              "previous": null,
+              "value": 24
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "views",
+              "kind": "unit",
+              "previous": null,
+              "value": 40
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "sessions",
+              "kind": "unit",
+              "previous": null,
+              "value": 26
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": null,
+              "key": "session duration",
+              "kind": "duration_s",
+              "previous": null,
+              "value": 207.46153846153845
+            },
+            {
+              "changeFromPreviousPct": null,
+              "isIncreaseBad": true,
+              "key": "bounce rate",
+              "kind": "percentage",
+              "previous": null,
+              "value": 34.61538461538461
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

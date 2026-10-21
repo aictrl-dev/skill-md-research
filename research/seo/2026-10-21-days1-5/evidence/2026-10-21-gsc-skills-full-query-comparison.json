@@ -1,0 +1,457 @@
+{
+  "source": "Google Search Console displayed comparison table",
+  "property": "https://aictrl.dev/",
+  "filter": {
+    "type": "Exact URL",
+    "value": "https://aictrl.dev/blog/skill-md-adoption-trajectory"
+  },
+  "search_type": "Web",
+  "timezone": "Pacific daily dates",
+  "periods": {
+    "current": [
+      "2026-09-22",
+      "2026-10-19"
+    ],
+    "previous": [
+      "2026-08-25",
+      "2026-09-21"
+    ]
+  },
+  "captured_on": "2026-10-21",
+  "method": "Rows per page250 verified; footer1-38of38; only rendered DOM rows retained. Difference columns omitted.",
+  "columns": [
+    "query",
+    "current_clicks",
+    "previous_clicks",
+    "current_impressions",
+    "previous_impressions",
+    "current_ctr",
+    "previous_ctr",
+    "current_position",
+    "previous_position"
+  ],
+  "rows": [
+    [
+      "snyk toxicskills clawhub 341 malicious agent skills mcp supply chain february 2026",
+      "0",
+      "0",
+      "11",
+      "0",
+      "0%",
+      "0%",
+      "3.6",
+      "0"
+    ],
+    [
+      "2026-02-11 ai open source release",
+      "0",
+      "0",
+      "10",
+      "0",
+      "0%",
+      "0%",
+      "5.8",
+      "0"
+    ],
+    [
+      "%site.developers.openai.com codex skills skill.md",
+      "0",
+      "0",
+      "8",
+      "2",
+      "0%",
+      "0%",
+      "5.9",
+      "8.5"
+    ],
+    [
+      "+site.developers.openai.com codex skills skill.md progressive disclosure",
+      "0",
+      "0",
+      "8",
+      "0",
+      "0%",
+      "0%",
+      "7.5",
+      "0"
+    ],
+    [
+      "+site.developers.openai.com codex skills skill.md",
+      "0",
+      "0",
+      "5",
+      "0",
+      "0%",
+      "0%",
+      "5.8",
+      "0"
+    ],
+    [
+      "site.developers.openai.com codex skills skill.md progressive disclosure",
+      "0",
+      "0",
+      "4",
+      "0",
+      "0%",
+      "0%",
+      "7.8",
+      "0"
+    ],
+    [
+      "agentskills.io agent skills open standard",
+      "0",
+      "0",
+      "2",
+      "0",
+      "0%",
+      "0%",
+      "6",
+      "0"
+    ],
+    [
+      "+site.developers.openai.com codex skills skill.md .agents/skills",
+      "0",
+      "0",
+      "2",
+      "0",
+      "0%",
+      "0%",
+      "7",
+      "0"
+    ],
+    [
+      "anthropic official blog agentic ai tool use skills research",
+      "0",
+      "0",
+      "2",
+      "0",
+      "0%",
+      "0%",
+      "8",
+      "0"
+    ],
+    [
+      "+site.developers.openai.com codex skills skill.md progressive disclosure%",
+      "0",
+      "0",
+      "2",
+      "0",
+      "0%",
+      "0%",
+      "8.5",
+      "0"
+    ],
+    [
+      "anthropic agent skills skill.md",
+      "0",
+      "0",
+      "2",
+      "0",
+      "0%",
+      "0%",
+      "9",
+      "0"
+    ],
+    [
+      "site.developers.openai.com/codex \"agents.md\" \"skills\"",
+      "0",
+      "0",
+      "2",
+      "0",
+      "0%",
+      "0%",
+      "9",
+      "0"
+    ],
+    [
+      "site.developers.openai.com codex skills skill.md agents skills",
+      "0",
+      "0",
+      "2",
+      "0",
+      "0%",
+      "0%",
+      "10",
+      "0"
+    ],
+    [
+      "agent skills open standard skill.md agentskills.io",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "2",
+      "0"
+    ],
+    [
+      "agent skills open standard skill.md specification agentskills.io",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "2",
+      "0"
+    ],
+    [
+      "skill.md manifest spec anthropic openai versioning",
+      "0",
+      "0",
+      "1",
+      "12",
+      "0%",
+      "0%",
+      "4",
+      "2.9"
+    ],
+    [
+      "+site.developers.openai.com/codex/skills \"skill.md\"",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "6",
+      "0"
+    ],
+    [
+      "mikor történt ez?",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "6",
+      "0"
+    ],
+    [
+      "+site.developers.openai.com codex skills progressive disclosure agents.md",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "7",
+      "0"
+    ],
+    [
+      "site.developers.openai.com/codex skills skill.md .agents/skills",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "7",
+      "0"
+    ],
+    [
+      "%site.developers.openai.com codex skills progressive disclosure agents.md",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "8",
+      "0"
+    ],
+    [
+      "%site.developers.openai.com codex skills progressive disclosure skill.md",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "8",
+      "0"
+    ],
+    [
+      "%site.developers.openai.com codex skills skill.md agents.md",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "8",
+      "0"
+    ],
+    [
+      "%site.developers.openai.com/codex skills .agents/skills skill.md",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "8",
+      "0"
+    ],
+    [
+      "anthropic agent skills documentation skill.md",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "8",
+      "0"
+    ],
+    [
+      "site.developers.openai.com/codex/skills progressive disclosure skill.md",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "8",
+      "0"
+    ],
+    [
+      "+site.developers.openai.com codex agents.md skills skill.md",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "9",
+      "0"
+    ],
+    [
+      "agentskills.io open standard specification",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "9",
+      "0"
+    ],
+    [
+      "agentskills.io specification update changelog",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "9",
+      "0"
+    ],
+    [
+      "site.developers.openai.com codex skills skill.md",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "9",
+      "0"
+    ],
+    [
+      "agent skills open standard official specification skill.md agentskills.io",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "10",
+      "0"
+    ],
+    [
+      "site.developers.openai.com codex skills skill.md .agents/skills",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "10",
+      "0"
+    ],
+    [
+      "skills .md",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "21",
+      "0"
+    ],
+    [
+      "skill.md anthropic openai shells examples",
+      "0",
+      "0",
+      "1",
+      "0",
+      "0%",
+      "0%",
+      "63",
+      "0"
+    ],
+    [
+      "anthropic adopts openai markdown standard",
+      "0",
+      "0",
+      "0",
+      "8",
+      "0%",
+      "0%",
+      "0",
+      "10.8"
+    ],
+    [
+      "skill.md function calling adapters openai anthropic google",
+      "0",
+      "0",
+      "0",
+      "5",
+      "0%",
+      "0%",
+      "0",
+      "8.4"
+    ],
+    [
+      "いつごろから",
+      "0",
+      "0",
+      "0",
+      "1",
+      "0%",
+      "0%",
+      "0",
+      "6"
+    ],
+    [
+      "anthropic agent skills open standard december 2025 cross-platform",
+      "0",
+      "0",
+      "0",
+      "1",
+      "0%",
+      "0%",
+      "0",
+      "9"
+    ]
+  ],
+  "limits": [
+    "Available query rows do not sum to page headline. Do not classify hidden queries or infer query-to-person attribution."
+  ],
+  "interpretation": "The visible sample contains substantial official-documentation navigation and dated news/security intent. Clarify a distinct practical contribution rather than compete as official docs; query-to-person quality remains unknown."
+}

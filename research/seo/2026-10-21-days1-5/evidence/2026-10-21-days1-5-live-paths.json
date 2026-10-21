@@ -1,0 +1,48 @@
+{
+  "observed_date_utc": "2026-10-21",
+  "method": "Read-only HTTP GET of public production pages; no form submissions",
+  "pages": [
+    {
+      "url": "https://aictrl.dev/agent",
+      "sha256": "682c7495ddaae9ca9a3796fc122b9cebe795b9e390c545033ba9cdc080eacd29",
+      "bytes": 98845,
+      "title": "Headless Agent Harness for Workflow Automation | aictrl.dev",
+      "forms": [],
+      "scripts": [
+        "/cookie-consent.js?v=1",
+        "/analytics.js?v=2",
+        "/tracking.js?v=1"
+      ]
+    },
+    {
+      "url": "https://aictrl.dev/blog/headless-coding-agent-cli-benchmark",
+      "sha256": "6179aa3bf4b4b51c7e11ea46043b04ccea1c296ec9f655ed86ebefef0b64d93f",
+      "bytes": 70167,
+      "title": "Which coding-agent CLI is best for headless workflow automation? | aictrl.dev",
+      "forms": [],
+      "scripts": [
+        "/cookie-consent.js?v=1",
+        "/analytics.js?v=2",
+        "/tracking.js?v=1"
+      ]
+    },
+    {
+      "url": "https://aictrl.dev/signup",
+      "sha256": "468f66d0d22825e1f0fdb62ab183f6028a2fe908498ba7ac4971f1f7b3e502e6",
+      "bytes": 12389,
+      "title": "Create your account \u2014 aictrl.dev",
+      "forms": [
+        {
+          "action": "https://app.aictrl.dev/",
+          "method": "post",
+          "fields": [
+            "email"
+          ]
+        }
+      ],
+      "scripts": [
+        "/js/hero-wave.js"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5174 @@
+{
+  "captured_at_utc": "2026-10-21 19:49:36 UTC",
+  "project_id": 88595,
+  "timezone": "UTC",
+  "scope": "Exact apex, human-classified events, project test filter. Source-native complete calendar dates through20Oct, not same instants as GSC Pacific. These are raw visitor/session diagnostics, not source-attributed accounts.",
+  "queries": [
+    {
+      "id": "current28-InitialChannelType",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-09-23",
+          "date_to": "2026-10-20"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ],
+        "breakdownBy": "InitialChannelType",
+        "limit": 200
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22breakdownBy%22%3A%22InitialChannelType%22%2C%22dateRange%22%3A%7B%22date_from%22%3A%222026-09-23%22%2C%22date_to%22%3A%222026-10-20%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22includeAvgTimeOnPage%22%3Afalse%2C%22includeBounceRate%22%3Afalse%2C%22includeHost%22%3Afalse%2C%22kind%22%3A%22WebStatsTableQuery%22%2C%22limit%22%3A200%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "breakdownBy": "InitialChannelType",
+            "dateRange": {
+              "date_from": "2026-09-23",
+              "date_to": "2026-10-20"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "includeAvgTimeOnPage": false,
+            "includeBounceRate": false,
+            "includeHost": false,
+            "kind": "WebStatsTableQuery",
+            "limit": 200,
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            [
+              "Direct",
+              [
+                274,
+                null
+              ],
+              [
+                436,
+                null
+              ],
+              0.6342592592592593,
+              ""
+            ],
+            [
+              "Organic Search",
+              [
+                106,
+                null
+              ],
+              [
+                131,
+                null
+              ],
+              0.24537037037037038,
+              ""
+            ],
+            [
+              "Email",
+              [
+                23,
+                null
+              ],
+              [
+                26,
+                null
+              ],
+              0.05324074074074074,
+              ""
+            ],
+            [
+              "Organic Social",
+              [
+                12,
+                null
+              ],
+              [
+                28,
+                null
+              ],
+              0.027777777777777776,
+              ""
+            ],
+            [
+              "Referral",
+              [
+                7,
+                null
+              ],
+              [
+                11,
+                null
+              ],
+              0.016203703703703703,
+              ""
+            ],
+            [
+              "Organic Video",
+              [
+                5,
+                null
+              ],
+              [
+                11,
+                null
+              ],
+              0.011574074074074073,
+              ""
+            ],
+            [
+              "AI",
+              [
+                5,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              0.011574074074074073,
+              ""
+            ]
+          ],
+          "columns": [
+            "context.columns.breakdown_value",
+            "context.columns.visitors",
+            "context.columns.views",
+            "context.columns.ui_fill_fraction",
+            "context.columns.cross_sell"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "current28-InitialReferringDomain",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-09-23",
+          "date_to": "2026-10-20"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ],
+        "breakdownBy": "InitialReferringDomain",
+        "limit": 200
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22breakdownBy%22%3A%22InitialReferringDomain%22%2C%22dateRange%22%3A%7B%22date_from%22%3A%222026-09-23%22%2C%22date_to%22%3A%222026-10-20%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22includeAvgTimeOnPage%22%3Afalse%2C%22includeBounceRate%22%3Afalse%2C%22includeHost%22%3Afalse%2C%22kind%22%3A%22WebStatsTableQuery%22%2C%22limit%22%3A200%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "breakdownBy": "InitialReferringDomain",
+            "dateRange": {
+              "date_from": "2026-09-23",
+              "date_to": "2026-10-20"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "includeAvgTimeOnPage": false,
+            "includeBounceRate": false,
+            "includeHost": false,
+            "kind": "WebStatsTableQuery",
+            "limit": 200,
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            [
+              "$direct",
+              [
+                304,
+                null
+              ],
+              [
+                476,
+                null
+              ],
+              0.7053364269141531,
+              ""
+            ],
+            [
+              "www.google.com",
+              [
+                93,
+                null
+              ],
+              [
+                111,
+                null
+              ],
+              0.21577726218097448,
+              ""
+            ],
+            [
+              "www.linkedin.com",
+              [
+                9,
+                null
+              ],
+              [
+                22,
+                null
+              ],
+              0.02088167053364269,
+              ""
+            ],
+            [
+              "duckduckgo.com",
+              [
+                4,
+                null
+              ],
+              [
+                6,
+                null
+              ],
+              0.009280742459396751,
+              ""
+            ],
+            [
+              "www.bing.com",
+              [
+                3,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              0.0069605568445475635,
+              ""
+            ],
+            [
+              "com.linkedin.android",
+              [
+                2,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              0.004640371229698376,
+              ""
+            ],
+            [
+              "noai.duckduckgo.com",
+              [
+                2,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              0.004640371229698376,
+              ""
+            ],
+            [
+              "aictrl.dev",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              0.004640371229698376,
+              ""
+            ],
+            [
+              "127.0.0.26:3005",
+              [
+                1,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              0.002320185614849188,
+              ""
+            ],
+            [
+              "aicodelabs.dev",
+              [
+                1,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              0.002320185614849188,
+              ""
+            ],
+            [
+              "search.google.com",
+              [
+                1,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              0.002320185614849188,
+              ""
+            ],
+            [
+              "teams.public.onecdn.static.microsoft",
+              [
+                1,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              0.002320185614849188,
+              ""
+            ],
+            [
+              "com.google.android.gm",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.002320185614849188,
+              ""
+            ],
+            [
+              "com.google.android.googlequicksearchbox",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.002320185614849188,
+              ""
+            ],
+            [
+              "dev.to",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.002320185614849188,
+              ""
+            ],
+            [
+              "kagi.com",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.002320185614849188,
+              ""
+            ],
+            [
+              "outlook.live.com",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.002320185614849188,
+              ""
+            ],
+            [
+              "search.brave.com",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.002320185614849188,
+              ""
+            ],
+            [
+              "www.b2match.com",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.002320185614849188,
+              ""
+            ],
+            [
+              "www.instagram.com",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.002320185614849188,
+              ""
+            ]
+          ],
+          "columns": [
+            "context.columns.breakdown_value",
+            "context.columns.visitors",
+            "context.columns.views",
+            "context.columns.ui_fill_fraction",
+            "context.columns.cross_sell"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "current28-InitialPage",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-09-23",
+          "date_to": "2026-10-20"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ],
+        "breakdownBy": "InitialPage",
+        "limit": 200,
+        "includeHost": true,
+        "includeBounceRate": true
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22breakdownBy%22%3A%22InitialPage%22%2C%22dateRange%22%3A%7B%22date_from%22%3A%222026-09-23%22%2C%22date_to%22%3A%222026-10-20%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22includeAvgTimeOnPage%22%3Afalse%2C%22includeBounceRate%22%3Atrue%2C%22includeHost%22%3Atrue%2C%22kind%22%3A%22WebStatsTableQuery%22%2C%22limit%22%3A200%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "breakdownBy": "InitialPage",
+            "dateRange": {
+              "date_from": "2026-09-23",
+              "date_to": "2026-10-20"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "includeAvgTimeOnPage": false,
+            "includeBounceRate": true,
+            "includeHost": true,
+            "kind": "WebStatsTableQuery",
+            "limit": 200,
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            [
+              "aictrl.dev/",
+              [
+                182,
+                null
+              ],
+              [
+                277,
+                null
+              ],
+              [
+                0.5476190476190477,
+                null
+              ],
+              0.4099099099099099,
+              ""
+            ],
+            [
+              "aictrl.dev/start",
+              [
+                20,
+                null
+              ],
+              [
+                21,
+                null
+              ],
+              [
+                0.4,
+                null
+              ],
+              0.04504504504504504,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/swe-evo-analysis",
+              [
+                15,
+                null
+              ],
+              [
+                16,
+                null
+              ],
+              [
+                0.7333333333333333,
+                null
+              ],
+              0.033783783783783786,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/from-agent-factory-to-workflow",
+              [
+                15,
+                null
+              ],
+              [
+                15,
+                null
+              ],
+              [
+                0.8,
+                null
+              ],
+              0.033783783783783786,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/knowledge-graph-agentic-ai",
+              [
+                12,
+                null
+              ],
+              [
+                15,
+                null
+              ],
+              [
+                0.5714285714285714,
+                null
+              ],
+              0.02702702702702703,
+              ""
+            ],
+            [
+              "aictrl.dev/docs",
+              [
+                11,
+                null
+              ],
+              [
+                13,
+                null
+              ],
+              [
+                0.7272727272727273,
+                null
+              ],
+              0.024774774774774775,
+              ""
+            ],
+            [
+              "aictrl.dev/features",
+              [
+                9,
+                null
+              ],
+              [
+                11,
+                null
+              ],
+              [
+                0.8,
+                null
+              ],
+              0.02027027027027027,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/ai-usability-testing-backlog-design",
+              [
+                8,
+                null
+              ],
+              [
+                23,
+                null
+              ],
+              [
+                0.3333333333333333,
+                null
+              ],
+              0.018018018018018018,
+              ""
+            ],
+            [
+              "aictrl.dev/pricing",
+              [
+                8,
+                null
+              ],
+              [
+                18,
+                null
+              ],
+              [
+                0.7777777777777778,
+                null
+              ],
+              0.018018018018018018,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-evals-proof-before-ship",
+              [
+                8,
+                null
+              ],
+              [
+                10,
+                null
+              ],
+              [
+                0.75,
+                null
+              ],
+              0.018018018018018018,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-md-adoption-trajectory",
+              [
+                8,
+                null
+              ],
+              [
+                8,
+                null
+              ],
+              [
+                0.875,
+                null
+              ],
+              0.018018018018018018,
+              ""
+            ],
+            [
+              "aictrl.dev/features/code-review",
+              [
+                8,
+                null
+              ],
+              [
+                8,
+                null
+              ],
+              [
+                0.625,
+                null
+              ],
+              0.018018018018018018,
+              ""
+            ],
+            [
+              "aictrl.dev/plugins",
+              [
+                8,
+                null
+              ],
+              [
+                8,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.018018018018018018,
+              ""
+            ],
+            [
+              "aictrl.dev/onboarding/connect-repo",
+              [
+                7,
+                null
+              ],
+              [
+                29,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.015765765765765764,
+              ""
+            ],
+            [
+              "aictrl.dev/ai-sdlc",
+              [
+                7,
+                null
+              ],
+              [
+                8,
+                null
+              ],
+              [
+                0.5714285714285714,
+                null
+              ],
+              0.015765765765765764,
+              ""
+            ],
+            [
+              "aictrl.dev/blog",
+              [
+                6,
+                null
+              ],
+              [
+                24,
+                null
+              ],
+              [
+                0.4,
+                null
+              ],
+              0.013513513513513514,
+              ""
+            ],
+            [
+              "aictrl.dev/changelog",
+              [
+                6,
+                null
+              ],
+              [
+                16,
+                null
+              ],
+              [
+                0.4,
+                null
+              ],
+              0.013513513513513514,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/vibe-coding-dopamine-trap",
+              [
+                6,
+                null
+              ],
+              [
+                8,
+                null
+              ],
+              [
+                0.3333333333333333,
+                null
+              ],
+              0.013513513513513514,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/reasoning-benchmarks",
+              [
+                6,
+                null
+              ],
+              [
+                6,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.013513513513513514,
+              ""
+            ],
+            [
+              "aictrl.dev/support",
+              [
+                6,
+                null
+              ],
+              [
+                6,
+                null
+              ],
+              [
+                0.6666666666666666,
+                null
+              ],
+              0.013513513513513514,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/software-factory-change-impact",
+              [
+                5,
+                null
+              ],
+              [
+                8,
+                null
+              ],
+              [
+                0.4,
+                null
+              ],
+              0.01126126126126126,
+              ""
+            ],
+            [
+              "aictrl.dev/demo",
+              [
+                5,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.01126126126126126,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/local-model-code-review",
+              [
+                4,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              [
+                0.75,
+                null
+              ],
+              0.009009009009009009,
+              ""
+            ],
+            [
+              "aictrl.dev/Blog",
+              [
+                4,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.009009009009009009,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/ai-code-review-tools-2026",
+              [
+                4,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.009009009009009009,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/chinese-ai-models-catch-up",
+              [
+                4,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                0.25,
+                null
+              ],
+              0.009009009009009009,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/github",
+              [
+                4,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                0.75,
+                null
+              ],
+              0.009009009009009009,
+              ""
+            ],
+            [
+              "aictrl.dev/privacy",
+              [
+                4,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.009009009009009009,
+              ""
+            ],
+            [
+              "aictrl.dev/features/workflow-as-code",
+              [
+                3,
+                null
+              ],
+              [
+                12,
+                null
+              ],
+              [
+                0.6666666666666666,
+                null
+              ],
+              0.006756756756756757,
+              ""
+            ],
+            [
+              "aictrl.dev/about",
+              [
+                3,
+                null
+              ],
+              [
+                9,
+                null
+              ],
+              [
+                0.6666666666666666,
+                null
+              ],
+              0.006756756756756757,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/aictrl-vs-github-gitlab-sdlc-automation",
+              [
+                3,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                0.25,
+                null
+              ],
+              0.006756756756756757,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/ai-sdlc-compressed-not-replaced",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.006756756756756757,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/code-review-dogfooding-assessment-2026",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.006756756756756757,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/open-source-review-ai-era",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                0.6666666666666666,
+                null
+              ],
+              0.006756756756756757,
+              ""
+            ],
+            [
+              "aictrl.dev/cookies",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.006756756756756757,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/first-review",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.006756756756756757,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/github-triggers",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.006756756756756757,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/model-access",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.006756756756756757,
+              ""
+            ],
+            [
+              "aictrl.dev/terms",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.006756756756756757,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/agentic-loops-to-measured-workflows",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0045045045045045045,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/framework-matters",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0045045045045045045,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/saaspocalypse",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.0045045045045045045,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/swarm-paradox",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0045045045045045045,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/pr-explanations",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.0045045045045045045,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/explain-pr",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0045045045045045045,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/bdd-knowledge-graphs-deterministic-traceability",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0022522522522522522,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/browser-use-rise",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.0022522522522522522,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/label-an-issue-get-a-reviewed-pr",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0022522522522522522,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-engineering-pseudocode",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0022522522522522522,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-md-standard-enterprise-guide",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0022522522522522522,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/github",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0022522522522522522,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/workflows",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0022522522522522522,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/skills",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0022522522522522522,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/tasks",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.0022522522522522522,
+              ""
+            ]
+          ],
+          "columns": [
+            "context.columns.breakdown_value",
+            "context.columns.visitors",
+            "context.columns.views",
+            "context.columns.bounce_rate",
+            "context.columns.ui_fill_fraction",
+            "context.columns.cross_sell"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "previous28-InitialChannelType",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-08-26",
+          "date_to": "2026-09-22"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ],
+        "breakdownBy": "InitialChannelType",
+        "limit": 200
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22breakdownBy%22%3A%22InitialChannelType%22%2C%22dateRange%22%3A%7B%22date_from%22%3A%222026-08-26%22%2C%22date_to%22%3A%222026-09-22%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22includeAvgTimeOnPage%22%3Afalse%2C%22includeBounceRate%22%3Afalse%2C%22includeHost%22%3Afalse%2C%22kind%22%3A%22WebStatsTableQuery%22%2C%22limit%22%3A200%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "breakdownBy": "InitialChannelType",
+            "dateRange": {
+              "date_from": "2026-08-26",
+              "date_to": "2026-09-22"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "includeAvgTimeOnPage": false,
+            "includeBounceRate": false,
+            "includeHost": false,
+            "kind": "WebStatsTableQuery",
+            "limit": 200,
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            [
+              "Direct",
+              [
+                192,
+                null
+              ],
+              [
+                453,
+                null
+              ],
+              0.7164179104477612,
+              ""
+            ],
+            [
+              "Organic Search",
+              [
+                48,
+                null
+              ],
+              [
+                58,
+                null
+              ],
+              0.1791044776119403,
+              ""
+            ],
+            [
+              "Email",
+              [
+                10,
+                null
+              ],
+              [
+                12,
+                null
+              ],
+              0.03731343283582089,
+              ""
+            ],
+            [
+              "Referral",
+              [
+                9,
+                null
+              ],
+              [
+                26,
+                null
+              ],
+              0.033582089552238806,
+              ""
+            ],
+            [
+              "AI",
+              [
+                6,
+                null
+              ],
+              [
+                9,
+                null
+              ],
+              0.022388059701492536,
+              ""
+            ],
+            [
+              "Organic Social",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              0.011194029850746268,
+              ""
+            ]
+          ],
+          "columns": [
+            "context.columns.breakdown_value",
+            "context.columns.visitors",
+            "context.columns.views",
+            "context.columns.ui_fill_fraction",
+            "context.columns.cross_sell"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "previous28-InitialReferringDomain",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-08-26",
+          "date_to": "2026-09-22"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ],
+        "breakdownBy": "InitialReferringDomain",
+        "limit": 200
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22breakdownBy%22%3A%22InitialReferringDomain%22%2C%22dateRange%22%3A%7B%22date_from%22%3A%222026-08-26%22%2C%22date_to%22%3A%222026-09-22%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22includeAvgTimeOnPage%22%3Afalse%2C%22includeBounceRate%22%3Afalse%2C%22includeHost%22%3Afalse%2C%22kind%22%3A%22WebStatsTableQuery%22%2C%22limit%22%3A200%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "breakdownBy": "InitialReferringDomain",
+            "dateRange": {
+              "date_from": "2026-08-26",
+              "date_to": "2026-09-22"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "includeAvgTimeOnPage": false,
+            "includeBounceRate": false,
+            "includeHost": false,
+            "kind": "WebStatsTableQuery",
+            "limit": 200,
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            [
+              "$direct",
+              [
+                202,
+                null
+              ],
+              [
+                467,
+                null
+              ],
+              0.7565543071161048,
+              ""
+            ],
+            [
+              "www.google.com",
+              [
+                46,
+                null
+              ],
+              [
+                56,
+                null
+              ],
+              0.17228464419475656,
+              ""
+            ],
+            [
+              "aictrl.dev",
+              [
+                6,
+                null
+              ],
+              [
+                18,
+                null
+              ],
+              0.02247191011235955,
+              ""
+            ],
+            [
+              "chatgpt.com",
+              [
+                3,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "www.reddit.com",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "porkbun.com",
+              [
+                1,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              0.003745318352059925,
+              ""
+            ],
+            [
+              "app.aictrl.dev",
+              [
+                1,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              0.003745318352059925,
+              ""
+            ],
+            [
+              "com.google.android.gm",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003745318352059925,
+              ""
+            ],
+            [
+              "duckduckgo.com",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003745318352059925,
+              ""
+            ],
+            [
+              "www.bing.com",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003745318352059925,
+              ""
+            ],
+            [
+              "yuanbao.tencent.com",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003745318352059925,
+              ""
+            ],
+            [
+              "zylos.ai",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003745318352059925,
+              ""
+            ]
+          ],
+          "columns": [
+            "context.columns.breakdown_value",
+            "context.columns.visitors",
+            "context.columns.views",
+            "context.columns.ui_fill_fraction",
+            "context.columns.cross_sell"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "previous28-InitialPage",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-08-26",
+          "date_to": "2026-09-22"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ],
+        "breakdownBy": "InitialPage",
+        "limit": 200,
+        "includeHost": true,
+        "includeBounceRate": true
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22breakdownBy%22%3A%22InitialPage%22%2C%22dateRange%22%3A%7B%22date_from%22%3A%222026-08-26%22%2C%22date_to%22%3A%222026-09-22%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22includeAvgTimeOnPage%22%3Afalse%2C%22includeBounceRate%22%3Atrue%2C%22includeHost%22%3Atrue%2C%22kind%22%3A%22WebStatsTableQuery%22%2C%22limit%22%3A200%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "breakdownBy": "InitialPage",
+            "dateRange": {
+              "date_from": "2026-08-26",
+              "date_to": "2026-09-22"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "includeAvgTimeOnPage": false,
+            "includeBounceRate": true,
+            "includeHost": true,
+            "kind": "WebStatsTableQuery",
+            "limit": 200,
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            [
+              "aictrl.dev/",
+              [
+                100,
+                null
+              ],
+              [
+                319,
+                null
+              ],
+              [
+                0.34615384615384615,
+                null
+              ],
+              0.3663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/chinese-ai-models-catch-up",
+              [
+                11,
+                null
+              ],
+              [
+                11,
+                null
+              ],
+              [
+                0.8181818181818182,
+                null
+              ],
+              0.040293040293040296,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/swe-evo-analysis",
+              [
+                11,
+                null
+              ],
+              [
+                11,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.040293040293040296,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/local-model-code-review",
+              [
+                10,
+                null
+              ],
+              [
+                10,
+                null
+              ],
+              [
+                0.8,
+                null
+              ],
+              0.03663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/knowledge-graph-agentic-ai",
+              [
+                9,
+                null
+              ],
+              [
+                16,
+                null
+              ],
+              [
+                0.6666666666666666,
+                null
+              ],
+              0.03296703296703297,
+              ""
+            ],
+            [
+              "aictrl.dev/start",
+              [
+                8,
+                null
+              ],
+              [
+                8,
+                null
+              ],
+              [
+                0.25,
+                null
+              ],
+              0.029304029304029304,
+              ""
+            ],
+            [
+              "aictrl.dev/pricing",
+              [
+                7,
+                null
+              ],
+              [
+                20,
+                null
+              ],
+              [
+                0.7142857142857143,
+                null
+              ],
+              0.02564102564102564,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/github",
+              [
+                7,
+                null
+              ],
+              [
+                12,
+                null
+              ],
+              [
+                0.42857142857142855,
+                null
+              ],
+              0.02564102564102564,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/swarm-paradox",
+              [
+                7,
+                null
+              ],
+              [
+                7,
+                null
+              ],
+              [
+                0.2857142857142857,
+                null
+              ],
+              0.02564102564102564,
+              ""
+            ],
+            [
+              "aictrl.dev/docs",
+              [
+                6,
+                null
+              ],
+              [
+                13,
+                null
+              ],
+              [
+                0.6666666666666666,
+                null
+              ],
+              0.02197802197802198,
+              ""
+            ],
+            [
+              "aictrl.dev/ai-sdlc",
+              [
+                6,
+                null
+              ],
+              [
+                9,
+                null
+              ],
+              [
+                0.3333333333333333,
+                null
+              ],
+              0.02197802197802198,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/from-agent-factory-to-workflow",
+              [
+                6,
+                null
+              ],
+              [
+                7,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.02197802197802198,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-md-adoption-trajectory",
+              [
+                5,
+                null
+              ],
+              [
+                6,
+                null
+              ],
+              [
+                0.8,
+                null
+              ],
+              0.018315018315018316,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/browser-use-rise",
+              [
+                5,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              [
+                0.4,
+                null
+              ],
+              0.018315018315018316,
+              ""
+            ],
+            [
+              "aictrl.dev/demo",
+              [
+                5,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.018315018315018316,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/vibe-coding-dopamine-trap",
+              [
+                4,
+                null
+              ],
+              [
+                6,
+                null
+              ],
+              [
+                0.2,
+                null
+              ],
+              0.014652014652014652,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/saaspocalypse",
+              [
+                4,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              [
+                0.8,
+                null
+              ],
+              0.014652014652014652,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/ai-sdlc-compressed-not-replaced",
+              [
+                4,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.014652014652014652,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/reasoning-benchmarks",
+              [
+                4,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.014652014652014652,
+              ""
+            ],
+            [
+              "aictrl.dev/features",
+              [
+                3,
+                null
+              ],
+              [
+                17,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.01098901098901099,
+              ""
+            ],
+            [
+              "aictrl.dev/features/code-review",
+              [
+                3,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                0.3333333333333333,
+                null
+              ],
+              0.01098901098901099,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-engineering-pseudocode",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.01098901098901099,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-evals-proof-before-ship",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.01098901098901099,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-md-standard-enterprise-guide",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.01098901098901099,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/first-review",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                0.6666666666666666,
+                null
+              ],
+              0.01098901098901099,
+              ""
+            ],
+            [
+              "aictrl.dev/plugins",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                0.3333333333333333,
+                null
+              ],
+              0.01098901098901099,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/troubleshooting",
+              [
+                2,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.007326007326007326,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/tasks",
+              [
+                2,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.007326007326007326,
+              ""
+            ],
+            [
+              "aictrl.dev/blog",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.007326007326007326,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/ai-electricity-crisis",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.007326007326007326,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/framework-matters",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.007326007326007326,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-md-standard-enterprise-guide.html",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.007326007326007326,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/model-access",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.007326007326007326,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/workflows",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.007326007326007326,
+              ""
+            ],
+            [
+              "aictrl.dev/support",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.007326007326007326,
+              ""
+            ],
+            [
+              "aictrl.dev/onboarding/connect-repo",
+              [
+                1,
+                null
+              ],
+              [
+                9,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/features/knowledge-graph",
+              [
+                1,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/ai-code-review-tools-2026",
+              [
+                1,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/agentic-loops-to-measured-workflows",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/anatomy-of-ai-coding-agents",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/bdd-knowledge-graphs-deterministic-traceability",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/knowledge-graph-agentic-ai.html",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-evals-proof-before-ship.html",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/chat-to-pr",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/explain-pr",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/early-access",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/features/knowledge-graph.html",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/features/workflow-as-code",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/lp/code-review",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ],
+            [
+              "aictrl.dev/terms",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003663003663003663,
+              ""
+            ]
+          ],
+          "columns": [
+            "context.columns.breakdown_value",
+            "context.columns.visitors",
+            "context.columns.views",
+            "context.columns.bounce_rate",
+            "context.columns.ui_fill_fraction",
+            "context.columns.cross_sell"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "current14-InitialChannelType",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-10-07",
+          "date_to": "2026-10-20"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ],
+        "breakdownBy": "InitialChannelType",
+        "limit": 200
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22breakdownBy%22%3A%22InitialChannelType%22%2C%22dateRange%22%3A%7B%22date_from%22%3A%222026-10-07%22%2C%22date_to%22%3A%222026-10-20%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22includeAvgTimeOnPage%22%3Afalse%2C%22includeBounceRate%22%3Afalse%2C%22includeHost%22%3Afalse%2C%22kind%22%3A%22WebStatsTableQuery%22%2C%22limit%22%3A200%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "breakdownBy": "InitialChannelType",
+            "dateRange": {
+              "date_from": "2026-10-07",
+              "date_to": "2026-10-20"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "includeAvgTimeOnPage": false,
+            "includeBounceRate": false,
+            "includeHost": false,
+            "kind": "WebStatsTableQuery",
+            "limit": 200,
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            [
+              "Direct",
+              [
+                144,
+                null
+              ],
+              [
+                253,
+                null
+              ],
+              0.5538461538461539,
+              ""
+            ],
+            [
+              "Organic Search",
+              [
+                82,
+                null
+              ],
+              [
+                91,
+                null
+              ],
+              0.3153846153846154,
+              ""
+            ],
+            [
+              "Email",
+              [
+                17,
+                null
+              ],
+              [
+                20,
+                null
+              ],
+              0.06538461538461539,
+              ""
+            ],
+            [
+              "Organic Social",
+              [
+                7,
+                null
+              ],
+              [
+                13,
+                null
+              ],
+              0.026923076923076925,
+              ""
+            ],
+            [
+              "Organic Video",
+              [
+                5,
+                null
+              ],
+              [
+                11,
+                null
+              ],
+              0.019230769230769232,
+              ""
+            ],
+            [
+              "Referral",
+              [
+                5,
+                null
+              ],
+              [
+                7,
+                null
+              ],
+              0.019230769230769232,
+              ""
+            ]
+          ],
+          "columns": [
+            "context.columns.breakdown_value",
+            "context.columns.visitors",
+            "context.columns.views",
+            "context.columns.ui_fill_fraction",
+            "context.columns.cross_sell"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "current14-InitialReferringDomain",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-10-07",
+          "date_to": "2026-10-20"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ],
+        "breakdownBy": "InitialReferringDomain",
+        "limit": 200
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22breakdownBy%22%3A%22InitialReferringDomain%22%2C%22dateRange%22%3A%7B%22date_from%22%3A%222026-10-07%22%2C%22date_to%22%3A%222026-10-20%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22includeAvgTimeOnPage%22%3Afalse%2C%22includeBounceRate%22%3Afalse%2C%22includeHost%22%3Afalse%2C%22kind%22%3A%22WebStatsTableQuery%22%2C%22limit%22%3A200%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "breakdownBy": "InitialReferringDomain",
+            "dateRange": {
+              "date_from": "2026-10-07",
+              "date_to": "2026-10-20"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "includeAvgTimeOnPage": false,
+            "includeBounceRate": false,
+            "includeHost": false,
+            "kind": "WebStatsTableQuery",
+            "limit": 200,
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            [
+              "$direct",
+              [
+                164,
+                null
+              ],
+              [
+                283,
+                null
+              ],
+              0.6332046332046332,
+              ""
+            ],
+            [
+              "www.google.com",
+              [
+                74,
+                null
+              ],
+              [
+                79,
+                null
+              ],
+              0.2857142857142857,
+              ""
+            ],
+            [
+              "www.linkedin.com",
+              [
+                5,
+                null
+              ],
+              [
+                8,
+                null
+              ],
+              0.019305019305019305,
+              ""
+            ],
+            [
+              "com.linkedin.android",
+              [
+                2,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              0.007722007722007722,
+              ""
+            ],
+            [
+              "duckduckgo.com",
+              [
+                2,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              0.007722007722007722,
+              ""
+            ],
+            [
+              "noai.duckduckgo.com",
+              [
+                2,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              0.007722007722007722,
+              ""
+            ],
+            [
+              "aicodelabs.dev",
+              [
+                1,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              0.003861003861003861,
+              ""
+            ],
+            [
+              "teams.public.onecdn.static.microsoft",
+              [
+                1,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              0.003861003861003861,
+              ""
+            ],
+            [
+              "aictrl.dev",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003861003861003861,
+              ""
+            ],
+            [
+              "com.google.android.gm",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003861003861003861,
+              ""
+            ],
+            [
+              "com.google.android.googlequicksearchbox",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003861003861003861,
+              ""
+            ],
+            [
+              "dev.to",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003861003861003861,
+              ""
+            ],
+            [
+              "kagi.com",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003861003861003861,
+              ""
+            ],
+            [
+              "search.brave.com",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003861003861003861,
+              ""
+            ],
+            [
+              "www.b2match.com",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003861003861003861,
+              ""
+            ],
+            [
+              "www.bing.com",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.003861003861003861,
+              ""
+            ]
+          ],
+          "columns": [
+            "context.columns.breakdown_value",
+            "context.columns.visitors",
+            "context.columns.views",
+            "context.columns.ui_fill_fraction",
+            "context.columns.cross_sell"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "current14-InitialPage",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-10-07",
+          "date_to": "2026-10-20"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ],
+        "breakdownBy": "InitialPage",
+        "limit": 200,
+        "includeHost": true,
+        "includeBounceRate": true
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22breakdownBy%22%3A%22InitialPage%22%2C%22dateRange%22%3A%7B%22date_from%22%3A%222026-10-07%22%2C%22date_to%22%3A%222026-10-20%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22includeAvgTimeOnPage%22%3Afalse%2C%22includeBounceRate%22%3Atrue%2C%22includeHost%22%3Atrue%2C%22kind%22%3A%22WebStatsTableQuery%22%2C%22limit%22%3A200%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "breakdownBy": "InitialPage",
+            "dateRange": {
+              "date_from": "2026-10-07",
+              "date_to": "2026-10-20"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "includeAvgTimeOnPage": false,
+            "includeBounceRate": true,
+            "includeHost": true,
+            "kind": "WebStatsTableQuery",
+            "limit": 200,
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            [
+              "aictrl.dev/",
+              [
+                98,
+                null
+              ],
+              [
+                147,
+                null
+              ],
+              [
+                0.5229357798165137,
+                null
+              ],
+              0.3643122676579926,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/swe-evo-analysis",
+              [
+                13,
+                null
+              ],
+              [
+                14,
+                null
+              ],
+              [
+                0.8461538461538461,
+                null
+              ],
+              0.048327137546468404,
+              ""
+            ],
+            [
+              "aictrl.dev/start",
+              [
+                12,
+                null
+              ],
+              [
+                13,
+                null
+              ],
+              [
+                0.3333333333333333,
+                null
+              ],
+              0.04460966542750929,
+              ""
+            ],
+            [
+              "aictrl.dev/docs",
+              [
+                10,
+                null
+              ],
+              [
+                11,
+                null
+              ],
+              [
+                0.8,
+                null
+              ],
+              0.03717472118959108,
+              ""
+            ],
+            [
+              "aictrl.dev/features",
+              [
+                8,
+                null
+              ],
+              [
+                8,
+                null
+              ],
+              [
+                0.875,
+                null
+              ],
+              0.02973977695167286,
+              ""
+            ],
+            [
+              "aictrl.dev/pricing",
+              [
+                7,
+                null
+              ],
+              [
+                17,
+                null
+              ],
+              [
+                0.75,
+                null
+              ],
+              0.026022304832713755,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/from-agent-factory-to-workflow",
+              [
+                7,
+                null
+              ],
+              [
+                7,
+                null
+              ],
+              [
+                0.8571428571428571,
+                null
+              ],
+              0.026022304832713755,
+              ""
+            ],
+            [
+              "aictrl.dev/changelog",
+              [
+                6,
+                null
+              ],
+              [
+                16,
+                null
+              ],
+              [
+                0.4,
+                null
+              ],
+              0.022304832713754646,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/knowledge-graph-agentic-ai",
+              [
+                6,
+                null
+              ],
+              [
+                9,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.022304832713754646,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/vibe-coding-dopamine-trap",
+              [
+                6,
+                null
+              ],
+              [
+                8,
+                null
+              ],
+              [
+                0.3333333333333333,
+                null
+              ],
+              0.022304832713754646,
+              ""
+            ],
+            [
+              "aictrl.dev/onboarding/connect-repo",
+              [
+                5,
+                null
+              ],
+              [
+                24,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.01858736059479554,
+              ""
+            ],
+            [
+              "aictrl.dev/ai-sdlc",
+              [
+                5,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              [
+                0.6,
+                null
+              ],
+              0.01858736059479554,
+              ""
+            ],
+            [
+              "aictrl.dev/features/code-review",
+              [
+                5,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              [
+                0.8,
+                null
+              ],
+              0.01858736059479554,
+              ""
+            ],
+            [
+              "aictrl.dev/plugins",
+              [
+                5,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.01858736059479554,
+              ""
+            ],
+            [
+              "aictrl.dev/blog",
+              [
+                4,
+                null
+              ],
+              [
+                21,
+                null
+              ],
+              [
+                0.375,
+                null
+              ],
+              0.01486988847583643,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/software-factory-change-impact",
+              [
+                4,
+                null
+              ],
+              [
+                7,
+                null
+              ],
+              [
+                0.25,
+                null
+              ],
+              0.01486988847583643,
+              ""
+            ],
+            [
+              "aictrl.dev/Blog",
+              [
+                4,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.01486988847583643,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/reasoning-benchmarks",
+              [
+                4,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.01486988847583643,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-md-adoption-trajectory",
+              [
+                4,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                0.75,
+                null
+              ],
+              0.01486988847583643,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/github",
+              [
+                4,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                0.75,
+                null
+              ],
+              0.01486988847583643,
+              ""
+            ],
+            [
+              "aictrl.dev/about",
+              [
+                3,
+                null
+              ],
+              [
+                9,
+                null
+              ],
+              [
+                0.6666666666666666,
+                null
+              ],
+              0.011152416356877323,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/local-model-code-review",
+              [
+                3,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                0.6666666666666666,
+                null
+              ],
+              0.011152416356877323,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/code-review-dogfooding-assessment-2026",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.011152416356877323,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/open-source-review-ai-era",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                0.6666666666666666,
+                null
+              ],
+              0.011152416356877323,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-evals-proof-before-ship",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.011152416356877323,
+              ""
+            ],
+            [
+              "aictrl.dev/demo",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.011152416356877323,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/github-triggers",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.011152416356877323,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/model-access",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.011152416356877323,
+              ""
+            ],
+            [
+              "aictrl.dev/privacy",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.011152416356877323,
+              ""
+            ],
+            [
+              "aictrl.dev/support",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                0.3333333333333333,
+                null
+              ],
+              0.011152416356877323,
+              ""
+            ],
+            [
+              "aictrl.dev/terms",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.011152416356877323,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/agentic-loops-to-measured-workflows",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.007434944237918215,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/ai-code-review-tools-2026",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.007434944237918215,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/ai-sdlc-compressed-not-replaced",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.007434944237918215,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/framework-matters",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.007434944237918215,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/pr-explanations",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.007434944237918215,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/ai-usability-testing-backlog-design",
+              [
+                1,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.0037174721189591076,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/aictrl-vs-github-gitlab-sdlc-automation",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0037174721189591076,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/browser-use-rise",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.0037174721189591076,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/chinese-ai-models-catch-up",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0037174721189591076,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/label-an-issue-get-a-reviewed-pr",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0037174721189591076,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-md-standard-enterprise-guide",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0037174721189591076,
+              ""
+            ],
+            [
+              "aictrl.dev/cookies",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0037174721189591076,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/skills",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0037174721189591076,
+              ""
+            ],
+            [
+              "aictrl.dev/features/workflow-as-code",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0037174721189591076,
+              ""
+            ]
+          ],
+          "columns": [
+            "context.columns.breakdown_value",
+            "context.columns.visitors",
+            "context.columns.views",
+            "context.columns.bounce_rate",
+            "context.columns.ui_fill_fraction",
+            "context.columns.cross_sell"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "previous14-InitialChannelType",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-09-23",
+          "date_to": "2026-10-06"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ],
+        "breakdownBy": "InitialChannelType",
+        "limit": 200
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22breakdownBy%22%3A%22InitialChannelType%22%2C%22dateRange%22%3A%7B%22date_from%22%3A%222026-09-23%22%2C%22date_to%22%3A%222026-10-06%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22includeAvgTimeOnPage%22%3Afalse%2C%22includeBounceRate%22%3Afalse%2C%22includeHost%22%3Afalse%2C%22kind%22%3A%22WebStatsTableQuery%22%2C%22limit%22%3A200%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "breakdownBy": "InitialChannelType",
+            "dateRange": {
+              "date_from": "2026-09-23",
+              "date_to": "2026-10-06"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "includeAvgTimeOnPage": false,
+            "includeBounceRate": false,
+            "includeHost": false,
+            "kind": "WebStatsTableQuery",
+            "limit": 200,
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            [
+              "Direct",
+              [
+                133,
+                null
+              ],
+              [
+                183,
+                null
+              ],
+              0.76,
+              ""
+            ],
+            [
+              "Organic Search",
+              [
+                24,
+                null
+              ],
+              [
+                40,
+                null
+              ],
+              0.13714285714285715,
+              ""
+            ],
+            [
+              "Email",
+              [
+                6,
+                null
+              ],
+              [
+                6,
+                null
+              ],
+              0.03428571428571429,
+              ""
+            ],
+            [
+              "Organic Social",
+              [
+                5,
+                null
+              ],
+              [
+                15,
+                null
+              ],
+              0.02857142857142857,
+              ""
+            ],
+            [
+              "AI",
+              [
+                5,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              0.02857142857142857,
+              ""
+            ],
+            [
+              "Referral",
+              [
+                2,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              0.011428571428571429,
+              ""
+            ]
+          ],
+          "columns": [
+            "context.columns.breakdown_value",
+            "context.columns.visitors",
+            "context.columns.views",
+            "context.columns.ui_fill_fraction",
+            "context.columns.cross_sell"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "previous14-InitialReferringDomain",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-09-23",
+          "date_to": "2026-10-06"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ],
+        "breakdownBy": "InitialReferringDomain",
+        "limit": 200
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22breakdownBy%22%3A%22InitialReferringDomain%22%2C%22dateRange%22%3A%7B%22date_from%22%3A%222026-09-23%22%2C%22date_to%22%3A%222026-10-06%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22includeAvgTimeOnPage%22%3Afalse%2C%22includeBounceRate%22%3Afalse%2C%22includeHost%22%3Afalse%2C%22kind%22%3A%22WebStatsTableQuery%22%2C%22limit%22%3A200%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "breakdownBy": "InitialReferringDomain",
+            "dateRange": {
+              "date_from": "2026-09-23",
+              "date_to": "2026-10-06"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "includeAvgTimeOnPage": false,
+            "includeBounceRate": false,
+            "includeHost": false,
+            "kind": "WebStatsTableQuery",
+            "limit": 200,
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            [
+              "$direct",
+              [
+                143,
+                null
+              ],
+              [
+                193,
+                null
+              ],
+              0.8171428571428572,
+              ""
+            ],
+            [
+              "www.google.com",
+              [
+                19,
+                null
+              ],
+              [
+                32,
+                null
+              ],
+              0.10857142857142857,
+              ""
+            ],
+            [
+              "www.linkedin.com",
+              [
+                4,
+                null
+              ],
+              [
+                14,
+                null
+              ],
+              0.022857142857142857,
+              ""
+            ],
+            [
+              "www.bing.com",
+              [
+                2,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              0.011428571428571429,
+              ""
+            ],
+            [
+              "duckduckgo.com",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              0.011428571428571429,
+              ""
+            ],
+            [
+              "127.0.0.26:3005",
+              [
+                1,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              0.005714285714285714,
+              ""
+            ],
+            [
+              "search.google.com",
+              [
+                1,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              0.005714285714285714,
+              ""
+            ],
+            [
+              "aictrl.dev",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.005714285714285714,
+              ""
+            ],
+            [
+              "outlook.live.com",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.005714285714285714,
+              ""
+            ],
+            [
+              "www.instagram.com",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.005714285714285714,
+              ""
+            ]
+          ],
+          "columns": [
+            "context.columns.breakdown_value",
+            "context.columns.visitors",
+            "context.columns.views",
+            "context.columns.ui_fill_fraction",
+            "context.columns.cross_sell"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "previous14-InitialPage",
+      "input": {
+        "dateRange": {
+          "date_from": "2026-09-23",
+          "date_to": "2026-10-06"
+        },
+        "filterTestAccounts": true,
+        "properties": [
+          {
+            "key": "$host",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "aictrl.dev"
+            ]
+          },
+          {
+            "key": "$virt_is_bot",
+            "type": "event",
+            "operator": "exact",
+            "value": [
+              "false"
+            ]
+          }
+        ],
+        "breakdownBy": "InitialPage",
+        "limit": 200,
+        "includeHost": true,
+        "includeBounceRate": true
+      },
+      "result": [
+        {
+          "_posthogUrl": "https://eu.posthog.com/project/88595/insights/new#q=%7B%22kind%22%3A%22InsightVizNode%22%2C%22source%22%3A%7B%22breakdownBy%22%3A%22InitialPage%22%2C%22dateRange%22%3A%7B%22date_from%22%3A%222026-09-23%22%2C%22date_to%22%3A%222026-10-06%22%7D%2C%22doPathCleaning%22%3Afalse%2C%22filterTestAccounts%22%3Atrue%2C%22includeAvgTimeOnPage%22%3Afalse%2C%22includeBounceRate%22%3Atrue%2C%22includeHost%22%3Atrue%2C%22kind%22%3A%22WebStatsTableQuery%22%2C%22limit%22%3A200%2C%22properties%22%3A%5B%7B%22key%22%3A%22%24host%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22aictrl.dev%22%5D%7D%2C%7B%22key%22%3A%22%24virt_is_bot%22%2C%22operator%22%3A%22exact%22%2C%22type%22%3A%22event%22%2C%22value%22%3A%5B%22false%22%5D%7D%5D%7D%7D",
+          "query": {
+            "breakdownBy": "InitialPage",
+            "dateRange": {
+              "date_from": "2026-09-23",
+              "date_to": "2026-10-06"
+            },
+            "doPathCleaning": false,
+            "filterTestAccounts": true,
+            "includeAvgTimeOnPage": false,
+            "includeBounceRate": true,
+            "includeHost": true,
+            "kind": "WebStatsTableQuery",
+            "limit": 200,
+            "properties": [
+              {
+                "key": "$host",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "aictrl.dev"
+                ]
+              },
+              {
+                "key": "$virt_is_bot",
+                "operator": "exact",
+                "type": "event",
+                "value": [
+                  "false"
+                ]
+              }
+            ]
+          },
+          "results": [
+            [
+              "aictrl.dev/",
+              [
+                86,
+                null
+              ],
+              [
+                130,
+                null
+              ],
+              [
+                0.5742574257425742,
+                null
+              ],
+              0.48314606741573035,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/from-agent-factory-to-workflow",
+              [
+                8,
+                null
+              ],
+              [
+                8,
+                null
+              ],
+              [
+                0.75,
+                null
+              ],
+              0.0449438202247191,
+              ""
+            ],
+            [
+              "aictrl.dev/start",
+              [
+                8,
+                null
+              ],
+              [
+                8,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.0449438202247191,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/ai-usability-testing-backlog-design",
+              [
+                7,
+                null
+              ],
+              [
+                19,
+                null
+              ],
+              [
+                0.3,
+                null
+              ],
+              0.03932584269662921,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/knowledge-graph-agentic-ai",
+              [
+                6,
+                null
+              ],
+              [
+                6,
+                null
+              ],
+              [
+                0.6666666666666666,
+                null
+              ],
+              0.033707865168539325,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-evals-proof-before-ship",
+              [
+                5,
+                null
+              ],
+              [
+                7,
+                null
+              ],
+              [
+                0.6,
+                null
+              ],
+              0.028089887640449437,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-md-adoption-trajectory",
+              [
+                4,
+                null
+              ],
+              [
+                4,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.02247191011235955,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/chinese-ai-models-catch-up",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.016853932584269662,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/first-review",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.016853932584269662,
+              ""
+            ],
+            [
+              "aictrl.dev/features/code-review",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                0.3333333333333333,
+                null
+              ],
+              0.016853932584269662,
+              ""
+            ],
+            [
+              "aictrl.dev/plugins",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.016853932584269662,
+              ""
+            ],
+            [
+              "aictrl.dev/support",
+              [
+                3,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.016853932584269662,
+              ""
+            ],
+            [
+              "aictrl.dev/features/workflow-as-code",
+              [
+                2,
+                null
+              ],
+              [
+                11,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "aictrl.dev/onboarding/connect-repo",
+              [
+                2,
+                null
+              ],
+              [
+                5,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "aictrl.dev/ai-sdlc",
+              [
+                2,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "aictrl.dev/blog",
+              [
+                2,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/aictrl-vs-github-gitlab-sdlc-automation",
+              [
+                2,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "aictrl.dev/features",
+              [
+                2,
+                null
+              ],
+              [
+                3,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/ai-code-review-tools-2026",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/reasoning-benchmarks",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/saaspocalypse",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                0.5,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/swarm-paradox",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/swe-evo-analysis",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "aictrl.dev/cookies",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "aictrl.dev/demo",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/explain-pr",
+              [
+                2,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.011235955056179775,
+              ""
+            ],
+            [
+              "aictrl.dev/docs",
+              [
+                1,
+                null
+              ],
+              [
+                2,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.0056179775280898875,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/ai-sdlc-compressed-not-replaced",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0056179775280898875,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/bdd-knowledge-graphs-deterministic-traceability",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0056179775280898875,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/local-model-code-review",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0056179775280898875,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/skill-engineering-pseudocode",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0056179775280898875,
+              ""
+            ],
+            [
+              "aictrl.dev/blog/software-factory-change-impact",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0056179775280898875,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/github",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0056179775280898875,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/setup/workflows",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0056179775280898875,
+              ""
+            ],
+            [
+              "aictrl.dev/docs/tasks",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                0,
+                null
+              ],
+              0.0056179775280898875,
+              ""
+            ],
+            [
+              "aictrl.dev/pricing",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0056179775280898875,
+              ""
+            ],
+            [
+              "aictrl.dev/privacy",
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              [
+                1,
+                null
+              ],
+              0.0056179775280898875,
+              ""
+            ]
+          ],
+          "columns": [
+            "context.columns.breakdown_value",
+            "context.columns.visitors",
+            "context.columns.views",
+            "context.columns.bounce_rate",
+            "context.columns.ui_fill_fraction",
+            "context.columns.cross_sell"
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": []
+}
