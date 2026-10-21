@@ -1,0 +1,732 @@
+{
+  "schemaVersion": 2,
+  "protocolVersion": 3,
+  "HARNESSES": [
+    "candidate-default",
+    "candidate-selected"
+  ],
+  "REPS": 5,
+  "LONG_REPS": 0,
+  "WARMUP": 0,
+  "LATENCY": 50,
+  "CPUS": "2",
+  "MEMORY": "2g",
+  "TIMEOUT_MS": 180000,
+  "candidate": {
+    "imageId": "sha256:a8bd06679cfeed73feaee94f86b4e2c16c3913aaa86f5d1c36e61069dbede5be",
+    "matchingBaseId": "sha256:115e6dd65ebfb52349873367e6c80a3739e333314effc54293fb00a6b49e8978",
+    "binaryPath": "/usr/local/bin/aictrl",
+    "binarySha256": "c60d37a2d91de46abbbddccf10fdb0bb0c4940df9c2295ce42ba715344986874",
+    "version": "0.0.0-selector246-e807e4aacf5c",
+    "source": {
+      "path": "source-manifest.json",
+      "sha256": "e807e4aacf5c7e97f2500220f175533c38174601232d12e16bb0e0f4e7a34afe"
+    },
+    "generated": {
+      "path": "generated-manifest.json",
+      "sha256": "024c356da9f3b45970a58d125e3c0ec72bf0928ffc111e4de1833593080c1e05"
+    },
+    "dependencies": {
+      "path": "dependencies-manifest.json",
+      "sha256": "d9a4f45a65aeb314e2d981ac910059e5ff9fe3bece4fcd5c891c8804d63a5586"
+    },
+    "build": {
+      "path": "build-manifest.json",
+      "sha256": "cc4af75933ea51633f21404f0007be5f0afa233abad92aee65b58250c5210a89"
+    }
+  },
+  "campaignMetadata": {
+    "purpose": "same-candidate independent tool-selection reference-token capture; no performance comparison",
+    "network": "host network; loopback scripted stub only is intended, but OS egress is not restricted",
+    "model": "fixture/fixture (non-GPT), no real inference",
+    "prompt": "BENCHTASK short: read notes-0.txt, notes-1.txt and notes-2.txt once each in order, then reply Done.",
+    "permission": {
+      "*": "allow"
+    },
+    "selector": "--tools read,bash,edit,write",
+    "sourcePins": {
+      "source": {
+        "sha256": "e807e4aacf5c7e97f2500220f175533c38174601232d12e16bb0e0f4e7a34afe",
+        "bytes": 28849
+      },
+      "generated": {
+        "sha256": "024c356da9f3b45970a58d125e3c0ec72bf0928ffc111e4de1833593080c1e05",
+        "bytes": 12194
+      },
+      "dependencies": {
+        "sha256": "d9a4f45a65aeb314e2d981ac910059e5ff9fe3bece4fcd5c891c8804d63a5586",
+        "bytes": 7594169
+      },
+      "build": {
+        "sha256": "cc4af75933ea51633f21404f0007be5f0afa233abad92aee65b58250c5210a89",
+        "bytes": 3522
+      }
+    },
+    "inputManifestSha256": "e4a41132254999800649873c60fce649f562b222d04bc19fed65a9f12032952b",
+    "protocolSources": {
+      "token-stub.ts": "1fd7e6579b44ecf2083345ad56ad15546d2899011b4e5ddc518310db47483bda",
+      "count_tokens.py": "812921e017dc79b0d497de8523baf6fd744115664da203fa71a39cc370afa5f2",
+      "token-capture-selector246.ts": "a2df73dea8305aa13435425df0aef812392d0ed94cb7dd78662772e1bc314a2d",
+      "count_selector246.py": "056f72e690809f6cc5aafa0d06e75480f23733121810f0a5a003324ed1c2e8e7"
+    },
+    "limitations": [
+      "Not provider billing/cache/quality evidence",
+      "Raw inert requests include repeated history and auxiliary calls",
+      "Timing is diagnostic only; never compare against historical campaigns"
+    ]
+  },
+  "raw": {
+    "short": {
+      "candidate-default": [
+        {
+          "runId": "01-candidate-default-short",
+          "valid": true,
+          "mainRequests": 4,
+          "auxRequests": 0,
+          "discoveryRequests": 0,
+          "otherRequests": [],
+          "toolNames": [
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ]
+          ],
+          "exit": 0,
+          "timedOut": false,
+          "errors": []
+        },
+        {
+          "runId": "02-candidate-default-short",
+          "valid": true,
+          "mainRequests": 4,
+          "auxRequests": 0,
+          "discoveryRequests": 0,
+          "otherRequests": [],
+          "toolNames": [
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ]
+          ],
+          "exit": 0,
+          "timedOut": false,
+          "errors": []
+        },
+        {
+          "runId": "03-candidate-default-short",
+          "valid": true,
+          "mainRequests": 4,
+          "auxRequests": 0,
+          "discoveryRequests": 0,
+          "otherRequests": [],
+          "toolNames": [
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ]
+          ],
+          "exit": 0,
+          "timedOut": false,
+          "errors": []
+        },
+        {
+          "runId": "04-candidate-default-short",
+          "valid": true,
+          "mainRequests": 4,
+          "auxRequests": 0,
+          "discoveryRequests": 0,
+          "otherRequests": [],
+          "toolNames": [
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ]
+          ],
+          "exit": 0,
+          "timedOut": false,
+          "errors": []
+        },
+        {
+          "runId": "05-candidate-default-short",
+          "valid": true,
+          "mainRequests": 4,
+          "auxRequests": 0,
+          "discoveryRequests": 0,
+          "otherRequests": [],
+          "toolNames": [
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ],
+            [
+              "bash",
+              "read",
+              "glob",
+              "grep",
+              "edit",
+              "write",
+              "task",
+              "webfetch",
+              "skill"
+            ]
+          ],
+          "exit": 0,
+          "timedOut": false,
+          "errors": []
+        }
+      ],
+      "candidate-selected": [
+        {
+          "runId": "01-candidate-selected-short",
+          "valid": true,
+          "mainRequests": 4,
+          "auxRequests": 0,
+          "discoveryRequests": 0,
+          "otherRequests": [],
+          "toolNames": [
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ]
+          ],
+          "exit": 0,
+          "timedOut": false,
+          "errors": []
+        },
+        {
+          "runId": "02-candidate-selected-short",
+          "valid": true,
+          "mainRequests": 4,
+          "auxRequests": 0,
+          "discoveryRequests": 0,
+          "otherRequests": [],
+          "toolNames": [
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ]
+          ],
+          "exit": 0,
+          "timedOut": false,
+          "errors": []
+        },
+        {
+          "runId": "03-candidate-selected-short",
+          "valid": true,
+          "mainRequests": 4,
+          "auxRequests": 0,
+          "discoveryRequests": 0,
+          "otherRequests": [],
+          "toolNames": [
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ]
+          ],
+          "exit": 0,
+          "timedOut": false,
+          "errors": []
+        },
+        {
+          "runId": "04-candidate-selected-short",
+          "valid": true,
+          "mainRequests": 4,
+          "auxRequests": 0,
+          "discoveryRequests": 0,
+          "otherRequests": [],
+          "toolNames": [
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ]
+          ],
+          "exit": 0,
+          "timedOut": false,
+          "errors": []
+        },
+        {
+          "runId": "05-candidate-selected-short",
+          "valid": true,
+          "mainRequests": 4,
+          "auxRequests": 0,
+          "discoveryRequests": 0,
+          "otherRequests": [],
+          "toolNames": [
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ],
+            [
+              "bash",
+              "read",
+              "edit",
+              "write"
+            ]
+          ],
+          "exit": 0,
+          "timedOut": false,
+          "errors": []
+        }
+      ]
+    }
+  },
+  "failures": [],
+  "cleanupChecks": [
+    {
+      "name": "selector246-1472843-1792550281453-preflight",
+      "removed": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      },
+      "remaining": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "name": "selector246-1472843-1792550281453-01-candidate-default-short",
+      "removed": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      },
+      "remaining": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "name": "selector246-1472843-1792550281453-01-candidate-selected-short",
+      "removed": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      },
+      "remaining": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "name": "selector246-1472843-1792550281453-02-candidate-selected-short",
+      "removed": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      },
+      "remaining": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "name": "selector246-1472843-1792550281453-02-candidate-default-short",
+      "removed": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      },
+      "remaining": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "name": "selector246-1472843-1792550281453-03-candidate-default-short",
+      "removed": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      },
+      "remaining": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "name": "selector246-1472843-1792550281453-03-candidate-selected-short",
+      "removed": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      },
+      "remaining": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "name": "selector246-1472843-1792550281453-04-candidate-selected-short",
+      "removed": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      },
+      "remaining": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "name": "selector246-1472843-1792550281453-04-candidate-default-short",
+      "removed": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      },
+      "remaining": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "name": "selector246-1472843-1792550281453-05-candidate-default-short",
+      "removed": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      },
+      "remaining": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "name": "selector246-1472843-1792550281453-05-candidate-selected-short",
+      "removed": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      },
+      "remaining": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "finalCampaignCheck": {
+        "stdout": "",
+        "stderr": "",
+        "exit": 0,
+        "timedOut": false
+      }
+    }
+  ]
+}

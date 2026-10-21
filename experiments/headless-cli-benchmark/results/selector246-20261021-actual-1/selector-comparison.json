@@ -1,0 +1,32 @@
+{
+  "acceptance_passed": true,
+  "measurement": "offline reference tokens, not billing/cache/quality",
+  "deltas": {
+    "first_main_input_tokens_estimate": {
+      "default": 3459,
+      "selected": 2019,
+      "selected_minus_default": -1440,
+      "reduction_percent": 41.63052905464007
+    },
+    "session_input_tokens_estimate": {
+      "default": 15150,
+      "selected": 9390,
+      "selected_minus_default": -5760,
+      "reduction_percent": 38.01980198019802
+    },
+    "session_output_tokens_estimate": {
+      "default": 59,
+      "selected": 59,
+      "selected_minus_default": 0,
+      "reduction_percent": 0.0
+    },
+    "session_total_tokens_estimate": {
+      "default": 15209,
+      "selected": 9449,
+      "selected_minus_default": -5760,
+      "reduction_percent": 37.87231244657769
+    }
+  },
+  "campaign_sha256": "0c10185781dfbc4a21e5720d55641a35b31ff97243e78060a9dc1fc8c998c404",
+  "accounting_sha256": "5867bac1e4a5824fb06358eb148c21e7581a8bcfdc34b06beb8cd34ce768f96c"
+}
