@@ -1,0 +1,23 @@
+{
+  "imageId": "sha256:a8bd06679cfeed73feaee94f86b4e2c16c3913aaa86f5d1c36e61069dbede5be",
+  "matchingBaseId": "sha256:115e6dd65ebfb52349873367e6c80a3739e333314effc54293fb00a6b49e8978",
+  "binaryPath": "/usr/local/bin/aictrl",
+  "binarySha256": "c60d37a2d91de46abbbddccf10fdb0bb0c4940df9c2295ce42ba715344986874",
+  "version": "0.0.0-selector246-e807e4aacf5c",
+  "source": {
+    "path": "source-manifest.json",
+    "sha256": "e807e4aacf5c7e97f2500220f175533c38174601232d12e16bb0e0f4e7a34afe"
+  },
+  "generated": {
+    "path": "generated-manifest.json",
+    "sha256": "024c356da9f3b45970a58d125e3c0ec72bf0928ffc111e4de1833593080c1e05"
+  },
+  "dependencies": {
+    "path": "dependencies-manifest.json",
+    "sha256": "d9a4f45a65aeb314e2d981ac910059e5ff9fe3bece4fcd5c891c8804d63a5586"
+  },
+  "build": {
+    "path": "build-manifest.json",
+    "sha256": "cc4af75933ea51633f21404f0007be5f0afa233abad92aee65b58250c5210a89"
+  }
+}

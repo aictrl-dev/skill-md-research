@@ -1,0 +1,86 @@
+{
+  "startedUTC": "2026-10-21T02:35:52.635660+00:00",
+  "sourceOwnerReleaseSha256": "66aa91dd03792b45e95746c4180a486b4348bfced8d4fecd1f41303ec3073965",
+  "matchingBaseId": "sha256:115e6dd65ebfb52349873367e6c80a3739e333314effc54293fb00a6b49e8978",
+  "sourcePins": {
+    "source": {
+      "path": "/home/bulat/code/aictrl_main/docs/marketing/cli-execution/2026-10-21-selector/candidate-build-inputs-2/source-manifest.json",
+      "sha256": "e807e4aacf5c7e97f2500220f175533c38174601232d12e16bb0e0f4e7a34afe"
+    },
+    "generated": {
+      "path": "/home/bulat/code/aictrl_main/docs/marketing/cli-execution/2026-10-21-selector/candidate-build-inputs-2/generated-manifest.json",
+      "sha256": "024c356da9f3b45970a58d125e3c0ec72bf0928ffc111e4de1833593080c1e05"
+    },
+    "dependencies": {
+      "path": "/home/bulat/code/aictrl_main/docs/marketing/cli-execution/2026-10-21-selector/candidate-build-inputs-2/dependencies-manifest.json",
+      "sha256": "d9a4f45a65aeb314e2d981ac910059e5ff9fe3bece4fcd5c891c8804d63a5586"
+    }
+  },
+  "compilerSha256": "7ce7d6b654eddeec20afddf2396317fba6dc19ab52788a27e894e1806bf8f24b",
+  "targetCacheSha256": "7ce7d6b654eddeec20afddf2396317fba6dc19ab52788a27e894e1806bf8f24b",
+  "version": "0.0.0-selector246-e807e4aacf5c",
+  "channel": "benchmark",
+  "network": "none during compiler and final Docker build",
+  "installed": false,
+  "complete": true,
+  "canonicalBuildArgv": [
+    "docker",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--name",
+    "selector246-native-build-1464699-1792550152",
+    "--network",
+    "none",
+    "--user",
+    "1000:1000",
+    "--mount",
+    "type=bind,src=/home/bulat/code/cli-selector246-build-20261021,dst=/build/source",
+    "--mount",
+    "type=bind,src=/home/bulat/.bun/bin/bun,dst=/opt/compiler/bun,readonly",
+    "--mount",
+    "type=bind,src=/home/bulat/code/aictrl_main/docs/marketing/cli-execution/2026-10-21-selector/candidate-native-build-2/build-home,dst=/build/home",
+    "--workdir",
+    "/build/source",
+    "--entrypoint",
+    "/usr/bin/env",
+    "sha256:115e6dd65ebfb52349873367e6c80a3739e333314effc54293fb00a6b49e8978",
+    "-i",
+    "PATH=/opt/compiler:/usr/local/bin:/usr/bin:/bin",
+    "HOME=/build/home",
+    "XDG_CACHE_HOME=/build/home/xdg/cache",
+    "XDG_CONFIG_HOME=/build/home/xdg/config",
+    "XDG_DATA_HOME=/build/home/xdg/data",
+    "XDG_STATE_HOME=/build/home/xdg/state",
+    "AICTRL_VERSION=0.0.0-selector246-e807e4aacf5c",
+    "AICTRL_CHANNEL=benchmark",
+    "bun",
+    "run",
+    "packages/cli/script/build.ts",
+    "--single"
+  ],
+  "imageBuildArgv": [
+    "docker",
+    "build",
+    "--pull=false",
+    "--network=none",
+    "--tag",
+    "aictrl-harness-bench:aictrl-selector246-0120c64dcbcd40a7",
+    "/home/bulat/code/aictrl_main/docs/marketing/cli-execution/2026-10-21-selector/candidate-native-build-2/image-context"
+  ],
+  "imageId": "sha256:a8bd06679cfeed73feaee94f86b4e2c16c3913aaa86f5d1c36e61069dbede5be",
+  "imageTag": "aictrl-harness-bench:aictrl-selector246-0120c64dcbcd40a7",
+  "binarySha256": "c60d37a2d91de46abbbddccf10fdb0bb0c4940df9c2295ce42ba715344986874",
+  "binaryBytes": 105347040,
+  "binaryPath": "/usr/local/bin/aictrl",
+  "dockerfileSha256": "ea2f5379f01cf0b527414c90d5bb93a7b8e4d7953fc55e8b328ccd2049ff52ba",
+  "snapshotInputsUnchanged": true,
+  "binaryDeterminism": "Single build only; no bit-identical rebuild claim",
+  "cleanup": {
+    "removeExit": 0,
+    "removeStderr": "",
+    "inspectExit": 0,
+    "remainingContainerIds": []
+  },
+  "finishedUTC": "2026-10-21T02:36:10.827199+00:00"
+}

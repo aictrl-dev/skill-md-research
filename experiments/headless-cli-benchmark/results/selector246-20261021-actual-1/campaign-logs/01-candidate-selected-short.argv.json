@@ -1,0 +1,70 @@
+{
+  "argv": [
+    "docker",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--name",
+    "selector246-1472843-1792550281453-01-candidate-selected-short",
+    "--label",
+    "aictrl.harness-benchmark=selector246-1472843-1792550281453",
+    "--network",
+    "host",
+    "--user",
+    "10001:10001",
+    "--cpus",
+    "2",
+    "--memory",
+    "2g",
+    "--memory-swap",
+    "2g",
+    "-e",
+    "AICTRL_CONFIG_CONTENT={\"provider\":{\"fixture\":{\"npm\":\"@ai-sdk/openai-compatible\",\"options\":{\"apiKey\":\"fixture\",\"baseURL\":\"http://127.0.0.1:35173/v1\"},\"models\":{\"fixture\":{\"name\":\"fixture\",\"tool_call\":true,\"limit\":{\"context\":200000,\"output\":1000}}}}},\"permission\":{\"*\":\"allow\"}}",
+    "sha256:a8bd06679cfeed73feaee94f86b4e2c16c3913aaa86f5d1c36e61069dbede5be",
+    "/usr/local/bin/aictrl",
+    "run",
+    "--format",
+    "json",
+    "--model",
+    "fixture/fixture",
+    "--tools",
+    "read,bash,edit,write",
+    "BENCHTASK short: read notes-0.txt, notes-1.txt and notes-2.txt once each in order, then reply Done."
+  ],
+  "cliArgv": [
+    "/usr/local/bin/aictrl",
+    "run",
+    "--format",
+    "json",
+    "--model",
+    "fixture/fixture",
+    "--tools",
+    "read,bash,edit,write",
+    "BENCHTASK short: read notes-0.txt, notes-1.txt and notes-2.txt once each in order, then reply Done."
+  ],
+  "config": {
+    "provider": {
+      "fixture": {
+        "npm": "@ai-sdk/openai-compatible",
+        "options": {
+          "apiKey": "fixture",
+          "baseURL": "http://127.0.0.1:35173/v1"
+        },
+        "models": {
+          "fixture": {
+            "name": "fixture",
+            "tool_call": true,
+            "limit": {
+              "context": 200000,
+              "output": 1000
+            }
+          }
+        }
+      }
+    },
+    "permission": {
+      "*": "allow"
+    }
+  },
+  "inputManifestSha256": "e4a41132254999800649873c60fce649f562b222d04bc19fed65a9f12032952b"
+}

@@ -1,0 +1,228 @@
+{
+  "uid": 10001,
+  "home": [],
+  "binarySha256": "c60d37a2d91de46abbbddccf10fdb0bb0c4940df9c2295ce42ba715344986874",
+  "version": "0.0.0-selector246-e807e4aacf5c",
+  "fixtures": {
+    "notes.txt": {
+      "bytes": 340,
+      "sha256": "268a0ba51362b6181510ff8e8cea2804328d526cb07a97ce8fe56d995f5c64a0"
+    },
+    "big.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "notes-0.txt": {
+      "bytes": 340,
+      "sha256": "268a0ba51362b6181510ff8e8cea2804328d526cb07a97ce8fe56d995f5c64a0"
+    },
+    "notes-1.txt": {
+      "bytes": 340,
+      "sha256": "268a0ba51362b6181510ff8e8cea2804328d526cb07a97ce8fe56d995f5c64a0"
+    },
+    "notes-2.txt": {
+      "bytes": 340,
+      "sha256": "268a0ba51362b6181510ff8e8cea2804328d526cb07a97ce8fe56d995f5c64a0"
+    },
+    "big-0.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-1.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-2.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-3.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-4.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-5.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-6.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-7.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-8.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-9.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-10.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-11.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-12.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-13.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-14.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-15.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-16.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-17.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-18.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-19.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-20.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-21.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-22.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-23.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-24.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-25.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-26.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-27.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-28.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-29.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-30.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-31.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-32.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-33.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-34.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-35.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-36.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-37.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-38.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-39.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-40.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-41.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-42.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-43.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-44.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-45.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-46.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-47.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-48.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    },
+    "big-49.txt": {
+      "bytes": 48000,
+      "sha256": "1c756a4da138e2789f27bccbd48c08dcf99bcbf51bd27f7a4442b13b28b912db"
+    }
+  }
+}
