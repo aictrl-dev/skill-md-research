@@ -1,0 +1,130 @@
+{
+  "observed_at": "2026-10-22T11:55:09.975728+00:00",
+  "head_sha": "4c1a61f2d96af9fdb016bfb21c393f71b80c668a",
+  "environment": "sandbox",
+  "deployment_run": "https://github.com/aictrl-dev/aictrl/actions/runs/39770611449",
+  "deployment_result": "partial: Firebase Hosting step succeeded 11:29:47 UTC; overall run failed 11:53:04 UTC at integration drain fence; Cloud Run, DBOS worker and deployment verification skipped",
+  "public_artifact_count": 8,
+  "all_source_equals_live": true,
+  "artifacts": [
+    {
+      "path": "website/public/blog/feed.xml",
+      "requested_url": "https://aictrl-sandbox.web.app/blog/feed.xml",
+      "final_url": "https://aictrl-sandbox.web.app/blog/feed.xml",
+      "status": 200,
+      "bytes": 13036,
+      "sha256": "be7e964724e1e96dacc747ca83cc38e7bb22338d4acbd66d5eaf7b15bd812bbd",
+      "source_equals_live": true,
+      "content_type": "application/xml",
+      "date": "Thu, 22 Oct 2026 11:55:09 GMT"
+    },
+    {
+      "path": "website/public/blog/framework-matters.html",
+      "requested_url": "https://aictrl-sandbox.web.app/blog/framework-matters",
+      "final_url": "https://aictrl-sandbox.web.app/blog/framework-matters",
+      "status": 200,
+      "bytes": 58345,
+      "sha256": "67a54894e5de261bf47c240a1a7de0f51cae4cae61665ff9882a7ba8dff84e31",
+      "source_equals_live": true,
+      "content_type": "text/html; charset=utf-8",
+      "date": "Thu, 22 Oct 2026 11:55:09 GMT",
+      "canonical": [
+        "https://aictrl.dev/blog/framework-matters"
+      ],
+      "description": [
+        "Analysis of how AI coding agents perform differently across frameworks. Data showing why your choice of tools significantly impacts AI-assisted development outcomes."
+      ]
+    },
+    {
+      "path": "website/public/blog/headless-coding-agent-cli-benchmark.html",
+      "requested_url": "https://aictrl-sandbox.web.app/blog/headless-coding-agent-cli-benchmark",
+      "final_url": "https://aictrl-sandbox.web.app/blog/headless-coding-agent-cli-benchmark",
+      "status": 200,
+      "bytes": 70533,
+      "sha256": "9351a15043a569d7128d688d6b1337097a39b63676cfc1eaa29198b4e2336d6d",
+      "source_equals_live": true,
+      "content_type": "text/html; charset=utf-8",
+      "date": "Thu, 22 Oct 2026 11:55:09 GMT",
+      "canonical": [
+        "https://aictrl.dev/blog/headless-coding-agent-cli-benchmark"
+      ],
+      "description": [
+        "Six coding-agent CLIs measured for headless workflow automation: start-up, time per turn, memory, image size and tokens, from the system prompt to a 50-read session."
+      ]
+    },
+    {
+      "path": "website/public/blog/index.html",
+      "requested_url": "https://aictrl-sandbox.web.app/blog/",
+      "final_url": "https://aictrl-sandbox.web.app/blog",
+      "status": 200,
+      "bytes": 48017,
+      "sha256": "796a769ca7464f00f38cb19b5cc4472b89afcfc286e13c3ebdaf2649070628b9",
+      "source_equals_live": true,
+      "content_type": "text/html; charset=utf-8",
+      "date": "Thu, 22 Oct 2026 11:55:09 GMT",
+      "canonical": [
+        "https://aictrl.dev/blog"
+      ],
+      "description": [
+        "Research, analysis, and practical guides for engineering teams deploying AI agents in production. Stay ahead of the curve with data-driven insights from aictrl."
+      ]
+    },
+    {
+      "path": "website/public/blog/swe-evo-analysis.html",
+      "requested_url": "https://aictrl-sandbox.web.app/blog/swe-evo-analysis",
+      "final_url": "https://aictrl-sandbox.web.app/blog/swe-evo-analysis",
+      "status": 200,
+      "bytes": 54893,
+      "sha256": "e93fef35dce693cfd0210d9ef16bbc16553fa556691dfcdc6cfd716d9ff2175e",
+      "source_equals_live": true,
+      "content_type": "text/html; charset=utf-8",
+      "date": "Thu, 22 Oct 2026 11:55:09 GMT",
+      "canonical": [
+        "https://aictrl.dev/blog/swe-evo-analysis"
+      ],
+      "description": [
+        "What the SWE-EVO benchmark measures, why frontier models can need leaner prompts, and how to test your coding agent’s instructions, skills and tools."
+      ]
+    },
+    {
+      "path": "website/public/og-images/blog-swe-evo-analysis.png",
+      "requested_url": "https://aictrl-sandbox.web.app/og-images/blog-swe-evo-analysis.png",
+      "final_url": "https://aictrl-sandbox.web.app/og-images/blog-swe-evo-analysis.png",
+      "status": 200,
+      "bytes": 46673,
+      "sha256": "5af7fd84a82c9841aea94a919ddc4dd37ba543c2b8ced9ae83fdf27b2f3bd31c",
+      "source_equals_live": true,
+      "content_type": "image/png",
+      "date": "Thu, 22 Oct 2026 11:55:09 GMT"
+    },
+    {
+      "path": "website/public/signup.html",
+      "requested_url": "https://aictrl-sandbox.web.app/signup",
+      "final_url": "https://aictrl-sandbox.web.app/signup",
+      "status": 200,
+      "bytes": 11881,
+      "sha256": "1e589deba3cd1c9c41de3f6a776ceb7c4b1a5a4c193fb2f4466864fff6d56cd4",
+      "source_equals_live": true,
+      "content_type": "text/html; charset=utf-8",
+      "date": "Thu, 22 Oct 2026 11:55:09 GMT",
+      "canonical": [
+        "https://aictrl.dev/signup"
+      ],
+      "description": [
+        "Sign up with GitHub, Google, or a magic link to ground your AI agents in your codebase, team skills, and knowledge graph."
+      ]
+    },
+    {
+      "path": "website/public/sitemap.xml",
+      "requested_url": "https://aictrl-sandbox.web.app/sitemap.xml",
+      "final_url": "https://aictrl-sandbox.web.app/sitemap.xml",
+      "status": 200,
+      "bytes": 6330,
+      "sha256": "8dc8cc9a514d7e7064fae8751f8005cf146f26288d72719eb6767906867977a1",
+      "source_equals_live": true,
+      "content_type": "application/xml",
+      "date": "Thu, 22 Oct 2026 11:55:09 GMT"
+    }
+  ],
+  "limits": "Fresh HTTP GET and exact source-byte verification after successful Firebase Hosting publication within a failed overall sandbox deployment; no authentication action, production publication, index inclusion or acquisition outcome is established."
+}

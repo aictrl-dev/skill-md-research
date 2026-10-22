@@ -1,0 +1,24 @@
+{
+  "observed_at": "2026-10-22T11:44:45.127630+00:00",
+  "base_sha": "85ca67ac285c9355da6acb941a005b8c50126e57",
+  "head_sha": "ac7ef62e58a21984e32d719b05cc294a7de21e3e",
+  "promotion_tree": "3d91f02d0965900689948de90d50f3c0a537e36d",
+  "conflict_free": true,
+  "paths": [
+    ".claude/skills/write-blog-post/SKILL.md",
+    "scripts/ci/test-impact-policy.d.mts",
+    "scripts/ci/test-impact-policy.mjs",
+    "test/ci-test-impact.test.ts",
+    "website/public/blog/feed.xml",
+    "website/public/blog/framework-matters.html",
+    "website/public/blog/headless-coding-agent-cli-benchmark.html",
+    "website/public/blog/index.html",
+    "website/public/blog/swe-evo-analysis.html",
+    "website/public/og-images/blog-swe-evo-analysis.png",
+    "website/public/signup.html",
+    "website/public/sitemap.xml"
+  ],
+  "all_candidate_paths_equal_promotion": true,
+  "main_only_preserved": "website/public/blog/open-source-review-ai-era.html",
+  "limits": "Read-only tree check; not CI execution or deployment."
+}

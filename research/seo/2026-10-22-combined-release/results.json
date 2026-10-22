@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "head": "4c1a61f2d96af9fdb016bfb21c393f71b80c668a",
+  "files": 4,
+  "additions": 7,
+  "deletions": 5,
+  "category": "AI Assisted Analysis display / Analysis filter taxonomy",
+  "filterChecks": [
+    "Analysis includes SWE",
+    "Research excludes SWE",
+    "All restores SWE"
+  ],
+  "modifiedDates": {
+    "SWE": "2026-10-22",
+    "framework": "2026-10-21"
+  },
+  "preserved": [
+    "publication dates",
+    "SWE title/description/JSONLD",
+    "all hrefs",
+    "all three embedded stylesheets byte-identical",
+    "both WiT tables byte-identical"
+  ],
+  "hashes": {
+    "website/public/blog/framework-matters.html": "931876f341bcb8a0502b98abd628dae50ec8cc2fc6c048b307b31d3ab5d2e5c7",
+    "website/public/blog/index.html": "4c83255a118f01dd5c57aa514c2e9594d24e84ce05f249b4a3003558315a5d6f",
+    "website/public/blog/swe-evo-analysis.html": "ebdab1fa9eaf55383a95ff21b8918dbca2a7753c89d676b827f51e46b23f0974",
+    "website/public/llms.txt": "a2c81be5d86dc58c14598a702f99300905a60ddad12e53a68b05ccfd656a7bd2"
+  },
+  "finalHeadReadback": "57c596052c8f1180584e39ae1a73778110e7e21b",
+  "hashesStillMatch": true
+}

@@ -1,0 +1,66 @@
+{
+  "observed_at": "2026-10-22T11:34:13.234154+00:00",
+  "base_sha": "85ca67ac285c9355da6acb941a005b8c50126e57",
+  "head_sha": "4c1a61f2d96af9fdb016bfb21c393f71b80c668a",
+  "promotion_tree": "399adbea774c3b94d9994d9b23bf2172169f6589",
+  "conflict_free": true,
+  "path_count": 9,
+  "artifacts": [
+    {
+      "path": ".claude/skills/write-blog-post/SKILL.md",
+      "bytes": 26267,
+      "sha256": "ac984e4b3f51553240b24e7c116775deb0d2ae8287056292c68dd654804cfa60",
+      "candidate_equals_promotion": true
+    },
+    {
+      "path": "website/public/blog/feed.xml",
+      "bytes": 13036,
+      "sha256": "be7e964724e1e96dacc747ca83cc38e7bb22338d4acbd66d5eaf7b15bd812bbd",
+      "candidate_equals_promotion": true
+    },
+    {
+      "path": "website/public/blog/framework-matters.html",
+      "bytes": 58345,
+      "sha256": "67a54894e5de261bf47c240a1a7de0f51cae4cae61665ff9882a7ba8dff84e31",
+      "candidate_equals_promotion": true
+    },
+    {
+      "path": "website/public/blog/headless-coding-agent-cli-benchmark.html",
+      "bytes": 70533,
+      "sha256": "9351a15043a569d7128d688d6b1337097a39b63676cfc1eaa29198b4e2336d6d",
+      "candidate_equals_promotion": true
+    },
+    {
+      "path": "website/public/blog/index.html",
+      "bytes": 48017,
+      "sha256": "796a769ca7464f00f38cb19b5cc4472b89afcfc286e13c3ebdaf2649070628b9",
+      "candidate_equals_promotion": true
+    },
+    {
+      "path": "website/public/blog/swe-evo-analysis.html",
+      "bytes": 54893,
+      "sha256": "e93fef35dce693cfd0210d9ef16bbc16553fa556691dfcdc6cfd716d9ff2175e",
+      "candidate_equals_promotion": true
+    },
+    {
+      "path": "website/public/og-images/blog-swe-evo-analysis.png",
+      "bytes": 46673,
+      "sha256": "5af7fd84a82c9841aea94a919ddc4dd37ba543c2b8ced9ae83fdf27b2f3bd31c",
+      "candidate_equals_promotion": true
+    },
+    {
+      "path": "website/public/signup.html",
+      "bytes": 11881,
+      "sha256": "1e589deba3cd1c9c41de3f6a776ceb7c4b1a5a4c193fb2f4466864fff6d56cd4",
+      "candidate_equals_promotion": true
+    },
+    {
+      "path": "website/public/sitemap.xml",
+      "bytes": 6330,
+      "sha256": "8dc8cc9a514d7e7064fae8751f8005cf146f26288d72719eb6767906867977a1",
+      "candidate_equals_promotion": true
+    }
+  ],
+  "main_only_preserved": "website/public/blog/open-source-review-ai-era.html",
+  "kind": "read-only three-way tree preflight; no merge commit or deployment"
+}

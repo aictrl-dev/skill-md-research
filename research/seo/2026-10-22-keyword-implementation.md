@@ -2,6 +2,8 @@
 
 Follow-up to the [Keyword Planner study](2026-10-22-keyword-planner-and-skills.md), whose observations and limits remain unchanged. Research PR #15 merged into main at `4887646ed441e4108d96aee89d259f26a0223b0e`; its reviewed research contents match head `e8a55e7de15cecad35ea0cd570d007c61db8339c` byte-for-byte. This follow-up uses a new branch after that merge.
 
+Current-state pointer: the [11:55 UTC combined-release checkpoint](2026-10-22-combined-release/README.md) records article merge, expanded release scope, unmerged metadata follow-up and pending CI/deployment/live requirements. Earlier dated sections below are preserved as history.
+
 ## Bounded implementation
 
 The existing Search Console exposure for `swe evo` / `swe-evo` and the Planner ranges support retaining the benchmark as the primary intent. `Agent harness` remains a supporting term in the existing title. No volume ranges are summed, advertiser competition is not organic difficulty, and unrelated automotive suggestions are excluded.

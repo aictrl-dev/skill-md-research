@@ -1,0 +1,66 @@
+{
+  "run": 39770611449,
+  "runURL": "https://github.com/aictrl-dev/aictrl/actions/runs/39770611449",
+  "head": "4c1a61f2d96af9fdb016bfb21c393f71b80c668a",
+  "attempt": 1,
+  "job": "Build and Deploy to Sandbox",
+  "conclusion": "failure",
+  "completedAtUTC": "2026-10-22T11:53:04Z",
+  "selectedSteps": [
+    {
+      "number": 12,
+      "name": "Deploy Firebase Hosting",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-22T11:29:39Z",
+      "completed_at": "2026-10-22T11:29:47Z"
+    },
+    {
+      "number": 19,
+      "name": "Acquire and drain repository integration deployment fence",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-22T11:32:37Z",
+      "completed_at": "2026-10-22T11:52:42Z"
+    },
+    {
+      "number": 20,
+      "name": "Deploy to Cloud Run (Sandbox)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-22T11:52:42Z",
+      "completed_at": "2026-10-22T11:52:42Z"
+    },
+    {
+      "number": 21,
+      "name": "Deploy DBOS executor worker (Sandbox)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-22T11:52:42Z",
+      "completed_at": "2026-10-22T11:52:42Z"
+    },
+    {
+      "number": 22,
+      "name": "Verify deployment",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-22T11:52:42Z",
+      "completed_at": "2026-10-22T11:52:42Z"
+    },
+    {
+      "number": 23,
+      "name": "Release repository integration deployment fence",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-22T11:52:42Z",
+      "completed_at": "2026-10-22T11:52:44Z"
+    }
+  ],
+  "fenceDiagnostic": {
+    "atUTC": "2026-10-22T11:52:42.767Z",
+    "message": "Timed out draining 1 active repository integration run(s).",
+    "source": "Captured GitHub job log line supplied with the terminal review."
+  },
+  "fenceReleaseCompletedAtUTC": "2026-10-22T11:52:44.638Z",
+  "limits": "Minimal public job/step receipt; runner metadata, raw environments and logs omitted. Successful Hosting publication is distinct from the failed overall deployment and skipped backend/worker/health steps. No rerun, cancellation, lock mutation or production deployment is claimed."
+}
