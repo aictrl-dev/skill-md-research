@@ -1,0 +1,26 @@
+{
+  "url": "https://aictrl-sandbox.web.app/signup",
+  "finalURL": "https://aictrl-sandbox.web.app/signup",
+  "httpStatus": 200,
+  "contentType": "text/html; charset=utf-8",
+  "sha256": "1e589deba3cd1c9c41de3f6a776ceb7c4b1a5a4c193fb2f4466864fff6d56cd4",
+  "bytes": 11881,
+  "sourceCommit": "3e7f4baae4079317d613b8ddc043d2ce2fc55b2e",
+  "sandboxMerge": "e26b933688eb35294d0ff44ca69b78bd02c2a4e9",
+  "sourceBuiltAndLiveBytesEqual": true,
+  "deployRun": 39762498046,
+  "deployConclusion": "success",
+  "deployCompletedUTC": "2026-10-22T10:24:05Z",
+  "renderedDOM": {
+    "forms": 0,
+    "emailInputs": 0,
+    "emailLabel": "Continue with email in aictrl",
+    "emailHref": "https://app.aictrl.dev/",
+    "describedBy": "email-next-step",
+    "description": "Enter your email on the next screen to request a magic link."
+  },
+  "limits": [
+    "Sandbox evidence only; no production promotion or live production body hash established.",
+    "No email, OAuth, terms acceptance or provider action activated. No successful authentication, magic-link delivery or model execution claimed."
+  ]
+}

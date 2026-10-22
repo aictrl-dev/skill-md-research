@@ -47,4 +47,14 @@ Signup PR #6442 merged into sandbox at `e26b933688eb35294d0ff44ca69b78bd02c2a4e9
 
 Production main `85ca67ac285c9355da6acb941a005b8c50126e57` predates the signup merge and retains the old form in source. Its deployment run `39762334762` succeeded at 10:25:46 UTC. A direct HTTP probe was denied on the probing path, and a search-tool fetch was stale; neither supplies a fresh public signup body/hash. Production promotion and fresh live verification remain outstanding.
 
+## Signup release preparation — 11:13 UTC checkpoint
+
+The [fresh sandbox receipt](2026-10-22-signup-release/sandbox-live.json) verifies HTTP 200 at `https://aictrl-sandbox.web.app/signup`, with all 11,881 bytes equal to the source and built candidate (SHA-256 `1e589deba3cd1c9c41de3f6a776ceb7c4b1a5a4c193fb2f4466864fff6d56cd4`). Browser DOM confirms zero forms/email inputs, the bare app-root email link and its visible `aria-describedby` explanation. No email, provider action or terms acceptance was activated. This is deployed sandbox verification, not production or authentication success.
+
+The [promotion preflight](2026-10-22-signup-release/promotion-preflight.json) is conflict-free against main `85ca67ac285c9355da6acb941a005b8c50126e57` and sandbox `e26b933688eb35294d0ff44ca69b78bd02c2a4e9`: tree `da1ae6fc0c08629550c1bd6eb0197941296c397e`. Only signup differs from main in the proposed merge result. Main-only changes to the open-source review article are preserved; comparing branch tips directly would misleadingly include that article difference.
+
+[Draft production release PR #6446](https://github.com/aictrl-dev/aictrl/pull/6446), created **11:12:32 UTC**, promotes sandbox to main with one changed signup file (seven additions / ten deletions), links #6439 and matches milestone 85. It adds no source commit or deployment. SWE-EVO remains in separate unmerged #6434 and is absent from this release head.
+
+New release-boundary CI `39768849728` and Static Checks `39768849694` are running at this checkpoint. Older sandbox deploy/check results share head `e26b933...` but do not establish these new release-event checks. E2E/Gherkin workflow gates pass with actual selected tests skipped. Review monitoring is scheduled for 11:17:32–11:42:32 UTC; no release-head verdict or green result is inferred. The normal production merge/deploy and exact live verification remain pending.
+
 The full Days 1–5 objective remains incomplete: approved acquisition/consent semantics (#4665), an authorized successful real-provider journey, release/live/index evidence and qualified-traffic measurement remain open. This pass spent USD 0 and installed no MCP, OAuth grant or paid service.

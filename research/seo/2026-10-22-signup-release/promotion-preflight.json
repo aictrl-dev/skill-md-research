@@ -1,0 +1,13 @@
+{
+  "main": "85ca67ac285c9355da6acb941a005b8c50126e57",
+  "sandbox": "e26b933688eb35294d0ff44ca69b78bd02c2a4e9",
+  "promotionTree": "da1ae6fc0c08629550c1bd6eb0197941296c397e",
+  "conflicts": false,
+  "diffFromMain": [
+    "website/public/signup.html"
+  ],
+  "signupMatchesSandbox": true,
+  "mainOnlyBlogChangePreserved": true,
+  "signupSourceSha256": "1e589deba3cd1c9c41de3f6a776ceb7c4b1a5a4c193fb2f4466864fff6d56cd4",
+  "limitations": "Read-only merge-tree preflight only: no merge commit, release PR, production deployment, built-body hash or live result created."
+}
