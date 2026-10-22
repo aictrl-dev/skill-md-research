@@ -1,0 +1,110 @@
+{
+  "purpose": "maintainer_catalog_refresh",
+  "classification": "Internal metadata maintenance; never organic adoption or qualified traffic",
+  "status": "PASS",
+  "installAttempts": 1,
+  "startedAt": "2026-10-22T18:22:51.420006+00:00",
+  "finishedAt": "2026-10-22T18:22:55.040619+00:00",
+  "command": [
+    "/tmp/aictrl-skills-catalog-refresh-20261022-Q2KWia/node-v22.20.0-linux-x64/bin/node",
+    "/tmp/aictrl-skills-catalog-refresh-20261022-Q2KWia/cli-install/node_modules/skills/bin/cli.mjs",
+    "add",
+    "aictrl-dev/skills",
+    "--skill",
+    "spec-review",
+    "--agent",
+    "opencode",
+    "--yes",
+    "--copy",
+    "--json"
+  ],
+  "cwd": "/tmp/aictrl-skills-catalog-refresh-20261022-Q2KWia/project",
+  "nodeVersion": "22.20.0",
+  "skillsCliVersion": "1.7.4",
+  "cliIntegrity": "sha512-lHZJksE8UImNAr+LL6unqq7jERjdFw5EJasm17srycwL7rXHGdCmgu1L1ttLxUO9i3rdH+QQig+px0icHqLmRw==",
+  "cliArchiveIntegrityVerified": true,
+  "nodeOfficialArchiveSha256": "00bbd05e306ea68b6e13e17360d0e2f680b493ef95f2fea1c4296ff7437530bc",
+  "source": "aictrl-dev/skills",
+  "requestedRef": "default branch (no explicit ref supplied)",
+  "defaultHeadBeforeInstall": "bbd2329fd68a4b9037e837142f31b4b34ddff768",
+  "requestedSkill": "spec-review",
+  "agent": "opencode",
+  "projectLocal": true,
+  "exitCode": 0,
+  "cliResult": [
+    {
+      "name": "spec-review",
+      "status": "installed",
+      "source": "aictrl-dev/skills",
+      "ref": null,
+      "hash": "0c659ed5b3e18ae076c6f373809d4370944338f9133b04872d6df74edfb7238c",
+      "path": "/tmp/aictrl-skills-catalog-refresh-20261022-Q2KWia/project/.agents/skills/spec-review",
+      "scope": "project",
+      "agents": [
+        "OpenCode"
+      ],
+      "mode": "copy",
+      "security": {
+        "gen": "safe",
+        "socket": "0 alerts",
+        "snyk": "medium",
+        "details": "https://skills.sh/aictrl-dev/skills"
+      }
+    }
+  ],
+  "installedProjectFiles": [
+    ".agents/skills/spec-review/SKILL.md",
+    ".agents/skills/spec-review/reference/contract-impact.md",
+    "skills-lock.json"
+  ],
+  "telemetry": {
+    "requestedEnabled": true,
+    "inheritedOptOutFlags": {
+      "DISABLE_TELEMETRY": false,
+      "DO_NOT_TRACK": false
+    },
+    "noOptOutChangedOrRemoved": true,
+    "sourceGuard": "!process.env.DISABLE_TELEMETRY && !process.env.DO_NOT_TRACK",
+    "scopeReviewed": "Anonymous public repository/skill identifiers, skill-file relative metadata, target-agent names, CLI version/context; no credentials or private project content supplied. Public-repository audits are also enabled.",
+    "metadataFlagUsed": false,
+    "deliveryAcknowledgement": "CLI does not expose telemetry delivery acceptance; successful install is not proof of server-side metadata refresh or cache propagation.",
+    "officialDocs": [
+      "https://skills.sh/docs/customize",
+      "https://skills.sh/docs/cli"
+    ],
+    "packagedDocumentation": "/tmp/aictrl-skills-catalog-refresh-20261022-Q2KWia/package/docs/troubleshooting.md"
+  },
+  "isolation": {
+    "environmentKeys": [
+      "GIT_CONFIG_GLOBAL",
+      "GIT_CONFIG_NOSYSTEM",
+      "GIT_TERMINAL_PROMPT",
+      "NODE_COMPILE_CACHE",
+      "PATH",
+      "TMPDIR",
+      "XDG_CACHE_HOME",
+      "XDG_CONFIG_HOME",
+      "XDG_DATA_HOME",
+      "XDG_STATE_HOME"
+    ],
+    "homeNotRepurposed": true,
+    "xdgPathsAllInsideFreshDirectory": true,
+    "credentialsNotInherited": true,
+    "gitGlobalAndSystemConfigBypassed": true,
+    "globalProjectDependenciesUnchanged": true,
+    "temporaryCliDependenciesOnly": "/tmp/aictrl-skills-catalog-refresh-20261022-Q2KWia/cli-install"
+  },
+  "rawOutputs": {
+    "help": "/tmp/aictrl-skills-catalog-refresh-20261022-Q2KWia/help.log",
+    "version": "/tmp/aictrl-skills-catalog-refresh-20261022-Q2KWia/version.log",
+    "install": "/tmp/aictrl-skills-catalog-refresh-20261022-Q2KWia/install.json",
+    "stderr": "/tmp/aictrl-skills-catalog-refresh-20261022-Q2KWia/install.stderr",
+    "cliSetup": "/tmp/aictrl-skills-catalog-refresh-20261022-Q2KWia/cli-setup.log"
+  },
+  "limits": [
+    "Exactly one skill install attempted; no all-skills, repeated installs, refresh polls or uninstall.",
+    "No model/provider/MCP/auth/sign-in/credential creation, private-file payload, production tools or tracking changes.",
+    "Root owns the single public catalog UI check; QA stops after this receipt.",
+    "No repository edits/reset/commit/push/global dependency changes."
+  ]
+}

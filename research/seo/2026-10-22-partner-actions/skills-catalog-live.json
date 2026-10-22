@@ -1,0 +1,40 @@
+{
+  "observed_at": "2026-10-22T18:23Z",
+  "method": "Native Chrome DOM via CUA, reload after one controlled maintainer install",
+  "url": "https://skills.sh/aictrl-dev/skills",
+  "visible_skill_count": 13,
+  "displayed_total_installs": 91,
+  "groups": [
+    "Plan and build",
+    "Review changes",
+    "Design and test",
+    "Run workflows",
+    "Investigate and share"
+  ],
+  "absent_catalog_skills": [
+    "execute-workflow",
+    "explain-change",
+    "ui-polish",
+    "ux-testing"
+  ],
+  "source_pr": "https://github.com/aictrl-dev/skills/pull/88",
+  "merged_at": "2026-10-22T18:16:08Z",
+  "merge_commit": "bbd2329fd68a4b9037e837142f31b4b34ddff768",
+  "merged_file_sha256": "a6f5f16796e2c797c3c56a734552412e018dc7653fd5f4cfebe749e4c660663c",
+  "merged_file_bytes": 1445,
+  "merged_default_branch_byte_parity": true,
+  "validation": "Official schema/format validation; all 17 canonical source slugs covered once; plugin/skill validators; diff check",
+  "ci": "All applicable PR checks passed; production MCP contract skipped because main-only",
+  "ai_review": {
+    "verdict": "Looks good",
+    "findings": 0,
+    "url": "https://github.com/aictrl-dev/skills/pull/88#issuecomment-6347953499"
+  },
+  "limits": [
+    "Task grouping visibly live; no new catalog inclusion inferred.",
+    "One telemetry-enabled internal metadata-maintenance install; exclude from organic adoption and qualified acquisition.",
+    "No ranking, qualified traffic or revenue improvement claimed."
+  ],
+  "new_spend_usd": 0,
+  "timestamp_precision": "minute"
+}
