@@ -1,0 +1,19 @@
+{
+  "head": "4dd6cc64829a908952d2b6dd70a6df2a20afadee",
+  "sandbox": "e26b933688eb35294d0ff44ca69b78bd02c2a4e9",
+  "integrationTree": "f921116166cce31a55698021a6c709fb1249db1f",
+  "conflicts": false,
+  "candidateFilesMatchHead": true,
+  "sandboxSignupPreserved": true,
+  "sourceHashes": {
+    ".claude/skills/write-blog-post/SKILL.md": "ac984e4b3f51553240b24e7c116775deb0d2ae8287056292c68dd654804cfa60",
+    "website/public/blog/feed.xml": "be7e964724e1e96dacc747ca83cc38e7bb22338d4acbd66d5eaf7b15bd812bbd",
+    "website/public/blog/framework-matters.html": "67a54894e5de261bf47c240a1a7de0f51cae4cae61665ff9882a7ba8dff84e31",
+    "website/public/blog/headless-coding-agent-cli-benchmark.html": "9351a15043a569d7128d688d6b1337097a39b63676cfc1eaa29198b4e2336d6d",
+    "website/public/blog/index.html": "796a769ca7464f00f38cb19b5cc4472b89afcfc286e13c3ebdaf2649070628b9",
+    "website/public/blog/swe-evo-analysis.html": "e93fef35dce693cfd0210d9ef16bbc16553fa556691dfcdc6cfd716d9ff2175e",
+    "website/public/og-images/blog-swe-evo-analysis.png": "5af7fd84a82c9841aea94a919ddc4dd37ba543c2b8ced9ae83fdf27b2f3bd31c",
+    "website/public/sitemap.xml": "8dc8cc9a514d7e7064fae8751f8005cf146f26288d72719eb6767906867977a1"
+  },
+  "limitations": "Read-only integration-tree/source preflight; no merge commit, deployed/build-output hash or live result."
+}

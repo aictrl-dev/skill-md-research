@@ -1,0 +1,63 @@
+{
+  "status": "PASS",
+  "head": "0527af498b00d5df33781c41fd4b939f996eb9af",
+  "scope": [
+    "website/public/blog/feed.xml",
+    "website/public/blog/headless-coding-agent-cli-benchmark.html",
+    "website/public/blog/index.html",
+    "website/public/blog/swe-evo-analysis.html",
+    "website/public/sitemap.xml"
+  ],
+  "description": "What the SWE-EVO benchmark measures, why frontier models can need leaner prompts, and how to test your coding agent’s instructions, skills and tools.",
+  "descriptionCharacters": 149,
+  "published": "2026-02-02",
+  "modified": "2026-10-22",
+  "feedPublication": "Mon, 02 Feb 2026 00:00:00 GMT",
+  "localAnchorReferences": [
+    {
+      "source": "website/public/blog/swe-evo-analysis.html",
+      "href": "#what-changed"
+    },
+    {
+      "source": "website/public/blog/swe-evo-analysis.html",
+      "href": "#context-decisions"
+    },
+    {
+      "source": "website/public/blog/swe-evo-analysis.html",
+      "href": "#what-is-swe-evo"
+    },
+    {
+      "source": "website/public/blog/swe-evo-analysis.html",
+      "href": "#quality-versus-overhead"
+    },
+    {
+      "source": "website/public/blog/swe-evo-analysis.html",
+      "href": "#evaluation-example"
+    },
+    {
+      "source": "website/public/blog/swe-evo-analysis.html",
+      "href": "/agent#quickstart"
+    },
+    {
+      "source": "website/public/blog/headless-coding-agent-cli-benchmark.html",
+      "href": "/blog/swe-evo-analysis#what-is-swe-evo"
+    },
+    {
+      "source": "website/public/blog/headless-coding-agent-cli-benchmark.html",
+      "href": "/blog/swe-evo-analysis#evaluation-example"
+    }
+  ],
+  "preserved": [
+    "title/URL/OG image",
+    "SWE benchmark results table/token comparison/prompts/sources/CSS",
+    "all external URLs",
+    "CLI findings tables/figures/metadata/publication dates; body only gains contextual paragraph"
+  ],
+  "hashes": {
+    "website/public/blog/feed.xml": "be7e964724e1e96dacc747ca83cc38e7bb22338d4acbd66d5eaf7b15bd812bbd",
+    "website/public/blog/headless-coding-agent-cli-benchmark.html": "9351a15043a569d7128d688d6b1337097a39b63676cfc1eaa29198b4e2336d6d",
+    "website/public/blog/index.html": "796a769ca7464f00f38cb19b5cc4472b89afcfc286e13c3ebdaf2649070628b9",
+    "website/public/blog/swe-evo-analysis.html": "e93fef35dce693cfd0210d9ef16bbc16553fa556691dfcdc6cfd716d9ff2175e",
+    "website/public/sitemap.xml": "8dc8cc9a514d7e7064fae8751f8005cf146f26288d72719eb6767906867977a1"
+  }
+}
