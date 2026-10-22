@@ -1,0 +1,989 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "aictrl referral and search research ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "meta",
+    "sources",
+    "evidence",
+    "clusters",
+    "assets",
+    "keywords",
+    "campaigns",
+    "events",
+    "budget_entries"
+  ],
+  "properties": {
+    "meta": {
+      "$ref": "#/$defs/meta"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      }
+    },
+    "clusters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/cluster"
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/asset"
+      }
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/keyword"
+      }
+    },
+    "campaigns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/campaign"
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/event"
+      }
+    },
+    "budget_entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/budget"
+      }
+    }
+  },
+  "$defs": {
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "as_of",
+        "last_recorded_on",
+        "owner",
+        "nsm",
+        "scope",
+        "partner_budget_usd",
+        "historical_budget_reconciled",
+        "search_ads_budget_usd",
+        "notes"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date"
+        },
+        "last_recorded_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nsm": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "const": "research_and_preparation"
+        },
+        "partner_budget_usd": {
+          "const": 200
+        },
+        "historical_budget_reconciled": {
+          "type": "boolean"
+        },
+        "search_ads_budget_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "subject_id",
+        "kind",
+        "url",
+        "observed_on",
+        "claim",
+        "limitation"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "kind": {
+          "enum": [
+            "primary",
+            "native_ui",
+            "receipt",
+            "founder_confirmation",
+            "live_page",
+            "account_snapshot",
+            "product_page"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "observed_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "limitation": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "cluster": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "intent",
+        "priority",
+        "demand_assessment"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "intent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "priority": {
+          "enum": [
+            "P0",
+            "P1",
+            "P2"
+          ]
+        },
+        "demand_assessment": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "url",
+        "readiness",
+        "gap",
+        "next_step"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "readiness": {
+          "enum": [
+            "ready_for_research",
+            "needs_copy",
+            "needs_demo",
+            "needs_validation"
+          ]
+        },
+        "gap": {
+          "type": "string",
+          "minLength": 1
+        },
+        "next_step": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "offer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "billing",
+        "amount_usd",
+        "all_in_verified",
+        "duration",
+        "decision",
+        "reason",
+        "terms_unknown",
+        "evidence_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "billing": {
+          "enum": [
+            "free",
+            "one_time",
+            "recurring",
+            "quote",
+            "unknown"
+          ]
+        },
+        "amount_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "all_in_verified": {
+          "type": "boolean"
+        },
+        "duration": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision": {
+          "enum": [
+            "free_first",
+            "evaluate",
+            "hold",
+            "reject"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "terms_unknown": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "window_start",
+        "window_end",
+        "evidence_id",
+        "referred_visitors",
+        "qualified_visitors",
+        "spend_usd",
+        "note"
+      ],
+      "properties": {
+        "window_start": {
+          "type": "string",
+          "format": "date"
+        },
+        "window_end": {
+          "type": "string",
+          "format": "date"
+        },
+        "evidence_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "referred_visitors": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "qualified_visitors": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "spend_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "due_on",
+        "owner",
+        "mode",
+        "estimated_hours"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "due_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mode": {
+          "enum": [
+            "prepare",
+            "check_existing",
+            "verify_route",
+            "human_only",
+            "hold"
+          ]
+        },
+        "estimated_hours": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "operator_family",
+        "category",
+        "priority",
+        "decision",
+        "status",
+        "audience",
+        "capabilities",
+        "cluster_ids",
+        "asset_ids",
+        "destination_url",
+        "hypothesis",
+        "eligibility",
+        "link_value",
+        "evidence_ids",
+        "status_evidence_ids",
+        "live_url",
+        "depends_on",
+        "offers",
+        "next_action",
+        "outcomes"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "operator_family": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "enum": [
+            "catalog",
+            "client",
+            "package",
+            "curation",
+            "automation",
+            "directory",
+            "publisher",
+            "community"
+          ]
+        },
+        "priority": {
+          "enum": [
+            "P0",
+            "P1",
+            "P2"
+          ]
+        },
+        "decision": {
+          "enum": [
+            "pursue",
+            "maintain",
+            "monitor",
+            "hold",
+            "reject"
+          ]
+        },
+        "status": {
+          "enum": [
+            "candidate",
+            "prepared",
+            "submitted",
+            "live",
+            "waiting_external",
+            "paused",
+            "rejected"
+          ]
+        },
+        "audience": {
+          "type": "string",
+          "minLength": 1
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "sdlc",
+              "software_factory",
+              "automation",
+              "plugin",
+              "skills",
+              "cli",
+              "mcp",
+              "code_review",
+              "knowledge"
+            ]
+          }
+        },
+        "cluster_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "asset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "destination_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "hypothesis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "eligibility": {
+          "type": "string",
+          "minLength": 1
+        },
+        "link_value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "status_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "live_url": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "depends_on": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "offers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/offer"
+          }
+        },
+        "next_action": {
+          "$ref": "#/$defs/action"
+        },
+        "outcomes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/outcome"
+          }
+        }
+      }
+    },
+    "planner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "market",
+        "monthly_low",
+        "monthly_high",
+        "cpc_low_usd",
+        "cpc_high_usd",
+        "window_start",
+        "window_end",
+        "network",
+        "language"
+      ],
+      "properties": {
+        "market": {
+          "enum": [
+            "US",
+            "GB"
+          ]
+        },
+        "monthly_low": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "monthly_high": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "cpc_low_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "cpc_high_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "window_start": {
+          "type": "string",
+          "format": "date"
+        },
+        "window_end": {
+          "type": "string",
+          "format": "date"
+        },
+        "network": {
+          "const": "Google Search"
+        },
+        "language": {
+          "const": "English"
+        }
+      }
+    },
+    "gsc": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "clicks",
+        "impressions",
+        "position",
+        "window_start",
+        "window_end",
+        "property",
+        "search_type",
+        "timezone"
+      ],
+      "properties": {
+        "clicks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "impressions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "position": {
+          "type": "number",
+          "minimum": 0
+        },
+        "window_start": {
+          "type": "string",
+          "format": "date"
+        },
+        "window_end": {
+          "type": "string",
+          "format": "date"
+        },
+        "property": {
+          "const": "https://aictrl.dev/"
+        },
+        "search_type": {
+          "const": "Web"
+        },
+        "timezone": {
+          "const": "Pacific daily dates"
+        }
+      }
+    },
+    "keyword": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "phrase",
+        "cluster_id",
+        "intent",
+        "planner",
+        "gsc",
+        "evidence_ids",
+        "decision",
+        "caveat"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phrase": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cluster_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "intent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "planner": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/planner"
+          }
+        },
+        "gsc": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/gsc"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "decision": {
+          "enum": [
+            "prepare_exact_phrase",
+            "content_support",
+            "research_only"
+          ]
+        },
+        "caveat": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "campaign": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "cluster_id",
+        "asset_id",
+        "state",
+        "markets",
+        "language",
+        "network",
+        "match_types",
+        "keywords",
+        "negative_keywords",
+        "headlines",
+        "descriptions",
+        "budget_usd",
+        "max_cpc_usd",
+        "launch_blockers"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cluster_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "asset_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "const": "draft_paused"
+        },
+        "markets": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "US",
+              "GB"
+            ]
+          }
+        },
+        "language": {
+          "const": "English"
+        },
+        "network": {
+          "const": "Google Search only; partners and Display excluded in proposal"
+        },
+        "match_types": {
+          "const": [
+            "exact",
+            "phrase"
+          ]
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "negative_keywords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "headlines": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30
+          },
+          "minItems": 3,
+          "maxItems": 15
+        },
+        "descriptions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 90
+          },
+          "minItems": 2,
+          "maxItems": 4
+        },
+        "budget_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "max_cpc_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "launch_blockers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_id",
+        "evidence_id",
+        "observed_on",
+        "from_status",
+        "to_status",
+        "note"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observed_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "from_status": {
+          "enum": [
+            "candidate",
+            "prepared",
+            "submitted",
+            "live",
+            "waiting_external",
+            "paused",
+            "rejected"
+          ]
+        },
+        "to_status": {
+          "enum": [
+            "candidate",
+            "prepared",
+            "submitted",
+            "live",
+            "waiting_external",
+            "paused",
+            "rejected"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_id",
+        "evidence_id",
+        "amount_usd",
+        "state",
+        "on",
+        "note"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "amount_usd": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "state": {
+          "enum": [
+            "committed_unpaid",
+            "spent"
+          ]
+        },
+        "on": {
+          "type": "string",
+          "format": "date"
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

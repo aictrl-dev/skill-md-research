@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "observedAt": "2026-10-22T22:43:16.601257+00:00",
+  "ownership": "research/seo/acquisition/tests/test_engine.py only",
+  "command": "python3 -B -m unittest discover -s research/seo/acquisition/tests -p test_engine.py -v",
+  "cwd": "/home/bulat/code/skill-md-research-referrals-20261022",
+  "result": {
+    "testMethods": 28,
+    "failed": 0,
+    "errors": 0,
+    "elapsedSeconds": 2.183,
+    "exitCode": 0
+  },
+  "resolvedFindings": [
+    {
+      "issue": "Outcome evidence FK missing and source subject unchecked",
+      "regression": "test_outcome_evidence_must_exist_and_identify_source",
+      "fixedBy": "parent engine owner; QA did not edit engine/schema"
+    },
+    {
+      "issue": "Event and budget evidence could belong to a different source",
+      "regression": "test_event_and_budget_evidence_must_identify_source",
+      "fixedBy": "parent engine owner"
+    },
+    {
+      "issue": "Unknown/null-price offer could be labelled free_first",
+      "regression": "test_unknown_offer_cannot_be_classified_free_first",
+      "fixedBy": "parent engine owner"
+    }
+  ],
+  "coverageScope": [
+    "Duplicate IDs in all eight collections and per-source offers",
+    "Dangling source/evidence/cluster/asset/event/budget references and cycles",
+    "Status evidence requires same source/accepted receipt kind; live requires HTTPS URL",
+    "Unknown price remains null/blank, never explicit free or free_first",
+    "Cumulative committed_unpaid plus spent cap, exact decimal cap, nonpositive rejection",
+    "Unknown historical reconciliation reports available budget null",
+    "Paused Search drafts and 30/90-character boundaries",
+    "Invalid record update leaves input/history unchanged; successful update independent",
+    "Failed atomic replacement/serialization preserves original and cleans temp files",
+    "CSV formula safety includes leading whitespace, tab/CR/newline and real exports"
+  ],
+  "limits": [
+    "Independent synthetic fixtures, not mutable live ledger used as fixture.",
+    "No full repository suite, Docker, external actions, store mutation or deployment.",
+    "No engine/schema/store edits by QA; concurrent parent edits preserved.",
+    "No comprehensive coverage percentage or validation of all research claims/current data asserted.",
+    "Final rerun was exactly the same bounded suite after fixes, per parent instruction."
+  ]
+}

@@ -1,0 +1,36 @@
+id,phrase,cluster,market,monthly_low,monthly_high,cpc_low_usd,cpc_high_usd,gsc_clicks,gsc_impressions,gsc_position,intent
+kw-01,sdlc orchestrator,orchestration,not_collected,,,,,0,5,8.2,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-02,sdlc orchestration,orchestration,not_collected,,,,,0,1,11.0,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-03,software factory ai,orchestration,not_collected,,,,,1,1,88.0,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-04,ai software factory,orchestration,not_collected,,,,,0,4,13.5,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-05,aisdlc,orchestration,not_collected,,,,,0,1,67.0,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-06,ai code review,review,not_collected,,,,,0,7,61.1,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-07,ai code reviewer,review,not_collected,,,,,0,1,60.0,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-08,deterministic ai code review,review,not_collected,,,,,0,2,66.5,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-09,ai agent plugins,clients,not_collected,,,,,0,2,49.5,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-10,ai agent plugin,clients,not_collected,,,,,0,1,60.0,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-11,agent knowledge graph for code,knowledge,not_collected,,,,,0,2,21.0,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-12,knowledge graph for ai agents,knowledge,not_collected,,,,,0,2,58.5,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-13,agentic context graph,knowledge,not_collected,,,,,0,2,18.5,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-14,workflow as code,workflows,not_collected,,,,,0,0,0,Informational or ambiguous; do not buy broad expansion automatically.
+kw-15,workflows as code,workflows,not_collected,,,,,0,0,0,Informational or ambiguous; do not buy broad expansion automatically.
+kw-16,agent harness,cli,GB,100,1000,,,,,,Informational or ambiguous; do not buy broad expansion automatically.
+kw-16,agent harness,cli,US,1000,10000,,,,,,Informational or ambiguous; do not buy broad expansion automatically.
+kw-17,harness engineering,cli,GB,100,1000,,,,,,Informational or ambiguous; do not buy broad expansion automatically.
+kw-17,harness engineering,cli,US,1000,10000,,,,,,Informational or ambiguous; do not buy broad expansion automatically.
+kw-18,context engineering,skills,GB,100,1000,,,,,,Informational or ambiguous; do not buy broad expansion automatically.
+kw-18,context engineering,skills,US,1000,10000,,,,,,Informational or ambiguous; do not buy broad expansion automatically.
+kw-19,claude code system prompt,skills,GB,100,1000,,,,,,Informational or ambiguous; do not buy broad expansion automatically.
+kw-19,claude code system prompt,skills,US,1000,10000,,,,,,Informational or ambiguous; do not buy broad expansion automatically.
+kw-20,agents md,skills,GB,100,1000,,,,,,Informational or ambiguous; do not buy broad expansion automatically.
+kw-20,agents md,skills,US,1000,10000,,,,,,Informational or ambiguous; do not buy broad expansion automatically.
+kw-21,swe evo,skills,GB,10,100,,,2,27,8.1,Informational or ambiguous; do not buy broad expansion automatically.
+kw-21,swe evo,skills,US,10,100,,,2,27,8.1,Informational or ambiguous; do not buy broad expansion automatically.
+kw-22,swe evo benchmark,skills,GB,10,100,,,,,,Informational or ambiguous; do not buy broad expansion automatically.
+kw-22,swe evo benchmark,skills,US,10,100,,,,,,Informational or ambiguous; do not buy broad expansion automatically.
+kw-23,headless coding agent,cli,not_collected,,,,,,,,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-24,ai sdlc automation,orchestration,not_collected,,,,,,,,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-25,claude ai mcp integration,clients,not_collected,,,,,,,,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-26,chatgpt engineering plugin,clients,not_collected,,,,,,,,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.
+kw-27,agent skills library,skills,not_collected,,,,,,,,Informational or ambiguous; do not buy broad expansion automatically.
+kw-28,pull request explanation,review,not_collected,,,,,,,,Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.

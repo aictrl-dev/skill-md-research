@@ -110,3 +110,7 @@ MIT
 ## Citation
 
 Paper forthcoming.
+
+## SEO and acquisition research
+
+The ongoing [referral and Search research engine](research/seo/acquisition/README.md) tracks distribution opportunities, source evidence, keyword research, advertised costs and next actions. Its canonical JSON and generated CSVs support continued acquisition work without adding research artifacts to the product repository.

@@ -1,0 +1,3876 @@
+{
+  "meta": {
+    "version": 1,
+    "as_of": "2026-10-22",
+    "last_recorded_on": "2026-10-22",
+    "owner": "seo-product-engineer",
+    "nsm": "Unique qualified organic/referral visitors in a rolling 28-day window; qualification requires a verified signup, demo request or successful installation/connection plus relevant use-case intent. Report unknown when permitted evidence or deduplication is unavailable.",
+    "scope": "research_and_preparation",
+    "partner_budget_usd": 200,
+    "historical_budget_reconciled": false,
+    "search_ads_budget_usd": null,
+    "notes": [
+      "No purchases, new outreach, submissions or serving campaigns performed in this research pass.",
+      "Known new spend is zero; historical unrecorded liabilities are not assumed zero. Reconcile before a purchase.",
+      "Google Ads money is separate and unallocated. The partner ceiling is cumulative, not per run.",
+      "Null means not measured or not verified. Vendor audience counts, platform installs and clicks do not prove qualified visitors.",
+      "No new UTM contract, pixel, identity join or analytics collection is enabled. Existing allowed EU PostHog reporting may be read.",
+      "A source is a distribution surface, not a promised backlink. Operator families and dependencies prevent treating syndication as independent acquisition."
+    ]
+  },
+  "sources": [
+    {
+      "id": "mcp-registry",
+      "name": "Official MCP Registry",
+      "operator_family": "mcp-registry",
+      "category": "catalog",
+      "priority": "P0",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "MCP client users and registry consumers",
+      "capabilities": [
+        "mcp",
+        "plugin",
+        "automation"
+      ],
+      "cluster_ids": [
+        "clients",
+        "orchestration"
+      ],
+      "asset_ids": [
+        "setup"
+      ],
+      "destination_url": "https://aictrl.dev/docs/plugin-setup",
+      "hypothesis": "Canonical remote-server metadata can reach clients already seeking tools.",
+      "eligibility": "Remote Streamable HTTP supported. Existing operating handoff records namespace io.github.vasparshin/aictrl and a validated draft; preserve that ownership path and verify public state before publication.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-mcp-registry",
+        "registry-handoff"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Reconcile existing io.github.vasparshin/aictrl namespace and validated OAuth-corrected draft; verify current public state, then prepare a versioned remote manifest without creating a replacement namespace.",
+        "due_on": "2026-10-22",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 2
+      },
+      "outcomes": []
+    },
+    {
+      "id": "glama",
+      "name": "Glama",
+      "operator_family": "glama-punkpeye",
+      "category": "catalog",
+      "priority": "P0",
+      "decision": "maintain",
+      "status": "live",
+      "audience": "Engineers choosing verified remote MCP tools",
+      "capabilities": [
+        "mcp",
+        "automation"
+      ],
+      "cluster_ids": [
+        "clients",
+        "orchestration"
+      ],
+      "asset_ids": [
+        "setup"
+      ],
+      "destination_url": "https://aictrl.dev/docs/plugin-setup",
+      "hypothesis": "Improve use-case clarity on an already live connector rather than resubmit.",
+      "eligibility": "Existing ownership verified; use current metadata edit route and preserve working auth.",
+      "link_value": "Observed homepage/About/setup links are nofollow noreferrer; direct discovery remains useful.",
+      "evidence_ids": [
+        "e-glama",
+        "history-glama"
+      ],
+      "status_evidence_ids": [
+        "history-glama"
+      ],
+      "live_url": "https://glama.ai/mcp/connectors/dev.aictrl/aictrl",
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Compare live description and setup link with current clients; prepare only useful metadata corrections.",
+        "due_on": "2026-10-22",
+        "owner": "seo-product-engineer",
+        "mode": "check_existing",
+        "estimated_hours": 1
+      },
+      "outcomes": []
+    },
+    {
+      "id": "pulsemcp",
+      "name": "PulseMCP",
+      "operator_family": "pulsemcp",
+      "category": "catalog",
+      "priority": "P2",
+      "decision": "hold",
+      "status": "paused",
+      "audience": "MCP adopters browsing the directory",
+      "capabilities": [
+        "mcp",
+        "plugin"
+      ],
+      "cluster_ids": [
+        "clients"
+      ],
+      "asset_ids": [
+        "setup"
+      ],
+      "destination_url": "https://aictrl.dev/docs/plugin-setup",
+      "hypothesis": "Future registry ingestion may expose the same endpoint to another audience.",
+      "eligibility": "Submission and edits paused; no reopening date.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-pulsemcp"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [
+        "mcp-registry"
+      ],
+      "offers": [],
+      "next_action": {
+        "text": "Recheck pause notice after registry preparation; do not submit or promise a date.",
+        "due_on": "2026-10-29",
+        "owner": "seo-product-engineer",
+        "mode": "hold",
+        "estimated_hours": 0.25
+      },
+      "outcomes": []
+    },
+    {
+      "id": "mcpservers",
+      "name": "MCPservers.org",
+      "operator_family": "mcpservers",
+      "category": "catalog",
+      "priority": "P1",
+      "decision": "monitor",
+      "status": "submitted",
+      "audience": "MCP server seekers",
+      "capabilities": [
+        "mcp",
+        "plugin"
+      ],
+      "cluster_ids": [
+        "clients"
+      ],
+      "asset_ids": [
+        "setup"
+      ],
+      "destination_url": "https://aictrl.dev/docs/plugin-setup",
+      "hypothesis": "Existing free queue can provide a referral link without paying for faster review.",
+      "eligibility": "Free application already pending; inspect that application before any change.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-mcpservers",
+        "history-mcpservers"
+      ],
+      "status_evidence_ids": [
+        "history-mcpservers"
+      ],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [
+        {
+          "id": "free",
+          "billing": "free",
+          "amount_usd": 0,
+          "all_in_verified": false,
+          "duration": "queue/review dependent",
+          "decision": "free_first",
+          "reason": "Existing free queue or available free path comes before paying for acceleration.",
+          "terms_unknown": "Eligibility, actual acceptance, publication timing and outbound link need verification.",
+          "evidence_ids": [
+            "e-mcpservers"
+          ]
+        },
+        {
+          "id": "premium-review",
+          "billing": "one_time",
+          "amount_usd": 39,
+          "all_in_verified": false,
+          "duration": "24-hour review target",
+          "decision": "hold",
+          "reason": "Buys review speed; current free application is already pending. No incremental qualified referral evidence.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-mcpservers"
+          ]
+        }
+      ],
+      "next_action": {
+        "text": "Check the existing 21 October submission after its review window; no duplicate application.",
+        "due_on": "2026-11-04",
+        "owner": "seo-product-engineer",
+        "mode": "check_existing",
+        "estimated_hours": 0.25
+      },
+      "outcomes": []
+    },
+    {
+      "id": "mcp-so",
+      "name": "MCP.so",
+      "operator_family": "mcp-so",
+      "category": "catalog",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Users searching for remote MCP servers",
+      "capabilities": [
+        "mcp",
+        "plugin"
+      ],
+      "cluster_ids": [
+        "clients"
+      ],
+      "asset_ids": [
+        "setup"
+      ],
+      "destination_url": "https://aictrl.dev/docs/plugin-setup",
+      "hypothesis": "Potential direct remote install discovery; qualify actual engineering audience before spending.",
+      "eligibility": "Remote-server submission lane exists; paid link qualification and all-in terms unverified.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-mcp-so"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [
+        {
+          "id": "remote-publication",
+          "billing": "one_time",
+          "amount_usd": 39,
+          "all_in_verified": false,
+          "duration": "one-time publication; placement duration unverified",
+          "decision": "evaluate",
+          "reason": "Relevant remote-server lane; inspect comparable SDLC listings and paid-link terms first.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-mcp-so"
+          ]
+        }
+      ],
+      "next_action": {
+        "text": "Prepare remote endpoint metadata; inspect comparable SDLC pages and outbound links before considering the fee.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1
+      },
+      "outcomes": []
+    },
+    {
+      "id": "mcpmarket",
+      "name": "MCPMarket",
+      "operator_family": "mcpmarket",
+      "category": "catalog",
+      "priority": "P0",
+      "decision": "monitor",
+      "status": "submitted",
+      "audience": "Practitioners installing one coding skill at a time",
+      "capabilities": [
+        "skills",
+        "mcp",
+        "code_review"
+      ],
+      "cluster_ids": [
+        "skills",
+        "review"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "An explicit Try Now link may be more useful than queue acceleration alone.",
+      "eligibility": "Existing single code-review skill is already in the free queue; upgrade route for that application unverified.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-mcpmarket",
+        "history-mcpmarket"
+      ],
+      "status_evidence_ids": [
+        "history-mcpmarket"
+      ],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [
+        {
+          "id": "free",
+          "billing": "free",
+          "amount_usd": 0,
+          "all_in_verified": false,
+          "duration": "queue/review dependent",
+          "decision": "free_first",
+          "reason": "Existing free queue or available free path comes before paying for acceleration.",
+          "terms_unknown": "Eligibility, actual acceptance, publication timing and outbound link need verification.",
+          "evidence_ids": [
+            "e-mcpmarket"
+          ]
+        },
+        {
+          "id": "agent-skill",
+          "billing": "one_time",
+          "amount_usd": 29,
+          "all_in_verified": false,
+          "duration": "24-hour listing target; link duration unverified",
+          "decision": "evaluate",
+          "reason": "Potentially adds a Try Now referral path absent from free listing; upgrade existing application if justified.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-mcpmarket"
+          ]
+        }
+      ],
+      "next_action": {
+        "text": "Inspect existing application status; prepare a measured comparison of free versus paid referral affordance, without resubmitting.",
+        "due_on": "2026-11-18",
+        "owner": "seo-product-engineer",
+        "mode": "check_existing",
+        "estimated_hours": 0.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "smithery",
+      "name": "Smithery",
+      "operator_family": "smithery",
+      "category": "catalog",
+      "priority": "P1",
+      "decision": "hold",
+      "status": "candidate",
+      "audience": "Developers discovering and connecting MCP servers",
+      "capabilities": [
+        "mcp",
+        "plugin"
+      ],
+      "cluster_ids": [
+        "clients"
+      ],
+      "asset_ids": [
+        "setup"
+      ],
+      "destination_url": "https://aictrl.dev/docs/plugin-setup",
+      "hypothesis": "Catalog-only metadata may remain useful after changes to hosted proxy services.",
+      "eligibility": "Homepage announces MCP Proxy and managed identity shutdown on 31 October; directory-only publication needs verification.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-smithery"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Verify a current direct-endpoint catalog lane; avoid proxy-dependent packaging.",
+        "due_on": "2026-10-26",
+        "owner": "seo-product-engineer",
+        "mode": "verify_route",
+        "estimated_hours": 0.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "lobehub",
+      "name": "LobeHub MCP",
+      "operator_family": "lobehub",
+      "category": "catalog",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Chat-client users finding MCP tools",
+      "capabilities": [
+        "mcp",
+        "plugin"
+      ],
+      "cluster_ids": [
+        "clients"
+      ],
+      "asset_ids": [
+        "setup"
+      ],
+      "destination_url": "https://aictrl.dev/docs/plugin-setup",
+      "hypothesis": "A searchable tool page could reach people already configuring a chat client.",
+      "eligibility": "Publish link exists, but official publishing document returned 403; current remote OAuth eligibility unverified.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-lobehub"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Read the visible publishing UI, verify remote OAuth support and ownership rules, then prepare metadata only.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1
+      },
+      "outcomes": []
+    },
+    {
+      "id": "skills-sh",
+      "name": "skills.sh",
+      "operator_family": "vercel-skills",
+      "category": "catalog",
+      "priority": "P0",
+      "decision": "maintain",
+      "status": "live",
+      "audience": "Coding-agent users searching for installable skills",
+      "capabilities": [
+        "skills",
+        "code_review",
+        "automation"
+      ],
+      "cluster_ids": [
+        "skills",
+        "review"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "Task-specific descriptions can turn existing visibility into relevant local trials.",
+      "eligibility": "Already live; display config refresh follows a telemetry-enabled install, not page visits. Do not create installs for metrics.",
+      "link_value": "Existing source links were observed nofollow; platform install totals include internal checks.",
+      "evidence_ids": [
+        "e-skills-sh",
+        "history-skills-sh"
+      ],
+      "status_evidence_ids": [
+        "history-skills-sh"
+      ],
+      "live_url": "https://skills.sh/aictrl-dev/skills",
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Audit the absent execute-workflow, explain-change, ui-polish and ux-testing entries and their actual indexing requirements; preserve five live task groups and avoid artificial installs.",
+        "due_on": "2026-10-22",
+        "owner": "seo-product-engineer",
+        "mode": "check_existing",
+        "estimated_hours": 0.75
+      },
+      "outcomes": []
+    },
+    {
+      "id": "skillsmp",
+      "name": "SkillsMP",
+      "operator_family": "skillsmp",
+      "category": "catalog",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "People searching public GitHub skills",
+      "capabilities": [
+        "skills",
+        "automation"
+      ],
+      "cluster_ids": [
+        "skills"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "Improve discoverability of public task skills through a GitHub-indexed search engine.",
+      "eligibility": "Public SKILL.md indexing described; manual submission and update route unverified.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-skillsmp"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Search for the canonical skills repo; document any missing index entries and prepare a correction request only if needed.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1
+      },
+      "outcomes": []
+    },
+    {
+      "id": "skillhub",
+      "name": "SkillHub",
+      "operator_family": "skillhub",
+      "category": "catalog",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Users selecting skills by occupation and category",
+      "capabilities": [
+        "skills",
+        "code_review"
+      ],
+      "cluster_ids": [
+        "skills",
+        "review"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "A focused change-explanation or review skill may match a high-intent category.",
+      "eligibility": "Publish link leads to an app route; authentication and eligibility must be inspected before an application.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-skillhub"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Check for existing aictrl entries; inspect publication requirements and prepare one relevant skill record.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1
+      },
+      "outcomes": []
+    },
+    {
+      "id": "claude",
+      "name": "Claude connectors and plugins",
+      "operator_family": "anthropic",
+      "category": "client",
+      "priority": "P0",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Claude.ai and Claude Code engineering users",
+      "capabilities": [
+        "plugin",
+        "mcp",
+        "skills",
+        "sdlc"
+      ],
+      "cluster_ids": [
+        "clients",
+        "skills"
+      ],
+      "asset_ids": [
+        "plugins"
+      ],
+      "destination_url": "https://aictrl.dev/plugins",
+      "hypothesis": "Meet existing client users with a clear engineering use case and tested install path.",
+      "eligibility": "Connector and plugin applications are distinct; September plugin acknowledgement does not prove approval or a connector application.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-claude"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Reconcile prior plugin receipt, inspect current connector route and prepare one issue-to-review demo plus a client landing brief.",
+        "due_on": "2026-10-22",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 3
+      },
+      "outcomes": []
+    },
+    {
+      "id": "chatgpt",
+      "name": "ChatGPT plugin directory",
+      "operator_family": "openai",
+      "category": "client",
+      "priority": "P0",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "ChatGPT users needing engineering workflows",
+      "capabilities": [
+        "plugin",
+        "mcp",
+        "skills",
+        "sdlc"
+      ],
+      "cluster_ids": [
+        "clients",
+        "orchestration"
+      ],
+      "asset_ids": [
+        "plugins"
+      ],
+      "destination_url": "https://aictrl.dev/plugins",
+      "hypothesis": "Directory discovery can reach users inside an already supported client.",
+      "eligibility": "Working plugin is founder-confirmed; official directory approval is unknown. Inspect existing draft before starting another.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-chatgpt"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Prepare a gap checklist for the existing package and review evidence; add the missing public ChatGPT setup brief.",
+        "due_on": "2026-10-22",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 3
+      },
+      "outcomes": []
+    },
+    {
+      "id": "cline",
+      "name": "Cline MCP Marketplace",
+      "operator_family": "cline",
+      "category": "client",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Cline users choosing tools from the editor",
+      "capabilities": [
+        "mcp",
+        "code_review"
+      ],
+      "cluster_ids": [
+        "clients",
+        "review"
+      ],
+      "asset_ids": [
+        "setup"
+      ],
+      "destination_url": "https://aictrl.dev/docs/plugin-setup",
+      "hypothesis": "In-editor installation can have higher use-case intent than a general AI directory.",
+      "eligibility": "Submission asks for server GitHub repo, icon and tested Cline installation; closed backend versus public metadata repo needs clarification.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-cline"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Prepare endpoint and public docs; verify remote-only eligibility and run a real Cline install before claiming compatibility.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 2
+      },
+      "outcomes": []
+    },
+    {
+      "id": "continue",
+      "name": "Continue Hub",
+      "operator_family": "continue",
+      "category": "client",
+      "priority": "P2",
+      "decision": "hold",
+      "status": "candidate",
+      "audience": "Continue users adding MCP configuration",
+      "capabilities": [
+        "mcp",
+        "skills"
+      ],
+      "cluster_ids": [
+        "clients",
+        "skills"
+      ],
+      "asset_ids": [
+        "setup"
+      ],
+      "destination_url": "https://aictrl.dev/docs/plugin-setup",
+      "hypothesis": "A reusable configuration block could reduce setup friction if Hub publication remains available.",
+      "eligibility": "Current documentation supports MCP, but Hub explore endpoint returned 502; publication availability unverified.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-continue"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Confirm Hub publication works before building a block; otherwise retain only documentation compatibility.",
+        "due_on": "2026-10-29",
+        "owner": "seo-product-engineer",
+        "mode": "verify_route",
+        "estimated_hours": 0.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor Directory",
+      "operator_family": "cursor-directory",
+      "category": "client",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Cursor community users selecting plugins",
+      "capabilities": [
+        "plugin",
+        "mcp",
+        "skills"
+      ],
+      "cluster_ids": [
+        "clients",
+        "skills"
+      ],
+      "asset_ids": [
+        "setup"
+      ],
+      "destination_url": "https://aictrl.dev/docs/plugin-setup",
+      "hypothesis": "A concrete editor workflow can attract more relevant users than a generic tool listing.",
+      "eligibility": "Community directory; current MCP route redirects to plugins. Publication format and eligibility unverified.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-cursor"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Inspect the current plugin submission lane and map the canonical skills plus remote setup to its format.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "devin-desktop",
+      "name": "Devin Desktop / Windsurf MCP ecosystem",
+      "operator_family": "cognition",
+      "category": "client",
+      "priority": "P2",
+      "decision": "hold",
+      "status": "candidate",
+      "audience": "Windsurf or Devin Desktop users configuring MCP",
+      "capabilities": [
+        "mcp",
+        "plugin"
+      ],
+      "cluster_ids": [
+        "clients"
+      ],
+      "asset_ids": [
+        "setup"
+      ],
+      "destination_url": "https://aictrl.dev/docs/plugin-setup",
+      "hypothesis": "A tested client guide may be useful even without a public marketplace lane.",
+      "eligibility": "Windsurf MCP documentation redirects to Devin Desktop; open store submission route not found.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-devin-desktop"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Verify current branding and public catalog route; do not claim marketplace eligibility from MCP support alone.",
+        "due_on": "2026-10-29",
+        "owner": "seo-product-engineer",
+        "mode": "verify_route",
+        "estimated_hours": 0.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode ecosystem",
+      "operator_family": "anomalyco",
+      "category": "client",
+      "priority": "P0",
+      "decision": "monitor",
+      "status": "waiting_external",
+      "audience": "OpenCode users installing skills and remote MCP",
+      "capabilities": [
+        "plugin",
+        "skills",
+        "mcp"
+      ],
+      "cluster_ids": [
+        "clients",
+        "skills"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "An existing maintainer relationship can revive relevant discovery without a duplicate PR.",
+      "eligibility": "Prior upstream PR was closed unmerged; one factual follow-up was already posted on 22 October.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-opencode",
+        "history-opencode"
+      ],
+      "status_evidence_ids": [
+        "history-opencode"
+      ],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Monitor the existing thread; prepare a patch only if requested, using current README rather than the old adapter-only instructions.",
+        "due_on": "2026-10-29",
+        "owner": "seo-product-engineer",
+        "mode": "check_existing",
+        "estimated_hours": 0.25
+      },
+      "outcomes": []
+    },
+    {
+      "id": "vscode-gallery",
+      "name": "VS Code / GitHub MCP gallery",
+      "operator_family": "microsoft-github",
+      "category": "client",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Developers choosing MCP tools in their editor",
+      "capabilities": [
+        "mcp",
+        "plugin"
+      ],
+      "cluster_ids": [
+        "clients"
+      ],
+      "asset_ids": [
+        "setup"
+      ],
+      "destination_url": "https://aictrl.dev/docs/plugin-setup",
+      "hypothesis": "Registry metadata may be surfaced in a client gallery without a second independent submission.",
+      "eligibility": "Gallery route and upstream ingestion rules need confirmation; syndication is not an independent backlink.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-vscode-gallery"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [
+        "mcp-registry"
+      ],
+      "offers": [],
+      "next_action": {
+        "text": "Verify the gallery upstream and namespace eligibility; reuse registry metadata instead of inventing a second catalog entry.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1
+      },
+      "outcomes": []
+    },
+    {
+      "id": "github-marketplace",
+      "name": "GitHub Marketplace app",
+      "operator_family": "microsoft-github",
+      "category": "client",
+      "priority": "P0",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Repository owners evaluating delivery and review apps",
+      "capabilities": [
+        "plugin",
+        "sdlc",
+        "code_review",
+        "automation"
+      ],
+      "cluster_ids": [
+        "review",
+        "orchestration"
+      ],
+      "asset_ids": [
+        "review"
+      ],
+      "destination_url": "https://aictrl.dev/features/code-review",
+      "hypothesis": "Repository-level discovery is directly adjacent to code-review and delivery work.",
+      "eligibility": "Publisher verification and package preparation existed earlier; app installation and public listing approval are different states.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-github-marketplace"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Reconcile existing publisher/application status, then prepare listing screenshots and one real review outcome.",
+        "due_on": "2026-10-22",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 2
+      },
+      "outcomes": []
+    },
+    {
+      "id": "npm",
+      "name": "npm package discovery",
+      "operator_family": "npm-github",
+      "category": "package",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Developers looking for a runnable CLI or adapter",
+      "capabilities": [
+        "cli",
+        "automation"
+      ],
+      "cluster_ids": [
+        "cli"
+      ],
+      "asset_ids": [
+        "agent"
+      ],
+      "destination_url": "https://aictrl.dev/agent",
+      "hypothesis": "Accurate package metadata can connect an install query to a working terminal journey.",
+      "eligibility": "Do not publish a new wrapper for a backlink. Verify current official package name, maintainers and version from public CLI source.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-npm"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Resolve package identity from the CLI manifest; prepare README, keywords and homepage corrections for the existing package.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1
+      },
+      "outcomes": []
+    },
+    {
+      "id": "awesome-remote",
+      "name": "Awesome Remote MCP Servers",
+      "operator_family": "glama-punkpeye",
+      "category": "curation",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Developers selecting reviewed remote MCP tools",
+      "capabilities": [
+        "mcp",
+        "plugin"
+      ],
+      "cluster_ids": [
+        "clients"
+      ],
+      "asset_ids": [
+        "setup"
+      ],
+      "destination_url": "https://aictrl.dev/docs/plugin-setup",
+      "hypothesis": "A valid remote entry can route interested developers to setup documentation.",
+      "eligibility": "Requires reachable initialize, public usability and an existing Glama connector. Contribution rules also request a repository star; do not manufacture engagement.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-awesome-remote"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [
+        "glama"
+      ],
+      "offers": [],
+      "next_action": {
+        "text": "Validate endpoint and badge, prepare an alphabetized remote entry, and flag the star condition for genuine human judgment.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1
+      },
+      "outcomes": []
+    },
+    {
+      "id": "awesome-claude",
+      "name": "Awesome Claude Code",
+      "operator_family": "hesreallyhim",
+      "category": "curation",
+      "priority": "P1",
+      "decision": "hold",
+      "status": "candidate",
+      "audience": "Claude Code users seeking useful established resources",
+      "capabilities": [
+        "skills",
+        "plugin"
+      ],
+      "cluster_ids": [
+        "skills",
+        "clients"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "A specific free local skill may fit a selective recommendation list.",
+      "eligibility": "Human-created recommendation only; web issue form only, no PR or gh submission. Age/activity route or 100-star alternative.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-awesome-claude"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Prepare a factual eligibility sheet for the founder; any recommendation must be independently human-written and submitted.",
+        "due_on": "2026-10-26",
+        "owner": "seo-product-engineer",
+        "mode": "human_only",
+        "estimated_hours": 0.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "awesome-skills",
+      "name": "Awesome Agent Skills",
+      "operator_family": "voltagent",
+      "category": "curation",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Developers browsing established task skills",
+      "capabilities": [
+        "skills",
+        "code_review"
+      ],
+      "cluster_ids": [
+        "skills",
+        "review"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "Existing public usage and a sharp task description may earn editorial discovery.",
+      "eligibility": "Working public skill and actual community usage required; author prefix and description of ten words or fewer.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-awesome-skills"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [
+        {
+          "id": "sponsor",
+          "billing": "quote",
+          "amount_usd": null,
+          "all_in_verified": false,
+          "duration": "not specified",
+          "decision": "hold",
+          "reason": "Sponsorship is separate from curated acceptance; do not buy an implied recommendation.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-awesome-skills"
+          ]
+        }
+      ],
+      "next_action": {
+        "text": "Prepare one established code-review or explain-change entry with usage evidence and a ten-word description.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1
+      },
+      "outcomes": []
+    },
+    {
+      "id": "n8n",
+      "name": "n8n template creator program",
+      "operator_family": "n8n",
+      "category": "automation",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Automation builders connecting engineering tools",
+      "capabilities": [
+        "automation",
+        "mcp",
+        "sdlc"
+      ],
+      "cluster_ids": [
+        "workflows",
+        "orchestration"
+      ],
+      "asset_ids": [
+        "workflow"
+      ],
+      "destination_url": "https://aictrl.dev/features/workflow-as-code",
+      "hypothesis": "A useful executable integration recipe gives an engineering reason to visit aictrl.",
+      "eligibility": "Creator account and reviewed workflow template required; no tested aictrl template exists in this pass.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-n8n"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Design and test issue → approved workflow → result notification before drafting a creator submission.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 4
+      },
+      "outcomes": []
+    },
+    {
+      "id": "dbos",
+      "name": "DBOS technical partnership",
+      "operator_family": "dbos",
+      "category": "automation",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Engineers building durable AI automation",
+      "capabilities": [
+        "automation",
+        "sdlc",
+        "software_factory"
+      ],
+      "cluster_ids": [
+        "workflows",
+        "orchestration"
+      ],
+      "asset_ids": [
+        "workflow"
+      ],
+      "destination_url": "https://aictrl.dev/features/workflow-as-code",
+      "hypothesis": "A first-hand durable-execution case study aligns with both products better than a paid directory.",
+      "eligibility": "aictrl uses DBOS internally; a public partnership or publisher commitment is not established.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-dbos"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Collect a reproducible retry/recovery example and draft a technical case-study brief with measured limitations.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 3
+      },
+      "outcomes": []
+    },
+    {
+      "id": "alternativeto",
+      "name": "AlternativeTo",
+      "operator_family": "alternativeto",
+      "category": "directory",
+      "priority": "P1",
+      "decision": "monitor",
+      "status": "submitted",
+      "audience": "People comparing software alternatives",
+      "capabilities": [
+        "sdlc",
+        "code_review",
+        "automation"
+      ],
+      "cluster_ids": [
+        "review",
+        "orchestration"
+      ],
+      "asset_ids": [
+        "review"
+      ],
+      "destination_url": "https://aictrl.dev/features/code-review",
+      "hypothesis": "Accurate distinctions can qualify comparison traffic before arrival.",
+      "eligibility": "Existing free submission from 15 October; email verification and editorial review apply.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-alternativeto",
+        "history-alternativeto"
+      ],
+      "status_evidence_ids": [
+        "history-alternativeto"
+      ],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Check existing submission and any reviewer question; prepare factual category and comparison corrections only.",
+        "due_on": "2026-10-22",
+        "owner": "seo-product-engineer",
+        "mode": "check_existing",
+        "estimated_hours": 0.25
+      },
+      "outcomes": []
+    },
+    {
+      "id": "producthunt",
+      "name": "Product Hunt",
+      "operator_family": "producthunt",
+      "category": "directory",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Product early adopters, developers and makers",
+      "capabilities": [
+        "plugin",
+        "skills",
+        "cli"
+      ],
+      "cluster_ids": [
+        "clients",
+        "cli"
+      ],
+      "asset_ids": [
+        "plugins"
+      ],
+      "destination_url": "https://aictrl.dev/plugins",
+      "hypothesis": "A meaningful release may attract early users, but broad launch traffic needs qualification.",
+      "eligibility": "Verify previous launches and current relaunch eligibility; do not repackage an old product as new.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-producthunt"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Prepare a release-specific launch brief, live demo and prior-launch audit; schedule only after landing pages are ready.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 2
+      },
+      "outcomes": []
+    },
+    {
+      "id": "devhunt",
+      "name": "DevHunt",
+      "operator_family": "devhunt",
+      "category": "directory",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Developers discovering tools, CLIs and automation",
+      "capabilities": [
+        "cli",
+        "skills",
+        "automation"
+      ],
+      "cluster_ids": [
+        "cli",
+        "orchestration"
+      ],
+      "asset_ids": [
+        "agent"
+      ],
+      "destination_url": "https://aictrl.dev/agent",
+      "hypothesis": "Developer-only positioning is closer to the target than general AI catalogs.",
+      "eligibility": "Free launch eligibility/current listing needs checking; paid weekly header is separate.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-devhunt"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [
+        {
+          "id": "header",
+          "billing": "one_time",
+          "amount_usd": 149,
+          "all_in_verified": false,
+          "duration": "one week",
+          "decision": "hold",
+          "reason": "Consumes about 75% of the cumulative ceiling before fees; impressions and outcomes unverified.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-devhunt"
+          ]
+        }
+      ],
+      "next_action": {
+        "text": "Audit existing listing and prepare a runnable CLI release; evaluate header concentration risk before requesting a slot.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "peerlist",
+      "name": "Peerlist Launchpad",
+      "operator_family": "peerlist",
+      "category": "directory",
+      "priority": "P2",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Developers and designers launching projects",
+      "capabilities": [
+        "skills",
+        "cli",
+        "plugin"
+      ],
+      "cluster_ids": [
+        "skills",
+        "cli"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "A local skill demo can attract practitioners who can try it immediately.",
+      "eligibility": "Limited weekly launch slots; inspect account and project history before submission.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-peerlist"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Prepare one useful free local skill demo and verify launch requirements and prior project status.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1
+      },
+      "outcomes": []
+    },
+    {
+      "id": "uneed",
+      "name": "Uneed",
+      "operator_family": "uneed",
+      "category": "directory",
+      "priority": "P2",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Founders, indie makers and tool enthusiasts",
+      "capabilities": [
+        "plugin",
+        "automation"
+      ],
+      "cluster_ids": [
+        "clients",
+        "orchestration"
+      ],
+      "asset_ids": [
+        "plugins"
+      ],
+      "destination_url": "https://aictrl.dev/plugins",
+      "hypothesis": "A small test is possible, but audience overlap is weaker than developer-native ecosystems.",
+      "eligibility": "Free queue and paid date selection exist; dofollow is conditional on score. No votes should be solicited or bought.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-uneed"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [
+        {
+          "id": "free",
+          "billing": "free",
+          "amount_usd": 0,
+          "all_in_verified": false,
+          "duration": "queue/review dependent",
+          "decision": "free_first",
+          "reason": "Existing free queue or available free path comes before paying for acceleration.",
+          "terms_unknown": "Eligibility, actual acceptance, publication timing and outbound link need verification.",
+          "evidence_ids": [
+            "e-uneed"
+          ]
+        },
+        {
+          "id": "fast-track",
+          "billing": "one_time",
+          "amount_usd": 14.99,
+          "all_in_verified": false,
+          "duration": "assigned launch in about 14 days",
+          "decision": "hold",
+          "reason": "Weak engineering audience evidence; date acceleration is not proof of valuable visitors.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-uneed"
+          ]
+        },
+        {
+          "id": "skip-line",
+          "billing": "one_time",
+          "amount_usd": 39.99,
+          "all_in_verified": false,
+          "duration": "chosen launch date",
+          "decision": "hold",
+          "reason": "Date choice alone is not incremental demand.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-uneed"
+          ]
+        },
+        {
+          "id": "pro",
+          "billing": "recurring",
+          "amount_usd": 99,
+          "all_in_verified": false,
+          "duration": "one year",
+          "decision": "reject",
+          "reason": "Annual subscription conflicts with this bounded placement test.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-uneed"
+          ]
+        },
+        {
+          "id": "newsletter",
+          "billing": "one_time",
+          "amount_usd": 249,
+          "all_in_verified": false,
+          "duration": "one newsletter placement",
+          "decision": "reject",
+          "reason": "Above the entire cumulative partner ceiling.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-uneed"
+          ]
+        }
+      ],
+      "next_action": {
+        "text": "Inspect existing product history; prepare free queue metadata and compare the engineering audience before any paid option.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 0.75
+      },
+      "outcomes": []
+    },
+    {
+      "id": "betalist",
+      "name": "BetaList",
+      "operator_family": "betalist",
+      "category": "directory",
+      "priority": "P2",
+      "decision": "hold",
+      "status": "candidate",
+      "audience": "Early adopters of new technology startups",
+      "capabilities": [
+        "plugin",
+        "automation"
+      ],
+      "cluster_ids": [
+        "clients"
+      ],
+      "asset_ids": [
+        "plugins"
+      ],
+      "destination_url": "https://aictrl.dev/plugins",
+      "hypothesis": "Potential launch audience only if a genuinely new eligible release qualifies.",
+      "eligibility": "Criteria favor prelaunch or recently launched products not previously featured; established aictrl may not qualify.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-betalist"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Check release-stage eligibility before preparing a submission; do not assume a paid fee bypasses it.",
+        "due_on": "2026-10-29",
+        "owner": "seo-product-engineer",
+        "mode": "verify_route",
+        "estimated_hours": 0.25
+      },
+      "outcomes": []
+    },
+    {
+      "id": "plugandship",
+      "name": "PlugandShip",
+      "operator_family": "plugandship",
+      "category": "directory",
+      "priority": "P1",
+      "decision": "monitor",
+      "status": "live",
+      "audience": "Developers discovering open-source tools",
+      "capabilities": [
+        "skills",
+        "cli"
+      ],
+      "cluster_ids": [
+        "skills",
+        "cli"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "Existing free listing can expose the public skills repo without paying for a date.",
+      "eligibility": "Public GitHub project required; existing free page is already assigned a launch slot.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-plugandship",
+        "history-plugandship"
+      ],
+      "status_evidence_ids": [
+        "history-plugandship"
+      ],
+      "live_url": "https://plugandship.dev/p/aictrl-dev-engineering-skills",
+      "depends_on": [],
+      "offers": [
+        {
+          "id": "free",
+          "billing": "free",
+          "amount_usd": 0,
+          "all_in_verified": false,
+          "duration": "queue/review dependent",
+          "decision": "free_first",
+          "reason": "Existing free queue or available free path comes before paying for acceleration.",
+          "terms_unknown": "Eligibility, actual acceptance, publication timing and outbound link need verification.",
+          "evidence_ids": [
+            "e-plugandship"
+          ]
+        },
+        {
+          "id": "fast-track",
+          "billing": "one_time",
+          "amount_usd": 19,
+          "all_in_verified": false,
+          "duration": "chosen launch day",
+          "decision": "hold",
+          "reason": "Calendar acceleration adds little while the existing public free page and assigned launch are already available.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-plugandship"
+          ]
+        }
+      ],
+      "next_action": {
+        "text": "Monitor the existing engineering-skills page and its previously assigned 6 November slot; do not pay to duplicate it.",
+        "due_on": "2026-11-06",
+        "owner": "seo-product-engineer",
+        "mode": "check_existing",
+        "estimated_hours": 0.25
+      },
+      "outcomes": []
+    },
+    {
+      "id": "futuretools",
+      "name": "FutureTools",
+      "operator_family": "futuretools",
+      "category": "directory",
+      "priority": "P2",
+      "decision": "monitor",
+      "status": "submitted",
+      "audience": "People exploring AI tools across many tasks",
+      "capabilities": [
+        "plugin",
+        "automation"
+      ],
+      "cluster_ids": [
+        "clients"
+      ],
+      "asset_ids": [
+        "plugins"
+      ],
+      "destination_url": "https://aictrl.dev/plugins",
+      "hypothesis": "A referral is possible, but broad discovery may produce low engineering intent.",
+      "eligibility": "Initial submission and permitted resubmission already sent; editorial review and CAPTCHA apply.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-futuretools",
+        "history-futuretools"
+      ],
+      "status_evidence_ids": [
+        "history-futuretools"
+      ],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Check the existing resubmission outcome; do not create another application without a permitted reason.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "check_existing",
+        "estimated_hours": 0.25
+      },
+      "outcomes": []
+    },
+    {
+      "id": "taaft",
+      "name": "There's An AI For That",
+      "operator_family": "taaft",
+      "category": "directory",
+      "priority": "P2",
+      "decision": "hold",
+      "status": "candidate",
+      "audience": "Broad task-based AI tool discovery",
+      "capabilities": [
+        "plugin",
+        "automation"
+      ],
+      "cluster_ids": [
+        "clients"
+      ],
+      "asset_ids": [
+        "plugins"
+      ],
+      "destination_url": "https://aictrl.dev/plugins",
+      "hypothesis": "Task-level engineering categories might fit, but traffic relevance and pricing are unverified.",
+      "eligibility": "Official submission page inaccessible to web research; no verified price, review terms or current aictrl listing.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-taaft"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [
+        {
+          "id": "submission",
+          "billing": "unknown",
+          "amount_usd": null,
+          "all_in_verified": false,
+          "duration": "not specified",
+          "decision": "hold",
+          "reason": "No verified all-in price or source-specific qualified referral result. Keep editorial/free routes separate.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-taaft"
+          ]
+        }
+      ],
+      "next_action": {
+        "text": "Inspect the native submission page only after higher-fit sources; do not use third-party price claims.",
+        "due_on": "2026-11-05",
+        "owner": "seo-product-engineer",
+        "mode": "verify_route",
+        "estimated_hours": 0.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "neuronfeed",
+      "name": "NeuronFeed",
+      "operator_family": "neuronfeed",
+      "category": "directory",
+      "priority": "P2",
+      "decision": "monitor",
+      "status": "submitted",
+      "audience": "AI startup founders and general AI tool users",
+      "capabilities": [
+        "plugin",
+        "automation"
+      ],
+      "cluster_ids": [
+        "clients"
+      ],
+      "asset_ids": [
+        "plugins"
+      ],
+      "destination_url": "https://aictrl.dev/plugins",
+      "hypothesis": "Possible secondary discovery; no demonstrated qualified engineering referrals.",
+      "eligibility": "Existing 8 October free submission has no verified public outcome.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-neuronfeed",
+        "history-neuronfeed"
+      ],
+      "status_evidence_ids": [
+        "history-neuronfeed"
+      ],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [
+        {
+          "id": "free",
+          "billing": "free",
+          "amount_usd": 0,
+          "all_in_verified": false,
+          "duration": "queue/review dependent",
+          "decision": "free_first",
+          "reason": "Existing free queue or available free path comes before paying for acceleration.",
+          "terms_unknown": "Eligibility, actual acceptance, publication timing and outbound link need verification.",
+          "evidence_ids": [
+            "e-neuronfeed"
+          ]
+        }
+      ],
+      "next_action": {
+        "text": "Check existing application/public search; record outcome rather than resubmit or treat a review target as acceptance.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "check_existing",
+        "estimated_hours": 0.25
+      },
+      "outcomes": []
+    },
+    {
+      "id": "console",
+      "name": "Console.dev",
+      "operator_family": "console",
+      "category": "publisher",
+      "priority": "P0",
+      "decision": "monitor",
+      "status": "waiting_external",
+      "audience": "Experienced developers evaluating useful self-service tools",
+      "capabilities": [
+        "cli",
+        "skills",
+        "mcp"
+      ],
+      "cluster_ids": [
+        "cli",
+        "skills"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "A useful local trial fits an editorial preference for developer tools that improve regular workflows.",
+      "eligibility": "Founder confirms email already sent from bulat@aictrl.dev. No duplicate outreach. Paid advertising is separate from editorial selection.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-console",
+        "history-console"
+      ],
+      "status_evidence_ids": [
+        "history-console"
+      ],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [
+        {
+          "id": "sponsorship",
+          "billing": "quote",
+          "amount_usd": null,
+          "all_in_verified": false,
+          "duration": "not specified",
+          "decision": "hold",
+          "reason": "No verified all-in price or source-specific qualified referral result. Keep editorial/free routes separate.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-console"
+          ]
+        }
+      ],
+      "next_action": {
+        "text": "Await the existing email response; prepare a concise answer/demo only for a specific editor request.",
+        "due_on": "2026-10-29",
+        "owner": "seo-product-engineer",
+        "mode": "check_existing",
+        "estimated_hours": 0.25
+      },
+      "outcomes": []
+    },
+    {
+      "id": "tldr",
+      "name": "TLDR Dev / DevOps",
+      "operator_family": "tldr",
+      "category": "publisher",
+      "priority": "P2",
+      "decision": "hold",
+      "status": "candidate",
+      "audience": "Software engineers and engineering leaders",
+      "capabilities": [
+        "sdlc",
+        "software_factory",
+        "automation"
+      ],
+      "cluster_ids": [
+        "orchestration",
+        "workflows"
+      ],
+      "asset_ids": [
+        "sdlc"
+      ],
+      "destination_url": "https://aictrl.dev/ai-sdlc",
+      "hypothesis": "Relevant edition targeting is preferable to buying a generic AI audience.",
+      "eligibility": "Official developer audience page exists; current pricing, minimum spend and placement terms require a quote.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-tldr"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [
+        {
+          "id": "sponsorship",
+          "billing": "quote",
+          "amount_usd": null,
+          "all_in_verified": false,
+          "duration": "not specified",
+          "decision": "hold",
+          "reason": "No verified all-in price or source-specific qualified referral result. Keep editorial/free routes separate.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-tldr"
+          ]
+        }
+      ],
+      "next_action": {
+        "text": "Prepare a one-paragraph evidence brief; obtain a bounded nonrecurring quote only if small placements are offered.",
+        "due_on": "2026-11-05",
+        "owner": "seo-product-engineer",
+        "mode": "hold",
+        "estimated_hours": 0.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "changelog",
+      "name": "Changelog",
+      "operator_family": "changelog",
+      "category": "publisher",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Developers following open-source releases and technical news",
+      "capabilities": [
+        "skills",
+        "cli",
+        "automation"
+      ],
+      "cluster_ids": [
+        "skills",
+        "cli"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "Original research or a useful open-source release can earn editorial discovery.",
+      "eligibility": "News submissions reject tutorials and commercial product/service pitches; sponsorship is a different route.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-changelog"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Select an actual open-source release or original result with a runnable artifact; prepare a neutral news brief.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "infoq",
+      "name": "InfoQ",
+      "operator_family": "infoq",
+      "category": "publisher",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Senior engineers, architects and delivery leaders",
+      "capabilities": [
+        "sdlc",
+        "software_factory",
+        "automation"
+      ],
+      "cluster_ids": [
+        "orchestration",
+        "workflows"
+      ],
+      "asset_ids": [
+        "workflow"
+      ],
+      "destination_url": "https://aictrl.dev/features/workflow-as-code",
+      "hypothesis": "A production lesson can reach the people designing delivery systems.",
+      "eligibility": "Editorial proposal and vendor-neutral technical substance required; disclose affiliation.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-infoq"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Outline a durable workflow failure/recovery case study with before/after evidence and lessons transferable beyond aictrl.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 3
+      },
+      "outcomes": []
+    },
+    {
+      "id": "dzone",
+      "name": "DZone",
+      "operator_family": "dzone",
+      "category": "publisher",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Developers and DevOps practitioners reading technical articles",
+      "capabilities": [
+        "automation",
+        "sdlc",
+        "knowledge"
+      ],
+      "cluster_ids": [
+        "workflows",
+        "knowledge"
+      ],
+      "asset_ids": [
+        "knowledge"
+      ],
+      "destination_url": "https://aictrl.dev/features/knowledge-graph",
+      "hypothesis": "A practical traceability example can attract readers with a concrete engineering problem.",
+      "eligibility": "Editorial review and current article submission/AI rules must be checked before publishing.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-dzone"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Prepare an original code-to-test traceability tutorial with downloadable example and useful on-page explanation.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 2
+      },
+      "outcomes": []
+    },
+    {
+      "id": "dev",
+      "name": "DEV Community",
+      "operator_family": "dev-community",
+      "category": "publisher",
+      "priority": "P1",
+      "decision": "maintain",
+      "status": "candidate",
+      "audience": "Developers learning tools through implementation examples",
+      "capabilities": [
+        "skills",
+        "cli",
+        "automation"
+      ],
+      "cluster_ids": [
+        "skills",
+        "cli"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "An owned publisher presence can turn useful standalone examples into relevant referrals.",
+      "eligibility": "Existing org/article and an unpublished draft exist. Current AI disclosure policy allows assisted work with disclosure and quality review.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-dev"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Audit the existing article/draft for usefulness, canonical URL and AI disclosure; prepare one tested local skill walkthrough.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "check_existing",
+        "estimated_hours": 1.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "hashnode",
+      "name": "Hashnode",
+      "operator_family": "hashnode",
+      "category": "publisher",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "Developers seeking detailed implementation guides",
+      "capabilities": [
+        "skills",
+        "automation",
+        "knowledge"
+      ],
+      "cluster_ids": [
+        "skills",
+        "knowledge"
+      ],
+      "asset_ids": [
+        "knowledge"
+      ],
+      "destination_url": "https://aictrl.dev/features/knowledge-graph",
+      "hypothesis": "A useful republished case study can reach developer readers while preserving the original canonical.",
+      "eligibility": "Editor supports Original URL canonical; verify publication ownership and current AI/editorial rules first.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-hashnode"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Prepare a code-graph example with original URL canonical and an audience-specific introduction.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "reddit",
+      "name": "Reddit engineering communities",
+      "operator_family": "reddit",
+      "category": "community",
+      "priority": "P1",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "AI agent and Claude skill practitioners",
+      "capabilities": [
+        "skills",
+        "mcp",
+        "sdlc",
+        "automation"
+      ],
+      "cluster_ids": [
+        "skills",
+        "orchestration"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "Useful answers and reproducible examples can earn trust and relevant voluntary visits.",
+      "eligibility": "Recheck each community rules. SEO focus r/AI_Agents and r/claudeskills; CLI owner manages r/HeadlessAgents. Banned names are excluded.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-reddit"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Prepare a reproducible lesson for a permitted community thread; disclose affiliation and obtain exact-item promotion review before any post.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "hackernews",
+      "name": "Hacker News / Show HN",
+      "operator_family": "hackernews",
+      "category": "community",
+      "priority": "P1",
+      "decision": "hold",
+      "status": "candidate",
+      "audience": "Technical early adopters trying concrete engineering tools",
+      "capabilities": [
+        "skills",
+        "cli",
+        "automation"
+      ],
+      "cluster_ids": [
+        "skills",
+        "cli"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "A runnable open-source skill or CLI is better suited to trial than a signup-only page.",
+      "eligibility": "Show HN requires something usable. HN prohibits generated posts, generated or AI-edited comments and automated posting.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-hackernews"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [],
+      "next_action": {
+        "text": "Provide the founder a factual artifact checklist only; any title, post and replies must be independently human-written.",
+        "due_on": "2026-10-26",
+        "owner": "seo-product-engineer",
+        "mode": "human_only",
+        "estimated_hours": 0.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "webtools",
+      "name": "Web Tools Weekly",
+      "operator_family": "lazarpress",
+      "category": "publisher",
+      "priority": "P2",
+      "decision": "hold",
+      "status": "candidate",
+      "audience": "Front-end developers looking for practical tools",
+      "capabilities": [
+        "skills",
+        "automation"
+      ],
+      "cluster_ids": [
+        "skills"
+      ],
+      "asset_ids": [
+        "skills"
+      ],
+      "destination_url": "https://github.com/aictrl-dev/skills",
+      "hypothesis": "A tested ui-polish or ux-testing skill is a more natural pitch than the whole platform.",
+      "eligibility": "Homepage is live; exact editorial/advertising route and current rate not verified.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-webtools"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [
+        {
+          "id": "sponsorship",
+          "billing": "unknown",
+          "amount_usd": null,
+          "all_in_verified": false,
+          "duration": "not specified",
+          "decision": "hold",
+          "reason": "No verified all-in price or source-specific qualified referral result. Keep editorial/free routes separate.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-webtools"
+          ]
+        }
+      ],
+      "next_action": {
+        "text": "Locate a current official suggestion/sponsorship route and inspect comparable issues; do not rely on aggregator pricing.",
+        "due_on": "2026-11-05",
+        "owner": "seo-product-engineer",
+        "mode": "verify_route",
+        "estimated_hours": 0.5
+      },
+      "outcomes": []
+    },
+    {
+      "id": "jsweekly",
+      "name": "JavaScript Weekly / Cooperpress",
+      "operator_family": "cooperpress",
+      "category": "publisher",
+      "priority": "P2",
+      "decision": "pursue",
+      "status": "candidate",
+      "audience": "JavaScript and TypeScript engineers",
+      "capabilities": [
+        "skills",
+        "cli",
+        "automation"
+      ],
+      "cluster_ids": [
+        "cli",
+        "skills"
+      ],
+      "asset_ids": [
+        "agent"
+      ],
+      "destination_url": "https://aictrl.dev/agent",
+      "hypothesis": "A relevant Node/TypeScript CLI release can earn tool-news attention.",
+      "eligibility": "Family advertising route exists; rate is quote-only and public audience figures were last updated in 2021.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-jsweekly"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [
+        {
+          "id": "sponsorship",
+          "billing": "quote",
+          "amount_usd": null,
+          "all_in_verified": false,
+          "duration": "not specified",
+          "decision": "hold",
+          "reason": "No verified all-in price or source-specific qualified referral result. Keep editorial/free routes separate.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-jsweekly"
+          ]
+        }
+      ],
+      "next_action": {
+        "text": "Prepare a TypeScript-oriented release note and verify the current editorial suggestion route before pitching.",
+        "due_on": "2026-10-23",
+        "owner": "seo-product-engineer",
+        "mode": "prepare",
+        "estimated_hours": 1
+      },
+      "outcomes": []
+    },
+    {
+      "id": "dailydev",
+      "name": "daily.dev advertising",
+      "operator_family": "dailydev",
+      "category": "publisher",
+      "priority": "P2",
+      "decision": "reject",
+      "status": "candidate",
+      "audience": "Developers discovering engineering content and tools",
+      "capabilities": [
+        "sdlc",
+        "skills",
+        "automation"
+      ],
+      "cluster_ids": [
+        "orchestration",
+        "skills"
+      ],
+      "asset_ids": [
+        "sdlc"
+      ],
+      "destination_url": "https://aictrl.dev/ai-sdlc",
+      "hypothesis": "Audience fit exists, but the main commercial product is a longer-running commitment.",
+      "eligibility": "Main pricing is monthly, quote-based, with an agreed term and quarterly resizing. No verified price or small one-off fit.",
+      "link_value": "Outbound link and indexability are unverified; assess as audience distribution first.",
+      "evidence_ids": [
+        "e-dailydev"
+      ],
+      "status_evidence_ids": [],
+      "live_url": null,
+      "depends_on": [],
+      "offers": [
+        {
+          "id": "managed-plan",
+          "billing": "recurring",
+          "amount_usd": null,
+          "all_in_verified": false,
+          "duration": "monthly; agreed term",
+          "decision": "reject",
+          "reason": "Monthly quote and agreed term; not a bounded one-off within known available funds.",
+          "terms_unknown": "Tax, all-in charge, exact placement duration, renewal/refund terms and paid-link qualification need verification.",
+          "evidence_ids": [
+            "e-dailydev"
+          ]
+        }
+      ],
+      "next_action": {
+        "text": "Exclude the recurring plan from this $200 experiment; revisit only if a clearly bounded one-off placement is documented.",
+        "due_on": "2026-11-19",
+        "owner": "seo-product-engineer",
+        "mode": "hold",
+        "estimated_hours": 0.25
+      },
+      "outcomes": []
+    }
+  ],
+  "evidence": [
+    {
+      "id": "gsc-baseline",
+      "subject_id": null,
+      "kind": "account_snapshot",
+      "url": "https://github.com/aictrl-dev/skill-md-research/blob/4887646ed441e4108d96aee89d259f26a0223b0e/research/seo/2026-10-21-days1-5/evidence/2026-10-21-gsc-apex-query28-comparison.json",
+      "observed_on": "2026-10-21",
+      "claim": "Complete rendered query comparison: 22 Sep–19 Oct versus 25 Aug–21 Sep 2026, Web, URL property.",
+      "limitation": "Not a fresh post-release pull; 222 visible rows include prior-only rows. Privacy-hidden queries are absent. No traffic qualification."
+    },
+    {
+      "id": "planner-baseline",
+      "subject_id": null,
+      "kind": "account_snapshot",
+      "url": "https://github.com/aictrl-dev/skill-md-research/blob/4887646ed441e4108d96aee89d259f26a0223b0e/research/seo/2026-10-22-keyword-planner-and-skills.md",
+      "observed_on": "2026-10-22",
+      "claim": "US and GB separate native Planner ranges, English, Google Search only, October 2025–September 2026.",
+      "limitation": "DOM transcription, not full CSV. Close variants overlap; bids/CPC not collected. Do not sum ranges or invent precise volumes."
+    },
+    {
+      "id": "planner-access",
+      "subject_id": null,
+      "kind": "native_ui",
+      "url": "https://ads.google.com/aw/overview",
+      "observed_on": "2026-10-22",
+      "claim": "Existing account overview shows Turn off ad blockers after sign-in; direct keywordplanner route previously returned 404.",
+      "limitation": "Fresh keyword/CPC collection blocked at the account overview. No blocker settings changed and no new campaign created."
+    },
+    {
+      "id": "product-clients",
+      "subject_id": null,
+      "kind": "founder_confirmation",
+      "url": "https://aictrl.dev/docs/plugin-setup",
+      "observed_on": "2026-10-22",
+      "claim": "Founder confirms plugin works on claude.ai and chatgpt.com. Current public guide lacks dedicated ChatGPT setup.",
+      "limitation": "Functional client support does not establish public directory approval or measured conversion."
+    },
+    {
+      "id": "product-plugins",
+      "subject_id": null,
+      "kind": "product_page",
+      "url": "https://aictrl.dev/plugins",
+      "observed_on": "2026-10-22",
+      "claim": "Inspected page body does not name ChatGPT or claude.ai; title is AI Coding Agent Plugins & Integrations.",
+      "limitation": "HTTP response inspection; requires rendered-page review when implementing copy."
+    },
+    {
+      "id": "paid-links",
+      "subject_id": null,
+      "kind": "primary",
+      "url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links",
+      "observed_on": "2026-10-22",
+      "claim": "Paid links should be qualified sponsored; nofollow is also acceptable. UGC links have a distinct relationship attribute.",
+      "limitation": "A vendor promise of dofollow or domain rating is not a valid ranking-return estimate."
+    },
+    {
+      "id": "ad-metrics",
+      "subject_id": null,
+      "kind": "primary",
+      "url": "https://support.google.com/google-ads/answer/3022575",
+      "observed_on": "2026-10-22",
+      "claim": "Planner metrics are approximate; competition is advertiser competition, and historical bids are not guaranteed CPC.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "ad-copy",
+      "subject_id": null,
+      "kind": "primary",
+      "url": "https://support.google.com/google-ads/answer/7684791",
+      "observed_on": "2026-10-22",
+      "claim": "Responsive Search headline and description limits are 30 and 90 characters.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "ad-budgets",
+      "subject_id": null,
+      "kind": "primary",
+      "url": "https://support.google.com/google-ads/answer/10486938",
+      "observed_on": "2026-10-22",
+      "claim": "Campaign total budgets support Search; account availability and final configuration still need inspection.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-mcp-registry",
+      "subject_id": "mcp-registry",
+      "kind": "primary",
+      "url": "https://modelcontextprotocol.io/registry/remote-servers",
+      "observed_on": "2026-10-22",
+      "claim": "Registry supports publicly reachable remote servers via server.json remotes; registry remains in preview.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-glama",
+      "subject_id": "glama",
+      "kind": "primary",
+      "url": "https://glama.ai/mcp/connectors/dev.aictrl/aictrl",
+      "observed_on": "2026-10-22",
+      "claim": "Existing live aictrl connector observed Healthy in the earlier 22 October check.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-pulsemcp",
+      "subject_id": "pulsemcp",
+      "kind": "primary",
+      "url": "https://www.pulsemcp.com/submit",
+      "observed_on": "2026-10-22",
+      "claim": "Native UI says new servers/clients and listing edits are temporarily paused; recommends Official Registry.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-mcpservers",
+      "subject_id": "mcpservers",
+      "kind": "primary",
+      "url": "https://mcpservers.org/submit",
+      "observed_on": "2026-10-22",
+      "claim": "Free review within two weeks; premium one-time review is $39 with 24-hour target.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-mcp-so",
+      "subject_id": "mcp-so",
+      "kind": "primary",
+      "url": "https://mcp.so/submit?type=remote-server",
+      "observed_on": "2026-10-22",
+      "claim": "Remote lane advertises $39 one-time publication, priority and a project link.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-mcpmarket",
+      "subject_id": "mcpmarket",
+      "kind": "primary",
+      "url": "https://mcpmarket.com/submit",
+      "observed_on": "2026-10-22",
+      "claim": "Native Agent Skill tab: $29 one-time, 24-hour listing and Try Now link; free 4–6 week queue lacks Try Now.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-smithery",
+      "subject_id": "smithery",
+      "kind": "primary",
+      "url": "https://smithery.ai/",
+      "observed_on": "2026-10-22",
+      "claim": "Official service notice concerns MCP Proxy and managed identity, not a stated shutdown of the entire catalog.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-lobehub",
+      "subject_id": "lobehub",
+      "kind": "primary",
+      "url": "https://lobehub.com/mcp",
+      "observed_on": "2026-10-22",
+      "claim": "MCP catalog has a publishing route; the publishing skill document was not accessible in this pass.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-skills-sh",
+      "subject_id": "skills-sh",
+      "kind": "primary",
+      "url": "https://skills.sh/docs/customize",
+      "observed_on": "2026-10-22",
+      "claim": "skills.sh.json changes display grouping; earlier check confirms aictrl task groups are live.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-skillsmp",
+      "subject_id": "skillsmp",
+      "kind": "primary",
+      "url": "https://skillsmp.com/about",
+      "observed_on": "2026-10-22",
+      "claim": "Site describes collecting public GitHub SKILL.md resources; API subscription is a separate search/export product.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-skillhub",
+      "subject_id": "skillhub",
+      "kind": "primary",
+      "url": "https://www.skillhub.club/",
+      "observed_on": "2026-10-22",
+      "claim": "Public catalog exposes Publish Skill; inventory size is not audience size.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-claude",
+      "subject_id": "claude",
+      "kind": "primary",
+      "url": "https://claude.com/marketplace/connectors-plugins",
+      "observed_on": "2026-10-22",
+      "claim": "Official marketplace exposes separate Submit connector and Submit plugin routes.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-chatgpt",
+      "subject_id": "chatgpt",
+      "kind": "primary",
+      "url": "https://developers.openai.com/plugins/deploy/submission",
+      "observed_on": "2026-10-22",
+      "claim": "Current portal uses a ZIP, verified developer identity, MCP/domain checks, five positive and three negative review cases, and a demo.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-cline",
+      "subject_id": "cline",
+      "kind": "primary",
+      "url": "https://github.com/cline/mcp-marketplace",
+      "observed_on": "2026-10-22",
+      "claim": "Primary README describes issue-template submission and review of maturity, documentation and security.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-continue",
+      "subject_id": "continue",
+      "kind": "primary",
+      "url": "https://docs.continue.dev/customize/mcp-tools",
+      "observed_on": "2026-10-22",
+      "claim": "Official docs describe MCP configuration; the current Hub publishing route was not verified.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-cursor",
+      "subject_id": "cursor",
+      "kind": "primary",
+      "url": "https://cursor.directory/",
+      "observed_on": "2026-10-22",
+      "claim": "The directory currently presents community plugins; this is not proof of first-party Cursor approval.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-devin-desktop",
+      "subject_id": "devin-desktop",
+      "kind": "primary",
+      "url": "https://docs.devin.ai/desktop/cascade/mcp",
+      "observed_on": "2026-10-22",
+      "claim": "Official redirected documentation supports MCP configuration, not a verified open partner application.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-opencode",
+      "subject_id": "opencode",
+      "kind": "primary",
+      "url": "https://github.com/anomalyco/opencode/pull/37248#issuecomment-6347664637",
+      "observed_on": "2026-10-22",
+      "claim": "Existing follow-up asks maintainers to reconsider; current public skills README supports skills install plus remote MCP config.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-vscode-gallery",
+      "subject_id": "vscode-gallery",
+      "kind": "primary",
+      "url": "https://code.visualstudio.com/docs/agent-customization/mcp-servers",
+      "observed_on": "2026-10-22",
+      "claim": "Current official documentation describes discovering and installing MCP servers.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-github-marketplace",
+      "subject_id": "github-marketplace",
+      "kind": "primary",
+      "url": "https://docs.github.com/en/apps/github-marketplace",
+      "observed_on": "2026-10-22",
+      "claim": "Official app marketplace route exists; prior preparation is not a live listing receipt.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-npm",
+      "subject_id": "npm",
+      "kind": "primary",
+      "url": "https://github.com/aictrl-dev/cli",
+      "observed_on": "2026-10-22",
+      "claim": "Public CLI repository is the source of truth for package identity; npm availability was not verified in this pass.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-awesome-remote",
+      "subject_id": "awesome-remote",
+      "kind": "primary",
+      "url": "https://github.com/punkpeye/awesome-remote-mcp-servers",
+      "observed_on": "2026-10-22",
+      "claim": "Remote-specific contribution guide requires endpoint, homepage/docs, Glama badge, OAuth marker and a short description.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-awesome-claude",
+      "subject_id": "awesome-claude",
+      "kind": "primary",
+      "url": "https://github.com/hesreallyhim/awesome-claude-code",
+      "observed_on": "2026-10-22",
+      "claim": "Contribution guide requires a human recommendation through the web issue form and rejects pull requests.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-awesome-skills",
+      "subject_id": "awesome-skills",
+      "kind": "primary",
+      "url": "https://github.com/VoltAgent/awesome-agent-skills",
+      "observed_on": "2026-10-22",
+      "claim": "Primary contribution guide describes quality and usage checks; sponsorship is separate from curated acceptance.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-n8n",
+      "subject_id": "n8n",
+      "kind": "primary",
+      "url": "https://support.n8n.io/article/becoming-an-n8n-template-creator-and-getting-help",
+      "observed_on": "2026-10-22",
+      "claim": "Official program asks creators to register and read Creator Hub submission guidance.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-dbos",
+      "subject_id": "dbos",
+      "kind": "primary",
+      "url": "https://www.dbos.dev/",
+      "observed_on": "2026-10-22",
+      "claim": "Official positioning includes durable workflows and AI agents; no aictrl co-marketing agreement verified.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-alternativeto",
+      "subject_id": "alternativeto",
+      "kind": "primary",
+      "url": "https://alternativeto.net/faq/",
+      "observed_on": "2026-10-22",
+      "claim": "FAQ describes app suggestions and review; pending queue is not a live listing.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-producthunt",
+      "subject_id": "producthunt",
+      "kind": "primary",
+      "url": "https://www.producthunt.com/launch",
+      "observed_on": "2026-10-22",
+      "claim": "Official launch guide is available; no current aictrl launch draft or eligibility receipt inspected.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-devhunt",
+      "subject_id": "devhunt",
+      "kind": "primary",
+      "url": "https://devhunt.org/",
+      "observed_on": "2026-10-22",
+      "claim": "Homepage advertises a $149 per week header placement and developer tool categories.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-peerlist",
+      "subject_id": "peerlist",
+      "kind": "primary",
+      "url": "https://peerlist.io/launchpad",
+      "observed_on": "2026-10-22",
+      "claim": "Current Launchpad page has a launch route and a weekly project cohort.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-uneed",
+      "subject_id": "uneed",
+      "kind": "primary",
+      "url": "https://www.uneed.best/pricing",
+      "observed_on": "2026-10-22",
+      "claim": "Current pricing: free queue, $14.99 fast-track, $39.99 skip line, $99 annual Pro and higher-priced promotion options.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-betalist",
+      "subject_id": "betalist",
+      "kind": "primary",
+      "url": "https://betalist.com/criteria",
+      "observed_on": "2026-10-22",
+      "claim": "Primary criteria require a technology product, distinct landing/signup and a suitable launch stage.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-plugandship",
+      "subject_id": "plugandship",
+      "kind": "primary",
+      "url": "https://plugandship.dev/submit",
+      "observed_on": "2026-10-22",
+      "claim": "Current submit page offers free queue or $19 date selection; next free slot is not the existing assigned slot.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-futuretools",
+      "subject_id": "futuretools",
+      "kind": "primary",
+      "url": "https://futuretools.io/submit-a-tool",
+      "observed_on": "2026-10-22",
+      "claim": "Submission form has editorial review and free/freemium/paid/open-source categories; no fee observed.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-taaft",
+      "subject_id": "taaft",
+      "kind": "primary",
+      "url": "https://theresanaiforthat.com/submit/",
+      "observed_on": "2026-10-22",
+      "claim": "Primary submission route could not be read in this pass.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-neuronfeed",
+      "subject_id": "neuronfeed",
+      "kind": "primary",
+      "url": "https://neuronfeed.com/guides/get-listed",
+      "observed_on": "2026-10-22",
+      "claim": "Official guide offers free AI startup submissions and describes a 48-hour review target.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-console",
+      "subject_id": "console",
+      "kind": "primary",
+      "url": "https://console.dev/selection-criteria",
+      "observed_on": "2026-10-22",
+      "claim": "Selection focuses on useful self-service developer tools; advertising page states paid reviews are not sold.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-tldr",
+      "subject_id": "tldr",
+      "kind": "primary",
+      "url": "https://advertise.tldr.tech/audiences/software-developers/",
+      "observed_on": "2026-10-22",
+      "claim": "Publisher offers developer audience advertising; no verified public rate in this pass.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-changelog",
+      "subject_id": "changelog",
+      "kind": "primary",
+      "url": "https://changelog.com/news/submit",
+      "observed_on": "2026-10-22",
+      "claim": "Official submit page encourages own work but excludes how-to/tutorial and commercial pitches.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-infoq",
+      "subject_id": "infoq",
+      "kind": "primary",
+      "url": "https://www.infoq.com/write-for-infoq/",
+      "observed_on": "2026-10-22",
+      "claim": "Official author route accepts proposals for first-hand engineering and production lessons.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-dzone",
+      "subject_id": "dzone",
+      "kind": "primary",
+      "url": "https://dzone.com/articles/dzones-article-submission-guidelines",
+      "observed_on": "2026-10-22",
+      "claim": "Official contribution and article guidelines are public; placement is not guaranteed.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-dev",
+      "subject_id": "dev",
+      "kind": "primary",
+      "url": "https://dev.to/guidelines-for-ai-assisted-articles-on-dev/",
+      "observed_on": "2026-10-22",
+      "claim": "Current policy covers AI-assisted articles; September 2026 feature adds explicit disclosure tiers.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-hashnode",
+      "subject_id": "hashnode",
+      "kind": "primary",
+      "url": "https://docs.hashnode.com/blogs/editor/writing-a-blog-post",
+      "observed_on": "2026-10-22",
+      "claim": "Official editor guide supports an original-source URL for republishing.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-reddit",
+      "subject_id": "reddit",
+      "kind": "primary",
+      "url": "https://www.reddit.com/r/AI_Agents/",
+      "observed_on": "2026-10-22",
+      "claim": "Existing community research identifies relevant engineering audiences; membership is not moderator ownership.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-hackernews",
+      "subject_id": "hackernews",
+      "kind": "primary",
+      "url": "https://news.ycombinator.com/newsguidelines.html",
+      "observed_on": "2026-10-22",
+      "claim": "Current HN guidelines require human-written participation and prohibit automated posting.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-webtools",
+      "subject_id": "webtools",
+      "kind": "primary",
+      "url": "https://webtoolsweekly.com/",
+      "observed_on": "2026-10-22",
+      "claim": "Primary homepage describes a weekly front-end developer tools newsletter.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-jsweekly",
+      "subject_id": "jsweekly",
+      "kind": "primary",
+      "url": "https://cooperpress.com/advertise/",
+      "observed_on": "2026-10-22",
+      "claim": "Official advertising route is available; stale aggregate audience claims are not current reach evidence.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "e-dailydev",
+      "subject_id": "dailydev",
+      "kind": "primary",
+      "url": "https://business.daily.dev/pricing/",
+      "observed_on": "2026-10-22",
+      "claim": "Current pricing describes Starter/Growth/Scale plans, company-specific quotes and a signed term.",
+      "limitation": "Platform statement or observed page, not evidence of aictrl referral outcomes."
+    },
+    {
+      "id": "history-glama",
+      "subject_id": "glama",
+      "kind": "live_page",
+      "url": "https://glama.ai/mcp/connectors/dev.aictrl/aictrl",
+      "observed_on": "2026-10-22",
+      "claim": "Earlier 22 October check: owned connector is live/Healthy.",
+      "limitation": "Historical or founder-confirmed state; not a new submission or a fresh traffic measurement."
+    },
+    {
+      "id": "history-skills-sh",
+      "subject_id": "skills-sh",
+      "kind": "live_page",
+      "url": "https://github.com/aictrl-dev/skill-md-research/blob/39ae694fd19212880fce4f1c62f1ab94e0df1faa/research/seo/2026-10-22-partner-actions/skills-catalog-live.json",
+      "observed_on": "2026-10-22",
+      "claim": "Earlier 22 October check: aictrl source page and task grouping visible.",
+      "limitation": "Historical or founder-confirmed state; not a new submission or a fresh traffic measurement."
+    },
+    {
+      "id": "history-mcpservers",
+      "subject_id": "mcpservers",
+      "kind": "receipt",
+      "url": "https://github.com/aictrl-dev/skill-md-research/blob/research/referral-search-engine-20261022/research/seo/acquisition/evidence/history-import.json",
+      "observed_on": "2026-10-21",
+      "claim": "Free application sent 21 October; public approval not verified.",
+      "limitation": "Historical or founder-confirmed state; not a new submission or a fresh traffic measurement."
+    },
+    {
+      "id": "history-mcpmarket",
+      "subject_id": "mcpmarket",
+      "kind": "receipt",
+      "url": "https://github.com/aictrl-dev/skill-md-research/blob/research/referral-search-engine-20261022/research/seo/acquisition/evidence/history-import.json",
+      "observed_on": "2026-10-21",
+      "claim": "One code-review skill submitted free on 21 October; no paid upgrade.",
+      "limitation": "Historical or founder-confirmed state; not a new submission or a fresh traffic measurement."
+    },
+    {
+      "id": "history-opencode",
+      "subject_id": "opencode",
+      "kind": "receipt",
+      "url": "https://github.com/anomalyco/opencode/pull/37248#issuecomment-6347664637",
+      "observed_on": "2026-10-22",
+      "claim": "One reconsideration comment posted; upstream PR remains closed unmerged.",
+      "limitation": "Historical or founder-confirmed state; not a new submission or a fresh traffic measurement."
+    },
+    {
+      "id": "history-alternativeto",
+      "subject_id": "alternativeto",
+      "kind": "receipt",
+      "url": "https://github.com/aictrl-dev/skill-md-research/blob/research/referral-search-engine-20261022/research/seo/acquisition/evidence/history-import.json",
+      "observed_on": "2026-10-15",
+      "claim": "Existing free submission dated 15 October; review pending.",
+      "limitation": "Historical or founder-confirmed state; not a new submission or a fresh traffic measurement."
+    },
+    {
+      "id": "history-plugandship",
+      "subject_id": "plugandship",
+      "kind": "receipt",
+      "url": "https://github.com/aictrl-dev/skill-md-research/blob/research/referral-search-engine-20261022/research/seo/acquisition/evidence/history-import.json",
+      "observed_on": "2026-10-22",
+      "claim": "Existing free public engineering-skills page; assigned launch slot previously recorded as 6 November.",
+      "limitation": "Historical or founder-confirmed state; not a new submission or a fresh traffic measurement."
+    },
+    {
+      "id": "history-futuretools",
+      "subject_id": "futuretools",
+      "kind": "receipt",
+      "url": "https://github.com/aictrl-dev/skill-md-research/blob/research/referral-search-engine-20261022/research/seo/acquisition/evidence/history-import.json",
+      "observed_on": "2026-10-16",
+      "claim": "Initial application 8 October; permitted resubmission 16 October.",
+      "limitation": "Historical or founder-confirmed state; not a new submission or a fresh traffic measurement."
+    },
+    {
+      "id": "history-neuronfeed",
+      "subject_id": "neuronfeed",
+      "kind": "receipt",
+      "url": "https://github.com/aictrl-dev/skill-md-research/blob/research/referral-search-engine-20261022/research/seo/acquisition/evidence/history-import.json",
+      "observed_on": "2026-10-08",
+      "claim": "Existing 8 October free application; public outcome not established.",
+      "limitation": "Historical or founder-confirmed state; not a new submission or a fresh traffic measurement."
+    },
+    {
+      "id": "history-console",
+      "subject_id": "console",
+      "kind": "founder_confirmation",
+      "url": "https://github.com/aictrl-dev/skill-md-research/blob/39ae694fd19212880fce4f1c62f1ab94e0df1faa/research/seo/2026-10-22-partner-actions.md",
+      "observed_on": "2026-10-22",
+      "claim": "Founder confirms outreach already sent from bulat@aictrl.dev; delivery time and body not inspected.",
+      "limitation": "Historical or founder-confirmed state; not a new submission or a fresh traffic measurement."
+    },
+    {
+      "id": "registry-handoff",
+      "subject_id": "mcp-registry",
+      "kind": "receipt",
+      "url": "https://github.com/aictrl-dev/skill-md-research/blob/39ae694fd19212880fce4f1c62f1ab94e0df1faa/research/seo/2026-10-22-partner-discovery-priorities.md",
+      "observed_on": "2026-10-22",
+      "claim": "Existing namespace io.github.vasparshin/aictrl and OAuth-corrected validated draft are recorded; fresh public status was not re-established.",
+      "limitation": "Historical operating handoff is not a live registry receipt; preserve existing ownership and avoid a personal replacement namespace."
+    }
+  ],
+  "clusters": [
+    {
+      "id": "orchestration",
+      "name": "SDLC orchestration and software factory",
+      "intent": "Engineering leaders seeking repeatable delivery workflows",
+      "priority": "P0",
+      "demand_assessment": "GSC has small early exposure for SDLC orchestration and AI software factory; no commercial volume or CPC measured."
+    },
+    {
+      "id": "review",
+      "name": "AI code review and change explanation",
+      "intent": "Engineers evaluating review automation and understanding a pull request",
+      "priority": "P1",
+      "demand_assessment": "Broad ai code review averaged position about 61 with seven impressions in the baseline; narrow workflow use cases need Planner research."
+    },
+    {
+      "id": "skills",
+      "name": "Agent skills and context engineering",
+      "intent": "Practitioners installing reusable skills or reducing instruction overhead",
+      "priority": "P0",
+      "demand_assessment": "Prior US Planner ranges are 1k–10k for several broad terms; informational, format and prompt-dump intent overlap."
+    },
+    {
+      "id": "clients",
+      "name": "Claude.ai and ChatGPT engineering plugin",
+      "intent": "People looking for engineering tools inside their existing chat client",
+      "priority": "P0",
+      "demand_assessment": "Founder confirms both clients work; no collected client-specific keyword volume or CPC yet."
+    },
+    {
+      "id": "cli",
+      "name": "Headless coding agent and CI automation",
+      "intent": "Developers running agents in terminals or CI",
+      "priority": "P1",
+      "demand_assessment": "Public CLI and headless benchmark assets exist; harness terms have broad and automotive ambiguity."
+    },
+    {
+      "id": "knowledge",
+      "name": "Code knowledge graph and traceability",
+      "intent": "Teams finding code relationships and deterministic delivery evidence",
+      "priority": "P1",
+      "demand_assessment": "GSC has small code-graph query samples, including position 21 for agent knowledge graph for code."
+    },
+    {
+      "id": "workflows",
+      "name": "Durable AI workflow automation",
+      "intent": "Engineers integrating steps, approvals and durable execution",
+      "priority": "P1",
+      "demand_assessment": "Adjacent use-case demand is unmeasured; workflow-as-code exposure is mostly prior-window in the GSC baseline."
+    }
+  ],
+  "assets": [
+    {
+      "id": "plugins",
+      "url": "https://aictrl.dev/plugins",
+      "readiness": "needs_copy",
+      "gap": "Page body does not name claude.ai or ChatGPT in the inspected response.",
+      "next_step": "Add accurate client-specific entry paths and links to tested setup guides."
+    },
+    {
+      "id": "setup",
+      "url": "https://aictrl.dev/docs/plugin-setup",
+      "readiness": "needs_copy",
+      "gap": "Claude.ai has a setup section; ChatGPT appears only in the authentication text.",
+      "next_step": "Create a dedicated tested ChatGPT section; distinguish custom install from directory approval."
+    },
+    {
+      "id": "skills",
+      "url": "https://github.com/aictrl-dev/skills",
+      "readiness": "ready_for_research",
+      "gap": "17 canonical skills in public source; directory inventories can lag.",
+      "next_step": "Use a specific skill and a local no-account example; pin a release when preparing a listing."
+    },
+    {
+      "id": "agent",
+      "url": "https://aictrl.dev/agent",
+      "readiness": "needs_demo",
+      "gap": "Headless CLI positioning exists; a new result demo is not captured in this pass.",
+      "next_step": "Prepare one successful bounded CI or terminal journey from the public CLI."
+    },
+    {
+      "id": "sdlc",
+      "url": "https://aictrl.dev/ai-sdlc",
+      "readiness": "needs_validation",
+      "gap": "Valid sitemap destination; claims and primary CTA need a buyer-intent review.",
+      "next_step": "Show issue → plan → execute → review → evidence with an actual workflow artifact."
+    },
+    {
+      "id": "review",
+      "url": "https://aictrl.dev/features/code-review",
+      "readiness": "needs_demo",
+      "gap": "Feature page exists; use current product evidence for differentiation.",
+      "next_step": "Show one real bug, review finding, fix and test, with limitations."
+    },
+    {
+      "id": "knowledge",
+      "url": "https://aictrl.dev/features/knowledge-graph",
+      "readiness": "ready_for_research",
+      "gap": "Structural code understanding page exists; no new performance claim verified.",
+      "next_step": "Link the traceability or code-navigation example appropriate to the referring audience."
+    },
+    {
+      "id": "workflow",
+      "url": "https://aictrl.dev/features/workflow-as-code",
+      "readiness": "needs_demo",
+      "gap": "Current URL exists in sitemap; partner-specific examples are not built.",
+      "next_step": "Build and test a small approved workflow before claiming an integration."
+    },
+    {
+      "id": "swe",
+      "url": "https://aictrl.dev/blog/swe-evo-analysis",
+      "readiness": "ready_for_research",
+      "gap": "Research article is informational; not a direct paid signup landing page.",
+      "next_step": "Use the measured prompt/context argument for editorial interest, with source attribution."
+    }
+  ],
+  "keywords": [
+    {
+      "id": "kw-01",
+      "phrase": "sdlc orchestrator",
+      "cluster_id": "orchestration",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": {
+        "clicks": 0,
+        "impressions": 5,
+        "position": 8.2,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-02",
+      "phrase": "sdlc orchestration",
+      "cluster_id": "orchestration",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": {
+        "clicks": 0,
+        "impressions": 1,
+        "position": 11.0,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-03",
+      "phrase": "software factory ai",
+      "cluster_id": "orchestration",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": {
+        "clicks": 1,
+        "impressions": 1,
+        "position": 88.0,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-04",
+      "phrase": "ai software factory",
+      "cluster_id": "orchestration",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": {
+        "clicks": 0,
+        "impressions": 4,
+        "position": 13.5,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-05",
+      "phrase": "aisdlc",
+      "cluster_id": "orchestration",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": {
+        "clicks": 0,
+        "impressions": 1,
+        "position": 67.0,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-06",
+      "phrase": "ai code review",
+      "cluster_id": "review",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": {
+        "clicks": 0,
+        "impressions": 7,
+        "position": 61.1,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-07",
+      "phrase": "ai code reviewer",
+      "cluster_id": "review",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": {
+        "clicks": 0,
+        "impressions": 1,
+        "position": 60.0,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-08",
+      "phrase": "deterministic ai code review",
+      "cluster_id": "review",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": {
+        "clicks": 0,
+        "impressions": 2,
+        "position": 66.5,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-09",
+      "phrase": "ai agent plugins",
+      "cluster_id": "clients",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": {
+        "clicks": 0,
+        "impressions": 2,
+        "position": 49.5,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-10",
+      "phrase": "ai agent plugin",
+      "cluster_id": "clients",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": {
+        "clicks": 0,
+        "impressions": 1,
+        "position": 60.0,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-11",
+      "phrase": "agent knowledge graph for code",
+      "cluster_id": "knowledge",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": {
+        "clicks": 0,
+        "impressions": 2,
+        "position": 21.0,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-12",
+      "phrase": "knowledge graph for ai agents",
+      "cluster_id": "knowledge",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": {
+        "clicks": 0,
+        "impressions": 2,
+        "position": 58.5,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-13",
+      "phrase": "agentic context graph",
+      "cluster_id": "knowledge",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": {
+        "clicks": 0,
+        "impressions": 2,
+        "position": 18.5,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-14",
+      "phrase": "workflow as code",
+      "cluster_id": "workflows",
+      "intent": "Informational or ambiguous; do not buy broad expansion automatically.",
+      "planner": [],
+      "gsc": {
+        "clicks": 0,
+        "impressions": 0,
+        "position": 0,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "content_support",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-15",
+      "phrase": "workflows as code",
+      "cluster_id": "workflows",
+      "intent": "Informational or ambiguous; do not buy broad expansion automatically.",
+      "planner": [],
+      "gsc": {
+        "clicks": 0,
+        "impressions": 0,
+        "position": 0,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline"
+      ],
+      "decision": "content_support",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-16",
+      "phrase": "agent harness",
+      "cluster_id": "cli",
+      "intent": "Informational or ambiguous; do not buy broad expansion automatically.",
+      "planner": [
+        {
+          "market": "GB",
+          "monthly_low": 100,
+          "monthly_high": 1000,
+          "cpc_low_usd": null,
+          "cpc_high_usd": null,
+          "window_start": "2025-10-01",
+          "window_end": "2026-09-30",
+          "network": "Google Search",
+          "language": "English"
+        },
+        {
+          "market": "US",
+          "monthly_low": 1000,
+          "monthly_high": 10000,
+          "cpc_low_usd": null,
+          "cpc_high_usd": null,
+          "window_start": "2025-10-01",
+          "window_end": "2026-09-30",
+          "network": "Google Search",
+          "language": "English"
+        }
+      ],
+      "gsc": null,
+      "evidence_ids": [
+        "planner-baseline"
+      ],
+      "decision": "content_support",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-17",
+      "phrase": "harness engineering",
+      "cluster_id": "cli",
+      "intent": "Informational or ambiguous; do not buy broad expansion automatically.",
+      "planner": [
+        {
+          "market": "GB",
+          "monthly_low": 100,
+          "monthly_high": 1000,
+          "cpc_low_usd": null,
+          "cpc_high_usd": null,
+          "window_start": "2025-10-01",
+          "window_end": "2026-09-30",
+          "network": "Google Search",
+          "language": "English"
+        },
+        {
+          "market": "US",
+          "monthly_low": 1000,
+          "monthly_high": 10000,
+          "cpc_low_usd": null,
+          "cpc_high_usd": null,
+          "window_start": "2025-10-01",
+          "window_end": "2026-09-30",
+          "network": "Google Search",
+          "language": "English"
+        }
+      ],
+      "gsc": null,
+      "evidence_ids": [
+        "planner-baseline"
+      ],
+      "decision": "content_support",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-18",
+      "phrase": "context engineering",
+      "cluster_id": "skills",
+      "intent": "Informational or ambiguous; do not buy broad expansion automatically.",
+      "planner": [
+        {
+          "market": "GB",
+          "monthly_low": 100,
+          "monthly_high": 1000,
+          "cpc_low_usd": null,
+          "cpc_high_usd": null,
+          "window_start": "2025-10-01",
+          "window_end": "2026-09-30",
+          "network": "Google Search",
+          "language": "English"
+        },
+        {
+          "market": "US",
+          "monthly_low": 1000,
+          "monthly_high": 10000,
+          "cpc_low_usd": null,
+          "cpc_high_usd": null,
+          "window_start": "2025-10-01",
+          "window_end": "2026-09-30",
+          "network": "Google Search",
+          "language": "English"
+        }
+      ],
+      "gsc": null,
+      "evidence_ids": [
+        "planner-baseline"
+      ],
+      "decision": "content_support",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-19",
+      "phrase": "claude code system prompt",
+      "cluster_id": "skills",
+      "intent": "Informational or ambiguous; do not buy broad expansion automatically.",
+      "planner": [
+        {
+          "market": "GB",
+          "monthly_low": 100,
+          "monthly_high": 1000,
+          "cpc_low_usd": null,
+          "cpc_high_usd": null,
+          "window_start": "2025-10-01",
+          "window_end": "2026-09-30",
+          "network": "Google Search",
+          "language": "English"
+        },
+        {
+          "market": "US",
+          "monthly_low": 1000,
+          "monthly_high": 10000,
+          "cpc_low_usd": null,
+          "cpc_high_usd": null,
+          "window_start": "2025-10-01",
+          "window_end": "2026-09-30",
+          "network": "Google Search",
+          "language": "English"
+        }
+      ],
+      "gsc": null,
+      "evidence_ids": [
+        "planner-baseline"
+      ],
+      "decision": "content_support",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-20",
+      "phrase": "agents md",
+      "cluster_id": "skills",
+      "intent": "Informational or ambiguous; do not buy broad expansion automatically.",
+      "planner": [
+        {
+          "market": "GB",
+          "monthly_low": 100,
+          "monthly_high": 1000,
+          "cpc_low_usd": null,
+          "cpc_high_usd": null,
+          "window_start": "2025-10-01",
+          "window_end": "2026-09-30",
+          "network": "Google Search",
+          "language": "English"
+        },
+        {
+          "market": "US",
+          "monthly_low": 1000,
+          "monthly_high": 10000,
+          "cpc_low_usd": null,
+          "cpc_high_usd": null,
+          "window_start": "2025-10-01",
+          "window_end": "2026-09-30",
+          "network": "Google Search",
+          "language": "English"
+        }
+      ],
+      "gsc": null,
+      "evidence_ids": [
+        "planner-baseline"
+      ],
+      "decision": "content_support",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-21",
+      "phrase": "swe evo",
+      "cluster_id": "skills",
+      "intent": "Informational or ambiguous; do not buy broad expansion automatically.",
+      "planner": [
+        {
+          "market": "GB",
+          "monthly_low": 10,
+          "monthly_high": 100,
+          "cpc_low_usd": null,
+          "cpc_high_usd": null,
+          "window_start": "2025-10-01",
+          "window_end": "2026-09-30",
+          "network": "Google Search",
+          "language": "English"
+        },
+        {
+          "market": "US",
+          "monthly_low": 10,
+          "monthly_high": 100,
+          "cpc_low_usd": null,
+          "cpc_high_usd": null,
+          "window_start": "2025-10-01",
+          "window_end": "2026-09-30",
+          "network": "Google Search",
+          "language": "English"
+        }
+      ],
+      "gsc": {
+        "clicks": 2,
+        "impressions": 27,
+        "position": 8.1,
+        "window_start": "2026-09-22",
+        "window_end": "2026-10-19",
+        "property": "https://aictrl.dev/",
+        "search_type": "Web",
+        "timezone": "Pacific daily dates"
+      },
+      "evidence_ids": [
+        "gsc-baseline",
+        "planner-baseline"
+      ],
+      "decision": "content_support",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-22",
+      "phrase": "swe evo benchmark",
+      "cluster_id": "skills",
+      "intent": "Informational or ambiguous; do not buy broad expansion automatically.",
+      "planner": [
+        {
+          "market": "GB",
+          "monthly_low": 10,
+          "monthly_high": 100,
+          "cpc_low_usd": null,
+          "cpc_high_usd": null,
+          "window_start": "2025-10-01",
+          "window_end": "2026-09-30",
+          "network": "Google Search",
+          "language": "English"
+        },
+        {
+          "market": "US",
+          "monthly_low": 10,
+          "monthly_high": 100,
+          "cpc_low_usd": null,
+          "cpc_high_usd": null,
+          "window_start": "2025-10-01",
+          "window_end": "2026-09-30",
+          "network": "Google Search",
+          "language": "English"
+        }
+      ],
+      "gsc": null,
+      "evidence_ids": [
+        "planner-baseline"
+      ],
+      "decision": "content_support",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-23",
+      "phrase": "headless coding agent",
+      "cluster_id": "cli",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": null,
+      "evidence_ids": [
+        "planner-access"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-24",
+      "phrase": "ai sdlc automation",
+      "cluster_id": "orchestration",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": null,
+      "evidence_ids": [
+        "planner-access"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-25",
+      "phrase": "claude ai mcp integration",
+      "cluster_id": "clients",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": null,
+      "evidence_ids": [
+        "planner-access"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-26",
+      "phrase": "chatgpt engineering plugin",
+      "cluster_id": "clients",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": null,
+      "evidence_ids": [
+        "planner-access"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-27",
+      "phrase": "agent skills library",
+      "cluster_id": "skills",
+      "intent": "Informational or ambiguous; do not buy broad expansion automatically.",
+      "planner": [],
+      "gsc": null,
+      "evidence_ids": [
+        "planner-access"
+      ],
+      "decision": "content_support",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    },
+    {
+      "id": "kw-28",
+      "phrase": "pull request explanation",
+      "cluster_id": "review",
+      "intent": "Potential tool/use-case intent; inspect actual result page and Planner variants before bidding.",
+      "planner": [],
+      "gsc": null,
+      "evidence_ids": [
+        "planner-access"
+      ],
+      "decision": "prepare_exact_phrase",
+      "caveat": "No measured CPC, conversions or qualified-visitor rate. Query position is a small-sample average, not a controlled ranking. Current-zero/prior-only exposure is not zero market demand."
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "search-sdlc",
+      "cluster_id": "orchestration",
+      "asset_id": "sdlc",
+      "state": "draft_paused",
+      "markets": [
+        "US",
+        "GB"
+      ],
+      "language": "English",
+      "network": "Google Search only; partners and Display excluded in proposal",
+      "match_types": [
+        "exact",
+        "phrase"
+      ],
+      "keywords": [
+        "sdlc orchestration",
+        "ai sdlc automation",
+        "ai software factory"
+      ],
+      "negative_keywords": [
+        "wiring harness",
+        "wire harness",
+        "automotive",
+        "ECU",
+        "car repair",
+        "manufacturing jobs",
+        "factory jobs",
+        "software engineer salary"
+      ],
+      "headlines": [
+        "AI SDLC Workflows",
+        "From Issue to Reviewed Change",
+        "Build Repeatable AI Workflows"
+      ],
+      "descriptions": [
+        "Connect skills, execution and review in one engineering workflow. Explore aictrl.",
+        "See how aictrl structures delivery work with reusable skills and workflow evidence."
+      ],
+      "budget_usd": null,
+      "max_cpc_usd": null,
+      "launch_blockers": [
+        "Fresh market-specific Planner volume and bid ranges not collected.",
+        "No separate Search budget or bid cap assigned.",
+        "Choose one geography and one use case for a bounded first pilot.",
+        "Verify landing-page promise, successful journey and allowed qualified-outcome measurement."
+      ]
+    },
+    {
+      "id": "search-clients",
+      "cluster_id": "clients",
+      "asset_id": "plugins",
+      "state": "draft_paused",
+      "markets": [
+        "US",
+        "GB"
+      ],
+      "language": "English",
+      "network": "Google Search only; partners and Display excluded in proposal",
+      "match_types": [
+        "exact",
+        "phrase"
+      ],
+      "keywords": [
+        "claude ai mcp integration",
+        "chatgpt engineering plugin"
+      ],
+      "negative_keywords": [
+        "wiring harness",
+        "wire harness",
+        "automotive",
+        "ECU",
+        "car repair",
+        "manufacturing jobs",
+        "factory jobs",
+        "software engineer salary"
+      ],
+      "headlines": [
+        "Engineering Tools in ChatGPT",
+        "Connect aictrl to Claude.ai",
+        "Skills for Engineering Work"
+      ],
+      "descriptions": [
+        "Bring engineering skills and workflows to your existing chat client. See setup steps.",
+        "Explore aictrl for Claude.ai and ChatGPT. Choose your client and follow the guide."
+      ],
+      "budget_usd": null,
+      "max_cpc_usd": null,
+      "launch_blockers": [
+        "Fresh market-specific Planner volume and bid ranges not collected.",
+        "No separate Search budget or bid cap assigned.",
+        "Choose one geography and one use case for a bounded first pilot.",
+        "Verify landing-page promise, successful journey and allowed qualified-outcome measurement."
+      ]
+    },
+    {
+      "id": "search-cli",
+      "cluster_id": "cli",
+      "asset_id": "agent",
+      "state": "draft_paused",
+      "markets": [
+        "US",
+        "GB"
+      ],
+      "language": "English",
+      "network": "Google Search only; partners and Display excluded in proposal",
+      "match_types": [
+        "exact",
+        "phrase"
+      ],
+      "keywords": [
+        "headless coding agent",
+        "coding agent cli automation"
+      ],
+      "negative_keywords": [
+        "wiring harness",
+        "wire harness",
+        "automotive",
+        "ECU",
+        "car repair",
+        "manufacturing jobs",
+        "factory jobs",
+        "software engineer salary"
+      ],
+      "headlines": [
+        "Headless Coding Agent CLI",
+        "Run AI Workflows From Your CLI",
+        "Explore the aictrl Agent"
+      ],
+      "descriptions": [
+        "Run engineering workflows from the terminal. Read the setup guide and try aictrl.",
+        "Explore a headless agent for repeatable engineering tasks, with visible execution."
+      ],
+      "budget_usd": null,
+      "max_cpc_usd": null,
+      "launch_blockers": [
+        "Fresh market-specific Planner volume and bid ranges not collected.",
+        "No separate Search budget or bid cap assigned.",
+        "Choose one geography and one use case for a bounded first pilot.",
+        "Verify landing-page promise, successful journey and allowed qualified-outcome measurement."
+      ]
+    },
+    {
+      "id": "search-review",
+      "cluster_id": "review",
+      "asset_id": "review",
+      "state": "draft_paused",
+      "markets": [
+        "US",
+        "GB"
+      ],
+      "language": "English",
+      "network": "Google Search only; partners and Display excluded in proposal",
+      "match_types": [
+        "exact",
+        "phrase"
+      ],
+      "keywords": [
+        "ai code review workflow",
+        "pull request explanation"
+      ],
+      "negative_keywords": [
+        "wiring harness",
+        "wire harness",
+        "automotive",
+        "ECU",
+        "car repair",
+        "manufacturing jobs",
+        "factory jobs",
+        "software engineer salary"
+      ],
+      "headlines": [
+        "AI Code Review Workflows",
+        "Explain Changes With Evidence",
+        "From Review Finding to Fix"
+      ],
+      "descriptions": [
+        "Explore code review and change explanation with aictrl. See a concrete workflow.",
+        "Connect review findings to code changes and validation. Learn how the workflow works."
+      ],
+      "budget_usd": null,
+      "max_cpc_usd": null,
+      "launch_blockers": [
+        "Fresh market-specific Planner volume and bid ranges not collected.",
+        "No separate Search budget or bid cap assigned.",
+        "Choose one geography and one use case for a bounded first pilot.",
+        "Verify landing-page promise, successful journey and allowed qualified-outcome measurement."
+      ]
+    }
+  ],
+  "events": [],
+  "budget_entries": []
+}

@@ -1,0 +1,66 @@
+{
+  "imported_on": "2026-10-22",
+  "method": "Selected existing operating state only; no inbox, credentials or account identifiers copied.",
+  "records": [
+    {
+      "source_id": "mcpservers",
+      "local_source_path": "docs/marketing/seo/evidence/2026-10-21-mcpservers-submission.json",
+      "local_source_sha256": "3ce5fdaaa8b84c4954354a6d800f6b6734f88ebe1acee8af9a6857c4746939f0",
+      "state_as_recorded_on": "2026-10-21",
+      "claim": "Free application sent 21 October; public approval not verified.",
+      "status": "submitted",
+      "live_url": null,
+      "limitation": "Sanitized import of prior operating receipts, not a fresh platform acceptance check. Underlying local source is identified by its hash, not assumed to exist on a public product branch."
+    },
+    {
+      "source_id": "mcpmarket",
+      "local_source_path": "docs/marketing/seo/evidence/2026-10-21-mcpmarket-submission.json",
+      "local_source_sha256": "f0bd26a64a5bdc7a06c98faafff9a884e67de560b199c5bf6a5602a2f44afe82",
+      "state_as_recorded_on": "2026-10-21",
+      "claim": "One code-review skill submitted free on 21 October; no paid upgrade.",
+      "status": "submitted",
+      "live_url": null,
+      "limitation": "Sanitized import of prior operating receipts, not a fresh platform acceptance check. Underlying local source is identified by its hash, not assumed to exist on a public product branch."
+    },
+    {
+      "source_id": "plugandship",
+      "local_source_path": "docs/marketing/seo/evidence/2026-10-21-plugandship-submission.json",
+      "local_source_sha256": "ad0e6f53ab54c8c70561cb61e8290eb15517019f2074679fa79a4d5b71135d5b",
+      "state_as_recorded_on": "2026-10-22",
+      "claim": "Existing free public engineering-skills page; assigned launch slot previously recorded as 6 November.",
+      "status": "live",
+      "live_url": "https://plugandship.dev/p/aictrl-dev-engineering-skills",
+      "limitation": "Sanitized import of prior operating receipts, not a fresh platform acceptance check. Underlying local source is identified by its hash, not assumed to exist on a public product branch."
+    },
+    {
+      "source_id": "alternativeto",
+      "local_source_path": "artifacts/launch-distribution/submissions/alternativeto-2026-10-15.md",
+      "local_source_sha256": "3db4bb41a7c41ef2710c5189b345ace0d532a96fc4def8a0ce1193847b96f88c",
+      "state_as_recorded_on": "2026-10-15",
+      "claim": "Existing free submission dated 15 October; review pending.",
+      "status": "submitted",
+      "live_url": null,
+      "limitation": "Sanitized import of prior operating receipts, not a fresh platform acceptance check. Underlying local source is identified by its hash, not assumed to exist on a public product branch."
+    },
+    {
+      "source_id": "futuretools",
+      "local_source_path": "artifacts/launch-distribution/submissions/futuretools-resubmission-2026-10-16.md",
+      "local_source_sha256": "a15305d91ae2ec21be763be1bc1b004733bdc02e4d5d310b60feb5adf26ab575",
+      "state_as_recorded_on": "2026-10-16",
+      "claim": "Initial application 8 October; permitted resubmission 16 October.",
+      "status": "submitted",
+      "live_url": null,
+      "limitation": "Sanitized import of prior operating receipts, not a fresh platform acceptance check. Underlying local source is identified by its hash, not assumed to exist on a public product branch."
+    },
+    {
+      "source_id": "neuronfeed",
+      "local_source_path": "artifacts/launch-distribution/submissions/neuronfeed-2026-10-08.md",
+      "local_source_sha256": "f3aa145ee2b7dbabe5c034721c67627fd71ca8d920a14bd9375cee3ef55aca2d",
+      "state_as_recorded_on": "2026-10-08",
+      "claim": "Existing 8 October free application; public outcome not established.",
+      "status": "submitted",
+      "live_url": null,
+      "limitation": "Sanitized import of prior operating receipts, not a fresh platform acceptance check. Underlying local source is identified by its hash, not assumed to exist on a public product branch."
+    }
+  ]
+}

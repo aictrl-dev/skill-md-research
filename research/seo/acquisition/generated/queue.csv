@@ -1,0 +1,8 @@
+id,source,priority,due_on,mode,owner,action
+chatgpt,ChatGPT plugin directory,P0,2026-10-22,prepare,seo-product-engineer,Prepare a gap checklist for the existing package and review evidence; add the missing public ChatGPT setup brief.
+claude,Claude connectors and plugins,P0,2026-10-22,prepare,seo-product-engineer,"Reconcile prior plugin receipt, inspect current connector route and prepare one issue-to-review demo plus a client landing brief."
+github-marketplace,GitHub Marketplace app,P0,2026-10-22,prepare,seo-product-engineer,"Reconcile existing publisher/application status, then prepare listing screenshots and one real review outcome."
+glama,Glama,P0,2026-10-22,check_existing,seo-product-engineer,Compare live description and setup link with current clients; prepare only useful metadata corrections.
+mcp-registry,Official MCP Registry,P0,2026-10-22,prepare,seo-product-engineer,"Reconcile existing io.github.vasparshin/aictrl namespace and validated OAuth-corrected draft; verify current public state, then prepare a versioned remote manifest without creating a replacement namespace."
+skills-sh,skills.sh,P0,2026-10-22,check_existing,seo-product-engineer,"Audit the absent execute-workflow, explain-change, ui-polish and ux-testing entries and their actual indexing requirements; preserve five live task groups and avoid artificial installs."
+alternativeto,AlternativeTo,P1,2026-10-22,check_existing,seo-product-engineer,Check existing submission and any reviewer question; prepare factual category and comparison corrections only.
