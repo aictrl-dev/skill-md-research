@@ -1,0 +1,49 @@
+{
+  "article": "https://aictrl.dev/blog/swe-evo-analysis",
+  "merge_sha": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+  "indexed_inspection": {
+    "observed_at": "2026-10-22T15:19:31.177Z",
+    "report_url": "https://search.google.com/search-console/inspect?resource_id=sc-domain%3Aaictrl.dev&id=_AAfHNnDcQYLd7HlvAxXlQ",
+    "status": "Page is indexed",
+    "last_crawl_display": "16 Oct 2026, 03:08:33",
+    "display_timezone": "unlabelled; preserved without conversion",
+    "crawler": "Googlebot smartphone",
+    "crawl_allowed": "Yes",
+    "fetch": "Successful",
+    "indexing_allowed": "Yes",
+    "user_canonical": "https://aictrl.dev/blog/swe-evo-analysis",
+    "google_canonical": "Inspected URL",
+    "sitemap": "https://aictrl.dev/sitemap.xml",
+    "breadcrumb_items": 1
+  },
+  "live_test": {
+    "observed_at": "2026-10-22T15:20:55.225Z",
+    "report_url": "https://search.google.com/search-console/inspect?resource_id=sc-domain%3Aaictrl.dev&id=nHkGmd_cpDJLOCvmFlyQZw&alt_id=_AAfHNnDcQYLd7HlvAxXlQ",
+    "status": "URL is available to Google",
+    "page_availability": "Page can be indexed",
+    "test_time_display": "22 Oct 2026, 16:19:35",
+    "display_timezone": "unlabelled; preserved without conversion",
+    "crawler": "Google Inspection Tool smartphone",
+    "crawl_allowed": "Yes",
+    "fetch": "Successful",
+    "indexing_allowed": "Yes",
+    "user_canonical": "https://aictrl.dev/blog/swe-evo-analysis",
+    "google_canonical": "Only determined after indexing",
+    "breadcrumb_items": 1,
+    "tested_html_current_title_observed": true,
+    "tested_html_title_observed_at": "2026-10-22T15:22:06.966Z",
+    "title": "SWE-EVO: what your agent harness still needs"
+  },
+  "indexing_request": {
+    "observed_at": "2026-10-22T15:22:49.900Z",
+    "accepted": true,
+    "confirmation": "Indexing requested. URL was added to a priority crawl queue. Submitting a page multiple times will not change its queue position or priority.",
+    "accepted_requests": 1
+  },
+  "limits": [
+    "Live test proves current fetch and eligibility, not inclusion of the revised article in the index or rankings.",
+    "Stored indexed crawl predates the published revision.",
+    "Google Inspection Tool fetch is separate from the Python urllib client that received Cloudflare 1010.",
+    "No settings, ownership tokens or analytics changed."
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "observed_at": "2026-10-22T15:08:31.703263+00:00",
+  "merge_sha": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+  "final_source_head": "6eb7dbfe6f369ddfb7bb15f7dc3c31d2073e9eeb",
+  "artifact_count": 9,
+  "all_equal_reviewed_c051": true,
+  "main_only_article_preserved": true,
+  "artifacts": [
+    {
+      "path": "website/public/blog/feed.xml",
+      "bytes": 13036,
+      "sha256": "be7e964724e1e96dacc747ca83cc38e7bb22338d4acbd66d5eaf7b15bd812bbd",
+      "equals_reviewed_c051": true
+    },
+    {
+      "path": "website/public/blog/framework-matters.html",
+      "bytes": 58489,
+      "sha256": "931876f341bcb8a0502b98abd628dae50ec8cc2fc6c048b307b31d3ab5d2e5c7",
+      "equals_reviewed_c051": true
+    },
+    {
+      "path": "website/public/blog/headless-coding-agent-cli-benchmark.html",
+      "bytes": 70533,
+      "sha256": "9351a15043a569d7128d688d6b1337097a39b63676cfc1eaa29198b4e2336d6d",
+      "equals_reviewed_c051": true
+    },
+    {
+      "path": "website/public/blog/index.html",
+      "bytes": 48029,
+      "sha256": "4c83255a118f01dd5c57aa514c2e9594d24e84ce05f249b4a3003558315a5d6f",
+      "equals_reviewed_c051": true
+    },
+    {
+      "path": "website/public/blog/swe-evo-analysis.html",
+      "bytes": 54960,
+      "sha256": "ebdab1fa9eaf55383a95ff21b8918dbca2a7753c89d676b827f51e46b23f0974",
+      "equals_reviewed_c051": true
+    },
+    {
+      "path": "website/public/llms.txt",
+      "bytes": 9591,
+      "sha256": "a2c81be5d86dc58c14598a702f99300905a60ddad12e53a68b05ccfd656a7bd2",
+      "equals_reviewed_c051": true
+    },
+    {
+      "path": "website/public/og-images/blog-swe-evo-analysis.png",
+      "bytes": 46673,
+      "sha256": "5af7fd84a82c9841aea94a919ddc4dd37ba543c2b8ced9ae83fdf27b2f3bd31c",
+      "equals_reviewed_c051": true
+    },
+    {
+      "path": "website/public/signup.html",
+      "bytes": 11881,
+      "sha256": "1e589deba3cd1c9c41de3f6a776ceb7c4b1a5a4c193fb2f4466864fff6d56cd4",
+      "equals_reviewed_c051": true
+    },
+    {
+      "path": "website/public/sitemap.xml",
+      "bytes": 6330,
+      "sha256": "8dc8cc9a514d7e7064fae8751f8005cf146f26288d72719eb6767906867977a1",
+      "equals_reviewed_c051": true
+    }
+  ]
+}

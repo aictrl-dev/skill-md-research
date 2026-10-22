@@ -1,0 +1,454 @@
+{
+  "kind": "read-only exact-merge production QA terminal summary",
+  "observedAt": "2026-10-22T15:29:29.952Z",
+  "pr": 6446,
+  "mergedAt": "2026-10-22T15:06:30Z",
+  "merge": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+  "finalSource": "6eb7dbfe6f369ddfb7bb15f7dc3c31d2073e9eeb",
+  "scopeFiles": 36,
+  "allSixKnownHandlesTerminal": true,
+  "terminalSummary": {
+    "success": 5,
+    "cancelled": 1,
+    "failure": 0,
+    "pending": 0
+  },
+  "runs": [
+    {
+      "id": 39801702353,
+      "name": "Deploy to Cloud Run",
+      "event": "push",
+      "branch": "main",
+      "head": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "created": "2026-10-22T15:06:37Z",
+      "updated": "2026-10-22T15:27:37Z"
+    },
+    {
+      "id": 39801694793,
+      "name": "Deploy to Cloud Run",
+      "event": "push",
+      "branch": "main",
+      "head": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "created": "2026-10-22T15:06:34Z",
+      "updated": "2026-10-22T15:25:10Z"
+    },
+    {
+      "id": 39801702435,
+      "name": "Deploy Static Content",
+      "event": "push",
+      "branch": "main",
+      "head": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "created": "2026-10-22T15:06:37Z",
+      "updated": "2026-10-22T15:10:00Z"
+    },
+    {
+      "id": 39801695372,
+      "name": "Deploy Static Content",
+      "event": "push",
+      "branch": "main",
+      "head": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "created": "2026-10-22T15:06:35Z",
+      "updated": "2026-10-22T15:09:06Z"
+    },
+    {
+      "id": 39801702512,
+      "name": "Static Checks",
+      "event": "push",
+      "branch": "main",
+      "head": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "created": "2026-10-22T15:06:37Z",
+      "updated": "2026-10-22T15:15:34Z"
+    },
+    {
+      "id": 39801695031,
+      "name": "Static Checks",
+      "event": "push",
+      "branch": "main",
+      "head": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "cancelled",
+      "created": "2026-10-22T15:06:35Z",
+      "updated": "2026-10-22T15:11:45Z"
+    }
+  ],
+  "duplicateProvenance": "All six are independent attempt1 push/main runs at same merge; no tag event shown. Matching workflow pairs have separate run IDs/check suites. No QA start/rerun/cancel action. Duplicate-event cause unproven.",
+  "cloudRunOutcomes": [
+    {
+      "run": 39801694793,
+      "event": "push",
+      "branch": "main",
+      "head": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+      "attempt": 1,
+      "conclusion": "success",
+      "updatedAt": "2026-10-22T15:25:10Z",
+      "appJob": 119903929187,
+      "jobCompletedAt": "2026-10-22T15:25:05Z",
+      "sourceScope": {
+        "DEPLOY_FULL": false,
+        "BASE_SHA": "85ca67ac285c9355da6acb941a005b8c50126e57",
+        "HEAD_SHA": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+        "firebaseTarget": false,
+        "executorTarget": false
+      },
+      "serverImage": {
+        "tag": "europe-west2-docker.pkg.dev/aictrl-prod/session-control/server:sha-7000314b",
+        "manifestList": "sha256:cc645c509f9f14719cf8b318766c8071f388661208ece12ff1480809d4b7b437",
+        "platformManifest": "sha256:3e314371d9a1dc42d4d77504a6ad309c79c98d4936630ffcdf329378e6decc8e",
+        "pushed": true
+      },
+      "deployment": {
+        "serviceRevision": "session-control-00637-2hm",
+        "observedTrafficPercent": 100,
+        "revisionImageDigestMatchesBuildPlatformManifest": true,
+        "health": "Healthy on attempt 1 at2026-10-22T15:24:26.3450718Z",
+        "dbosStepConclusion": "success",
+        "dbosActualEffect": "Worker pool not enabled; image update skipped, no worker mutation established.",
+        "executorJobEffect": "Scoped out; image build/verify/job update all skipped.",
+        "firebaseHostingEffect": "Indexes/rules/Hosting rewrites skipped; website publication separately static-content workflows."
+      },
+      "steps": [
+        {
+          "name": "Resolve deploy base",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:07:42Z",
+          "completed_at": "2026-10-22T15:07:46Z"
+        },
+        {
+          "name": "Check deploy input changes",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:07:46Z",
+          "completed_at": "2026-10-22T15:07:52Z"
+        },
+        {
+          "name": "Deploy Firestore indexes, rules, and hosting rewrites",
+          "conclusion": "skipped",
+          "started_at": "2026-10-22T15:07:52Z",
+          "completed_at": "2026-10-22T15:07:52Z"
+        },
+        {
+          "name": "Build and push server image",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:07:52Z",
+          "completed_at": "2026-10-22T15:12:39Z"
+        },
+        {
+          "name": "Build and push executor image",
+          "conclusion": "skipped",
+          "started_at": "2026-10-22T15:12:39Z",
+          "completed_at": "2026-10-22T15:12:39Z"
+        },
+        {
+          "name": "Verify executor image",
+          "conclusion": "skipped",
+          "started_at": "2026-10-22T15:12:39Z",
+          "completed_at": "2026-10-22T15:12:39Z"
+        },
+        {
+          "name": "Deploy executor Cloud Run Job",
+          "conclusion": "skipped",
+          "started_at": "2026-10-22T15:12:39Z",
+          "completed_at": "2026-10-22T15:12:39Z"
+        },
+        {
+          "name": "Acquire and drain repository integration deployment fence",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:12:39Z",
+          "completed_at": "2026-10-22T15:23:33Z"
+        },
+        {
+          "name": "Deploy to Cloud Run",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:23:33Z",
+          "completed_at": "2026-10-22T15:24:25Z"
+        },
+        {
+          "name": "Deploy DBOS executor worker",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:24:25Z",
+          "completed_at": "2026-10-22T15:24:26Z"
+        },
+        {
+          "name": "Verify deployment",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:24:26Z",
+          "completed_at": "2026-10-22T15:24:26Z"
+        },
+        {
+          "name": "Release repository integration deployment fence",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:24:26Z",
+          "completed_at": "2026-10-22T15:24:29Z"
+        },
+        {
+          "name": "Post Release repository integration deployment fence",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:24:29Z",
+          "completed_at": "2026-10-22T15:24:29Z"
+        },
+        {
+          "name": "Post Acquire and drain repository integration deployment fence",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:24:29Z",
+          "completed_at": "2026-10-22T15:24:29Z"
+        },
+        {
+          "name": "Post Build and push server image",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:24:29Z",
+          "completed_at": "2026-10-22T15:24:31Z"
+        }
+      ],
+      "limits": [
+        "No Cloudflare Worker publication by QA; apexrouting verification owned byroot.",
+        "Static asset edge mismatch/purge failure remains separate from healthyservice.",
+        "No task/model execution, tracking, purchase or source/deployment mutation by QA.",
+        "This is the first-run result; the independent second run is summarized separately and is also terminal success."
+      ]
+    },
+    {
+      "run": 39801702353,
+      "event": "push",
+      "branch": "main",
+      "head": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+      "attempt": 1,
+      "conclusion": "success",
+      "updatedAt": "2026-10-22T15:27:37Z",
+      "resolverBase": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+      "serverImage": {
+        "tag": "europe-west2-docker.pkg.dev/aictrl-prod/session-control/server:sha-7000314b",
+        "manifestList": "sha256:7d7ad30b9759e16180b7ec6e03579db7b67ed905fd09e2db72c8ce334ff8dca7",
+        "platformManifest": "sha256:3e314371d9a1dc42d4d77504a6ad309c79c98d4936630ffcdf329378e6decc8e"
+      },
+      "health": "Healthy on attempt1 at2026-10-22T15:27:26.6079265Z",
+      "dbosActualEffect": "Worker pool not enabled; image update skipped despite stepSUCCESS.",
+      "executorJobEffect": "Image build/verify/jobdeploy skipped.",
+      "firebaseHostingEffect": "Indexes/rules/Hostingrewrites skipped.",
+      "job": 119914626724,
+      "jobCompletedAt": "2026-10-22T15:27:35Z",
+      "steps": [
+        {
+          "name": "Deploy Firestore indexes, rules, and hosting rewrites",
+          "conclusion": "skipped",
+          "started_at": "2026-10-22T15:26:17Z",
+          "completed_at": "2026-10-22T15:26:17Z"
+        },
+        {
+          "name": "Build and push server image",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:26:17Z",
+          "completed_at": "2026-10-22T15:26:32Z"
+        },
+        {
+          "name": "Build and push executor image",
+          "conclusion": "skipped",
+          "started_at": "2026-10-22T15:26:32Z",
+          "completed_at": "2026-10-22T15:26:32Z"
+        },
+        {
+          "name": "Verify executor image",
+          "conclusion": "skipped",
+          "started_at": "2026-10-22T15:26:32Z",
+          "completed_at": "2026-10-22T15:26:32Z"
+        },
+        {
+          "name": "Deploy executor Cloud Run Job",
+          "conclusion": "skipped",
+          "started_at": "2026-10-22T15:26:32Z",
+          "completed_at": "2026-10-22T15:26:32Z"
+        },
+        {
+          "name": "Acquire and drain repository integration deployment fence",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:26:32Z",
+          "completed_at": "2026-10-22T15:26:35Z"
+        },
+        {
+          "name": "Deploy to Cloud Run",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:26:35Z",
+          "completed_at": "2026-10-22T15:27:25Z"
+        },
+        {
+          "name": "Deploy DBOS executor worker",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:27:25Z",
+          "completed_at": "2026-10-22T15:27:26Z"
+        },
+        {
+          "name": "Verify deployment",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:27:26Z",
+          "completed_at": "2026-10-22T15:27:26Z"
+        },
+        {
+          "name": "Release repository integration deployment fence",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:27:26Z",
+          "completed_at": "2026-10-22T15:27:28Z"
+        },
+        {
+          "name": "Post Release repository integration deployment fence",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:27:28Z",
+          "completed_at": "2026-10-22T15:27:28Z"
+        },
+        {
+          "name": "Post Acquire and drain repository integration deployment fence",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:27:28Z",
+          "completed_at": "2026-10-22T15:27:28Z"
+        },
+        {
+          "name": "Post Build and push server image",
+          "conclusion": "success",
+          "started_at": "2026-10-22T15:27:28Z",
+          "completed_at": "2026-10-22T15:27:30Z"
+        }
+      ]
+    }
+  ],
+  "latestService": {
+    "latestReadyRevision": "session-control-00638-z2f",
+    "latestCreatedRevision": "session-control-00638-z2f",
+    "traffic": [
+      {
+        "latestRevision": true,
+        "percent": 100,
+        "revisionName": "session-control-00638-z2f"
+      }
+    ],
+    "configuredImageTag": "europe-west2-docker.pkg.dev/aictrl-prod/session-control/server:sha-7000314b",
+    "pinnedRevisionImageDigest": "europe-west2-docker.pkg.dev/aictrl-prod/session-control/server@sha256:3e314371d9a1dc42d4d77504a6ad309c79c98d4936630ffcdf329378e6decc8e",
+    "matchesBothBuildPlatformManifests": true,
+    "note": "The two builds have different manifest-list digests but the same exported platform manifest pinned by revisions00637 and00638."
+  },
+  "staticChecks": {
+    "newerRun": 39801702512,
+    "newerConclusion": "success",
+    "actualSecretScan": "success",
+    "repositoryChecksAndAggregate": "skipped",
+    "olderRun": 39801695031,
+    "olderConclusion": "cancelled",
+    "limits": "Cancellation is not pass; policy config cancel-in-progress=true is consistent with duplicate supersession, no cancellation actor proven."
+  },
+  "staticContent": {
+    "runs": [
+      {
+        "run": 39801702435,
+        "head": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+        "workflowConclusion": "success",
+        "ogCopied": true,
+        "purgeAPIResult": {
+          "success": false,
+          "errorCode": 7003,
+          "message": "Could not route to /client/v4/zones/purge_cache, perhaps your object identifier is invalid?"
+        },
+        "narrowLogEvidence": [
+          "2026-10-22T15:09:03.5975573Z Copying file:///home/runner/work/aictrl/aictrl/website/dist/og-images/blog-swe-evo-analysis.png to gs://aictrl.dev/og-images/blog-swe-evo-analysis.png",
+          "2026-10-22T15:09:25.6439888Z Patching gs://aictrl.dev/og-images/blog-swe-evo-analysis.png...",
+          "2026-10-22T15:09:38.3611619Z Cloudflare purge response: {\"result\":null,\"success\":false,\"errors\":[{\"code\":7003,\"message\":\"Could not route to /client/v4/zones/purge_cache, perhaps your object identifier is invalid?\"}],\"messages\":[]}",
+          "2026-10-22T15:09:38.3649640Z ##[warning]Cache purge may have failed: {\"result\":null,\"success\":false,\"errors\":[{\"code\":7003,\"message\":\"Could not route to /client/v4/zones/purge_cache, perhaps your object identifier is invalid?\"}],\"messages\":[]}"
+        ]
+      },
+      {
+        "run": 39801695372,
+        "head": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+        "workflowConclusion": "success",
+        "ogCopied": true,
+        "purgeAPIResult": {
+          "success": false,
+          "errorCode": 7003,
+          "message": "Could not route to /client/v4/zones/purge_cache, perhaps your object identifier is invalid?"
+        },
+        "narrowLogEvidence": [
+          "2026-10-22T15:07:24.9221783Z Copying file:///home/runner/work/aictrl/aictrl/website/dist/og-images/blog-swe-evo-analysis.png to gs://aictrl.dev/og-images/blog-swe-evo-analysis.png",
+          "2026-10-22T15:07:47.2779977Z Patching gs://aictrl.dev/og-images/blog-swe-evo-analysis.png...",
+          "2026-10-22T15:08:00.4360455Z Cloudflare purge response: {\"result\":null,\"success\":false,\"errors\":[{\"code\":7003,\"message\":\"Could not route to /client/v4/zones/purge_cache, perhaps your object identifier is invalid?\"}],\"messages\":[]}",
+          "2026-10-22T15:08:00.4405840Z ##[warning]Cache purge may have failed: {\"result\":null,\"success\":false,\"errors\":[{\"code\":7003,\"message\":\"Could not route to /client/v4/zones/purge_cache, perhaps your object identifier is invalid?\"}],\"messages\":[]}"
+        ]
+      }
+    ],
+    "limit": "Sync coverage and purge error observed; public edge hash/origin identity owned by root. No purge/config/deploy action by QA."
+  },
+  "freshFinalSourceCI": {
+    "head": "6eb7dbfe6f369ddfb7bb15f7dc3c31d2073e9eeb",
+    "base": "85ca67ac285c9355da6acb941a005b8c50126e57",
+    "event": "pull_request",
+    "ciRun": 39792960197,
+    "ciConclusion": "success",
+    "ciFinishedAt": "2026-10-22T14:29:05Z",
+    "ciJobs": {
+      "success": 20,
+      "skipped": 0,
+      "failed": 0
+    },
+    "testedShaAndBaseExplicitlyLogged": true,
+    "backend": {
+      "passed": 23012,
+      "skipped": 75,
+      "todo": 10,
+      "filesPassed": 1213,
+      "filesSkipped": 7,
+      "lineCoveragePercent": 83.63
+    },
+    "ui": {
+      "passed": 6141,
+      "filesPassed": 384,
+      "lineCoveragePercent": 69.14
+    },
+    "e2e": {
+      "run": 39792960265,
+      "conclusion": "success",
+      "finishedAt": "2026-10-22T14:27:31Z",
+      "actualBoundedSuiteAndRepositoryPicker": "Both ran and passed.",
+      "jobsPassed": 4
+    },
+    "gherkin": {
+      "run": 39792960221,
+      "conclusion": "success",
+      "finishedAt": "2026-10-22T14:26:20Z",
+      "actualSelectedSuitesAndSettingsNavigation": "Both ran and passed.",
+      "jobsPassed": 4
+    },
+    "limit": "Freshsource6eb results; no new fullsuite against merge7000314 was launched byQA."
+  },
+  "rootSuppliedLiveEvidence": {
+    "productionArtifacts": "At15:11:47 all9HTTP200,8sourceexact,OGedgestale. OriginOGlaterverifiedsourceexact; no9exactedgeclaim.",
+    "gcsObjectGeneration": "1792681744471205",
+    "gcsObjectUpdatedAt": "2026-10-22T15:09:26Z",
+    "gscReceipt": "/tmp/aictrl-seo-release6446-7000314-gsc.json",
+    "gscMeaning": "CurrentarticleliveHTMLpassed; recrawlaccepted15:22:49, not proofindexing/traffic.",
+    "apexRoutingReceipt": "/tmp/aictrl-seo-release6446-7000314-apex-routing.json",
+    "apexMeaning": "Apexwizardreturnsmarketing/noSPAroot whiledirectCloudRunreturnsSPAroot; desiredWorker-routingbehaviorstillunpublished/unverified.",
+    "cacheTrackingIssue": 6436,
+    "latestEdgeState": "Root observed old OG cache HIT again15:29:47UTC; Cloudflare browser remained signedout15:30. No further QA liveHTTP/GSCrequest."
+  },
+  "remainingBoundaries": [
+    "Cloudflare cachepurge failed in both staticruns; edgeOGresolution pending root secureCloudflarelogin/approvedaction.",
+    "ProductionapexWorkerpublication separate; QA did not publish Worker or alter routes.",
+    "GoogleGemini3.8Flash journey remains prepared/unexecuted pendingauthorizedexistingGooglecredential.",
+    "Openmeasurement/privacy policy and realqualifiedtraffic/attribution not established by CI/internalchecks."
+  ],
+  "actionsNotTaken": [
+    "No sourceedits/testsuitererun/commit/push/reviewtask/modelrequest/tracking/purchase.",
+    "No workflowretry/restart/cancel/fenceoverride/lockmutation/purge/deployWorker.",
+    "No publicHTTPduplication; root owns liveverification."
+  ],
+  "monitorState": "closed; all six assigned handles terminal"
+}

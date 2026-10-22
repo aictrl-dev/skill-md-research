@@ -1,0 +1,25 @@
+{
+  "observed_at": "2026-10-22T15:27:32.856022+00:00",
+  "merge_sha": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+  "requests": [
+    {
+      "surface": "apex",
+      "url": "https://aictrl.dev/?wizard=bind-repos",
+      "status_line": "HTTP/2 200 ",
+      "bytes": 32234,
+      "sha256": "4596274c8acd6d7e3bd44d7277df7105506aaf0c3a3b81b1f1b55f0a442185bd",
+      "title": "aictrl.dev \u2014 Your agents. Your standards. Ready to ship.",
+      "has_spa_root": false
+    },
+    {
+      "surface": "origin",
+      "url": "https://session-control-7rgu2ehuja-uc.a.run.app/?wizard=bind-repos",
+      "status_line": "HTTP/2 200 ",
+      "bytes": 803,
+      "sha256": "276ce9de67215218e7635a07548cd637c606bb6f14f7d0ab85d4f3f81838e34b",
+      "title": "aictrl.dev",
+      "has_spa_root": true
+    }
+  ],
+  "limits": "Unauthenticated GET of the inert UI route only; no OAuth/install callback, auth code, account action or repository binding. This observes routing, not authenticated completion or Worker version identity."
+}

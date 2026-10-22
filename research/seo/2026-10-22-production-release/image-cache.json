@@ -1,0 +1,37 @@
+{
+  "observed_at": "2026-10-22T15:29:47.771842+00:00",
+  "url": "https://aictrl.dev/og-images/blog-swe-evo-analysis.png",
+  "source_sha256": "5af7fd84a82c9841aea94a919ddc4dd37ba543c2b8ced9ae83fdf27b2f3bd31c",
+  "origin": {
+    "url": "https://storage.googleapis.com/aictrl.dev/og-images/blog-swe-evo-analysis.png",
+    "sha256": "5af7fd84a82c9841aea94a919ddc4dd37ba543c2b8ced9ae83fdf27b2f3bd31c",
+    "source_equals_origin": true,
+    "gcs_object_generation": "1792681744471205",
+    "gcs_updated_at": "2026-10-22T15:09:26Z",
+    "bytes": 46673
+  },
+  "edge": {
+    "status_line": "HTTP/2 200 ",
+    "sha256": "3bcf6efb755c258612c6c6f7b2e1e488a94abb130b6035da5591555355aa41bd",
+    "source_equals_live": false,
+    "bytes": 60480,
+    "cache_status": "HIT",
+    "age": "65377",
+    "last_modified": "Wed, 21 Oct 2026 21:13:56 GMT",
+    "cache_control": "public, max-age=31536000, immutable"
+  },
+  "purge_runs": [
+    39801695372,
+    39801702435
+  ],
+  "purge_outcome": {
+    "success": false,
+    "error": 7003
+  },
+  "existing_tracking_issue": "https://github.com/aictrl-dev/aictrl/issues/6436",
+  "operator_action": "Cloudflare sign-in requested; no purge, Worker publish or credential change performed",
+  "limits": [
+    "Origin and edge fetched separately; freshness facts are timestamped, not proof of every CDN location.",
+    "GCS generation is an object generation, not a Worker deployment or service revision."
+  ]
+}
