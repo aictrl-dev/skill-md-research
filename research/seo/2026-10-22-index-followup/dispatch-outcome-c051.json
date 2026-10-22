@@ -1,0 +1,128 @@
+{
+  "run": 39777180795,
+  "event": "workflow_dispatch",
+  "head": "c051653756b2ee41642b041a9984dc081d847f7a",
+  "attempt": 1,
+  "actor": "byapparov",
+  "triggeringActor": "byapparov",
+  "conclusion": "failure",
+  "runUpdatedAt": "2026-10-22T12:47:32Z",
+  "appJob": 119819225664,
+  "appJobCompletedAt": "2026-10-22T12:47:31Z",
+  "error": {
+    "at": "2026-10-22T12:46:59.9659448Z",
+    "message": "Timed out draining 1 active repository integration run(s).",
+    "activeRunCount": 1,
+    "blockingRunId": null,
+    "heartbeatOrAge": null
+  },
+  "observedLogInputs": {
+    "DEPLOY_FULL": true,
+    "BASE_SHA": "",
+    "INPUT_IMAGE_TAG": "",
+    "allow_bootstrap": false
+  },
+  "serverImage": {
+    "tag": "europe-west2-docker.pkg.dev/aictrl-prod/session-control/server:uat-sha-c0516537",
+    "manifestListDigest": "sha256:7b8ffc14eff1fed38675411a2c111d2540c4c0c52d595fe0308f5e5a02a2fdca",
+    "pushed": true,
+    "cloudRunServiceDeployed": false,
+    "newServiceRevision": null
+  },
+  "executorImage": {
+    "tag": "europe-west2-docker.pkg.dev/aictrl-prod/session-control/task-executor:uat-sha-c0516537",
+    "manifestListDigest": "sha256:b72a1bd5a33614f2299f93e472138996a803ded6737e16de0cc2d750be17bf23",
+    "pushed": true,
+    "cloudRunJobUpdated": true,
+    "jobExecutedByThisMonitor": false
+  },
+  "steps": [
+    {
+      "name": "Resolve deploy base",
+      "conclusion": "success",
+      "started_at": "2026-10-22T12:19:03Z",
+      "completed_at": "2026-10-22T12:19:03Z"
+    },
+    {
+      "name": "Build Firebase Hosting assets",
+      "conclusion": "success",
+      "started_at": "2026-10-22T12:19:40Z",
+      "completed_at": "2026-10-22T12:21:19Z"
+    },
+    {
+      "name": "Deploy Firebase Hosting",
+      "conclusion": "success",
+      "started_at": "2026-10-22T12:21:19Z",
+      "completed_at": "2026-10-22T12:21:27Z"
+    },
+    {
+      "name": "Build and push server image",
+      "conclusion": "success",
+      "started_at": "2026-10-22T12:21:31Z",
+      "completed_at": "2026-10-22T12:26:12Z"
+    },
+    {
+      "name": "Build and push executor image",
+      "conclusion": "success",
+      "started_at": "2026-10-22T12:26:12Z",
+      "completed_at": "2026-10-22T12:26:23Z"
+    },
+    {
+      "name": "Deploy executor Cloud Run Job (Sandbox)",
+      "conclusion": "success",
+      "started_at": "2026-10-22T12:26:38Z",
+      "completed_at": "2026-10-22T12:26:47Z"
+    },
+    {
+      "name": "Acquire and drain repository integration deployment fence",
+      "conclusion": "failure",
+      "started_at": "2026-10-22T12:26:47Z",
+      "completed_at": "2026-10-22T12:46:59Z"
+    },
+    {
+      "name": "Deploy to Cloud Run (Sandbox)",
+      "conclusion": "skipped",
+      "started_at": "2026-10-22T12:46:59Z",
+      "completed_at": "2026-10-22T12:46:59Z"
+    },
+    {
+      "name": "Deploy DBOS executor worker (Sandbox)",
+      "conclusion": "skipped",
+      "started_at": "2026-10-22T12:46:59Z",
+      "completed_at": "2026-10-22T12:46:59Z"
+    },
+    {
+      "name": "Verify deployment",
+      "conclusion": "skipped",
+      "started_at": "2026-10-22T12:46:59Z",
+      "completed_at": "2026-10-22T12:46:59Z"
+    },
+    {
+      "name": "Release repository integration deployment fence",
+      "conclusion": "success",
+      "started_at": "2026-10-22T12:46:59Z",
+      "completed_at": "2026-10-22T12:47:01Z"
+    }
+  ],
+  "relatedOpenIssues": [
+    {
+      "number": 5392,
+      "interpretation": "Same timeout symptom; stale blocking-run heartbeat not established here."
+    },
+    {
+      "number": 4779,
+      "interpretation": "Same timeout symptom; healthy long reconcile not established here."
+    }
+  ],
+  "limitations": [
+    "No blocking run ID or heartbeat in logs; cannot distinguish stale run from healthy long reconcile.",
+    "No Cloud Run service deployment/DBOS update/health verification executed after failed fence.",
+    "Earlier website success/live hashes remain separate valid observations; no new live HTTP check performed by QA.",
+    "No retry, cancellation, lock or source mutation; no provider request."
+  ],
+  "runtimeStateBoundary": {
+    "latestSuccessfullyDeployedServiceSource": "ac7ef62e58a21984e32d719b05cc294a7de21e3e",
+    "taskExecutorJobUpdatedSource": "c051653756b2ee41642b041a9984dc081d847f7a",
+    "meaning": "Partial runtime mutation: service/DBOS remain at last verified ac7 deployment; task-executor Cloud Run Job configuration updated to c051. No blanket runtime-unchanged claim."
+  }
+}
