@@ -1,0 +1,11 @@
+{
+  "recorded_at": "2026-10-22T18:01:30.611470+00:00",
+  "pr": "https://github.com/anomalyco/opencode/pull/37248",
+  "comment_url": "https://github.com/anomalyco/opencode/pull/37248#issuecomment-6347664637",
+  "comment_created_at": "2026-10-22T18:01:29Z",
+  "body_sha256": "512e77a64deb217db549a4dda3aee2610a0d921905e582bec159d5215d3f1f7c",
+  "readback_exact": true,
+  "new_comments": 1,
+  "qa_receipt": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/receipt.json",
+  "limits": "One existing-submission follow-up; no duplicate issue/PR, listing acceptance, package change, maintainer response or paid commitment inferred."
+}

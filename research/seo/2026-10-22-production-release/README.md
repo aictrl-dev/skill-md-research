@@ -54,3 +54,9 @@ The owner reports updating the GitHub App Setup URL; its endpoint was independen
 ## Partner discovery follow-up
 
 The [partner priorities note](../2026-10-22-partner-discovery-priorities.md) records native Glama/skills.sh listing observations and public-source registry/plugin readiness, separating live placements from pending applications and platform counters from qualified referrals. Optional provider-specific CLI testing is activation work and does not block independent SEO delivery or free partner research. The original qualified-visitor NSM and existing consent, measurement, paid-placement and cumulative-budget gates remain intact; this pass made no new submission, external message, reservation or spend.
+
+## Authorized partner actions — 18:01 UTC checkpoint
+
+The [execution record](../2026-10-22-partner-actions.md) archives one authorized factual follow-up on the existing closed OpenCode submission, plus a fresh isolated 1.2.0 installer check that passed clean install/repeat/uninstall for 17 skills without OAuth or model use. No duplicate PR, accepted listing or qualified-acquisition result is inferred. The Console editorial pitch remains unsent pending the intended business sender/prior-contact check; MCP.so's USD 39 offer was assessed, not bought. Smithery's announced 31 October shutdown concerns its proxy/managed identity, not proof that its entire directory is closing.
+
+The founder confirmed all four partnership streams. **Issue #4665 governs new analytics collection; it does not block partnerships, listings, authorized outreach or assessment.** These activities proceed independently while qualification measurements remain unknown. No new spend, reservation or commitment was made, and the original cumulative USD 200 authority and qualified-visitor NSM remain unchanged. This is actual bounded partner execution, not full Days 1–5 completion.

@@ -1,0 +1,192 @@
+{
+  "status": "PASS",
+  "observedAt": "2026-10-22T18:00:46.077442+00:00",
+  "purpose": "Local partner-listing package eligibility smoke; no activation or provider test",
+  "package": {
+    "name": "@aictrl/opencode",
+    "version": "1.2.0",
+    "engines": {
+      "node": ">=18.0.0"
+    },
+    "integrity": "sha512-HMB4LRn5mj9IqJYK2iiIR9itSA8kYSCJDokrsgiLrhHD7ERTttRQKWBAqx2Werz68Pe4fUNY0C7kKMp8S70Iqw==",
+    "integrityVerified": true,
+    "shasum": "b6cbff45217729ad167bf78e0a41add34271f7ea",
+    "tarball": "https://registry.npmjs.org/@aictrl/opencode/-/opencode-1.2.0.tgz",
+    "gitHead": "a36d27f227c222d74f43a68dcb4e57e1940af267",
+    "bin": {
+      "aictrl-opencode": "opencode/bin/install.js"
+    },
+    "publishedGitHead": "a36d27f227c222d74f43a68dcb4e57e1940af267"
+  },
+  "runtime": {
+    "node": "v20.20.2",
+    "npm": "10.8.2",
+    "supportedByPackageEngine": true
+  },
+  "sourceReferenceProvided": "f2a51248211d8f8d815c6f319ef8814b11733066",
+  "cliInspection": {
+    "path": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/package/opencode/bin/install.js",
+    "sha256": "ace091e4b6f0b08f0af909268225a20511e97587f498aafa220b4e72a2e8dadd",
+    "documentedSupportedArgs": [
+      "--project <directory>",
+      "--uninstall"
+    ],
+    "helpAndVersionFlags": "Not implemented; version verified from registry and extracted package metadata",
+    "installerImports": [
+      "node:fs",
+      "node:os",
+      "node:path",
+      "node:url"
+    ],
+    "telemetry": "No telemetry implementation or documented opt-out in pinned installer; it only copies local files and writes config. No telemetry/MCP/provider process started.",
+    "byteIdenticalToProvidedCurrentMain": true,
+    "currentMainSourceSnapshot": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/upstream-main-installer.js"
+  },
+  "isolation": {
+    "directory": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo",
+    "explicitProject": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/project",
+    "environmentKeys": [
+      "PATH",
+      "XDG_CACHE_HOME",
+      "XDG_CONFIG_HOME",
+      "XDG_DATA_HOME",
+      "XDG_STATE_HOME"
+    ],
+    "HOME": "Not set or repurposed",
+    "globalEquivalentConfigEmptyAfter": true,
+    "inheritedCredentials": false
+  },
+  "commands": [
+    {
+      "stage": "install",
+      "argv": [
+        "/usr/bin/node",
+        "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/package/opencode/bin/install.js",
+        "--project",
+        "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/project"
+      ],
+      "exitCode": 0,
+      "outputPath": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/install.log"
+    },
+    {
+      "stage": "repeat-install",
+      "argv": [
+        "/usr/bin/node",
+        "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/package/opencode/bin/install.js",
+        "--project",
+        "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/project"
+      ],
+      "exitCode": 0,
+      "outputPath": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/repeat-install.log"
+    },
+    {
+      "stage": "uninstall",
+      "argv": [
+        "/usr/bin/node",
+        "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/package/opencode/bin/install.js",
+        "--uninstall",
+        "--project",
+        "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/project"
+      ],
+      "exitCode": 0,
+      "outputPath": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/uninstall.log"
+    }
+  ],
+  "install": {
+    "skillCount": 17,
+    "skillNames": [
+      "code-review",
+      "create-bug",
+      "create-issue",
+      "create-pr",
+      "create-workflow",
+      "design-review",
+      "execute-workflow",
+      "explain-change",
+      "implement-code-change",
+      "judge-review-findings",
+      "measurement-plan",
+      "recording-product-demo",
+      "reply-to-code-review",
+      "root-cause-analysis",
+      "spec-review",
+      "ui-polish",
+      "ux-testing"
+    ],
+    "generatedMcpConfig": {
+      "type": "remote",
+      "url": "https://aictrl.dev/mcp",
+      "enabled": true
+    },
+    "installedSkillBytesMatchPinnedBundle": true,
+    "snapshot": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/installed-manifest.json",
+    "generatedConfigSnapshot": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/installed-config.json"
+  },
+  "repeat": {
+    "idempotentContentAndFilePaths": true,
+    "fileCount": 63
+  },
+  "uninstall": {
+    "all17OwnedSkillDirectoriesRemoved": true,
+    "aictrlMcpEntryRemoved": true,
+    "foreignSkillAndFilePreserved": true,
+    "unrelatedMcpAndModelAndSchemaPreserved": true,
+    "remainingFiles": [
+      ".opencode/skills/qa-unrelated/SKILL.md",
+      "keep.txt",
+      "opencode.json"
+    ]
+  },
+  "rawPaths": {
+    "npmPack": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/pack.json",
+    "registryMetadata": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/registry-metadata.json",
+    "archive": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/aictrl-opencode-1.2.0.tgz"
+  },
+  "limits": [
+    "No global OpenCode configuration touched; all installer targets were explicit disposable project paths.",
+    "No OpenCode session, MCP handshake/auth/sign-in, provider/model call, production tool call, credential creation or telemetry capture.",
+    "No repository edits/resets, commit/push, external partner message, purchase or listing mutation.",
+    "This proves current1.2.0 local install/repeat/uninstall behavior only, not upstream listing acceptance, OAuth readiness, workflow activation, referral quality or qualified NSM.",
+    "Executed the verified pinned npm archive CLI directly with Node; did not claim the npx launcher, OAuth handshake or external activation was tested."
+  ],
+  "acquisitionCommands": [
+    {
+      "argv": [
+        "npm",
+        "--userconfig=/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/user.npmrc",
+        "--globalconfig=/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/global.npmrc",
+        "--cache=/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/npm-cache",
+        "pack",
+        "@aictrl/opencode@1.2.0",
+        "--ignore-scripts",
+        "--json"
+      ],
+      "cwd": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo",
+      "stdout": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/pack.json",
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "npm",
+        "--userconfig=/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/user.npmrc",
+        "--globalconfig=/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/global.npmrc",
+        "--cache=/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/npm-cache",
+        "view",
+        "@aictrl/opencode@1.2.0",
+        "--json"
+      ],
+      "cwd": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo",
+      "stdout": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo/registry-metadata.json",
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "tar",
+        "-xzf",
+        "aictrl-opencode-1.2.0.tgz"
+      ],
+      "cwd": "/tmp/aictrl-opencode-partner-smoke-20261022-xdwAqo",
+      "exitCode": 0
+    }
+  ]
+}
