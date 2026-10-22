@@ -110,3 +110,9 @@ MIT
 ## Citation
 
 Paper forthcoming.
+
+## Internal growth operations
+
+Internal SEO, marketing and acquisition operations are maintained in the private
+[aictrl-dev/growth](https://github.com/aictrl-dev/growth) repository. Public papers,
+experiments and benchmark results remain in this repository.
