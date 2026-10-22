@@ -1,0 +1,59 @@
+{
+  "checked_at": "2026-10-22T22:01Z",
+  "timestamp_precision": "minute",
+  "purpose": "Read-only technical feasibility for the existing analytics proposal; no policy approval or enablement.",
+  "hosting": {
+    "status": "settled",
+    "instance": "eu.posthog.com",
+    "authority": "Founder confirmation in this conversation; use existing instance, no new hosting choice."
+  },
+  "project_settings": {
+    "method": "PostHog MCP call project-get id88595",
+    "id": 88595,
+    "anonymize_ips": false,
+    "timezone": "UTC",
+    "session_recording_opt_in": false,
+    "session_recording_retention_period": "30d",
+    "returned_retention_field_names": [
+      "session_recording_retention_period"
+    ],
+    "limits": "No raw-event retention field was returned. Recording opt-in is a project setting, not exhaustive proof that no producer captures recordings. API token and other response fields excluded."
+  },
+  "event_retention_docs": {
+    "source": "https://posthog.com/docs/data/events-retention",
+    "retrieval": "PostHog MCP docs-search",
+    "documented_free_period": "1 year",
+    "documented_paid_period": "7 years",
+    "shorter_period_available_on_request": false,
+    "retention_is_deletion_tool": false,
+    "interpretation": "The draft90-day raw-event deletion promise is not established by native plan retention. Current project plan and physical deletion mechanisms were not independently verified."
+  },
+  "deletion_tool_schema": {
+    "method": "PostHog MCP info persons-bulk-delete only; never called",
+    "accepts_distinct_ids": true,
+    "described_scope": "Associated persons; optionally their associated events/recordings",
+    "response": "202 Accepted",
+    "irreversible": true,
+    "personless_event_coverage": "Not proved by this schema",
+    "seven_day_completion": "Not proved",
+    "safe_later_regrant": "Not proved"
+  },
+  "proposal_reviewed": {
+    "pr": "https://github.com/aictrl-dev/aictrl/pull/6391",
+    "head": "6ccc8fb4af9f512ae72f1f8e6068a95a6ba1f13f",
+    "status": "OPEN/DRAFT"
+  },
+  "operations": {
+    "settings_changed": false,
+    "capture_enabled": false,
+    "identities_changed": false,
+    "events_created": 0,
+    "events_or_persons_deleted": 0,
+    "new_spend_usd": 0
+  },
+  "limits": [
+    "No person/event rows, credentials, private content or raw project API token retained.",
+    "Community answers and old GitHub issues returned by search were not used as capability evidence.",
+    "Documentation and schema inspection do not replace a controlled provider deletion/re-grant test."
+  ]
+}

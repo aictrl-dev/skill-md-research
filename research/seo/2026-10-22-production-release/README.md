@@ -2,6 +2,13 @@
 
 Release [#6446](https://github.com/aictrl-dev/aictrl/pull/6446) **merged at 15:06:30 UTC**, merge `7000314ba863d4e356bb8d4b3763a42be4099ed1`, final source `6eb7dbfe6f369ddfb7bb15f7dc3c31d2073e9eeb`. Final scope was **36 paths, 815 additions / 1,472 deletions**, including #6452. Earlier open-release, pending-service and mixed-sandbox records remain dated history, not current production state. **The full Days 1–5 goal is still incomplete.**
 
+
+## Latest technical clarification — 22:01 UTC
+
+The [read-only PostHog feasibility check](../2026-10-22-posthog-feasibility.md) supersedes earlier suggestions that the founder needs to choose hosting or approve unresolved provider mechanics. The existing EU instance is settled. Current documentation does not establish the draft 90-day raw-event deletion promise; the 30-day project field is recording retention, and the persons-deletion schema does not prove deletion of events without profiles, seven-day completion or safe re-grant. Engineering must resolve those implementation questions before requesting final policy sign-off. No setting or data was changed.
+
+The optional Gemini provider test is separate activation work. Earlier references below to its secure-configuration question are historical, not a current SEO prerequisite. Console outreach is already sent from bulat@aictrl.dev, per founder confirmation. New analytics approval does not block content, listing maintenance, authorized partner work or placement assessment; qualified-conversion coverage remains unknown.
+
 ## Source and terminal deployment evidence
 
 The [production manifest](production-manifest.json) verifies all nine publication files unchanged from reviewed c051 and preserves main's separate open-source-review article. The [terminal deployment receipt](deployments.json) has SHA-256 `8220ba50de4d05e01f67470c082468e28e0efaf9e8763f8075097a2ab9a6e015`; all six known production handles are terminal: **five SUCCESS / one CANCELLED**, zero pending or failing.
