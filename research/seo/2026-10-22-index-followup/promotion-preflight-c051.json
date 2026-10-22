@@ -1,0 +1,32 @@
+{
+  "observed_at": "2026-10-22T12:02:33.433853+00:00",
+  "head_sha": "c051653756b2ee41642b041a9984dc081d847f7a",
+  "base_sha": "85ca67ac285c9355da6acb941a005b8c50126e57",
+  "promotion_tree": "d93ecdecd2acb609599f9ecf22e75bbc8ddccf1d",
+  "paths": [
+    ".claude/skills/write-blog-post/SKILL.md",
+    "cloudflare/workers/aictrl-router/src/index.js",
+    "cloudflare/workers/aictrl-router/src/index.test.js",
+    "scripts/ci/test-impact-policy.d.mts",
+    "scripts/ci/test-impact-policy.mjs",
+    "server/index.ts",
+    "server/ui-entry-router.ts",
+    "test/ci-test-impact.test.ts",
+    "test/ui-entry-router.test.ts",
+    "ui/e2e/repository-picker-first-run.spec.ts",
+    "website/public/blog/feed.xml",
+    "website/public/blog/framework-matters.html",
+    "website/public/blog/headless-coding-agent-cli-benchmark.html",
+    "website/public/blog/index.html",
+    "website/public/blog/swe-evo-analysis.html",
+    "website/public/llms.txt",
+    "website/public/og-images/blog-swe-evo-analysis.png",
+    "website/public/signup.html",
+    "website/public/sitemap.xml"
+  ],
+  "conflict_free": true,
+  "all_candidate_paths_equal_promotion": true,
+  "four_metadata_paths_equal_reviewed_followup": true,
+  "main_only_preserved": "website/public/blog/open-source-review-ai-era.html",
+  "limits": "Read-only integration tree check; not CI, deployment or production proof."
+}
