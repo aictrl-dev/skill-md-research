@@ -1,0 +1,84 @@
+{
+  "observed_at": "2026-10-22T15:58:51.000702+00:00",
+  "worker_version": "fe280117-d3b2-479d-8622-6153dba6d701",
+  "requests": [
+    {
+      "name": "setup-root",
+      "url": "https://aictrl.dev/?wizard=bind-repos",
+      "status_line": "HTTP/2 200 ",
+      "location": null,
+      "bytes": 803,
+      "sha256": "276ce9de67215218e7635a07548cd637c606bb6f14f7d0ab85d4f3f81838e34b",
+      "has_spa_root": true,
+      "title": "aictrl.dev",
+      "cache_status": "DYNAMIC"
+    },
+    {
+      "name": "marketing-root",
+      "url": "https://aictrl.dev/",
+      "status_line": "HTTP/2 200 ",
+      "location": null,
+      "bytes": 32234,
+      "sha256": "4596274c8acd6d7e3bd44d7277df7105506aaf0c3a3b81b1f1b55f0a442185bd",
+      "has_spa_root": false,
+      "title": "aictrl.dev \u2014 Your agents. Your standards. Ready to ship.",
+      "cache_status": "REVALIDATED"
+    },
+    {
+      "name": "new-setup-entry",
+      "url": "https://aictrl.dev/app?wizard=bind-repos",
+      "status_line": "HTTP/2 307 ",
+      "location": "https://app.aictrl.dev/app?wizard=bind-repos",
+      "bytes": 79,
+      "sha256": "2bbcf6b5ace7943cc0664c76e0829d21cb6b8657b3b6da40ab6c06ce3c0e70d9",
+      "has_spa_root": false,
+      "title": null,
+      "cache_status": "DYNAMIC"
+    },
+    {
+      "name": "app-setup-entry",
+      "url": "https://app.aictrl.dev/app?wizard=bind-repos",
+      "status_line": "HTTP/2 200 ",
+      "location": null,
+      "bytes": 803,
+      "sha256": "276ce9de67215218e7635a07548cd637c606bb6f14f7d0ab85d4f3f81838e34b",
+      "has_spa_root": true,
+      "title": "aictrl.dev",
+      "cache_status": "DYNAMIC"
+    },
+    {
+      "name": "article",
+      "url": "https://aictrl.dev/blog/swe-evo-analysis",
+      "status_line": "HTTP/2 200 ",
+      "location": null,
+      "bytes": 54960,
+      "sha256": "ebdab1fa9eaf55383a95ff21b8918dbca2a7753c89d676b827f51e46b23f0974",
+      "has_spa_root": false,
+      "title": "SWE-EVO: what your agent harness still needs | aictrl",
+      "cache_status": "REVALIDATED"
+    },
+    {
+      "name": "explore",
+      "url": "https://explore.aictrl.dev/",
+      "status_line": "HTTP/2 200 ",
+      "location": null,
+      "bytes": 18080,
+      "sha256": "85c61265a16adc8fb7544608e553aad58ce6fb042eace702bb17a615d15c04df",
+      "has_spa_root": false,
+      "title": "aictrl explore \u2014 the architecture of open-source coding agents",
+      "cache_status": "REVALIDATED"
+    },
+    {
+      "name": "og-image",
+      "url": "https://aictrl.dev/og-images/blog-swe-evo-analysis.png",
+      "status_line": "HTTP/2 200 ",
+      "location": null,
+      "bytes": 60480,
+      "sha256": "3bcf6efb755c258612c6c6f7b2e1e488a94abb130b6035da5591555355aa41bd",
+      "has_spa_root": false,
+      "title": null,
+      "cache_status": "HIT"
+    }
+  ],
+  "limits": "Unauthenticated inert GET requests; no actual installation, signed state, auth code or account action."
+}

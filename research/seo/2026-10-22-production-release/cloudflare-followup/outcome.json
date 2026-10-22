@@ -1,0 +1,48 @@
+{
+  "recorded_at": "2026-10-22T16:00:51.807391+00:00",
+  "release_pr": "https://github.com/aictrl-dev/aictrl/pull/6446",
+  "source_merge_commit": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+  "worker": "aictrl-router",
+  "account_id": "5cc8eef1598aa4e25bdc0644e79b4d4d",
+  "previous_version": "9f6381c0-deb0-418a-86c0-577fbfb383dd",
+  "published_version": "fe280117-d3b2-479d-8622-6153dba6d701",
+  "deployment": {
+    "id": "529d6e7d-1609-46e4-b5a6-b985a41c3203",
+    "created_on": "2026-10-22T15:57:38.147337Z",
+    "versions": [
+      {
+        "version_id": "fe280117-d3b2-479d-8622-6153dba6d701",
+        "percentage": 100
+      }
+    ]
+  },
+  "runtime": {
+    "compatibility_date": "2024-01-01",
+    "usage_model": "standard"
+  },
+  "bindings_unchanged": true,
+  "routes": [
+    "aictrl.dev/*",
+    "www.aictrl.dev/*",
+    "explore.aictrl.dev/*"
+  ],
+  "workers_dev": false,
+  "preview_urls": false,
+  "verification": "86 focused tests passed; source dry-run passed; only reviewed routing logic differed from downloaded live bundle; published at 100%; public setup root now serves SPA, marketing root remains marketing, /app redirects to app host, article/explore HTTP 200; OG bytes now match release source after targeted GCS-key purge.",
+  "github_app_setup_url": {
+    "value": "https://app.aictrl.dev/api/github-app/setup",
+    "saved_setting_evidence": "User reported app updated; private GitHub App settings were not independently read.",
+    "endpoint_check": "HTTP 400 Missing installation_id query parameter on inert GET confirms setup handler is reachable.",
+    "full_install_flow_verified": false
+  },
+  "automation_gap": {
+    "issue": "https://github.com/aictrl-dev/aictrl/issues/6436",
+    "status": "Still open: deployment cache-purge automation previously failed with invalid/missing zone identifier. Manual targeted purge resolves current stale image only."
+  },
+  "limits": [
+    "Routing checks were unauthenticated and did not create installations or bind repositories.",
+    "No claim of successful end-to-end GitHub installation, indexed new revision, traffic uplift or completed Days 1\u20135 goal.",
+    "No credential values read or copied; existing CLI auth used for deployment; existing dashboard session used for purge.",
+    "Product tracked files and lockfiles unchanged."
+  ]
+}

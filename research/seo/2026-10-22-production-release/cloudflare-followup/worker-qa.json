@@ -1,0 +1,41 @@
+{
+  "observedAt": "2026-10-22T15:48:02.445825+00:00",
+  "worktree": "/home/bulat/code/aictrl-cloudflare-release-6446-20261022",
+  "branch": "deploy/cloudflare-release-6446-20261022",
+  "head": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+  "command": "npm test -- --reporter=json --outputFile=/tmp/aictrl-cloudflare-release6446-worker-vitest.json",
+  "cwd": "/home/bulat/code/aictrl-cloudflare-release-6446-20261022/cloudflare/workers/aictrl-router",
+  "exitCode": 0,
+  "vitestVersion": "3.2.4",
+  "testInclude": [
+    "src/**/*.test.js"
+  ],
+  "testSourceFiles": [
+    "/home/bulat/code/aictrl-cloudflare-release-6446-20261022/cloudflare/workers/aictrl-router/src/index.test.js"
+  ],
+  "counts": {
+    "testFiles": 1,
+    "tests": 86,
+    "passed": 86,
+    "failed": 0,
+    "pending": 0,
+    "describeGroups": 13
+  },
+  "success": true,
+  "trackedDiffEmpty": true,
+  "untrackedDependencySymlink": "/home/bulat/code/aictrl-cloudflare-release-6446-20261022/cloudflare/workers/aictrl-router/node_modules",
+  "dependencyTarget": "/home/bulat/code/aictrl_main/cloudflare/workers/aictrl-router/node_modules",
+  "hashes": {
+    "src/index.js": "a55d4c540d3e21cea512ac65b8574f7b4c041d53532b05647037838aa65d81c1",
+    "src/index.test.js": "7d9a616950d8c9b39e9be093eabdababf2d66f9640bc8c925b52408f80ab6284",
+    "vitest.config.js": "92132534a3aaf5c62843549890e8d5d0cda99bc3d7cd4508efb6fa59914de487",
+    "package.json": "cc6924f779beab257f2a094dd766c470f35348049311f21d89e89d7a93b7f534",
+    "package-lock.json": "c62485e033254ee27025e0174b1fa70836d5ca2714883b80c445eef716920d4e"
+  },
+  "limits": [
+    "Source and tests ran from isolated exact merge checkout, not dirty main source.",
+    "Existing dependencies reused via authorized symlink only; no install, package/lock edit or upgrade.",
+    "Only existing Worker suite ran; no new tests, remote checks, deployment, provider/GSC/cache/tracking action.",
+    "Unit suite does not prove live Worker publication or apex routing; root owns deployment and HTTP verification."
+  ]
+}

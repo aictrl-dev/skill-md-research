@@ -1,0 +1,18 @@
+{
+  "observed_at": "2026-10-22T15:59:59.148791+00:00",
+  "public_url": "https://aictrl.dev/og-images/blog-swe-evo-analysis.png",
+  "purged_cache_key": "https://storage.googleapis.com/aictrl.dev/og-images/blog-swe-evo-analysis.png",
+  "purge_method": "Cloudflare dashboard Custom Purge by URL; Recently Purged showed the exact key",
+  "status_line": "HTTP/2 200 ",
+  "sha256": "5af7fd84a82c9841aea94a919ddc4dd37ba543c2b8ced9ae83fdf27b2f3bd31c",
+  "bytes": 46673,
+  "expected_sha256": "5af7fd84a82c9841aea94a919ddc4dd37ba543c2b8ced9ae83fdf27b2f3bd31c",
+  "matches_expected": true,
+  "headers": {
+    "cf-ray": "a4e9b659dd02d922-LHR",
+    "cf-cache-status": "MISS",
+    "cache-control": "public, max-age=31536000, immutable",
+    "last-modified": "Thu, 22 Oct 2026 15:09:04 GMT"
+  },
+  "limits": "One public fetch from this client; no claim that browser or social-platform private caches are cleared."
+}

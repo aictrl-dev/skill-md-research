@@ -1,0 +1,11 @@
+# Cloudflare rollout follow-up — 22 October 2026
+
+The [rollout outcome](outcome.json) records reviewed Worker version **`fe280117-d3b2-479d-8622-6153dba6d701` at 100%**, published **15:57:38 UTC**, replacing `9f6381c0-deb0-418a-86c0-577fbfb383dd`. The [source/live reconciliation](reconciliation.json) preserves bindings, routes and compatibility settings; only the reviewed setup-root routing logic differs. The [focused source QA](worker-qa.json) passed **86/86 tests** from the exact release checkout. Source dry-run also passed; neither is substituted for the separate publication/live evidence.
+
+The [15:58:51 UTC inert routing checks](live-routing.json) show `/?wizard=bind-repos` now serves the SPA. Marketing root remains marketing; `/app?wizard=bind-repos` redirects to the app host; article and explore remain HTTP 200. No installation, signed callback, repository binding or account action was exercised.
+
+That same routing receipt deliberately retains the **pre-purge OG image mismatch**. Only the article image's origin-fetch cache key, `https://storage.googleapis.com/aictrl.dev/og-images/blog-swe-evo-analysis.png`, was purged. The [15:59:59 UTC post-purge receipt](image-after-purge.json) then verifies the canonical public image exactly matches release source SHA-256 `5af7fd84a82c9841aea94a919ddc4dd37ba543c2b8ced9ae83fdf27b2f3bd31c` (46,673 bytes, cache MISS). This one fetch does not establish that private browser/social caches are cleared. Automated purge [issue #6436](https://github.com/aictrl-dev/aictrl/issues/6436) remains open; the targeted purge resolved the current stale image, not the automation defect.
+
+The owner reports updating GitHub App Setup URL to **`https://app.aictrl.dev/api/github-app/setup`**. An independent inert endpoint check reached that handler and returned HTTP 400 for the missing installation ID. The saved private GitHub App setting and a real install flow were **not independently verified**.
+
+These receipts resolve the observed Worker routing and canonical-image mismatch from the [earlier production checkpoint](../README.md), while preserving that history. They do not prove successful authentication/provider execution, revised search indexing, qualified traffic, consent-policy approval or completion of Days 1–5. This research commit performs no product, provider, deployment, purge or settings action.

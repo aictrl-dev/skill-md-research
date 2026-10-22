@@ -44,3 +44,9 @@ The [apex routing receipt](apex-routing.json) shows `https://aictrl.dev/?wizard=
 | Day 5 release and live checks | Approval/merge and production-service gates closed; edge cache, reviewed apex Worker publication and complete route/journey verification remain pending |
 
 No revised-index, ranking, qualified-acquisition, successful authentication/provider-result or policy-approval outcome is inferred. All earlier research and the original 44-file archive are preserved. This archival update makes no source, tracking, provider, deployment, purchase, Worker or cache mutation.
+
+## Cloudflare follow-up — 16:00 UTC
+
+The [new rollout receipts](cloudflare-followup/README.md) supersede the current Worker/image-blocker status above without rewriting those original observations. Reviewed Worker version `fe280117-d3b2-479d-8622-6153dba6d701` is published at 100%; inert setup-root routing now serves the SPA, while marketing/article/explore behavior is preserved. The canonical article OG image now matches release source after a purge of only its origin-fetch cache key. The pre-purge mismatch remains in the new routing receipt; automated purge issue #6436 is still open.
+
+The owner reports updating the GitHub App Setup URL; its endpoint was independently reachable, while the saved private setting and a real install remain unverified. Provider/journey, policy and qualified-outcome requirements remain open. This resolves the observed public routing/image defects, **not the full Days 1–5 goal**.

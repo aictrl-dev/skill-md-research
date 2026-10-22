@@ -1,0 +1,14 @@
+{
+  "checked_at": "2026-10-22T15:57:01.711088+00:00",
+  "merge_commit": "7000314ba863d4e356bb8d4b3763a42be4099ed1",
+  "previous_version": "9f6381c0-deb0-418a-86c0-577fbfb383dd",
+  "remote_bundle_sha256": "95a3030f7dc1bfefb3c2505992396daeeee81f404440c25639188552739233fb",
+  "reviewed_bundle_sha256": "b7f1e18c0e38658a46692d8b81eb7c25946c2db5a5dacec55a808d0262765e69",
+  "only_bundle_change": "Exact single wizard=bind-repos root query is proxied to Cloud Run",
+  "vars_routes_compatibility_match": true,
+  "preserved_remote_settings": {
+    "workers_dev": false,
+    "preview_urls": false
+  },
+  "deployment_config": "/tmp/aictrl-router-release6446.toml"
+}
