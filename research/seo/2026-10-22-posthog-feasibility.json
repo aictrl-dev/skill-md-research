@@ -26,7 +26,7 @@
     "documented_paid_period": "7 years",
     "shorter_period_available_on_request": false,
     "retention_is_deletion_tool": false,
-    "interpretation": "The draft90-day raw-event deletion promise is not established by native plan retention. Current project plan and physical deletion mechanisms were not independently verified."
+    "interpretation": "Native plan retention does not establish the draft 90-day raw-event deletion promise. Current billing metadata lists a paid plan and 7-year Product Analytics retention feature; no shorter physical-deletion mechanism was verified."
   },
   "deletion_tool_schema": {
     "method": "PostHog MCP info persons-bulk-delete only; never called",
@@ -55,5 +55,41 @@
     "No person/event rows, credentials, private content or raw project API token retained.",
     "Community answers and old GitHub issues returned by search were not used as capability evidence.",
     "Documentation and schema inspection do not replace a controlled provider deletion/re-grant test."
-  ]
+  ],
+  "followup_checked_at": "2026-10-22T22:06Z",
+  "plan_observation": {
+    "method": "PostHog MCP billing-overview-get; active project-get confirmed 88595",
+    "active_project_id": 88595,
+    "has_active_subscription": true,
+    "subscription_level": "paid",
+    "billing_plan": "paid",
+    "product_analytics_retention_feature": {
+      "key": "product_analytics_data_retention",
+      "unit": "years",
+      "value": 7
+    },
+    "limits": "Observed product feature/window, not proof of physical event removal or a shorter purge mechanism. Financial amounts, customer IDs and payment details excluded."
+  },
+  "deletion_workflow_docs": {
+    "source": "https://posthog.com/docs/privacy/data-storage#right-to-be-forgotten",
+    "retrieval": "Native Chrome read of official page after MCP docs-search returned only introductory chunks",
+    "operation": "Read documentation only; no API call or deletion",
+    "queued_request_signal": [
+      "persons_queued_for_deletion",
+      "events_queued_for_deletion"
+    ],
+    "failure_field": "deletion_errors",
+    "completion_endpoint": "GET /api/projects/:project_id/persons/deletion_status",
+    "filters": [
+      "status=pending|completed|all",
+      "person_uuid"
+    ],
+    "completion_fields": [
+      "status",
+      "delete_verified_at"
+    ],
+    "asynchronous": true,
+    "future_id_reuse": "Docs recommend avoiding reuse during processing; Reset deleted person allows future events to create a new person profile. Compatibility with proposed no-profile capture remains unverified.",
+    "limits": "Documentation describes matched persons, not demonstrated personless-event deletion or a guaranteed seven-day completion deadline."
+  }
 }
