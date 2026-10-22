@@ -1,0 +1,65 @@
+{
+  "target": "http://127.0.0.5:3005/blog/swe-evo-analysis",
+  "measuredAt": "2026-10-22T09:19:26.791Z",
+  "thresholds": {
+    "alignPx": 2,
+    "widthPx": 2,
+    "fillRatio": 0.75,
+    "tapPx": 44,
+    "tapErrorPx": 24,
+    "inputFontPx": 16,
+    "textPx": 14,
+    "contrast": 4.5,
+    "contrastLarge": 3,
+    "deadSpaceVh": 0.3,
+    "actionGapVh": 0.25,
+    "typeScaleMax": 6,
+    "labelGapPx": 12,
+    "eyebrowMaxWords": 4,
+    "eyebrowTrackingEm": 0.04,
+    "examples": 3
+  },
+  "profile": "content",
+  "viewports": {
+    "phone": {
+      "fieldCount": 0,
+      "rows": [],
+      "scope": ".section[aria-labelledby=\"learn-from-failures\"]",
+      "scopeScreenshot": "phone-scope.png"
+    },
+    "desktop": {
+      "fieldCount": 0,
+      "rows": [],
+      "scope": ".section[aria-labelledby=\"learn-from-failures\"]",
+      "scopeScreenshot": "desktop-scope.png"
+    }
+  },
+  "findings": [],
+  "hidden": {
+    "selectors": "#cookieBanner,.site-nav",
+    "matched": 2
+  },
+  "copy": [
+    "06 / Make failures useful",
+    "Turn the next bug into evidence for one better control",
+    "A missed requirement is an opportunity to learn where the workflow broke. Before adding another permanent paragraph to the system prompt, classify the failure and make the remedy testable.",
+    "Practitioner framework — suggested diagnoses and interventions, not experimental results.",
+    "Observed failure",
+    "Try next",
+    "Evidence to keep",
+    "Agent missed an undocumented compatibility rule",
+    "Add the specific constraint to repository context.",
+    "A failing compatibility test that passes after the repair.",
+    "Correct code, wrong specialist procedure",
+    "Make the relevant skill discoverable and load it for this task.",
+    "The loaded skill version and completed procedure checks.",
+    "Instructions mention an unavailable tool",
+    "Align the prompt and tool catalog.",
+    "The actual request and tool-call error before and after.",
+    "Agent skipped a required validation or boundary",
+    "Put the check or permission gate in the execution path.",
+    "A controlled failure showing the gate blocks completion.",
+    "On the next model upgrade, replay these cases. Retire workarounds that no longer help; retain requirements and controls whose purpose still exists. That gives the instruction library a maintenance loop instead of allowing it to grow after every incident.",
+    "Failure diagnosis and suggested controls"
+  ]
+}

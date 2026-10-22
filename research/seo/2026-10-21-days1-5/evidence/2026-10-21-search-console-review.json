@@ -1,0 +1,511 @@
+{
+  "observed_at_utc": "2026-10-21T18:14:25.175051+00:00",
+  "source": "Authenticated Google Search Console UI via Chrome extension; manually transcribed from visible active report tables and metric labels",
+  "property": "sc-domain:aictrl.dev",
+  "search_type": "Web",
+  "timezone": "America/Los_Angeles (GSC daily reporting)",
+  "current_window": {
+    "start": "2026-09-22",
+    "end": "2026-10-19"
+  },
+  "previous_window": {
+    "start": "2026-08-25",
+    "end": "2026-09-21"
+  },
+  "date_evidence": "Exact ranges read in Compare date dialog; chart AX label showed Invalid Date after comparison, so not used for dates",
+  "performance": {
+    "current": {
+      "clicks": 22,
+      "impressions": 3458,
+      "ctr_display": "0.6%",
+      "average_position": 8.6
+    },
+    "previous": {
+      "clicks": 22,
+      "impressions": 4439,
+      "ctr_display": "0.5%",
+      "average_position": 11.2
+    }
+  },
+  "pages_28d_header": [
+    "url",
+    "clicks",
+    "impressions",
+    "ctr_display",
+    "position"
+  ],
+  "pages_28d": [
+    [
+      "https://aictrl.dev/",
+      7,
+      109,
+      "6.4%",
+      3.7
+    ],
+    [
+      "https://aictrl.dev/blog/swe-evo-analysis",
+      6,
+      1632,
+      "0.4%",
+      8.0
+    ],
+    [
+      "https://aictrl.dev/hush",
+      3,
+      111,
+      "2.7%",
+      6.5
+    ],
+    [
+      "https://aictrl.dev/blog/knowledge-graph-agentic-ai",
+      1,
+      328,
+      "0.3%",
+      12.4
+    ],
+    [
+      "https://aictrl.dev/blog/from-agent-factory-to-workflow",
+      1,
+      137,
+      "0.7%",
+      7.1
+    ],
+    [
+      "https://aictrl.dev/blog/software-factory-change-impact",
+      1,
+      49,
+      "2%",
+      9.3
+    ],
+    [
+      "https://aictrl.dev/blog/aictrl-vs-github-gitlab-sdlc-automation",
+      1,
+      12,
+      "8.3%",
+      5.3
+    ],
+    [
+      "https://aictrl.dev/authors/bulat",
+      1,
+      9,
+      "11.1%",
+      2.2
+    ],
+    [
+      "https://aictrl.dev/features/workflow-as-code",
+      1,
+      4,
+      "25%",
+      12.3
+    ],
+    [
+      "https://aictrl.dev/blog/skill-md-adoption-trajectory",
+      0,
+      454,
+      "0%",
+      6.8
+    ],
+    [
+      "https://aictrl.dev/blog/chinese-ai-models-catch-up",
+      0,
+      174,
+      "0%",
+      7.2
+    ],
+    [
+      "https://aictrl.dev/features/code-review",
+      0,
+      88,
+      "0%",
+      20.5
+    ],
+    [
+      "https://aictrl.dev/blog/agentic-loops-to-measured-workflows",
+      0,
+      66,
+      "0%",
+      5.4
+    ],
+    [
+      "https://aictrl.dev/ai-sdlc",
+      0,
+      65,
+      "0%",
+      8.0
+    ],
+    [
+      "https://aictrl.dev/features",
+      0,
+      52,
+      "0%",
+      7.6
+    ],
+    [
+      "https://aictrl.dev/plugins",
+      0,
+      52,
+      "0%",
+      18.4
+    ],
+    [
+      "https://aictrl.dev/pricing",
+      0,
+      47,
+      "0%",
+      5.4
+    ],
+    [
+      "https://aictrl.dev/docs",
+      0,
+      43,
+      "0%",
+      5.4
+    ],
+    [
+      "https://explore.aictrl.dev/hermes",
+      0,
+      43,
+      "0%",
+      15.6
+    ],
+    [
+      "https://aictrl.dev/features/knowledge-graph",
+      0,
+      10,
+      "0%",
+      9.8
+    ]
+  ],
+  "comparison_page_header": [
+    "url",
+    "current_clicks",
+    "previous_clicks",
+    "current_impressions",
+    "previous_impressions",
+    "current_position",
+    "previous_position"
+  ],
+  "comparison_pages": [
+    [
+      "https://aictrl.dev/",
+      7,
+      9,
+      109,
+      176,
+      3.7,
+      4.7
+    ],
+    [
+      "https://aictrl.dev/blog/swe-evo-analysis",
+      6,
+      1,
+      1632,
+      1344,
+      8.0,
+      8.5
+    ],
+    [
+      "https://aictrl.dev/hush",
+      3,
+      0,
+      111,
+      217,
+      6.5,
+      6.5
+    ],
+    [
+      "https://aictrl.dev/blog/knowledge-graph-agentic-ai",
+      1,
+      0,
+      328,
+      913,
+      12.4,
+      11.0
+    ],
+    [
+      "https://aictrl.dev/blog/from-agent-factory-to-workflow",
+      1,
+      0,
+      137,
+      103,
+      7.1,
+      7.8
+    ],
+    [
+      "https://aictrl.dev/blog/skill-md-adoption-trajectory",
+      0,
+      1,
+      454,
+      530,
+      6.8,
+      7.1
+    ]
+  ],
+  "selected_queries_28d_header": [
+    "query",
+    "clicks",
+    "impressions",
+    "ctr_display",
+    "position"
+  ],
+  "selected_queries_28d": [
+    [
+      "swe-evo",
+      1,
+      41,
+      "2.4%",
+      8.1
+    ],
+    [
+      "swe evo",
+      2,
+      27,
+      "7.4%",
+      8.1
+    ],
+    [
+      "\"swe-evo\"",
+      0,
+      18,
+      "0%",
+      9.1
+    ],
+    [
+      "ai ctrl",
+      2,
+      17,
+      "11.8%",
+      6.0
+    ],
+    [
+      "aictrl",
+      2,
+      7,
+      "28.6%",
+      1.9
+    ],
+    [
+      "swe-bench agent evaluation scoring methodology environment behavior",
+      0,
+      10,
+      "0%",
+      10.2
+    ],
+    [
+      "ai code review",
+      0,
+      7,
+      "0%",
+      61.1
+    ],
+    [
+      "sdlc orchestrator",
+      0,
+      5,
+      "0%",
+      8.2
+    ],
+    [
+      "\"swe-evo\" benchmark",
+      0,
+      5,
+      "0%",
+      8.6
+    ],
+    [
+      "ai software factory",
+      0,
+      4,
+      "0%",
+      13.5
+    ]
+  ],
+  "query_coverage": "158 query rows rendered in active 28-day table, selected relevant rows retained here; privacy/truncation means visible queries do not cover totals. Hidden inactive DOM tables were excluded from evidence.",
+  "three_month_context": {
+    "start": "2026-07-20",
+    "end": "2026-10-19",
+    "clicks": 53,
+    "impressions_display": "12k",
+    "ctr_display": "0.4%",
+    "position": 13.2,
+    "selected_query_header": [
+      "query",
+      "clicks",
+      "impressions",
+      "position"
+    ],
+    "selected_queries": [
+      [
+        "ai code review",
+        0,
+        337,
+        57.9
+      ],
+      [
+        "ai code review tool",
+        0,
+        62,
+        52.3
+      ],
+      [
+        "knowledge graph tools ai coding agents code structure understanding",
+        0,
+        51,
+        10.3
+      ]
+    ]
+  },
+  "generative_ai": {
+    "report": "Search Generative AI features, Beta",
+    "current_impressions": 143,
+    "previous_impressions": 104,
+    "page_header": [
+      "url",
+      "current_impressions",
+      "previous_impressions"
+    ],
+    "pages": [
+      [
+        "https://aictrl.dev/blog/from-agent-factory-to-workflow",
+        33,
+        2
+      ],
+      [
+        "https://aictrl.dev/blog/swe-evo-analysis",
+        31,
+        3
+      ],
+      [
+        "https://aictrl.dev/",
+        19,
+        28
+      ],
+      [
+        "https://aictrl.dev/blog/knowledge-graph-agentic-ai",
+        19,
+        33
+      ],
+      [
+        "https://aictrl.dev/hush",
+        17,
+        12
+      ],
+      [
+        "https://aictrl.dev/blog/skill-md-adoption-trajectory",
+        7,
+        10
+      ],
+      [
+        "https://aictrl.dev/features/code-review",
+        6,
+        5
+      ],
+      [
+        "http://aictrl.dev/",
+        3,
+        0
+      ],
+      [
+        "https://aictrl.dev/ai-sdlc",
+        3,
+        6
+      ],
+      [
+        "https://aictrl.dev/authors/bulat",
+        3,
+        3
+      ]
+    ],
+    "table_scope": "First 10 of 20 comparison page rows",
+    "limits": "Impressions only, overlapping standard Search performance; not visits, outside-Google citations or conversions. Domain Settings separately shows Include."
+  },
+  "report_urls": {
+    "performance": "https://search.google.com/search-console/performance/search-analytics?resource_id=sc-domain%3Aaictrl.dev&metrics=CLICKS%2CIMPRESSIONS%2CPOSITION&num_of_days=28&compare_date=PREV",
+    "ai": "https://search.google.com/search-console/performance/search-analytics/ai?resource_id=sc-domain%3Aaictrl.dev&num_of_days=28&compare_date=PREV"
+  },
+  "limits": [
+    "Domain property includes explore subdomain and HTTP variants; not apex-only.",
+    "No user-level attribution, qualification or causal claim.",
+    "PostHog dashboard opening timed out; existing historical snapshot is separate.",
+    "PostHog access retried via AX and DOM; current dashboard could not be read due to timeouts. Bing was not reviewed.",
+    "Countries/devices, 14-day slices, exact page-filtered query attribution and individual URL-inspection reports remain operational follow-up; not claimed reviewed."
+  ],
+  "last_observed_at_utc": "2026-10-21T18:17:04.791517+00:00",
+  "indexing": {
+    "scope": "All known URLs, domain property including subdomains; not the live sitemap denominator",
+    "report_last_updated": "2026-10-12",
+    "indexed": 46,
+    "not_indexed": 540,
+    "reasons": {
+      "excluded_noindex": 408,
+      "not_found_404": 44,
+      "alternative_canonical": 12,
+      "redirect": 8,
+      "blocked_robots": 4,
+      "other_4xx": 1,
+      "crawled_not_indexed": 22,
+      "discovered_not_indexed": 41
+    },
+    "crawled_not_indexed_examples": [
+      {
+        "url": "https://aictrl.dev/llms.txt",
+        "last_crawled": "2026-10-07"
+      },
+      {
+        "url": "https://aictrl.dev/.well-known/security.txt",
+        "last_crawled": "2026-10-06"
+      },
+      {
+        "url": "https://aictrl.dev/blog/browser-use-rise",
+        "last_crawled": "2026-10-05"
+      },
+      {
+        "url": "https://aictrl.dev/docs/plugin-setup",
+        "last_crawled": "2026-09-25"
+      },
+      {
+        "url": "https://aictrl.dev/blog/media/from-agent-factory-to-workflow/manifest.json",
+        "last_crawled": "2026-09-15"
+      },
+      {
+        "url": "https://aictrl.dev/blog/chinese-ai-models-catch-up",
+        "last_crawled": "2026-08-31"
+      },
+      {
+        "url": "https://aictrl.dev/early-access",
+        "last_crawled": "2026-08-28"
+      },
+      {
+        "url": "https://aictrl.dev/blog/aictrl-vs-github-gitlab-sdlc-automation",
+        "last_crawled": "2026-08-02"
+      }
+    ],
+    "example_scope": "Selected public examples from first 10 of 22; source-file explorer examples omitted. Stale report and performance may disagree; inspect individual URLs before changes."
+  },
+  "sitemaps": [
+    {
+      "url": "https://aictrl.dev/sitemap.xml",
+      "status": "Success",
+      "submitted": "2026-03-09",
+      "last_read": "2026-10-17",
+      "discovered_pages": 64
+    },
+    {
+      "url": "https://explore.aictrl.dev/sitemap.xml",
+      "status": "Success",
+      "submitted": "2026-07-05",
+      "last_read": "2026-10-16",
+      "discovered_pages": 44
+    }
+  ],
+  "settings": {
+    "search_generative_ai": "Include",
+    "robots_warning": "1 file has a critical error",
+    "affected_robots_url": "https://links.aictrl.dev/robots.txt",
+    "affected_status": "Not fetched - Blocked due to other 4xx issue",
+    "affected_checked_on_display": "06/10/2026, 11:25",
+    "apex_robots_status": "Fetched",
+    "apex_checked_on_display": "26/09/2026, 23:24",
+    "limits": "Displayed clock timezone not independently verified; no configuration changes made."
+  }
+}

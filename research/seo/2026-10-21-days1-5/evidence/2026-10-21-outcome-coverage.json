@@ -1,0 +1,57 @@
+{
+  "captured_at_utc": "2026-10-21T19:17:21Z",
+  "project_id": 88595,
+  "status": "read-only diagnostic; not a qualified visitor metric",
+  "scope": "Raw event coverage includes staff, scanners and sandbox where shown. No new collection or identity values output. Existing approved separate-cohort direction preserved; no anonymous-to-account joining introduced.",
+  "metric_catalog": {
+    "count": 0,
+    "next": null
+  },
+  "queries": [
+    {
+      "id": "joins",
+      "input": {
+        "query": "SELECT source_table, source_column, target_table, target_column, relationship_kind, confidence, reasoning FROM system.information_schema.relationships WHERE source_table = 'events' AND (target_table = 'persons' OR target_table = 'person_distinct_ids') LIMIT 30",
+        "context": "Diagnostic coverage, not NSM. No identity values output. governed catalog consulted: no match."
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "source_table|source_column|target_table|target_column|relationship_kind|confidence|reasoning"
+          }
+        ]
+      }
+    },
+    {
+      "id": "daily-coverage",
+      "input": {
+        "query": "SELECT event, count() AS event_count, uniq(person_id) AS persons, countIf(properties.$host = 'aictrl.dev') AS apex_events, countIf(properties.$host = 'app.aictrl.dev') AS app_events FROM events WHERE timestamp >= '2026-10-19 00:00:00' AND timestamp < '2026-10-20 00:00:00' AND event IN ('$pageview', '$identify', 'cta_clicked', 'repo_linked', 'task_template_executed') GROUP BY event ORDER BY event LIMIT 10",
+        "context": "Diagnostic coverage, not NSM. No identity values output. governed catalog consulted: no match."
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "event|event_count|persons|apex_events|app_events\n$pageview|44|25|28|12"
+          }
+        ]
+      }
+    },
+    {
+      "id": "capture-coverage",
+      "input": {
+        "query": "SELECT event, coalesce(properties.env, '') AS env, coalesce(properties.$host, '') AS host, count() AS events, uniq(person_id) AS persons, countIf(properties.$is_identified = true) AS identified_events FROM events WHERE timestamp >= '2026-09-22 00:00:00' AND timestamp < '2026-10-20 00:00:00' AND event IN ('$pageview', '$identify', 'cta_clicked', 'repo_linked', 'task_template_executed') GROUP BY event, env, host ORDER BY event, events DESC LIMIT 80",
+        "context": "Raw technical capture coverage only, includes staff and scanners; not NSM. governed catalog consulted: no match."
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "event|env|host|events|persons|identified_events\n$identify|production|app.aictrl.dev|30|17|30\n$identify|sandbox|sandbox.aictrl.dev|8|1|8\n$identify|production|aictrl.dev|5|5|5\n$pageview|production|app.aictrl.dev|2060|93|1948\n$pageview|production|aictrl.dev|688|438|9\n$pageview|sandbox|sandbox.aictrl.dev|263|1|253\n$pageview|explore|explore.aictrl.dev|21|15|2\n$pageview|dev|localhost:3017|17|1|0\n$pageview|unknown|127.0.0.20:3006|5|1|0\n$pageview|unknown|127.0.0.26:3005|5|1|0\n$pageview|unknown|127.0.0.4:3005|4|2|0\n$pageview|unknown|127.0.0.89:3005|3|1|0\n$pageview|unknown|127.0.0.88:3005|2|1|0\n$pageview|unknown|127.0.0.2:3005|2|1|0\n$pageview|unknown|127.0.0.3:3005|1|1|0\n$pageview|dev|127.0.0.1:3006|1|1|0\ncta_clicked|production|aictrl.dev|20|15|2\nrepo_linked|production||37|10|0\ntask_template_executed|production|app.aictrl.dev|8|2|8\ntask_template_executed|sandbox|sandbox.aictrl.dev|1|1|1"
+          }
+        ]
+      }
+    }
+  ]
+}

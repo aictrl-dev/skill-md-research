@@ -1,0 +1,48 @@
+# aictrl.dev
+
+> AI workflow orchestration platform for engineering teams that use AI coding agents.
+
+aictrl.dev helps teams manage AI-assisted development through three pillars: Grounded Backlog (structured tasks with acceptance criteria and evidence-based approval gates), Skills Governance (standardized agent instructions treated as production code), and Knowledge Graph (contextual memory that improves agent accuracy and reduces token costs). The platform ensures AI agents prove their work rather than just promise it.
+
+## Documentation
+
+- [Getting Started](https://aictrl.dev/docs): Install the MCP server, run your first session, and learn core concepts like acceptance criteria, evidence, and approval gates.
+- [PR Explanations](https://aictrl.dev/docs/pr-explanations): Understand a pull request before you review it: what an explanation contains, explorable diagrams that link each step to its code, sharing on GitHub as one comment, customization, limits and troubleshooting.
+- [Start workflows from GitHub](https://aictrl.dev/docs/setup/github-triggers): Add a workflow file to your repository and start it from a GitHub label, comment or pull request, using the label-an-issue, get-a-reviewed-PR example.
+- [Delivery Analytics Methodology](https://aictrl.dev/docs/delivery-analytics): Definitions, source windows, proxies, and interpretation guidance for delivery performance signals.
+- [Headless Agent Harness](https://aictrl.dev/agent): aictrl CLI, an open-source (MIT) coding-agent CLI built only for non-interactive runs in CI, cron jobs and containers: versioned NDJSON event stream, JSON Schema-validated results, documented exit codes, per-tool permissions, any model provider, skills and MCP. Includes a copy-paste GitHub Actions workflow for a read-only pull request review with your own API key.
+- [Features](https://aictrl.dev/features): Three pillars of AI orchestration -- Grounded Backlog, Skills Governance, and Knowledge Graph.
+- [Pricing](https://aictrl.dev/pricing): Simple, transparent pricing for the complete orchestration stack.
+- [About](https://aictrl.dev/about): Meet the team behind aictrl.dev and learn about evidence-based development.
+- [Changelog](https://aictrl.dev/changelog): Weekly release notes. What we shipped each week, published every Thursday.
+
+## Blog
+
+- [Which coding-agent CLI is best for headless workflow automation?](https://aictrl.dev/blog/headless-coding-agent-cli-benchmark): Six coding-agent CLIs (aictrl, pi, Codex, OpenCode 2, Hermes, Goose) measured in fresh containers against a scripted model: start-up, harness time per turn, memory, image size, system prompt and tool-definition tokens, tokens for a short task, tokens per file read, JSON event-stream coverage and OpenTelemetry export. Runner and data are open (MIT / CC BY 4.0).
+- [Label an issue, get a reviewed PR](https://aictrl.dev/blog/label-an-issue-get-a-reviewed-pr): A workflow starts from a GitHub label, implements an issue, opens a pull request, reviews and fixes it, and reports back. One public run, and the rehearsal that failed.
+
+- [We simplified our backlog screen, and users would have approved the wrong thing](https://aictrl.dev/blog/ai-usability-testing-backlog-design): Seven Backlog versions in two days, tested by AI agent testers and a Jev simulated user. Cutting controls from 37 to 16 made both novice agent testers approve a security review instead of starting work; moving Ready to start above approvals took hurried testers from 1 of 3 to 3 of 3; seven fixes raised task success from 83% to 96%.
+- [From a generated image to a Blender film](https://aictrl.dev/blog/from-agent-factory-to-workflow): How we made the aictrl homepage film: a generated reference, an authored 3D world, and a workflow transition, with the failures and fixes along the way.
+- [Get It Off the Laptop: From Interactive AI Loops to Measured Workflows](https://aictrl.dev/blog/agentic-loops-to-measured-workflows): Interactive AI harnesses and automated workflows are different machines, not two settings of one dial. A loop that leaves no evidence never compounds.
+- [The Anatomy of an Open-Source AI Coding Agent](https://aictrl.dev/blog/anatomy-of-ai-coding-agents): We mapped opencode, OpenClaw and Hermes into knowledge graphs. Size scales depth, not width -- a TypeScript monoculture with one Python outlier.
+- [AI Didn't Kill the SDLC. It Compressed It.](https://aictrl.dev/blog/ai-sdlc-compressed-not-replaced): A one-engineer team merged 1,456 PRs and shipped 155 production deploys in 90 days by compressing each SDLC phase into an AI loop with a human gate.
+- [Code Review With a 12B Model: Graph Topology and the Price of Recall](https://aictrl.dev/blog/local-model-code-review): A recall-first DAG pipeline around gemma-12B found real TypeScript review bugs by combining many noisy passes, graph topologies, and script checks.
+- [aictrl vs. GitHub vs. GitLab for Agentic SDLC Automation](https://aictrl.dev/blog/aictrl-vs-github-gitlab-sdlc-automation): A methodology-led comparison of aictrl.dev, GitHub Agent HQ and Copilot coding agent, and GitLab Duo Agent Platform.
+- [The Path to 97%: Engineering Data Platform Availability as a KPI](https://aictrl.dev/blog/path-to-97-data-platform-availability): Most data platforms run at 50-80% availability. A problem-source taxonomy plus weighted availability turn 97% into a roadmap.
+- [How We Evaluated AI Code Review on Our Own PRs](https://aictrl.dev/blog/code-review-dogfooding-assessment-2026): A dogfooding assessment over 212 anonymized pull requests, showing why validity alone was not enough and completeness metrics changed the primary-reviewer decision.
+- [AI Code Review Tools in 2026: The PR Surface Is the Product](https://aictrl.dev/blog/ai-code-review-tools-2026): A field guide to CodeRabbit, CodeAnt, GitHub Copilot Code Review, Qodo, Graphite, and Cursor Bugbot: PR features, analytics, docs, and eval credibility.
+- [The Great Convergence: How Chinese AI Models Caught the West in 18 Months](https://aictrl.dev/blog/chinese-ai-models-catch-up): DeepSeek, Qwen, and Moonshot now challenge Western models at far lower cost. Benchmarks, pricing, and enterprise strategy.
+- [Proof Before Ship: How Skill Evals Turn AI Agents from Guesswork into Engineering](https://aictrl.dev/blog/skill-evals-proof-before-ship): Most teams ship AI skills on gut feel. Eval-driven development proves performance against metrics before accepting changes.
+- [From .feature Files to Knowledge Graphs](https://aictrl.dev/blog/bdd-knowledge-graphs-deterministic-traceability): BDD promised living documentation but delivered test suites. Knowledge graphs close the gap with queryable traceability from Gherkin scenarios to code.
+- [The Vibe Coding Dopamine Trap](https://aictrl.dev/blog/vibe-coding-dopamine-trap): AI coding tools are faster than ever, but 56% of CEOs report zero ROI. The neuroscience behind the addiction loop, the hidden quality tax (2.74x more security vulns), and 5 metrics that predict real outcomes.
+- [Why Knowledge Graphs Are the Missing Infrastructure Layer for Agentic AI](https://aictrl.dev/blog/knowledge-graph-agentic-ai): 95% of enterprise AI pilots fail due to the data layer, not models -- knowledge graphs improve LLM accuracy by 3-5x and cut token costs by 80-97%.
+- [From Vibe Coding to Spec Engineering](https://aictrl.dev/blog/skill-engineering-pseudocode): Agent instruction quality drives a 2.3x performance swing -- more than model choice. Why top AI teams treat instructions as production code.
+- [The SKILL.md Trajectory](https://aictrl.dev/blog/skill-md-adoption-trajectory): Anthropic open-sourced Agent Skills on Dec 18, OpenAI adopted within 48 hours, and 160,000+ skills were indexed across 7+ platforms by February.
+- [The SKILL.md Standard: Your Enterprise Guide to AI Grounding](https://aictrl.dev/blog/skill-md-standard-enterprise-guide): 84% of developers use AI tools, but only 23% of enterprises can measure ROI. How structured instruction files deliver 20-50% performance gains.
+- [The Reasoning Race: From 2.7% to 53.1% on Humanity's Last Exam](https://aictrl.dev/blog/reasoning-benchmarks): AI reasoning exploded in 12 months. Analysis of benchmark saturation, model specialization, and enterprise ROI.
+- [The SaaSpocalypse: $1 Trillion Wipeout and Who Survives](https://aictrl.dev/blog/saaspocalypse): Anthropic's Claude Cowork triggered a ~$1 trillion selloff in software stocks. Analysis of who survived and why.
+- [The Swarm Paradox: Why More AI Agents Often Means Worse Results](https://aictrl.dev/blog/swarm-paradox): Google found multi-agent systems degrade sequential tasks by 39-70%. Analysis of 12 benchmarks and what actually works.
+- [SWE-Bench Evolution Analysis: AI Coding Agent Performance](https://aictrl.dev/blog/swe-evo-analysis): Deep dive into how AI coding benchmarks have evolved and what the latest results reveal about autonomous software engineering.
+- [The AI Electricity Crisis: Will Efficiency Save Us?](https://aictrl.dev/blog/ai-electricity-crisis): GPU efficiency improved 66x in 9 years while token demand grew 3,000x. Analysis of Jevons Paradox in AI and the growing gap.
+- [The Rise of AI-Native Browser Automation](https://aictrl.dev/blog/browser-use-rise): How browser-use went from 0 to 77,000 GitHub stars in 5 months, challenging a decade of testing infrastructure.
+- [Framework Matters: The 2.5x AI Performance Story](https://aictrl.dev/blog/framework-matters): Analysis of how AI coding agents perform differently across frameworks and why tool choice significantly impacts AI-assisted development.
