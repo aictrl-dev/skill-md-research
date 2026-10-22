@@ -27,6 +27,20 @@ Read-only integration preflight against sandbox `e26b933688eb35294d0ff44ca69b78b
 
 No search-ranking, click-through, qualified-traffic or conversion improvement has been measured. PR #6434 still needs its normal merge/release and post-release checks. Do not request recrawl of an unpublished candidate or treat green CI as publication.
 
+## Subsequent verification and Bing recovery
+
+Article head `4dd6cc64829a908952d2b6dd70a6df2a20afadee` passed CI `39764390526` on **attempt 1 at 10:48:02 UTC**: all five UI/four backend shards, both shard gates, website, lint/build and test aggregate passed. Static Checks `39764390643` also passed. No retry or source/gate change was needed. Scope-appropriate E2E/Gherkin workflow gates passed while selected tests were skipped; they are not executed E2E evidence. Current-head review monitoring remains active at this checkpoint; older reviews do not cover the final rewrite.
+
+Research PR #16's initial head `45b1f221dc7b11e294af816b8fdee09ff3344a5a` passed CodeQL `39764637404` at 10:39:35 UTC. That result does not cover this later Bing evidence addition.
+
+[The recovered Bing receipt](2026-10-22-bing-followup.json) preserves exact normal-UI dates, tables and source limits. The 28-day current Search report now loads for 22 September–19 October, with **zero clicks / 109 impressions**. The earlier 25 August–21 September window and the corresponding Compare view explicitly return “Data for the selected range is not available”; they remain unknown, not zero. Independently selected 14-day reports recover **14 → 95 impressions**, with zero reported clicks in both periods. Their totals add to the current 28-day headline. Keywords/pages have smaller totals than headline/daily/device/country tables; the cause remains unverified, and missing or suppressed activity is not reconstructed.
+
+Sitemap details also recovered: apex sitemap 65 discovered URLs, last crawl 20 October; www sitemap 64, last crawl 16 October; both report Success. Their sum accounts for the 129 summary across two sitemap entries. The overlap of their URL sets, distinct canonical/indexed page count and present live sitemap size are not established by that summary. No submission, delete or recrawl was performed.
+
+Bing AI Performance also recovered for exact Custom windows: current 28-day citations **33**, earlier 28-day report **zero** with all 28 daily rows explicitly zero. This source-reported AI zero differs from Search Performance’s unavailable earlier period; sampling/coverage limits still apply. The two 14-day AI windows show **8 → 25 citations**, and their totals reconcile to 33. All available cited-page rows are retained; the current window includes knowledge graph (10) and skills adoption (7). One sampled grounding query reports six citations and a 33.33% share; its denominator is not reconstructed, and it is not a complete accounting. Only Grounding Queries and Pages tabs were observed, not a separate Topics Portfolio view.
+
+Bing uses source-native dates with unverified timezone/finality; keep these separate from Pacific GSC and UTC PostHog. Visibility and sampled AI citation metrics do not establish qualified acquisition or a causal effect of unpublished content. This expands the fixed-date Bing baseline; Search’s earlier 28-day window remains unavailable and the row-total mismatch remains unresolved. The selected skills/knowledge-graph refreshes remain scheduled for Days 7–8, rather than being reported as completed in Days 1–5.
+
 ## Adjacent merged work
 
 Signup PR #6442 merged into sandbox at `e26b933688eb35294d0ff44ca69b78bd02c2a4e9` on 22 October at 10:21:31 UTC. Its candidate signup file is byte-identical in that merge. Sandbox deployment run `39762498046` succeeded at 10:24:05 UTC. This is sandbox deployment evidence, not proof of production publication or a successful authentication journey.

@@ -1,0 +1,1721 @@
+{
+  "source": "Bing Webmaster Tools authenticated Chrome Work profile, visible UI/DOM",
+  "property": "https://aictrl.dev/",
+  "capturedOnUTC": "2026-10-22",
+  "method": "Normal report controls; dates read back before/after selection; normalized DOM transcription. No private API, new account/grant, scan, submission or capture-setting change.",
+  "timezone": "Not verified; retain Bing-native dates and do not equate them with Pacific GSC or UTC PostHog dates.",
+  "finality": "Not verified. Selected current window ends19Oct; accessible daily table runs1–19Oct. Do not fabricate absent September daily rows.",
+  "comparison28": {
+    "current": [
+      "2026-09-22",
+      "2026-10-19"
+    ],
+    "previous": [
+      "2026-08-25",
+      "2026-09-21"
+    ],
+    "allFourDatesVerified": true,
+    "response": "Data for the selected range is not available",
+    "metrics": null
+  },
+  "current28": {
+    "bounds": [
+      "2026-09-22",
+      "2026-10-19"
+    ],
+    "filter": "All",
+    "clicks": 0,
+    "impressions": 109,
+    "ctrDisplay": "0%",
+    "chartLabel": "Line chart showing Clicks,Impressions from September 22, 2026 to October 19, 2026. Clicks:0,Impressions:109. Toggle checkboxes to show the selected options in chart",
+    "daily": [
+      {
+        "date": "2026-10-01",
+        "clicks": 0,
+        "impressions": 5
+      },
+      {
+        "date": "2026-10-02",
+        "clicks": 0,
+        "impressions": 4
+      },
+      {
+        "date": "2026-10-03",
+        "clicks": 0,
+        "impressions": 2
+      },
+      {
+        "date": "2026-10-04",
+        "clicks": 0,
+        "impressions": 0
+      },
+      {
+        "date": "2026-10-05",
+        "clicks": 0,
+        "impressions": 3
+      },
+      {
+        "date": "2026-10-06",
+        "clicks": 0,
+        "impressions": 8
+      },
+      {
+        "date": "2026-10-07",
+        "clicks": 0,
+        "impressions": 8
+      },
+      {
+        "date": "2026-10-08",
+        "clicks": 0,
+        "impressions": 7
+      },
+      {
+        "date": "2026-10-09",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "date": "2026-10-10",
+        "clicks": 0,
+        "impressions": 4
+      },
+      {
+        "date": "2026-10-11",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "date": "2026-10-12",
+        "clicks": 0,
+        "impressions": 33
+      },
+      {
+        "date": "2026-10-13",
+        "clicks": 0,
+        "impressions": 6
+      },
+      {
+        "date": "2026-10-14",
+        "clicks": 0,
+        "impressions": 7
+      },
+      {
+        "date": "2026-10-15",
+        "clicks": 0,
+        "impressions": 3
+      },
+      {
+        "date": "2026-10-16",
+        "clicks": 0,
+        "impressions": 6
+      },
+      {
+        "date": "2026-10-17",
+        "clicks": 0,
+        "impressions": 3
+      },
+      {
+        "date": "2026-10-18",
+        "clicks": 0,
+        "impressions": 4
+      },
+      {
+        "date": "2026-10-19",
+        "clicks": 0,
+        "impressions": 4
+      }
+    ],
+    "keywords": [
+      {
+        "label": "why knowledge graph projects fall",
+        "impressions": 3,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 9.67
+      },
+      {
+        "label": "2 new western ai models",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "are skill.md still the go to for ai",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 2
+      },
+      {
+        "label": "site.anthropic.com sonnet 4.6 humanity last exam gdpval",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "empirical analysis of coding agent trajectories time sinks redundant file reads repeated test runs over-exploration swe-bench efficiency wasted steps",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 4
+      },
+      {
+        "label": "knowledge graph ai feature layer",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 8
+      },
+      {
+        "label": "claude 3 opus vs human experts in general reasoning tasks",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 2
+      },
+      {
+        "label": "frontier chinese ai model development by 2027",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 8
+      },
+      {
+        "label": "chinese ai models catch up frontier gap months 2026",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6
+      },
+      {
+        "label": "ai skill open standard",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 10
+      },
+      {
+        "label": "is knowledge graph a standard layer between chip design and llm in 2026 ai infrastructure?",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 3
+      },
+      {
+        "label": "skills.md industry standard",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 9
+      },
+      {
+        "label": "ai pre-delivery automated self-check skill. before any result delivery to the user (present_files, final summary, conclusion, status report, or asking a question), this skill must be actually loaded and executed, enumerating the d1-d12 gate snapshot",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 8
+      },
+      {
+        "label": "any western ai model in china",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 3
+      },
+      {
+        "label": "bdd graphs ai",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6
+      },
+      {
+        "label": "ai most proficient in chinese",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 9
+      },
+      {
+        "label": "where is the pull request used inside of the chat model any idea",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 2
+      },
+      {
+        "label": "mm c. swen&china-ai le",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6
+      },
+      {
+        "label": "\"agent skills\" trend search volume growing 2026 skill.md ecosystem",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 5
+      },
+      {
+        "label": "latest western ai model",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "feb 3 2026 claude cowork saas crsah",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 10
+      },
+      {
+        "label": "igmt in pull request chat",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6
+      },
+      {
+        "label": "gitlab sdlc",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "induction labs frontierml benchmark chinese labs results",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 10
+      },
+      {
+        "label": "open ai solving 90% of the 500 hardes questions",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 4
+      },
+      {
+        "label": "most used reasoning#R##N#medium · 50%",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 10
+      },
+      {
+        "label": "swe evo benchmark coding agents long horizon software evolution limitations requirements testing",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "claude opus 4.6 humanity last exam no tools score 2026",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "declarative agent workflow yaml spec self-describing ai readable generate code mermaid diagram",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 4
+      },
+      {
+        "label": "saas stocks selloff ai agents claude chatgpt replace software",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      }
+    ],
+    "pages": [
+      {
+        "label": "https://aictrl.dev/blog/chinese-ai-models-catch-up",
+        "impressions": 8,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "https://aictrl.dev/blog/reasoning-benchmarks",
+        "impressions": 5,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6
+      },
+      {
+        "label": "https://aictrl.dev/blog/knowledge-graph-agentic-ai",
+        "impressions": 5,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 8
+      },
+      {
+        "label": "https://aictrl.dev/blog/skill-md-adoption-trajectory",
+        "impressions": 4,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6.5
+      },
+      {
+        "label": "https://aictrl.dev/blog/saaspocalypse",
+        "impressions": 2,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 8.5
+      },
+      {
+        "label": "https://aictrl.dev/docs/setup/chat-to-pr",
+        "impressions": 2,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 4
+      },
+      {
+        "label": "https://aictrl.dev/blog/swe-evo-analysis",
+        "impressions": 2,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 5.5
+      },
+      {
+        "label": "https://aictrl.dev/blog/skill-evals-proof-before-ship",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 8
+      },
+      {
+        "label": "https://aictrl.dev/blog/bdd-knowledge-graphs-deterministic-traceability",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6
+      },
+      {
+        "label": "https://aictrl.dev/blog/aictrl-vs-github-gitlab-sdlc-automation",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "https://aictrl.dev/features/workflow-as-code",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 4
+      }
+    ],
+    "devices": [
+      {
+        "label": "Desktop",
+        "impressions": 99,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 13.95
+      },
+      {
+        "label": "Mobile",
+        "impressions": 10,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 12.5
+      }
+    ],
+    "countries": [
+      {
+        "label": "United States",
+        "impressions": 65,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 14.49
+      },
+      {
+        "label": "Rest of World",
+        "impressions": 17,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 43
+      },
+      {
+        "label": "United Kingdom",
+        "impressions": 6,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 16
+      },
+      {
+        "label": "Germany",
+        "impressions": 5,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 8
+      },
+      {
+        "label": "Japan",
+        "impressions": 5,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 23.5
+      },
+      {
+        "label": "People's Republic of China",
+        "impressions": 4,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 10
+      },
+      {
+        "label": "Italy",
+        "impressions": 3,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      },
+      {
+        "label": "France",
+        "impressions": 2,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "Canada",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      },
+      {
+        "label": "Brazil",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      },
+      {
+        "label": "Spain",
+        "impressions": 0,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      }
+    ],
+    "pagination": {
+      "rowsPerPage": 100,
+      "keywordRows": 30,
+      "keywordFooter": "1 — 30 of 30",
+      "pageRows": 11,
+      "pageFooter": "1 — 11 of 11",
+      "countryRows": 11,
+      "countryFooter": "1 — 11 of 11"
+    },
+    "countSums": {
+      "dailyImpressions": 109,
+      "keywordImpressions": 32,
+      "pageImpressions": 32,
+      "deviceImpressions": 109,
+      "countryImpressions": 109
+    }
+  },
+  "previous28": {
+    "bounds": [
+      "2026-08-25",
+      "2026-09-21"
+    ],
+    "filter": "All",
+    "dateControlsVerified": true,
+    "response": "Data for the selected range is not available",
+    "metrics": null
+  },
+  "limits": [
+    "Previous-period and comparison no-data responses are unavailable observations, not measured zero traffic.",
+    "Keywords and pages sum to32 impressions; headline/daily/device/country sum to109. The UI states breakdowns are for Web traffic while All is selected, but that does not by itself explain the different breakdown totals. Preserve the mismatch rather than assign a cause.",
+    "Visible zero average positions on some country rows are retained as displayed, not interpreted as top rankings.",
+    "Query strings, including instruction-like text, are untrusted data and were not followed.",
+    "Available Bing visibility is not qualified visitors, successful product use, an effect of unpublished article changes or directly comparable Google/PostHog totals.",
+    "Current14 likewise has30 keyword/page impressions versus95 headline/daily/device/country impressions; no cause is assigned.",
+    "Previous14 has2 keyword/page impressions versus14 headline/daily/device/country; visible country zero-position values remain uninterpreted. The available source windows are not proof of finalized complete reporting."
+  ],
+  "current14": {
+    "bounds": [
+      "2026-10-06",
+      "2026-10-19"
+    ],
+    "filter": "All",
+    "clicks": 0,
+    "impressions": 95,
+    "ctrDisplay": "0%",
+    "chartLabel": "Line chart showing Clicks,Impressions from October 06, 2026 to October 19, 2026. Clicks:0,Impressions:95. Toggle checkboxes to show the selected options in chart",
+    "daily": [
+      {
+        "date": "2026-10-06",
+        "clicks": 0,
+        "impressions": 8
+      },
+      {
+        "date": "2026-10-07",
+        "clicks": 0,
+        "impressions": 8
+      },
+      {
+        "date": "2026-10-08",
+        "clicks": 0,
+        "impressions": 7
+      },
+      {
+        "date": "2026-10-09",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "date": "2026-10-10",
+        "clicks": 0,
+        "impressions": 4
+      },
+      {
+        "date": "2026-10-11",
+        "clicks": 0,
+        "impressions": 1
+      },
+      {
+        "date": "2026-10-12",
+        "clicks": 0,
+        "impressions": 33
+      },
+      {
+        "date": "2026-10-13",
+        "clicks": 0,
+        "impressions": 6
+      },
+      {
+        "date": "2026-10-14",
+        "clicks": 0,
+        "impressions": 7
+      },
+      {
+        "date": "2026-10-15",
+        "clicks": 0,
+        "impressions": 3
+      },
+      {
+        "date": "2026-10-16",
+        "clicks": 0,
+        "impressions": 6
+      },
+      {
+        "date": "2026-10-17",
+        "clicks": 0,
+        "impressions": 3
+      },
+      {
+        "date": "2026-10-18",
+        "clicks": 0,
+        "impressions": 4
+      },
+      {
+        "date": "2026-10-19",
+        "clicks": 0,
+        "impressions": 4
+      }
+    ],
+    "keywords": [
+      {
+        "label": "why knowledge graph projects fall",
+        "impressions": 3,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 9.67
+      },
+      {
+        "label": "2 new western ai models",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "are skill.md still the go to for ai",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 2
+      },
+      {
+        "label": "site.anthropic.com sonnet 4.6 humanity last exam gdpval",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "empirical analysis of coding agent trajectories time sinks redundant file reads repeated test runs over-exploration swe-bench efficiency wasted steps",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 4
+      },
+      {
+        "label": "knowledge graph ai feature layer",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 8
+      },
+      {
+        "label": "claude 3 opus vs human experts in general reasoning tasks",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 2
+      },
+      {
+        "label": "frontier chinese ai model development by 2027",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 8
+      },
+      {
+        "label": "chinese ai models catch up frontier gap months 2026",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6
+      },
+      {
+        "label": "ai skill open standard",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 10
+      },
+      {
+        "label": "is knowledge graph a standard layer between chip design and llm in 2026 ai infrastructure?",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 3
+      },
+      {
+        "label": "skills.md industry standard",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 9
+      },
+      {
+        "label": "ai pre-delivery automated self-check skill. before any result delivery to the user (present_files, final summary, conclusion, status report, or asking a question), this skill must be actually loaded and executed, enumerating the d1-d12 gate snapshot",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 8
+      },
+      {
+        "label": "bdd graphs ai",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6
+      },
+      {
+        "label": "ai most proficient in chinese",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 9
+      },
+      {
+        "label": "mm c. swen&china-ai le",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6
+      },
+      {
+        "label": "\"agent skills\" trend search volume growing 2026 skill.md ecosystem",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 5
+      },
+      {
+        "label": "latest western ai model",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "feb 3 2026 claude cowork saas crsah",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 10
+      },
+      {
+        "label": "igmt in pull request chat",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6
+      },
+      {
+        "label": "gitlab sdlc",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "induction labs frontierml benchmark chinese labs results",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 10
+      },
+      {
+        "label": "open ai solving 90% of the 500 hardes questions",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 4
+      },
+      {
+        "label": "most used reasoning#R##N#medium · 50%",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 10
+      },
+      {
+        "label": "swe evo benchmark coding agents long horizon software evolution limitations requirements testing",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "claude opus 4.6 humanity last exam no tools score 2026",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "declarative agent workflow yaml spec self-describing ai readable generate code mermaid diagram",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 4
+      },
+      {
+        "label": "saas stocks selloff ai agents claude chatgpt replace software",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      }
+    ],
+    "pages": [
+      {
+        "label": "https://aictrl.dev/blog/chinese-ai-models-catch-up",
+        "impressions": 7,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7.57
+      },
+      {
+        "label": "https://aictrl.dev/blog/reasoning-benchmarks",
+        "impressions": 5,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6
+      },
+      {
+        "label": "https://aictrl.dev/blog/knowledge-graph-agentic-ai",
+        "impressions": 5,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 8
+      },
+      {
+        "label": "https://aictrl.dev/blog/skill-md-adoption-trajectory",
+        "impressions": 4,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6.5
+      },
+      {
+        "label": "https://aictrl.dev/blog/saaspocalypse",
+        "impressions": 2,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 8.5
+      },
+      {
+        "label": "https://aictrl.dev/blog/swe-evo-analysis",
+        "impressions": 2,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 5.5
+      },
+      {
+        "label": "https://aictrl.dev/docs/setup/chat-to-pr",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6
+      },
+      {
+        "label": "https://aictrl.dev/blog/skill-evals-proof-before-ship",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 8
+      },
+      {
+        "label": "https://aictrl.dev/blog/bdd-knowledge-graphs-deterministic-traceability",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6
+      },
+      {
+        "label": "https://aictrl.dev/blog/aictrl-vs-github-gitlab-sdlc-automation",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "https://aictrl.dev/features/workflow-as-code",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 4
+      }
+    ],
+    "devices": [
+      {
+        "label": "Desktop",
+        "impressions": 86,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 13.94
+      },
+      {
+        "label": "Mobile",
+        "impressions": 9,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 11.75
+      }
+    ],
+    "countries": [
+      {
+        "label": "United States",
+        "impressions": 61,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 14.49
+      },
+      {
+        "label": "Rest of World",
+        "impressions": 14,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 43
+      },
+      {
+        "label": "United Kingdom",
+        "impressions": 6,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 16
+      },
+      {
+        "label": "Japan",
+        "impressions": 4,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 23.5
+      },
+      {
+        "label": "Germany",
+        "impressions": 3,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 6
+      },
+      {
+        "label": "People's Republic of China",
+        "impressions": 3,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "France",
+        "impressions": 2,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 7
+      },
+      {
+        "label": "Canada",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      },
+      {
+        "label": "Brazil",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      },
+      {
+        "label": "Spain",
+        "impressions": 0,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      },
+      {
+        "label": "Italy",
+        "impressions": 0,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      }
+    ],
+    "pagination": {
+      "rowsPerPage": 100,
+      "keywordRows": 28,
+      "pageRows": 11,
+      "countryRows": 11
+    },
+    "countSums": {
+      "dailyImpressions": 95,
+      "keywordImpressions": 30,
+      "pageImpressions": 30,
+      "deviceImpressions": 95,
+      "countryImpressions": 95
+    },
+    "method": "Direct report read with exact controls/chart bounds and all visible tables. Daily values independently read in the 14-day chart and agree with the corresponding 28-day rows; keyword labels/values match the 28-day rows except the two absent queries. Page ordering at equal counts is not preserved by this normalization."
+  },
+  "previous14": {
+    "bounds": [
+      "2026-09-22",
+      "2026-10-05"
+    ],
+    "filter": "All",
+    "clicks": 0,
+    "impressions": 14,
+    "ctrDisplay": "0%",
+    "chartLabel": "Line chart showing Clicks,Impressions from September 22, 2026 to October 05, 2026. Clicks:0,Impressions:14. Toggle checkboxes to show the selected options in chart",
+    "daily": [
+      {
+        "date": "2026-10-01",
+        "clicks": 0,
+        "impressions": 5
+      },
+      {
+        "date": "2026-10-02",
+        "clicks": 0,
+        "impressions": 4
+      },
+      {
+        "date": "2026-10-03",
+        "clicks": 0,
+        "impressions": 2
+      },
+      {
+        "date": "2026-10-04",
+        "clicks": 0,
+        "impressions": 0
+      },
+      {
+        "date": "2026-10-05",
+        "clicks": 0,
+        "impressions": 3
+      }
+    ],
+    "keywords": [
+      {
+        "label": "any western ai model in china",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 3
+      },
+      {
+        "label": "where is the pull request used inside of the chat model any idea",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 2
+      }
+    ],
+    "pages": [
+      {
+        "label": "https://aictrl.dev/docs/setup/chat-to-pr",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 2
+      },
+      {
+        "label": "https://aictrl.dev/blog/chinese-ai-models-catch-up",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 3
+      }
+    ],
+    "devices": [
+      {
+        "label": "Desktop",
+        "impressions": 13,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 2
+      },
+      {
+        "label": "Mobile",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 3
+      }
+    ],
+    "countries": [
+      {
+        "label": "United States",
+        "impressions": 4,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      },
+      {
+        "label": "Italy",
+        "impressions": 3,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      },
+      {
+        "label": "Rest of World",
+        "impressions": 3,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      },
+      {
+        "label": "Germany",
+        "impressions": 2,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 2
+      },
+      {
+        "label": "Japan",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      },
+      {
+        "label": "People's Republic of China",
+        "impressions": 1,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 3
+      },
+      {
+        "label": "Canada",
+        "impressions": 0,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      },
+      {
+        "label": "United Kingdom",
+        "impressions": 0,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      },
+      {
+        "label": "Spain",
+        "impressions": 0,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      },
+      {
+        "label": "France",
+        "impressions": 0,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      },
+      {
+        "label": "Brazil",
+        "impressions": 0,
+        "clicks": 0,
+        "ctrDisplay": "0.00%",
+        "averagePosition": 0
+      }
+    ],
+    "pagination": {
+      "keywordRows": 2,
+      "pageRows": 2,
+      "countryRows": 11
+    },
+    "countSums": {
+      "dailyImpressions": 14,
+      "keywordImpressions": 2,
+      "pageImpressions": 2,
+      "deviceImpressions": 14,
+      "countryImpressions": 14
+    }
+  },
+  "comparison14": {
+    "method": "Two independently selected Custom reports with matching property/filter and verified date controls/chart bounds; no Compare-mode result is claimed.",
+    "current": [
+      "2026-10-06",
+      "2026-10-19"
+    ],
+    "previous": [
+      "2026-09-22",
+      "2026-10-05"
+    ],
+    "currentClicks": 0,
+    "previousClicks": 0,
+    "currentImpressions": 95,
+    "previousImpressions": 14,
+    "reconciliation": "14+95=109, matching the independently selected current28 headline and daily values. Row-level query/page sums remain smaller.",
+    "interpretation": "Small-sample visibility baseline only. No qualified acquisition, causal uplift or result from unpublished changes."
+  },
+  "recordedAtUTC": "2026-10-22T10:58:42Z",
+  "observationWindowUTC": "Approximately10:40 through 2026-10-22 10:58:42 UTC; source-native filter/chart dates are exact, per-action seconds not retained.",
+  "sitemaps": {
+    "knownSitemaps": 2,
+    "errors": 0,
+    "warnings": 0,
+    "totalURLsDiscovered": 129,
+    "rows": [
+      {
+        "url": "https://aictrl.dev/sitemap.xml",
+        "type": "Sitemap",
+        "lastSubmitDisplay": "9/28/2026",
+        "submissionStatus": "Submitted",
+        "lastCrawlDisplay": "10/20/2026",
+        "status": "Success",
+        "urlsDiscovered": 65
+      },
+      {
+        "url": "https://www.aictrl.dev/sitemap.xml",
+        "type": "Sitemap",
+        "lastSubmitDisplay": "7/9/2026",
+        "submissionStatus": "Discovered",
+        "lastCrawlDisplay": "10/16/2026",
+        "status": "Success",
+        "urlsDiscovered": 64
+      }
+    ],
+    "footer": "2 rows",
+    "limits": [
+      "65+64 accounts for the129 summary as two sitemap entries on apex/www hosts; their URL-set overlap and distinct indexed/canonical page count are not established.",
+      "No sitemap was submitted, deleted or recrawled in this read-only inspection."
+    ]
+  },
+  "aiPerformance": {
+    "source": "Microsoft Copilots and Partners",
+    "method": "Independently selected normal-UI Custom reports; exact date controls and chart bounds read back, with available grounding/page rows and sample notices.",
+    "current28": {
+      "bounds": [
+        "2026-09-22",
+        "2026-10-19"
+      ],
+      "citations": 33,
+      "avgCitedPagesDisplay": "1",
+      "daily": [
+        {
+          "date": "2026-10-01",
+          "citations": 1,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-02",
+          "citations": 3,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-03",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-04",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-05",
+          "citations": 4,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-06",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-07",
+          "citations": 4,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-08",
+          "citations": 3,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-09",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-10",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-11",
+          "citations": 3,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-12",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-13",
+          "citations": 2,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-14",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-15",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-16",
+          "citations": 4,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-17",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-18",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-19",
+          "citations": 9,
+          "avgCitedPagesDisplay": 3
+        }
+      ],
+      "pages": [
+        {
+          "url": "https://aictrl.dev/blog/saaspocalypse",
+          "citations": 11
+        },
+        {
+          "url": "https://aictrl.dev/blog/knowledge-graph-agentic-ai",
+          "citations": 10
+        },
+        {
+          "url": "https://aictrl.dev/blog/skill-md-adoption-trajectory",
+          "citations": 7
+        },
+        {
+          "url": "https://aictrl.dev/blog/reasoning-benchmarks",
+          "citations": 3
+        },
+        {
+          "url": "https://aictrl.dev/blog/skill-md-standard-enterprise-guide",
+          "citations": 2
+        }
+      ],
+      "pageFooter": "5 rows",
+      "groundingQueries": [
+        {
+          "query": "knowledge layer improve ai model accuracy",
+          "intent": "Research",
+          "topic": "AI Tools & Platforms",
+          "citations": 6,
+          "citationShareDisplay": "33.33%"
+        }
+      ],
+      "groundingFooter": "1 row"
+    },
+    "previous14": {
+      "bounds": [
+        "2026-09-22",
+        "2026-10-05"
+      ],
+      "citations": 8,
+      "avgCitedPagesDisplay": "1",
+      "daily": [
+        {
+          "date": "2026-10-01",
+          "citations": 1,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-02",
+          "citations": 3,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-03",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-04",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-05",
+          "citations": 4,
+          "avgCitedPagesDisplay": 1
+        }
+      ],
+      "pages": [
+        {
+          "url": "https://aictrl.dev/blog/saaspocalypse",
+          "citations": 7
+        },
+        {
+          "url": "https://aictrl.dev/blog/skill-md-standard-enterprise-guide",
+          "citations": 1
+        }
+      ],
+      "pageFooter": "2 rows",
+      "groundingResponse": "No data available",
+      "groundingQueries": [],
+      "groundingInterpretation": "No available grounding-query rows, not zero citation activity."
+    },
+    "current14": {
+      "bounds": [
+        "2026-10-06",
+        "2026-10-19"
+      ],
+      "citations": 25,
+      "avgCitedPagesDisplay": "1",
+      "daily": [
+        {
+          "date": "2026-10-06",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-07",
+          "citations": 4,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-08",
+          "citations": 3,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-09",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-10",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-11",
+          "citations": 3,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-12",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-13",
+          "citations": 2,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-14",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-15",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-16",
+          "citations": 4,
+          "avgCitedPagesDisplay": 1
+        },
+        {
+          "date": "2026-10-17",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-18",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-10-19",
+          "citations": 9,
+          "avgCitedPagesDisplay": 3
+        }
+      ],
+      "pages": [
+        {
+          "url": "https://aictrl.dev/blog/knowledge-graph-agentic-ai",
+          "citations": 10
+        },
+        {
+          "url": "https://aictrl.dev/blog/skill-md-adoption-trajectory",
+          "citations": 7
+        },
+        {
+          "url": "https://aictrl.dev/blog/saaspocalypse",
+          "citations": 4
+        },
+        {
+          "url": "https://aictrl.dev/blog/reasoning-benchmarks",
+          "citations": 3
+        },
+        {
+          "url": "https://aictrl.dev/blog/skill-md-standard-enterprise-guide",
+          "citations": 1
+        }
+      ],
+      "pageFooter": "5 rows",
+      "groundingQueries": [
+        {
+          "query": "knowledge layer improve ai model accuracy",
+          "intent": "Research",
+          "topic": "AI Tools & Platforms",
+          "citations": 6,
+          "citationShareDisplay": "33.33%"
+        }
+      ],
+      "groundingFooter": "1 row"
+    },
+    "reconciliation": "8+25=33, agreeing with the independently read current28 citation headline and available daily/page rows.",
+    "topicsPortfolio": "Only Grounding Queries and Pages tabs were visible; intent/topic columns are AI-generated. No distinct Topics Portfolio view was observed; do not infer no opportunity/demand.",
+    "limits": [
+      "Report explicitly says data below represents a sample and results may be refined as more data is processed.",
+      "Citations are not clicks, visitors, qualified acquisition or conversions.",
+      "One grounding row with6 citations/33.33% is not a complete query accounting of33 headline citations. The share denominator is not reconstructed.",
+      "Source-native timezone/finality unverified. Missing September daily rows are not fabricated.",
+      "The current14/previous14 daily lists were read in each selected report and agree with the corresponding current28 rows."
+    ],
+    "previous28": {
+      "bounds": [
+        "2026-08-25",
+        "2026-09-21"
+      ],
+      "citations": 0,
+      "avgCitedPagesDisplay": "0",
+      "daily": [
+        {
+          "date": "2026-08-25",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-08-26",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-08-27",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-08-28",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-08-29",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-08-30",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-08-31",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-01",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-02",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-03",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-04",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-05",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-06",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-07",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-08",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-09",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-10",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-11",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-12",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-13",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-14",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-15",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-16",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-17",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-18",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-19",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-20",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        },
+        {
+          "date": "2026-09-21",
+          "citations": 0,
+          "avgCitedPagesDisplay": 0
+        }
+      ],
+      "pages": [],
+      "pageFooter": "0 rows",
+      "groundingResponse": "No data available",
+      "groundingQueries": [],
+      "interpretation": "AI report explicitly displays0 headline citations and28 daily zero rows for the selected dates. This differs from Search Performance's unavailable prior28 report. It is a source-reported zero under sampling/coverage limits, not proof of no citations anywhere."
+    },
+    "comparison28": {
+      "method": "Independently selected Custom reports, verified bounds.",
+      "previousCitations": 0,
+      "currentCitations": 33,
+      "relativePercentageChange": null,
+      "interpretation": "No percentage increase is calculated from a zero baseline."
+    }
+  }
+}
