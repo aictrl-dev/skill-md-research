@@ -1,0 +1,61 @@
+{
+  "status": "PASS",
+  "comparison_HEAD": "39fa827b8a19295342a047452932050805dfb5b5",
+  "rateMappings": [
+    {
+      "raw": 18.75,
+      "displayed": "19%"
+    },
+    {
+      "raw": 22.92,
+      "displayed": "23%"
+    },
+    {
+      "raw": 2.08,
+      "displayed": "2%"
+    },
+    {
+      "raw": 10.42,
+      "displayed": "10%"
+    },
+    {
+      "raw": 4.17,
+      "displayed": "4%"
+    },
+    {
+      "raw": 39.58,
+      "displayed": "40%"
+    }
+  ],
+  "tokens": {
+    "full": 3442,
+    "scoped": 2091,
+    "system": 608,
+    "toolDefinitions": 2772,
+    "displayedFull": "3.4k",
+    "displayedScoped": "2.1k",
+    "rawReductionPercent": 39.250435793143524,
+    "displayedReduction": "about39%",
+    "rawRetainedPercent": 60.749564206856476,
+    "chartWidthPercent": 60.75,
+    "rawOneTaskPercentagePoints": 2.0833333333333335,
+    "displayedOneTask": "about2percentagepoints"
+  },
+  "preserved": [
+    "metadata/dates/model identifiers/commands",
+    "all hrefs",
+    "CSS and article DOM structure",
+    "skill frontmatter and all pre-existing skill bytes"
+  ],
+  "skillRule": "new numerical-readability section and attribution gate only",
+  "currentMeasurement": {
+    "measuredAt": "2026-10-22T09:27:31.162Z",
+    "findings": 0,
+    "copyContainsNewLabels": true,
+    "currentNumericalSnapshot": true
+  },
+  "hashes": {
+    "website/public/blog/swe-evo-analysis.html": "dd6207841afabdc2037d6410e102a259406c2a1a57208c18d6e424aaa9028f8b",
+    ".claude/skills/write-blog-post/SKILL.md": "ac984e4b3f51553240b24e7c116775deb0d2ae8287056292c68dd654804cfa60"
+  }
+}

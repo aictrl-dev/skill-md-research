@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "head": "0e6e6b96b27caa7c31e7caa4bb6f9aee4c8c84a7",
+  "file": "website/public/signup.html",
+  "sha256": "1e589deba3cd1c9c41de3f6a776ceb7c4b1a5a4c193fb2f4466864fff6d56cd4",
+  "emailURL": "https://app.aictrl.dev/",
+  "describedby": "email-next-step",
+  "providerURLs": [
+    "https://app.aictrl.dev/?provider=github",
+    "https://app.aictrl.dev/?provider=google"
+  ],
+  "axe": {
+    "scope": ".card",
+    "contrast": "excluded because jsdom lacks paint/layout",
+    "violations": [],
+    "passes": 10,
+    "incomplete": []
+  },
+  "limits": "Static/source/DOM checks only; no email send, delivery, account creation, or provider runtime execution."
+}
