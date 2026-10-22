@@ -1,6 +1,6 @@
 To: hello@console.dev
 Subject: Tool suggestion: aictrl engineering skills — MIT, local use without an account
-Status: Prepared; not sent. Business sender and prior-contact check still required.
+Status: Archived prepared copy. The founder confirmed on 22 October that the Console email was already sent from bulat@aictrl.dev. Actual sent body, send time, message ID and delivery were not independently inspected. Await response; do not send this draft again.
 
 Hi Console team,
 
