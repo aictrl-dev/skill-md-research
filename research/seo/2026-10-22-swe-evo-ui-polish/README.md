@@ -1,5 +1,7 @@
 # SWE-EVO article: UI-polish run
 
+> Superseded visually by the [WiT correction](../2026-10-22-swe-evo-wit/README.md). The owner rejected the cards, arbitrary highlights and narrow text despite these zero-error measurements. This remains the historical run, not the accepted design.
+
 22 October 2026. Target: `http://127.0.0.5:3005/blog/swe-evo-analysis`. Scope: `article.swe-evo-review`. Product PR: [#6434](https://github.com/aictrl-dev/aictrl/pull/6434). Before source: `17948751108767e484c04ea97b969c1538dd350e`.
 
 Used the installed aictrl `ui-polish` skill and its bundled `measure.cjs`, with the content profile, assets-only mode, scripts disabled, and the existing cookie banner hidden for measurement only. Phone 390×844; desktop 1366×900. No production tracking or cookie preferences were changed. Measurements concern the article, not unrelated header/footer controls.
