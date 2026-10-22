@@ -1,0 +1,8 @@
+Fixed 3 · remaining 0 · new 0
+Fixed:
+  [error] phone tap-target — 5 controls styled a have tap targets 17px on the smaller side (the first is 100×17px)
+  [info] phone+desktop text-size — 6 text runs in short uppercase letter-spaced labels (eyebrow pattern, small by design): 12px × 6 (.eyebrow)  (div:nth-of-type(1) > article > aside > p:nth-of-type(1))
+  [warn] phone+desktop text-size — 4 text runs below 14px: 12px × 4 (.eyebrow)  (div:nth-of-type(1) > article > section:nth-of-type(4) > p:nth-of-type(1))
+New copy for the owner to review:
+  "System instructions · repository files · skills · tool descriptions"
+  "→"
